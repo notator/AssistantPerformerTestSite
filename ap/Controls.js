@@ -10,8 +10,8 @@
 *  Assistant Performer's Graphic User Interface. 
 */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.controls');
 
@@ -19,7 +19,9 @@ _AP.controls = (function(document, window)
 {
     "use strict";
 
-    var
+	var
+	sf2Synth,
+
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
@@ -607,7 +609,7 @@ _AP.controls = (function(document, window)
 	},
 
 	// sets the options in the output device selector
-	setMIDIOutputDeviceSelector = function(midiAccess)
+	setMIDIOutputDeviceSelector = function(midiAccess, sf2Synth)
 	{
 		var
 		option,
@@ -618,6 +620,12 @@ _AP.controls = (function(document, window)
 		option = document.createElement("option");
 		option.text = "choose a MIDI output device";
 		os.add(option, null);
+
+		option = document.createElement("option");
+		option.outputDevice = sf2Synth;
+		option.text = "Resident SoundFont Synth";
+		os.add(option, null);
+
 		midiAccess.outputs.forEach(function(port)
 		{
 			//console.log('output id:', port.id, ' output name:', port.name);
@@ -753,10 +761,13 @@ _AP.controls = (function(document, window)
     	{
     		midiAccess = mAccess;
 
+			sf2Synth = new WebMIDI.sf2Synth1.Sf2Synth1();
+			sf2Synth.init();
+
     		getGlobalElements();
 
     		setMIDIInputDeviceSelector(midiAccess);
-    		setMIDIOutputDeviceSelector(midiAccess);
+    		setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 
     		// update the device selectors when devices get connected, disconnected, opened or closed
     		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
