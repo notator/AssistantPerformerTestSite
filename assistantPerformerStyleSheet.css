@@ -1,0 +1,86 @@
+﻿/** style sheet for AssistantPerformer **/
+
+a:link
+{
+    color: #1010C6;
+}
+a:hover
+{
+    color: #0088FF;
+}
+a:active
+{
+}
+a:visited
+{
+    color: #00AA00;
+}
+
+p.header1
+{
+    font-size: 22px;
+    font-weight: normal;
+    margin:15px auto 10px auto;
+}
+
+div.helpText
+{
+	font-size: 12px;
+}
+
+span.blueHelpText
+{
+    color: #8888FF;
+}
+
+span.redHelpText
+{
+    color: #f20d0d;
+}
+
+select.deviceSelector
+{
+    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
+    font-size: 11px; 
+    width: 220px;
+    margin-left: 8px;
+    margin-right: 8px; 
+}
+
+div.globalSpeedPanel
+{
+    width:520px;
+    padding: 9px 0 6px 0;
+    margin:8px auto 9px auto;    
+    background-color: #FCFCFC;
+    border: 1px solid #008000;
+}
+
+div.options
+{
+    font-size: 12px;
+    background-color: #F6F6F6;
+    border: 1px solid #008000;
+	width:740px;
+    margin: 10px auto 0 auto;
+    padding: 10px;
+    text-align:center;
+}
+
+div.checkBoxCell
+{
+     display:table-cell;
+     font-size: 9px;
+     text-align: center;
+     line-height: 10px;
+     padding-left: 3px;
+     padding-right: 3px;
+}
+
+div.runtimeDiv
+{
+	position: absolute;
+	padding: 0;
+	margin: 0;
+	visibility: hidden;
+}
