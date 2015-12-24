@@ -667,7 +667,7 @@ _AP.controls = (function(document, window)
 				}
 				break;
 			case "output":
-				setMIDIOutputDeviceSelector(midiAccess);
+				setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 				// Output devices are currently handled differently from the input devices...
 				// (I don't want the output device selector's selected index to change 
 				// every time an input device is connected or disconnected.)
