@@ -1644,7 +1644,7 @@ _AP.score = (function (document)
         // inserts each midiChord's finalChordOffMoment.messages in the first moment in the following midiObject.
         function transferFinalChordOffMoments(outputTracks)
         {
-            var track, trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i;
+            var track, trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i, previousMidiChord;
 
             for(trackIndex = 0; trackIndex < outputTracks.length; ++trackIndex)
             {
@@ -1655,14 +1655,17 @@ _AP.score = (function (document)
                     {
                         if(track.midiObjects[midiObjectIndex - 1] instanceof MidiChord)
                         {
-                        	console.assert(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
+                        	previousMidiChord = track.midiObjects[midiObjectIndex - 1];
+                        	console.assert(previousMidiChord.finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
 
-                            finalChordOffMessages = track.midiObjects[midiObjectIndex - 1].finalChordOffMoment.messages;
+                        	finalChordOffMessages = previousMidiChord.finalChordOffMoment.messages;
                             nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
                             for(i = 0; i < finalChordOffMessages.length; ++i)
                             {
                                 nextObjectMessages.splice(0, 0, finalChordOffMessages[i]);
                             }
+                            previousMidiChord.finalChordOffMoment = undefined;
+                            previousMidiChord.moments.length -= 1;	
                         }
                     }
                 }

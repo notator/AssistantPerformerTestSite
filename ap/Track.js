@@ -33,7 +33,8 @@ _AP.namespace('_AP.track');
 _AP.track = (function()
 {
     "use strict";
-    var
+	var
+	MidiChord = _AP.midiChord.MidiChord,
     // An empty track is created.
     Track = function()
     {
@@ -99,25 +100,13 @@ _AP.track = (function()
     	var i, index, midiObject, midiObjects = this.midiObjects,
 			midiChord, nMidiObjects = midiObjects.length;
 
-    	function isMidiChord(midiObject)
-    	{
-    		var rval = false;
-
-    		if((midiObject.moments[0].systemIndex !== undefined)
-			&& midiObject.setToStartAtBeginning !== undefined)
-    		{
-    			rval = true;
-    		}
-    		return rval;
-    	}
-
     	for(i = 0; i < nMidiObjects; ++i)
     	{
     		index = i;
     		// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
     		// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
     		// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
-    		if(isMidiChord(midiObjects[i]))
+    		if(midiObjects[i] instanceof MidiChord)
     		{
     			midiChord = midiObjects[i];
     			if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
@@ -157,7 +146,7 @@ _AP.track = (function()
     			break;
     		}
 
-    		if(isMidiChord(midiObjects[i]))
+    		if(midiObjects[i] instanceof MidiChord)
     		{ 
     			midiObject.setToStartAtBeginning();
     		}
