@@ -177,6 +177,7 @@ _AP.sequence = (function(window)
         function stopAfterDelay()
         {
         	var performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
+        	setState("stopped");
         	reportEndOfPerformance(sequenceRecording, performanceMsDuration);
         }
 
@@ -206,7 +207,11 @@ _AP.sequence = (function(window)
 
         track = getNextTrack(tracks, nTracks);
 
-        if(track === null)
+        if(document.hidden === true)
+        {
+        	stopAfterDelay();
+        }
+        else if(track === null)
         {
         	// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
         	setState("stopped");
