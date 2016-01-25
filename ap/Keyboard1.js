@@ -207,11 +207,6 @@ _AP.keyboard1 = (function()
 			}
 		}
 
-		if(document.hidden === true)
-		{
-			stop();
-		}
-
 		switch(msg.action)
 		{
 			case "midiMessage":
