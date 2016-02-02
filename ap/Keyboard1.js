@@ -81,7 +81,7 @@ _AP.keyboard1 = (function()
 	sequenceRecording, // the sequence being recorded.
 
 	allControllersOffMessages = [],
-	allNotesOffMessages = [],
+	allSoundOffMessages = [],
 
 	trackPressureOptions = [],
 	trackPitchWheelOptions = [],
@@ -93,13 +93,13 @@ _AP.keyboard1 = (function()
 			constants = _AP.constants,
 			CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
 			ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
-			ALL_NOTES_OFF = constants.CONTROL.ALL_NOTES_OFF;
+			ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
 
 		for(channelIndex = 0; channelIndex < nOutputChannels; channelIndex++)
 		{
 			byte1 = CONTROL_CHANGE + channelIndex;
 			allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-			allNotesOffMessages.push(new Uint8Array([byte1, ALL_NOTES_OFF, 0]));
+			allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
 		}
 	},
 
@@ -137,11 +137,21 @@ _AP.keyboard1 = (function()
 	// does nothing if the performance is already stopped
 	stop = function()
 	{
-		var performanceMsDuration, i, trackWorker;
+		var performanceMsDuration, i, trackWorker, nOutputTracks = outputTracks.length;
+
+		function doAllSoundOff(outputDevice, nTracks)
+		{
+			var trackIndex;
+
+			for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
+			{
+				outputDevice.send(allSoundOffMessages[trackIndex], performance.now());
+			}
+		}
 
 		if(!isStopped())
 		{
-			for(i = 0; i < trackWorkers.length; ++i)
+			for(i = 0; i < nOutputTracks; ++i)
 			{
 				trackWorker = trackWorkers[i];
 				if(trackWorker !== null)
@@ -149,7 +159,10 @@ _AP.keyboard1 = (function()
 					trackWorker.terminate();
 				}
 			}
-			trackWorkers = [];
+
+			doAllSoundOff(outputDevice, nOutputTracks);
+
+			trackWorkers.length = 0;
 
 			setState("stopped"); // removes input device event handlers
 
@@ -161,15 +174,6 @@ _AP.keyboard1 = (function()
 			}
 		}
 	},
-
- 	resetChannel = function(outputDevice, channelIndex, letSound)
- 	{
- 		if(letSound === false)
- 		{
- 			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
- 			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
- 		}
- 	},
 
 	sendMIDIMessage = function(uint8array)
 	{
@@ -183,6 +187,17 @@ _AP.keyboard1 = (function()
 			// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
 			// in the recording before saving the file. 
 			recording.addLiveMessage(uint8array, timestamp);
+		}
+	},
+
+	// sends all the trk's silent Messages at once.
+	resetTrack = function(silentTrkMessages)
+	{
+		var i, nMessages = silentTrkMessages.length;
+
+		for(i = 0; i < nMessages; ++i)
+		{
+			sendMIDIMessage(silentTrkMessages[i]);
 		}
 	},
 
@@ -236,13 +251,12 @@ _AP.keyboard1 = (function()
 				//}
 				sendMIDIMessage(msg.midiMessage);
 				break;
-			case "trkCompleted":
-				// TrackWorkers send this message to say that they are not going to send any more midiMessages from a trk (that is not the last).
-				resetChannel(outputDevice, msg.channelIndex, msg.letSound);
+			case "trkStopped":
+				// TrackWorkers send this message when the trk they are sending is stopped prematurely.
+				resetTrack(msg.silentTrkMessages);
 				break;
 			case "workerCompleted":
-				// TrackWorkers send this message to say that they are not going to send any more midiMessages from their final trk.
-				resetChannel(outputDevice, msg.channelIndex, msg.letSound);
+				// TrackWorkers send this message to say that they have no more trks to send.
 				workerHasCompleted(msg.trackIndex);
 				break;
 			default:
@@ -941,13 +955,13 @@ _AP.keyboard1 = (function()
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
-		function resetChannels(outputDevice, nTracks)
+		function doAllControllersOff(outputDevice, nTracks)
 		{
 			var trackIndex;
 
 			for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
 			{
-				resetChannel(outputDevice, trackIndex, false);
+				outputDevice.send(allControllersOffMessages[trackIndex], performance.now());
 			}
 		}
 
@@ -1572,7 +1586,7 @@ _AP.keyboard1 = (function()
 
 		sequenceRecording = recording;
 
-		resetChannels(outputDevice, outputTracks.length);
+		doAllControllersOff(outputDevice, outputTracks.length);
 
 		resetContinuousControllerOptions(outputTracks.length);
 
