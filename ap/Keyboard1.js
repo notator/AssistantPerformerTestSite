@@ -137,13 +137,17 @@ _AP.keyboard1 = (function()
 	// does nothing if the performance is already stopped
 	stop = function()
 	{
-		var performanceMsDuration, i;
+		var performanceMsDuration, i, trackWorker;
 
 		if(!isStopped())
 		{
 			for(i = 0; i < trackWorkers.length; ++i)
 			{
-				trackWorkers[i].terminate();
+				trackWorker = trackWorkers[i];
+				if(trackWorker !== null)
+				{
+					trackWorker.terminate();
+				}
 			}
 			trackWorkers = [];
 
@@ -159,13 +163,13 @@ _AP.keyboard1 = (function()
 	},
 
  	resetChannel = function(outputDevice, channelIndex, letSound)
-	{
-		if(letSound === false)
-		{
-			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
-			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
-		}
-	},
+ 	{
+ 		if(letSound === false)
+ 		{
+ 			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
+ 			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+ 		}
+ 	},
 
 	sendMIDIMessage = function(uint8array)
 	{
@@ -185,7 +189,7 @@ _AP.keyboard1 = (function()
 	// trackWorkers send their messages here.
 	handleTrackMessage = function(e)
 	{
-		var msg = e.data;
+		var msg = e.data, trackWorker;
 
 		function workerHasCompleted(trackIndex)
 		{
@@ -195,7 +199,8 @@ _AP.keyboard1 = (function()
 
 			for(i = 0; i < trackWorkers.length; i++)
 			{
-				if(trackWorkers[i].hasCompleted === false)
+				trackWorker = trackWorkers[i];
+				if(trackWorker !== null && trackWorker.hasCompleted === false)
 				{
 					performanceHasCompleted = false;
 					break;
@@ -314,7 +319,10 @@ _AP.keyboard1 = (function()
     		var i, nTrkOffs = trkOffs.length;
     		for(i = 0; i < nTrkOffs; ++i)
     		{
-    			workers[trkOffs[i]].postMessage({ "action": "stop" });
+    			if(workers[trkOffs[i]] !== null)
+    			{
+    				workers[trkOffs[i]].postMessage({ "action": "stop" });
+    			}
     		}
     	}
 
@@ -719,7 +727,7 @@ _AP.keyboard1 = (function()
 
     		for(i = 0; i < nTracks; ++i)
     		{
-    			if(trackPressureOptions[i].control !== 'disabled')
+    			if(trackWorkers[i] !== null && trackPressureOptions[i].control !== 'disabled')
     			{
     				doController(i, "pressure", data[1]); // Achtung: value is data[1]
     			}
@@ -734,7 +742,7 @@ _AP.keyboard1 = (function()
 
     		for(i = 0; i < nTracks; ++i)
     		{
-    			if(trackModWheelOptions[i].control !== 'disabled')
+    			if(trackWorkers[i] !== null && trackModWheelOptions[i].control !== 'disabled')
     			{
     				doController(i, "modWheel", data[2]); // Achtung: value is data[2]
     			}
@@ -806,12 +814,11 @@ _AP.keyboard1 = (function()
     					doSpeedOption(trackIndex, data[1], trackPitchWheelOptions[trackIndex].speedDeviation); // data1, the hi byte, is in range 0..127
     					break;
     			}
-
 			}
 
     		for(i = 0; i < nTracks; ++i)
     		{
-    			if(trackPitchWheelOptions[i].control !== 'disabled')
+    			if(trackWorkers[i] !== null && trackPitchWheelOptions[i].control !== 'disabled')
     			{
     				doOption(i, trackPitchWheelOptions[i]);
     			}
@@ -1455,14 +1462,21 @@ _AP.keyboard1 = (function()
 
 					for(i = 0; i < outputTracks.length; i++)
 					{
-						worker = new window.Worker("ap/TrackWorker.js");
-						worker.addEventListener("message", handleTrackMessage);
-						worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
-						// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
-						// and back to true when the worker says that it has completed its last trk.
-						worker.hasCompleted = true; // used to find out if the performance has completed.
+						if(trackIsOnArray[i] === true)
+						{
+							worker = new window.Worker("ap/TrackWorker.js");
+							worker.addEventListener("message", handleTrackMessage);
+							worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
+							// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
+							// and back to true when the worker says that it has completed its last trk.
+							worker.hasCompleted = true; // used to find out if the performance has completed.
 
-						trackWorkers.push(worker);
+							trackWorkers.push(worker);
+						}
+						else
+						{
+							trackWorkers.push(null); 							
+						}
 					}
 				}
 

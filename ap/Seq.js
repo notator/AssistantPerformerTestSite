@@ -113,11 +113,13 @@ _AP.seq = (function()
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
-				trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+				if(trkWorker !== null)
+				{
+					trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+					trkWorker.hasCompleted = false;
+				}
 
-				trkWorker.hasCompleted = false;
-
-				workers.push(trkWorker);
+				workers.push(trkWorker); // can be null (if the track has been disabled)
 			}
 			return workers;
 		}
