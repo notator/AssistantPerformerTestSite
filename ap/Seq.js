@@ -59,7 +59,24 @@ _AP.seq = (function()
 
 			function getMoments(trkMidiObjects)
 			{
-				var i, j, nTrkMidiObjects, trkMoments, moment, trkMoment, midiObject, midiObjectMsPosInSeq;
+				var i, j, nTrkMidiObjects, trkMoments, trkMoment, midiObject, midiObjectMsPosInSeq;
+
+				function pushMoment(trkMoments, moment)
+				{
+					// midiRests have a single moment, but its messages array can be empty.
+					if(moment.messages.length > 0)
+					{
+						trkMoment = {};
+						if(moment.systemIndex !== undefined)
+						{
+							trkMoment.systemIndex = moment.systemIndex;
+						}
+						// all moments have an msPositionInChord attribute (even in midiRests)
+						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
+						trkMoment.messages = moment.messages; // a clone of the messages is made when the trkMoment is transferred to the webWorker.
+						trkMoments.push(trkMoment);
+					}
+				}
 
 				nTrkMidiObjects = trkMidiObjects.length;
 				trkMoments = [];
@@ -69,20 +86,11 @@ _AP.seq = (function()
 					midiObjectMsPosInSeq = midiObject.msPositionInScore - seqPositionInScore;
 					for(j = 0; j < midiObject.moments.length; ++j)
 					{
-						moment = midiObject.moments[j];
-						// midiRests have a single moment, but its messages array can be empty.
-						if(moment.messages.length > 0)
-						{
-							trkMoment = {};
-							if(moment.systemIndex !== undefined)
-							{
-								trkMoment.systemIndex = moment.systemIndex;
-							}
-							// all moments have an msPositionInChord attribute (even in midiRests)
-							trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
-							trkMoment.messages = moment.messages; // a clone of the messages is made when the trkMoment is transferred to the webWorker.
-							trkMoments.push(trkMoment);
-						}
+						pushMoment(trkMoments, midiObject.moments[j]);
+					}
+					if(midiObject.finalChordOffMoment !== undefined)
+					{
+						pushMoment(trkMoments, midiObject.finalChordOffMoment);
 					}
 				}
 				return trkMoments;
