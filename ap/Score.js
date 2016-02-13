@@ -152,8 +152,9 @@ _AP.score = (function (document)
     	return timeObjectsArray;
     },
 
-	// Returns the performing timeObject closest to alignmentX (in any performing input or output track, depending on findInput).
+	// Returns the performing midiChordDef or inputChordDef closest to alignmentX (in any performing input or output track, depending on findInput).
 	// If trackIndex is defined, the returned timeObject will be in that track.
+	// If there are no chordDefs matching the arguments (i.e. if all the timeObjects are restDefs), the returned timeObject will be null.
 	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignmentX, trackIndex)
 	{
 		var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
@@ -387,8 +388,9 @@ _AP.score = (function (document)
         {
         	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
 		}
-        // move the start marker if necessary
-        if(timeObject.alignmentX !== startMarkerAlignmentX)
+    	// Move the start marker if necessary.
+        // timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
+        if(timeObject !== null && timeObject.alignmentX !== startMarkerAlignmentX)
         {
         	updateStartMarker(timeObjectsArray, timeObject);
         }

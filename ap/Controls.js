@@ -48,6 +48,7 @@ _AP.controls = (function(document, window)
 	STUDY3_SKETCH2_SCORE_INDEX1 = 5,
 	STUDY3_SKETCH2_SCORE_INDEX2 = 6,
 	PIANOLA_MUSIC_SCORE_INDEX = 7,
+	TOMBEAU1_SCORE_INDEX = 8,
 
 	RESIDENT_SYNTH_INDEX = 1,
 
@@ -208,11 +209,12 @@ _AP.controls = (function(document, window)
 
 	residentSynthCanPlayScore = function(scoreIndex)
 	{
-		var rval = false;
+		var rval = false,
+			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, TOMBEAU1_SCORE_INDEX];
 
-		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.")
+		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
-		if(scoreIndex === PIANOLA_MUSIC_SCORE_INDEX)
+		if(playableScores.indexOf(scoreIndex) >= 0)
 		{
 			rval = true;
 		}
@@ -240,7 +242,7 @@ _AP.controls = (function(document, window)
                 {
                 	globalElements.aboutLinkDiv.style.display = "block";
 
-                	if(residentSynthCanPlayScore(scoreIndex) === true || residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null)
+                	if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
                 	{
 
                 		if(globalElements.waitingForSoundFontDiv.style.display === "none"
@@ -775,7 +777,7 @@ _AP.controls = (function(document, window)
 						name: "Grand Piano",
 						url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, TOMBEAU1_SCORE_INDEX]
 					}
 				];
 
@@ -832,13 +834,7 @@ _AP.controls = (function(document, window)
         				for(i = 0; i < scoreSelectIndices.length; ++i)
         				{
         					option = scoreSelect.options[scoreSelectIndices[i]];
-        					if(soundFont.name === "Grand Piano")
-        					{
-        						if(option.text === "Pianola Music 1967 (scroll)")
-								{ 
-        							option.soundFont = soundFont;
-        						}
-        					}
+        					option.soundFont = soundFont;
         				}
 
         				if(!firstSoundFontLoaded)
@@ -1023,6 +1019,12 @@ _AP.controls = (function(document, window)
     					scoreInfo.aboutText = "about Pianola Music";
     					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
     					break;
+    				case TOMBEAU1_SCORE_INDEX:
+    					scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Tombeau 1";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+    					break;
     			}
 
     			return scoreInfo;
@@ -1155,7 +1157,7 @@ _AP.controls = (function(document, window)
 
     		setAboutLink(scoreInfo);
 
-    		if(residentSynthCanPlayScore(scoreIndex) === true || residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null)
+    		if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
     		{
     			setPages(scoreInfo);
 
@@ -1240,7 +1242,8 @@ _AP.controls = (function(document, window)
 
         function waitForSoundFont()
         {
-        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+        	if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+			&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
         	{
         		globalElements.waitingForSoundFontDiv.style.display = "block";
         		globalElements.outputDeviceSelect.disabled = true;
@@ -1276,13 +1279,6 @@ _AP.controls = (function(document, window)
     		}
     	}
 
-    	// setMIDIDevices is now called in beginRuntime().
-		// There is no reason to react here to the outputDeviceSelect changing.
-    	//if(controlID === "outputDeviceSelect")
-    	//{
-    	//	//setMIDIDevices();
-    	//}
-
     	/**** controls in options panel ***/
     	if(controlID === "inputDeviceSelect"
 		|| controlID === "outputDeviceSelect"
@@ -1293,8 +1289,8 @@ _AP.controls = (function(document, window)
 
     	if(controlID === "scoreSelect")
     	{
-    		if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
-			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+    		if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+			&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
     		{
     			setTimeout(waitForSoundFont, 200);
     		}
