@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--file created: Thursday 11.02.2016, 18:54:04-->
+<!--file created: Tuesday 23.02.2016, 10:05:28-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
@@ -10,7 +10,7 @@
 	<dimensions>
 		<paper
 			size="A3"
-			landscape="1" />
+			landscape="0" />
 		<title
 			titleHeight="32"
 			authorHeight="16"
@@ -19,23 +19,23 @@
 			topPage1="90"
 			topOtherPages="50"
 			right="50"
-			bottom="250"
+			bottom="100"
 			left="50" />
 	</dimensions>
 	<notation
 		minimumCrotchetDuration="800"
-		beamsCrossBarlines="true"
+		beamsCrossBarlines="false"
 		stafflineStemStrokeWidth="0.5"
 		gap="4"
-		minGapsBetweenStaves="8"
-		minGapsBetweenSystems="11"
-		voiceIndicesPerStaff="0, 1, 2, 3, 4, 5, 6 "
-		clefsPerStaff="t, t, t, t, b1, b1, b1"
-		stafflinesPerStaff="5,  5,  5,  5,  5,  5,  5"
-		staffGroups="4,  3"
-		longStaffNames="1, 2, 3, 4, 5, 6, 7"
-		shortStaffNames="1, 2, 3, 4, 5, 6, 7"
-		systemStartBars="1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 101, 111, 121, 131, 141, 151, 161, 171, 181, 191" />
+		minGapsBetweenStaves="6"
+		minGapsBetweenSystems="8"
+		voiceIndicesPerStaff="0, 1, 2, 3, 4, 5, 6, 7 "
+		clefsPerStaff="t, t, t, t, t, t, t, t"
+		stafflinesPerStaff="5,  5,  5,  5,  5,  5,  5,  5"
+		staffGroups="8"
+		longStaffNames="0, 1, 2, 3, 4, 5, 6, 7"
+		shortStaffNames="0, 1, 2, 3, 4, 5, 6, 7"
+		systemStartBars="1, 2, 3" />
 	<krystals>
 		<krystal
 			name="pk4(12)-2.krys" />
@@ -47,76 +47,30 @@
 			name="palette 1"
 			domain="12">
 			<basicChord>
-				<durations>150,175,203,237,276,321,374,435,507,590,687,800</durations>
+				<durations>900,900,900,900,900,900,900,900,900,900,900,900</durations>
 				<velocities>127,127,127,127,127,127,127,127,127,127,127,127</velocities>
-				<midiPitches>44,42,40,38,36,34,32,30,28,26,24,22</midiPitches>
-				<chordDensities>1,1,1,1,1,1,1,1,1,1,1,1</chordDensities>
+				<midiPitches>60,60,60,60,60,60,60,60,60,60,60,60</midiPitches>
+				<chordDensities>8,8,8,8,8,8,8,8,8,8,8,8</chordDensities>
+				<rootInversion>12,7,5,4,3,2,1</rootInversion>
+				<inversionIndices>0,1,2,3,4,5,6,7,8,9,10,11</inversionIndices>
+				<verticalVelocityFactors>0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3</verticalVelocityFactors>
 			</basicChord>
-			<patchIndices>115,115,115,115,115,115,115,115,115,115,115,115</patchIndices>
-			<panEnvelopes>69,58,81,46,92,35,104,23,115,12,126,0</panEnvelopes>
-			<ornamentNumbers>7,7,8,8,9,9,10,10,11,11,12,12</ornamentNumbers>
-			<ornamentSettings>
-				<numBasicChordDefs>12</numBasicChordDefs>
-				<basicChord>
-					<durations>1,1,1,1,1,1,1,1,1,1,1,1</durations>
-					<velocities>1,1,1,1,1,1,1,1,1,1,1,1</velocities>
-					<midiPitches>0,0,0,0,0,0,0,0,0,0,0,0</midiPitches>
-					<chordDensities>1,1,1,1,1,1,1,1,1,1,1,1</chordDensities>
-				</basicChord>
-				<numOrnaments>12</numOrnaments>
-				<ornaments>
-					<ornament>1</ornament>
-					<ornament>1,1</ornament>
-					<ornament>1,1,1</ornament>
-					<ornament>1,1,1,1</ornament>
-					<ornament>1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1,1,1</ornament>
-				</ornaments>
-			</ornamentSettings>
+			<patchIndices>0,0,0,0,0,0,0,0,0,0,0,0</patchIndices>
+			<panEnvelopes>0,12,23,35,46,58,69,81,92,104,115,127</panEnvelopes>
 		</palette>
 		<palette
 			name="palette 2"
 			domain="12">
 			<basicChord>
-				<durations>155,172,192,213,237,264,293,326,363,403,449,499</durations>
+				<durations>500,500,500,500,500,500,500,500,500,500,500,500</durations>
 				<velocities>127,127,127,127,127,127,127,127,127,127,127,127</velocities>
-				<midiPitches>35,35,34,34,33,33,32,32,31,31,30,30</midiPitches>
-				<chordDensities>1,1,1,1,1,1,1,1,1,1,1,1</chordDensities>
+				<midiPitches>60,60,60,60,60,60,60,60,60,60,60,60</midiPitches>
+				<chordDensities>8,7,6,5,4,3,2,2,2,2,2,2</chordDensities>
+				<rootInversion>12,7,5,4,3,2,1</rootInversion>
+				<inversionIndices>0,2,4,6,8,10,11,9,7,5,3,1</inversionIndices>
 			</basicChord>
-			<patchIndices>113,113,113,113,113,113,113,113,113,113,113,113</patchIndices>
-			<panEnvelopes>69,58,81,46,92,35,104,23,115,12,127,0</panEnvelopes>
-			<expressionEnvelopes>20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64,20:127:64</expressionEnvelopes>
-			<ornamentNumbers>7,7,8,8,9,9,10,10,11,11,12,12</ornamentNumbers>
-			<ornamentSettings>
-				<numBasicChordDefs>12</numBasicChordDefs>
-				<basicChord>
-					<durations>1,1,1,1,1,1,1,1,1,1,1,1</durations>
-					<velocities>1,1,1,1,1,1,1,1,1,1,1,1</velocities>
-					<midiPitches>0,0,0,0,0,0,0,0,0,0,0,0</midiPitches>
-					<chordDensities>1,1,1,1,1,1,1,1,1,1,1,1</chordDensities>
-				</basicChord>
-				<numOrnaments>12</numOrnaments>
-				<ornaments>
-					<ornament>1</ornament>
-					<ornament>1,1</ornament>
-					<ornament>1,1,1</ornament>
-					<ornament>1,1,1,1</ornament>
-					<ornament>1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1,1</ornament>
-					<ornament>1,1,1,1,1,1,1,1,1,1,1,1</ornament>
-				</ornaments>
-			</ornamentSettings>
+			<patchIndices>0,0,0,0,0,0,0,0,0,0,0,0</patchIndices>
+			<panEnvelopes>0,12,23,35,46,58,69,81,92,104,115,127</panEnvelopes>
 		</palette>
 		<palette
 			name="palette 3"
