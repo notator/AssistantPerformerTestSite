@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Tombeau 1, page 1 of 2</dc:title>
-				<dc:date>Wednesday 02.03.2016, 21:21:35</dc:date>
+				<dc:date>Wednesday 16.03.2016, 11:53:39</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -321,22 +321,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		style="display:inline"
 		sodipodi:insensitive="true">
 		<text
-			id="timeStamp"
+			class="timeStamp"
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Tombeau 1 page 1, Wednesday 02.03.2016, 21:21:35</text>
+			font-family="Arial">Tombeau 1 page 1, Wednesday 16.03.2016, 11:53:39</text>
 		<g
 			id="titles">
 			<text
-				id="mainTitle"
+				class="mainTitle"
 				x="4040"
 				y="400"
 				text-anchor="middle"
 				font-size="256"
 				font-family="Open Sans">Tombeau 1</text>
 			<text
-				id="author"
+				class="author"
 				x="7680"
 				y="400"
 				text-anchor="end"
@@ -344,45 +344,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				font-family="Open Sans">James Ingram</text>
 		</g>
 		<g
-			class="system"
-			id="sys1">
+			class="system">
 			<g
 				class="outputStaff"
-				id="sys1staff1"
 				score:staffName="0">
 				<g
-					class="stafflines"
-					id="sys1staff1stafflines">
+					class="stafflines">
 					<line
-						id="staffline1"
 						x1="400"
 						y1="960"
 						x2="7680"
 						y2="960"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline2"
 						x1="400"
 						y1="992"
 						x2="7680"
 						y2="992"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline3"
 						x1="400"
 						y1="1024"
 						x2="7680"
 						y2="1024"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline4"
 						x1="400"
 						y1="1056"
 						x2="7680"
 						y2="1056"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline5"
 						x1="400"
 						y1="1088"
 						x2="7680"
@@ -391,24 +383,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff1voice1"
 					score:midiChannel="0"
 					score:masterVolume="100">
 					<use
-						id="clef6"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,1056) scale(125.44)" />
 					<line
-						id="barline7"
+						class="barline"
 						x1="503.2"
 						y1="960"
 						x2="503.2"
 						y2="1088"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName8"
+						class="staffName"
 						x="232"
 						y="1049.6"
 						text-anchor="middle"
@@ -416,7 +407,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">0</text>
 					<g
 						class="outputChord"
-						id="outputChord9"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -430,9 +420,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics10">
+							class="graphics">
 							<line
-								id="stem11"
 								x1="618.4567"
 								y1="803.696"
 								x2="618.4567"
@@ -484,42 +473,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger12"
 								x1="567.2187"
 								y1="800"
 								x2="667.6946"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger13"
 								x1="567.2187"
 								y1="832"
 								x2="667.6946"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger14"
 								x1="567.2187"
 								y1="864"
 								x2="667.6946"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger15"
 								x1="567.2187"
 								y1="896"
 								x2="667.6946"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger16"
 								x1="567.2187"
 								y1="928"
 								x2="667.6946"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger17"
 								x1="602.044"
 								y1="1120"
 								x2="667.6946"
@@ -540,7 +523,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord18"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -554,9 +536,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics19">
+							class="graphics">
 							<line
-								id="stem20"
 								x1="1204.218"
 								y1="803.696"
 								x2="1204.218"
@@ -608,42 +589,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger21"
 								x1="1152.98"
 								y1="800"
 								x2="1253.456"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger22"
 								x1="1152.98"
 								y1="832"
 								x2="1253.456"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger23"
 								x1="1152.98"
 								y1="864"
 								x2="1253.456"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger24"
 								x1="1152.98"
 								y1="896"
 								x2="1253.456"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger25"
 								x1="1152.98"
 								y1="928"
 								x2="1253.456"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger26"
 								x1="1187.805"
 								y1="1120"
 								x2="1253.456"
@@ -659,7 +634,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord27"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -673,9 +647,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics28">
+							class="graphics">
 							<line
-								id="stem29"
 								x1="1789.979"
 								y1="803.696"
 								x2="1789.979"
@@ -727,42 +700,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger30"
 								x1="1738.74"
 								y1="800"
 								x2="1839.216"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger31"
 								x1="1738.74"
 								y1="832"
 								x2="1839.216"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger32"
 								x1="1738.74"
 								y1="864"
 								x2="1839.216"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger33"
 								x1="1738.74"
 								y1="896"
 								x2="1839.216"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger34"
 								x1="1738.74"
 								y1="928"
 								x2="1839.216"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger35"
 								x1="1773.566"
 								y1="1120"
 								x2="1839.216"
@@ -778,7 +745,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord36"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -792,9 +758,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics37">
+							class="graphics">
 							<line
-								id="stem38"
 								x1="2375.74"
 								y1="803.696"
 								x2="2375.74"
@@ -846,42 +811,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger39"
 								x1="2324.501"
 								y1="800"
 								x2="2424.977"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger40"
 								x1="2324.501"
 								y1="832"
 								x2="2424.977"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger41"
 								x1="2324.501"
 								y1="864"
 								x2="2424.977"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger42"
 								x1="2324.501"
 								y1="896"
 								x2="2424.977"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger43"
 								x1="2324.501"
 								y1="928"
 								x2="2424.977"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger44"
 								x1="2359.327"
 								y1="1120"
 								x2="2424.977"
@@ -897,7 +856,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord45"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -911,9 +869,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics46">
+							class="graphics">
 							<line
-								id="stem47"
 								x1="2961.5"
 								y1="803.696"
 								x2="2961.5"
@@ -965,42 +922,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger48"
 								x1="2910.262"
 								y1="800"
 								x2="3010.738"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger49"
 								x1="2910.262"
 								y1="832"
 								x2="3010.738"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger50"
 								x1="2910.262"
 								y1="864"
 								x2="3010.738"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger51"
 								x1="2910.262"
 								y1="896"
 								x2="3010.738"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger52"
 								x1="2910.262"
 								y1="928"
 								x2="3010.738"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger53"
 								x1="2945.088"
 								y1="1120"
 								x2="3010.738"
@@ -1016,7 +967,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord54"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -1030,9 +980,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics55">
+							class="graphics">
 							<line
-								id="stem56"
 								x1="3547.261"
 								y1="803.696"
 								x2="3547.261"
@@ -1084,42 +1033,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger57"
 								x1="3496.023"
 								y1="800"
 								x2="3596.499"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger58"
 								x1="3496.023"
 								y1="832"
 								x2="3596.499"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger59"
 								x1="3496.023"
 								y1="864"
 								x2="3596.499"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger60"
 								x1="3496.023"
 								y1="896"
 								x2="3596.499"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger61"
 								x1="3496.023"
 								y1="928"
 								x2="3596.499"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger62"
 								x1="3530.849"
 								y1="1120"
 								x2="3596.499"
@@ -1135,7 +1078,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord63"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -1149,9 +1091,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics64">
+							class="graphics">
 							<line
-								id="stem65"
 								x1="4133.022"
 								y1="803.696"
 								x2="4133.022"
@@ -1208,42 +1149,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger66"
 								x1="4081.784"
 								y1="800"
 								x2="4182.26"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger67"
 								x1="4081.784"
 								y1="832"
 								x2="4182.26"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger68"
 								x1="4081.784"
 								y1="864"
 								x2="4182.26"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger69"
 								x1="4081.784"
 								y1="896"
 								x2="4182.26"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger70"
 								x1="4081.784"
 								y1="928"
 								x2="4182.26"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger71"
 								x1="4116.61"
 								y1="1120"
 								x2="4182.26"
@@ -1259,7 +1194,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord72"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -1273,9 +1207,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics73">
+							class="graphics">
 							<line
-								id="stem74"
 								x1="4718.783"
 								y1="803.696"
 								x2="4718.783"
@@ -1342,42 +1275,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger75"
 								x1="4702.371"
 								y1="800"
 								x2="4768.021"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger76"
 								x1="4702.371"
 								y1="832"
 								x2="4768.021"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger77"
 								x1="4702.371"
 								y1="864"
 								x2="4768.021"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger78"
 								x1="4702.371"
 								y1="896"
 								x2="4768.021"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger79"
 								x1="4702.371"
 								y1="928"
 								x2="4768.021"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger80"
 								x1="4702.371"
 								y1="1120"
 								x2="4768.021"
@@ -1393,7 +1320,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord81"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -1407,9 +1333,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics82">
+							class="graphics">
 							<line
-								id="stem83"
 								x1="5304.544"
 								y1="803.696"
 								x2="5304.544"
@@ -1481,42 +1406,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger84"
 								x1="5288.131"
 								y1="800"
 								x2="5353.782"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger85"
 								x1="5288.131"
 								y1="832"
 								x2="5353.782"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger86"
 								x1="5288.131"
 								y1="864"
 								x2="5353.782"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger87"
 								x1="5288.131"
 								y1="896"
 								x2="5353.782"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger88"
 								x1="5288.131"
 								y1="928"
 								x2="5353.782"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger89"
 								x1="5288.131"
 								y1="1120"
 								x2="5353.782"
@@ -1532,7 +1451,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord90"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -1546,9 +1464,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics91">
+							class="graphics">
 							<line
-								id="stem92"
 								x1="5890.305"
 								y1="803.696"
 								x2="5890.305"
@@ -1620,42 +1537,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger93"
 								x1="5873.892"
 								y1="800"
 								x2="5939.542"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger94"
 								x1="5873.892"
 								y1="832"
 								x2="5939.542"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger95"
 								x1="5873.892"
 								y1="864"
 								x2="5939.542"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger96"
 								x1="5873.892"
 								y1="896"
 								x2="5939.542"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger97"
 								x1="5873.892"
 								y1="928"
 								x2="5939.542"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger98"
 								x1="5839.067"
 								y1="1120"
 								x2="5904.717"
@@ -1671,7 +1582,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord99"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -1685,9 +1595,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics100">
+							class="graphics">
 							<line
-								id="stem101"
 								x1="6476.065"
 								y1="803.696"
 								x2="6476.065"
@@ -1764,42 +1673,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger102"
 								x1="6459.653"
 								y1="800"
 								x2="6525.303"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger103"
 								x1="6459.653"
 								y1="832"
 								x2="6525.303"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger104"
 								x1="6459.653"
 								y1="864"
 								x2="6525.303"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger105"
 								x1="6459.653"
 								y1="896"
 								x2="6525.303"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger106"
 								x1="6459.653"
 								y1="928"
 								x2="6525.303"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger107"
 								x1="6459.653"
 								y1="1120"
 								x2="6525.303"
@@ -1815,7 +1718,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord108"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -1829,9 +1731,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics109">
+							class="graphics">
 							<line
-								id="stem110"
 								x1="7061.826"
 								y1="803.696"
 								x2="7061.826"
@@ -1913,42 +1814,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger111"
 								x1="7045.414"
 								y1="800"
 								x2="7111.064"
 								y2="800"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger112"
 								x1="7045.414"
 								y1="832"
 								x2="7111.064"
 								y2="832"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger113"
 								x1="7045.414"
 								y1="864"
 								x2="7111.064"
 								y2="864"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger114"
 								x1="7045.414"
 								y1="896"
 								x2="7111.064"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger115"
 								x1="7045.414"
 								y1="928"
 								x2="7111.064"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger116"
 								x1="7045.414"
 								y1="1120"
 								x2="7111.064"
@@ -1963,7 +1858,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline117"
+						class="barline"
 						x1="7680"
 						y1="958"
 						x2="7680"
@@ -1973,41 +1868,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff2"
 				score:staffName="1">
 				<g
-					class="stafflines"
-					id="sys1staff2stafflines">
+					class="stafflines">
 					<line
-						id="staffline118"
 						x1="400"
 						y1="1568"
 						x2="7680"
 						y2="1568"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline119"
 						x1="400"
 						y1="1600"
 						x2="7680"
 						y2="1600"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline120"
 						x1="400"
 						y1="1632"
 						x2="7680"
 						y2="1632"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline121"
 						x1="400"
 						y1="1664"
 						x2="7680"
 						y2="1664"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline122"
 						x1="400"
 						y1="1696"
 						x2="7680"
@@ -2016,24 +1904,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff2voice1"
 					score:midiChannel="1"
 					score:masterVolume="100">
 					<use
-						id="clef123"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,1664) scale(125.44)" />
 					<line
-						id="barline124"
+						class="barline"
 						x1="503.2"
 						y1="1568"
 						x2="503.2"
 						y2="1696"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName125"
+						class="staffName"
 						x="232"
 						y="1657.6"
 						text-anchor="middle"
@@ -2041,7 +1928,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">1</text>
 					<g
 						class="outputChord"
-						id="outputChord126"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -2055,9 +1941,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics127">
+							class="graphics">
 							<line
-								id="stem128"
 								x1="618.4567"
 								y1="1427.696"
 								x2="618.4567"
@@ -2099,35 +1984,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger129"
 								x1="567.2187"
 								y1="1440"
 								x2="667.6946"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger130"
 								x1="567.2187"
 								y1="1472"
 								x2="667.6946"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger131"
 								x1="567.2187"
 								y1="1504"
 								x2="667.6946"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger132"
 								x1="567.2187"
 								y1="1536"
 								x2="667.6946"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger133"
 								x1="602.044"
 								y1="1728"
 								x2="667.6946"
@@ -2148,7 +2028,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord134"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -2162,9 +2041,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics135">
+							class="graphics">
 							<line
-								id="stem136"
 								x1="1204.218"
 								y1="1427.696"
 								x2="1204.218"
@@ -2206,35 +2084,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger137"
 								x1="1152.98"
 								y1="1440"
 								x2="1253.456"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger138"
 								x1="1152.98"
 								y1="1472"
 								x2="1253.456"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger139"
 								x1="1152.98"
 								y1="1504"
 								x2="1253.456"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger140"
 								x1="1152.98"
 								y1="1536"
 								x2="1253.456"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger141"
 								x1="1187.805"
 								y1="1728"
 								x2="1253.456"
@@ -2250,7 +2123,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord142"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -2264,9 +2136,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics143">
+							class="graphics">
 							<line
-								id="stem144"
 								x1="1789.979"
 								y1="1427.696"
 								x2="1789.979"
@@ -2308,35 +2179,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger145"
 								x1="1738.74"
 								y1="1440"
 								x2="1839.216"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger146"
 								x1="1738.74"
 								y1="1472"
 								x2="1839.216"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger147"
 								x1="1738.74"
 								y1="1504"
 								x2="1839.216"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger148"
 								x1="1738.74"
 								y1="1536"
 								x2="1839.216"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger149"
 								x1="1773.566"
 								y1="1728"
 								x2="1839.216"
@@ -2352,7 +2218,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord150"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -2366,9 +2231,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics151">
+							class="graphics">
 							<line
-								id="stem152"
 								x1="2375.74"
 								y1="1427.696"
 								x2="2375.74"
@@ -2410,35 +2274,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger153"
 								x1="2324.501"
 								y1="1440"
 								x2="2424.977"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger154"
 								x1="2324.501"
 								y1="1472"
 								x2="2424.977"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger155"
 								x1="2324.501"
 								y1="1504"
 								x2="2424.977"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger156"
 								x1="2324.501"
 								y1="1536"
 								x2="2424.977"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger157"
 								x1="2359.327"
 								y1="1728"
 								x2="2424.977"
@@ -2454,7 +2313,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord158"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -2468,9 +2326,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics159">
+							class="graphics">
 							<line
-								id="stem160"
 								x1="2961.5"
 								y1="1427.696"
 								x2="2961.5"
@@ -2512,35 +2369,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger161"
 								x1="2910.262"
 								y1="1440"
 								x2="3010.738"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger162"
 								x1="2910.262"
 								y1="1472"
 								x2="3010.738"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger163"
 								x1="2910.262"
 								y1="1504"
 								x2="3010.738"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger164"
 								x1="2910.262"
 								y1="1536"
 								x2="3010.738"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger165"
 								x1="2945.088"
 								y1="1728"
 								x2="3010.738"
@@ -2556,7 +2408,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord166"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -2570,9 +2421,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics167">
+							class="graphics">
 							<line
-								id="stem168"
 								x1="3547.261"
 								y1="1427.696"
 								x2="3547.261"
@@ -2614,35 +2464,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger169"
 								x1="3496.023"
 								y1="1440"
 								x2="3596.499"
 								y2="1440"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger170"
 								x1="3496.023"
 								y1="1472"
 								x2="3596.499"
 								y2="1472"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger171"
 								x1="3496.023"
 								y1="1504"
 								x2="3596.499"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger172"
 								x1="3496.023"
 								y1="1536"
 								x2="3596.499"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger173"
 								x1="3530.849"
 								y1="1728"
 								x2="3596.499"
@@ -2658,7 +2503,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord174"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -2672,9 +2516,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics175">
+							class="graphics">
 							<line
-								id="stem176"
 								x1="4133.022"
 								y1="1523.696"
 								x2="4133.022"
@@ -2721,14 +2564,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger177"
 								x1="4081.784"
 								y1="1536"
 								x2="4182.26"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger178"
 								x1="4116.61"
 								y1="1728"
 								x2="4182.26"
@@ -2744,7 +2585,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord179"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -2758,9 +2598,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics180">
+							class="graphics">
 							<line
-								id="stem181"
 								x1="4718.783"
 								y1="1523.696"
 								x2="4718.783"
@@ -2817,14 +2656,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger182"
 								x1="4702.371"
 								y1="1536"
 								x2="4768.021"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger183"
 								x1="4702.371"
 								y1="1728"
 								x2="4768.021"
@@ -2840,7 +2677,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord184"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -2854,9 +2690,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics185">
+							class="graphics">
 							<line
-								id="stem186"
 								x1="5304.544"
 								y1="1523.696"
 								x2="5304.544"
@@ -2918,14 +2753,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger187"
 								x1="5288.131"
 								y1="1536"
 								x2="5353.782"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger188"
 								x1="5288.131"
 								y1="1728"
 								x2="5353.782"
@@ -2941,7 +2774,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord189"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -2955,9 +2787,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics190">
+							class="graphics">
 							<line
-								id="stem191"
 								x1="5890.305"
 								y1="1523.696"
 								x2="5890.305"
@@ -3019,14 +2850,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger192"
 								x1="5873.892"
 								y1="1536"
 								x2="5939.542"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger193"
 								x1="5839.067"
 								y1="1728"
 								x2="5904.717"
@@ -3042,7 +2871,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord194"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -3056,9 +2884,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics195">
+							class="graphics">
 							<line
-								id="stem196"
 								x1="6476.065"
 								y1="1523.696"
 								x2="6476.065"
@@ -3125,14 +2952,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger197"
 								x1="6459.653"
 								y1="1536"
 								x2="6525.303"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger198"
 								x1="6459.653"
 								y1="1728"
 								x2="6525.303"
@@ -3148,7 +2973,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord199"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -3162,9 +2986,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics200">
+							class="graphics">
 							<line
-								id="stem201"
 								x1="7061.826"
 								y1="1523.696"
 								x2="7061.826"
@@ -3236,14 +3059,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger202"
 								x1="7045.414"
 								y1="1536"
 								x2="7111.064"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger203"
 								x1="7045.414"
 								y1="1728"
 								x2="7111.064"
@@ -3258,7 +3079,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline204"
+						class="barline"
 						x1="7680"
 						y1="1566"
 						x2="7680"
@@ -3268,41 +3089,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff3"
 				score:staffName="2">
 				<g
-					class="stafflines"
-					id="sys1staff3stafflines">
+					class="stafflines">
 					<line
-						id="staffline205"
 						x1="400"
 						y1="2176"
 						x2="7680"
 						y2="2176"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline206"
 						x1="400"
 						y1="2208"
 						x2="7680"
 						y2="2208"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline207"
 						x1="400"
 						y1="2240"
 						x2="7680"
 						y2="2240"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline208"
 						x1="400"
 						y1="2272"
 						x2="7680"
 						y2="2272"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline209"
 						x1="400"
 						y1="2304"
 						x2="7680"
@@ -3311,24 +3125,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff3voice1"
 					score:midiChannel="2"
 					score:masterVolume="100">
 					<use
-						id="clef210"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,2272) scale(125.44)" />
 					<line
-						id="barline211"
+						class="barline"
 						x1="503.2"
 						y1="2176"
 						x2="503.2"
 						y2="2304"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName212"
+						class="staffName"
 						x="232"
 						y="2265.6"
 						text-anchor="middle"
@@ -3336,7 +3149,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">2</text>
 					<g
 						class="outputChord"
-						id="outputChord213"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -3350,9 +3162,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics214">
+							class="graphics">
 							<line
-								id="stem215"
 								x1="618.4567"
 								y1="2051.696"
 								x2="618.4567"
@@ -3389,35 +3200,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger216"
 								x1="602.044"
 								y1="2048"
 								x2="667.6946"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger217"
 								x1="602.044"
 								y1="2080"
 								x2="667.6946"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger218"
 								x1="602.044"
 								y1="2112"
 								x2="667.6946"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger219"
 								x1="602.044"
 								y1="2144"
 								x2="667.6946"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger220"
 								x1="602.044"
 								y1="2336"
 								x2="667.6946"
@@ -3438,7 +3244,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord221"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -3452,9 +3257,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics222">
+							class="graphics">
 							<line
-								id="stem223"
 								x1="1204.218"
 								y1="2051.696"
 								x2="1204.218"
@@ -3491,35 +3295,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger224"
 								x1="1187.805"
 								y1="2048"
 								x2="1253.456"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger225"
 								x1="1187.805"
 								y1="2080"
 								x2="1253.456"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger226"
 								x1="1187.805"
 								y1="2112"
 								x2="1253.456"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger227"
 								x1="1187.805"
 								y1="2144"
 								x2="1253.456"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger228"
 								x1="1187.805"
 								y1="2336"
 								x2="1253.456"
@@ -3535,7 +3334,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord229"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -3549,9 +3347,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics230">
+							class="graphics">
 							<line
-								id="stem231"
 								x1="1789.979"
 								y1="2051.696"
 								x2="1789.979"
@@ -3588,35 +3385,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger232"
 								x1="1773.566"
 								y1="2048"
 								x2="1839.216"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger233"
 								x1="1773.566"
 								y1="2080"
 								x2="1839.216"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger234"
 								x1="1773.566"
 								y1="2112"
 								x2="1839.216"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger235"
 								x1="1773.566"
 								y1="2144"
 								x2="1839.216"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger236"
 								x1="1773.566"
 								y1="2336"
 								x2="1839.216"
@@ -3632,7 +3424,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord237"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -3646,9 +3437,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics238">
+							class="graphics">
 							<line
-								id="stem239"
 								x1="2375.74"
 								y1="2051.696"
 								x2="2375.74"
@@ -3685,35 +3475,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger240"
 								x1="2359.327"
 								y1="2048"
 								x2="2424.977"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger241"
 								x1="2359.327"
 								y1="2080"
 								x2="2424.977"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger242"
 								x1="2359.327"
 								y1="2112"
 								x2="2424.977"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger243"
 								x1="2359.327"
 								y1="2144"
 								x2="2424.977"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger244"
 								x1="2359.327"
 								y1="2336"
 								x2="2424.977"
@@ -3729,7 +3514,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord245"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -3743,9 +3527,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics246">
+							class="graphics">
 							<line
-								id="stem247"
 								x1="2961.5"
 								y1="2051.696"
 								x2="2961.5"
@@ -3782,35 +3565,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger248"
 								x1="2945.088"
 								y1="2048"
 								x2="3010.738"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger249"
 								x1="2945.088"
 								y1="2080"
 								x2="3010.738"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger250"
 								x1="2945.088"
 								y1="2112"
 								x2="3010.738"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger251"
 								x1="2945.088"
 								y1="2144"
 								x2="3010.738"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger252"
 								x1="2945.088"
 								y1="2336"
 								x2="3010.738"
@@ -3826,7 +3604,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord253"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -3840,9 +3617,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics254">
+							class="graphics">
 							<line
-								id="stem255"
 								x1="3547.261"
 								y1="2147.696"
 								x2="3547.261"
@@ -3879,14 +3655,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger256"
 								x1="3496.023"
 								y1="2144"
 								x2="3596.499"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger257"
 								x1="3530.849"
 								y1="2336"
 								x2="3596.499"
@@ -3902,7 +3676,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord258"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -3916,9 +3689,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics259">
+							class="graphics">
 							<line
-								id="stem260"
 								x1="4133.022"
 								y1="2147.696"
 								x2="4133.022"
@@ -3955,14 +3727,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger261"
 								x1="4116.61"
 								y1="2144"
 								x2="4182.26"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger262"
 								x1="4116.61"
 								y1="2336"
 								x2="4182.26"
@@ -3978,7 +3748,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord263"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -3992,9 +3761,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics264">
+							class="graphics">
 							<line
-								id="stem265"
 								x1="4751.608"
 								y1="2076.8"
 								x2="4751.608"
@@ -4041,7 +3809,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger266"
 								x1="4702.371"
 								y1="2336"
 								x2="4768.021"
@@ -4057,7 +3824,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord267"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -4071,9 +3837,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics268">
+							class="graphics">
 							<line
-								id="stem269"
 								x1="5337.369"
 								y1="2076.8"
 								x2="5337.369"
@@ -4125,7 +3890,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger270"
 								x1="5288.131"
 								y1="2336"
 								x2="5353.782"
@@ -4141,7 +3905,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord271"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -4155,9 +3918,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics272">
+							class="graphics">
 							<line
-								id="stem273"
 								x1="5923.13"
 								y1="2076.8"
 								x2="5923.13"
@@ -4209,7 +3971,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger274"
 								x1="5873.892"
 								y1="2336"
 								x2="5939.542"
@@ -4225,7 +3986,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord275"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -4239,9 +3999,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics276">
+							class="graphics">
 							<line
-								id="stem277"
 								x1="6508.891"
 								y1="2076.8"
 								x2="6508.891"
@@ -4298,7 +4057,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger278"
 								x1="6459.653"
 								y1="2336"
 								x2="6525.303"
@@ -4314,7 +4072,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord279"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -4328,9 +4085,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics280">
+							class="graphics">
 							<line
-								id="stem281"
 								x1="7094.651"
 								y1="2076.8"
 								x2="7094.651"
@@ -4392,7 +4148,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger282"
 								x1="7045.414"
 								y1="2336"
 								x2="7111.064"
@@ -4407,7 +4162,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline283"
+						class="barline"
 						x1="7680"
 						y1="2174"
 						x2="7680"
@@ -4417,41 +4172,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff4"
 				score:staffName="3">
 				<g
-					class="stafflines"
-					id="sys1staff4stafflines">
+					class="stafflines">
 					<line
-						id="staffline284"
 						x1="400"
 						y1="2752"
 						x2="7680"
 						y2="2752"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline285"
 						x1="400"
 						y1="2784"
 						x2="7680"
 						y2="2784"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline286"
 						x1="400"
 						y1="2816"
 						x2="7680"
 						y2="2816"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline287"
 						x1="400"
 						y1="2848"
 						x2="7680"
 						y2="2848"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline288"
 						x1="400"
 						y1="2880"
 						x2="7680"
@@ -4460,24 +4208,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff4voice1"
 					score:midiChannel="3"
 					score:masterVolume="100">
 					<use
-						id="clef289"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,2848) scale(125.44)" />
 					<line
-						id="barline290"
+						class="barline"
 						x1="503.2"
 						y1="2752"
 						x2="503.2"
 						y2="2880"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName291"
+						class="staffName"
 						x="232"
 						y="2841.6"
 						text-anchor="middle"
@@ -4485,7 +4232,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">3</text>
 					<g
 						class="outputChord"
-						id="outputChord292"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -4499,9 +4245,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics293">
+							class="graphics">
 							<line
-								id="stem294"
 								x1="618.4567"
 								y1="2659.696"
 								x2="618.4567"
@@ -4533,28 +4278,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger295"
 								x1="602.044"
 								y1="2656"
 								x2="667.6946"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger296"
 								x1="602.044"
 								y1="2688"
 								x2="667.6946"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger297"
 								x1="602.044"
 								y1="2720"
 								x2="667.6946"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger298"
 								x1="602.044"
 								y1="2912"
 								x2="667.6946"
@@ -4575,7 +4316,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord299"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -4589,9 +4329,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics300">
+							class="graphics">
 							<line
-								id="stem301"
 								x1="1204.218"
 								y1="2659.696"
 								x2="1204.218"
@@ -4623,28 +4362,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger302"
 								x1="1187.805"
 								y1="2656"
 								x2="1253.456"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger303"
 								x1="1187.805"
 								y1="2688"
 								x2="1253.456"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger304"
 								x1="1187.805"
 								y1="2720"
 								x2="1253.456"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger305"
 								x1="1187.805"
 								y1="2912"
 								x2="1253.456"
@@ -4660,7 +4395,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord306"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -4674,9 +4408,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics307">
+							class="graphics">
 							<line
-								id="stem308"
 								x1="1789.979"
 								y1="2659.696"
 								x2="1789.979"
@@ -4708,28 +4441,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger309"
 								x1="1773.566"
 								y1="2656"
 								x2="1839.216"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger310"
 								x1="1773.566"
 								y1="2688"
 								x2="1839.216"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger311"
 								x1="1773.566"
 								y1="2720"
 								x2="1839.216"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger312"
 								x1="1773.566"
 								y1="2912"
 								x2="1839.216"
@@ -4745,7 +4474,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord313"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -4759,9 +4487,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics314">
+							class="graphics">
 							<line
-								id="stem315"
 								x1="2375.74"
 								y1="2659.696"
 								x2="2375.74"
@@ -4793,28 +4520,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger316"
 								x1="2359.327"
 								y1="2656"
 								x2="2424.977"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger317"
 								x1="2359.327"
 								y1="2688"
 								x2="2424.977"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger318"
 								x1="2359.327"
 								y1="2720"
 								x2="2424.977"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger319"
 								x1="2359.327"
 								y1="2912"
 								x2="2424.977"
@@ -4830,7 +4553,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord320"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -4844,9 +4566,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics321">
+							class="graphics">
 							<line
-								id="stem322"
 								x1="2994.326"
 								y1="2620.8"
 								x2="2994.326"
@@ -4878,7 +4599,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger323"
 								x1="2945.088"
 								y1="2912"
 								x2="3010.738"
@@ -4894,7 +4614,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord324"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -4908,9 +4627,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics325">
+							class="graphics">
 							<line
-								id="stem326"
 								x1="3580.087"
 								y1="2620.8"
 								x2="3580.087"
@@ -4942,7 +4660,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger327"
 								x1="3530.849"
 								y1="2912"
 								x2="3596.499"
@@ -4958,7 +4675,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord328"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -4972,9 +4688,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics329">
+							class="graphics">
 							<line
-								id="stem330"
 								x1="4165.848"
 								y1="2668.8"
 								x2="4165.848"
@@ -5006,7 +4721,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger331"
 								x1="4116.61"
 								y1="2912"
 								x2="4182.26"
@@ -5022,7 +4736,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord332"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -5036,9 +4749,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics333">
+							class="graphics">
 							<line
-								id="stem334"
 								x1="4751.608"
 								y1="2668.8"
 								x2="4751.608"
@@ -5075,7 +4787,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger335"
 								x1="4702.371"
 								y1="2912"
 								x2="4768.021"
@@ -5091,7 +4802,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord336"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -5105,9 +4815,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics337">
+							class="graphics">
 							<line
-								id="stem338"
 								x1="5337.369"
 								y1="2700.8"
 								x2="5337.369"
@@ -5149,7 +4858,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger339"
 								x1="5288.131"
 								y1="2912"
 								x2="5353.782"
@@ -5165,7 +4873,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord340"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -5179,9 +4886,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics341">
+							class="graphics">
 							<line
-								id="stem342"
 								x1="5923.13"
 								y1="2700.8"
 								x2="5923.13"
@@ -5223,7 +4929,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger343"
 								x1="5873.892"
 								y1="2912"
 								x2="5939.542"
@@ -5239,7 +4944,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord344"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -5253,9 +4957,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics345">
+							class="graphics">
 							<line
-								id="stem346"
 								x1="6508.891"
 								y1="2700.8"
 								x2="6508.891"
@@ -5302,7 +5005,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger347"
 								x1="6459.653"
 								y1="2912"
 								x2="6525.303"
@@ -5318,7 +5020,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord348"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -5332,9 +5033,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics349">
+							class="graphics">
 							<line
-								id="stem350"
 								x1="7094.651"
 								y1="2700.8"
 								x2="7094.651"
@@ -5386,7 +5086,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger351"
 								x1="7045.414"
 								y1="2912"
 								x2="7111.064"
@@ -5401,7 +5100,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline352"
+						class="barline"
 						x1="7680"
 						y1="2750"
 						x2="7680"
@@ -5411,41 +5110,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff5"
 				score:staffName="4">
 				<g
-					class="stafflines"
-					id="sys1staff5stafflines">
+					class="stafflines">
 					<line
-						id="staffline353"
 						x1="400"
 						y1="3296"
 						x2="7680"
 						y2="3296"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline354"
 						x1="400"
 						y1="3328"
 						x2="7680"
 						y2="3328"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline355"
 						x1="400"
 						y1="3360"
 						x2="7680"
 						y2="3360"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline356"
 						x1="400"
 						y1="3392"
 						x2="7680"
 						y2="3392"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline357"
 						x1="400"
 						y1="3424"
 						x2="7680"
@@ -5454,24 +5146,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff5voice1"
 					score:midiChannel="4"
 					score:masterVolume="100">
 					<use
-						id="clef358"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,3392) scale(125.44)" />
 					<line
-						id="barline359"
+						class="barline"
 						x1="503.2"
 						y1="3296"
 						x2="503.2"
 						y2="3424"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName360"
+						class="staffName"
 						x="232"
 						y="3385.6"
 						text-anchor="middle"
@@ -5479,7 +5170,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">4</text>
 					<g
 						class="outputChord"
-						id="outputChord361"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -5493,9 +5183,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics362">
+							class="graphics">
 							<line
-								id="stem363"
 								x1="618.4567"
 								y1="3235.696"
 								x2="618.4567"
@@ -5522,21 +5211,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger364"
 								x1="602.044"
 								y1="3232"
 								x2="667.6946"
 								y2="3232"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger365"
 								x1="602.044"
 								y1="3264"
 								x2="667.6946"
 								y2="3264"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger366"
 								x1="602.044"
 								y1="3456"
 								x2="667.6946"
@@ -5557,7 +5243,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord367"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -5571,9 +5256,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics368">
+							class="graphics">
 							<line
-								id="stem369"
 								x1="1204.218"
 								y1="3235.696"
 								x2="1204.218"
@@ -5600,21 +5284,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger370"
 								x1="1187.805"
 								y1="3232"
 								x2="1253.456"
 								y2="3232"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger371"
 								x1="1187.805"
 								y1="3264"
 								x2="1253.456"
 								y2="3264"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger372"
 								x1="1187.805"
 								y1="3456"
 								x2="1253.456"
@@ -5630,7 +5311,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord373"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -5644,9 +5324,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics374">
+							class="graphics">
 							<line
-								id="stem375"
 								x1="1789.979"
 								y1="3235.696"
 								x2="1789.979"
@@ -5673,21 +5352,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger376"
 								x1="1773.566"
 								y1="3232"
 								x2="1839.216"
 								y2="3232"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger377"
 								x1="1773.566"
 								y1="3264"
 								x2="1839.216"
 								y2="3264"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger378"
 								x1="1773.566"
 								y1="3456"
 								x2="1839.216"
@@ -5703,7 +5379,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord379"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -5717,9 +5392,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics380">
+							class="graphics">
 							<line
-								id="stem381"
 								x1="2408.565"
 								y1="3196.8"
 								x2="2408.565"
@@ -5746,7 +5420,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger382"
 								x1="2359.327"
 								y1="3456"
 								x2="2424.977"
@@ -5762,7 +5435,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord383"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -5776,9 +5448,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics384">
+							class="graphics">
 							<line
-								id="stem385"
 								x1="2994.326"
 								y1="3196.8"
 								x2="2994.326"
@@ -5805,7 +5476,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger386"
 								x1="2945.088"
 								y1="3456"
 								x2="3010.738"
@@ -5821,7 +5491,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord387"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -5835,9 +5504,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics388">
+							class="graphics">
 							<line
-								id="stem389"
 								x1="3580.087"
 								y1="3228.8"
 								x2="3580.087"
@@ -5864,7 +5532,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger390"
 								x1="3530.849"
 								y1="3456"
 								x2="3596.499"
@@ -5880,7 +5547,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord391"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -5894,9 +5560,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics392">
+							class="graphics">
 							<line
-								id="stem393"
 								x1="4165.848"
 								y1="3228.8"
 								x2="4165.848"
@@ -5923,7 +5588,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger394"
 								x1="4116.61"
 								y1="3456"
 								x2="4182.26"
@@ -5939,7 +5603,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord395"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -5953,9 +5616,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics396">
+							class="graphics">
 							<line
-								id="stem397"
 								x1="4751.608"
 								y1="3260.8"
 								x2="4751.608"
@@ -5987,7 +5649,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger398"
 								x1="4702.371"
 								y1="3456"
 								x2="4768.021"
@@ -6003,7 +5664,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord399"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -6017,9 +5677,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics400">
+							class="graphics">
 							<line
-								id="stem401"
 								x1="5337.369"
 								y1="3260.8"
 								x2="5337.369"
@@ -6051,7 +5710,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger402"
 								x1="5288.131"
 								y1="3456"
 								x2="5353.782"
@@ -6067,7 +5725,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord403"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -6081,9 +5738,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics404">
+							class="graphics">
 							<line
-								id="stem405"
 								x1="5923.13"
 								y1="3276.8"
 								x2="5923.13"
@@ -6115,7 +5771,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger406"
 								x1="5873.892"
 								y1="3456"
 								x2="5939.542"
@@ -6131,7 +5786,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord407"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -6145,9 +5799,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics408">
+							class="graphics">
 							<line
-								id="stem409"
 								x1="6508.891"
 								y1="3276.8"
 								x2="6508.891"
@@ -6184,7 +5837,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger410"
 								x1="6459.653"
 								y1="3456"
 								x2="6525.303"
@@ -6200,7 +5852,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord411"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -6214,9 +5865,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics412">
+							class="graphics">
 							<line
-								id="stem413"
 								x1="7094.651"
 								y1="3276.8"
 								x2="7094.651"
@@ -6258,7 +5908,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger414"
 								x1="7045.414"
 								y1="3456"
 								x2="7111.064"
@@ -6273,7 +5922,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline415"
+						class="barline"
 						x1="7680"
 						y1="3294"
 						x2="7680"
@@ -6283,41 +5932,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff6"
 				score:staffName="5">
 				<g
-					class="stafflines"
-					id="sys1staff6stafflines">
+					class="stafflines">
 					<line
-						id="staffline416"
 						x1="400"
 						y1="3904"
 						x2="7680"
 						y2="3904"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline417"
 						x1="400"
 						y1="3936"
 						x2="7680"
 						y2="3936"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline418"
 						x1="400"
 						y1="3968"
 						x2="7680"
 						y2="3968"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline419"
 						x1="400"
 						y1="4000"
 						x2="7680"
 						y2="4000"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline420"
 						x1="400"
 						y1="4032"
 						x2="7680"
@@ -6326,24 +5968,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff6voice1"
 					score:midiChannel="5"
 					score:masterVolume="100">
 					<use
-						id="clef421"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,4000) scale(125.44)" />
 					<line
-						id="barline422"
+						class="barline"
 						x1="503.2"
 						y1="3904"
 						x2="503.2"
 						y2="4032"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName423"
+						class="staffName"
 						x="232"
 						y="3993.6"
 						text-anchor="middle"
@@ -6351,7 +5992,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">5</text>
 					<g
 						class="outputChord"
-						id="outputChord424"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -6365,9 +6005,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics425">
+							class="graphics">
 							<line
-								id="stem426"
 								x1="651.282"
 								y1="3772.8"
 								x2="651.282"
@@ -6389,7 +6028,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger427"
 								x1="602.044"
 								y1="4064"
 								x2="667.6946"
@@ -6410,7 +6048,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord428"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -6424,9 +6061,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics429">
+							class="graphics">
 							<line
-								id="stem430"
 								x1="1237.043"
 								y1="3772.8"
 								x2="1237.043"
@@ -6448,7 +6084,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger431"
 								x1="1187.805"
 								y1="4064"
 								x2="1253.456"
@@ -6464,7 +6099,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord432"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -6478,9 +6112,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics433">
+							class="graphics">
 							<line
-								id="stem434"
 								x1="1822.804"
 								y1="3836.8"
 								x2="1822.804"
@@ -6502,7 +6135,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger435"
 								x1="1773.566"
 								y1="4064"
 								x2="1839.216"
@@ -6518,7 +6150,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord436"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -6532,9 +6163,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics437">
+							class="graphics">
 							<line
-								id="stem438"
 								x1="2408.565"
 								y1="3836.8"
 								x2="2408.565"
@@ -6556,7 +6186,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger439"
 								x1="2359.327"
 								y1="4064"
 								x2="2424.977"
@@ -6572,7 +6201,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord440"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -6586,9 +6214,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics441">
+							class="graphics">
 							<line
-								id="stem442"
 								x1="2994.326"
 								y1="3868.8"
 								x2="2994.326"
@@ -6610,7 +6237,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger443"
 								x1="2945.088"
 								y1="4064"
 								x2="3010.738"
@@ -6626,7 +6252,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord444"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -6640,9 +6265,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics445">
+							class="graphics">
 							<line
-								id="stem446"
 								x1="3580.087"
 								y1="3868.8"
 								x2="3580.087"
@@ -6664,7 +6288,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger447"
 								x1="3530.849"
 								y1="4064"
 								x2="3596.499"
@@ -6680,7 +6303,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord448"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -6694,9 +6316,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics449">
+							class="graphics">
 							<line
-								id="stem450"
 								x1="4165.848"
 								y1="3884.8"
 								x2="4165.848"
@@ -6718,7 +6339,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger451"
 								x1="4116.61"
 								y1="4064"
 								x2="4182.26"
@@ -6734,7 +6354,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord452"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -6748,9 +6367,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics453">
+							class="graphics">
 							<line
-								id="stem454"
 								x1="4751.608"
 								y1="3884.8"
 								x2="4751.608"
@@ -6777,7 +6395,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger455"
 								x1="4702.371"
 								y1="4064"
 								x2="4768.021"
@@ -6793,7 +6410,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord456"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -6807,9 +6423,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics457">
+							class="graphics">
 							<line
-								id="stem458"
 								x1="5337.369"
 								y1="3900.8"
 								x2="5337.369"
@@ -6836,7 +6451,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger459"
 								x1="5288.131"
 								y1="4064"
 								x2="5353.782"
@@ -6852,7 +6466,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord460"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -6866,9 +6479,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics461">
+							class="graphics">
 							<line
-								id="stem462"
 								x1="5923.13"
 								y1="3900.8"
 								x2="5923.13"
@@ -6890,7 +6502,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger463"
 								x1="5873.892"
 								y1="4064"
 								x2="5939.542"
@@ -6906,7 +6517,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord464"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -6920,9 +6530,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics465">
+							class="graphics">
 							<line
-								id="stem466"
 								x1="6508.891"
 								y1="3916.8"
 								x2="6508.891"
@@ -6949,7 +6558,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger467"
 								x1="6459.653"
 								y1="4064"
 								x2="6525.303"
@@ -6965,7 +6573,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord468"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -6979,9 +6586,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics469">
+							class="graphics">
 							<line
-								id="stem470"
 								x1="7094.651"
 								y1="3916.8"
 								x2="7094.651"
@@ -7013,7 +6619,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger471"
 								x1="7045.414"
 								y1="4064"
 								x2="7111.064"
@@ -7028,7 +6633,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline472"
+						class="barline"
 						x1="7680"
 						y1="3902"
 						x2="7680"
@@ -7038,41 +6643,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff7"
 				score:staffName="6">
 				<g
-					class="stafflines"
-					id="sys1staff7stafflines">
+					class="stafflines">
 					<line
-						id="staffline473"
 						x1="400"
 						y1="4320"
 						x2="7680"
 						y2="4320"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline474"
 						x1="400"
 						y1="4352"
 						x2="7680"
 						y2="4352"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline475"
 						x1="400"
 						y1="4384"
 						x2="7680"
 						y2="4384"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline476"
 						x1="400"
 						y1="4416"
 						x2="7680"
 						y2="4416"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline477"
 						x1="400"
 						y1="4448"
 						x2="7680"
@@ -7081,24 +6679,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff7voice1"
 					score:midiChannel="6"
 					score:masterVolume="100">
 					<use
-						id="clef478"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,4416) scale(125.44)" />
 					<line
-						id="barline479"
+						class="barline"
 						x1="503.2"
 						y1="4320"
 						x2="503.2"
 						y2="4448"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName480"
+						class="staffName"
 						x="232"
 						y="4409.6"
 						text-anchor="middle"
@@ -7106,7 +6703,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">6</text>
 					<g
 						class="outputChord"
-						id="outputChord481"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -7120,9 +6716,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics482">
+							class="graphics">
 							<line
-								id="stem483"
 								x1="651.282"
 								y1="4252.8"
 								x2="651.282"
@@ -7139,7 +6734,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger484"
 								x1="602.044"
 								y1="4480"
 								x2="667.6946"
@@ -7160,7 +6754,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord485"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -7174,9 +6767,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics486">
+							class="graphics">
 							<line
-								id="stem487"
 								x1="1237.043"
 								y1="4300.8"
 								x2="1237.043"
@@ -7193,7 +6785,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger488"
 								x1="1187.805"
 								y1="4480"
 								x2="1253.456"
@@ -7209,7 +6800,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord489"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -7223,9 +6813,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics490">
+							class="graphics">
 							<line
-								id="stem491"
 								x1="1822.804"
 								y1="4300.8"
 								x2="1822.804"
@@ -7242,7 +6831,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger492"
 								x1="1773.566"
 								y1="4480"
 								x2="1839.216"
@@ -7258,7 +6846,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord493"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -7272,9 +6859,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics494">
+							class="graphics">
 							<line
-								id="stem495"
 								x1="2408.565"
 								y1="4316.8"
 								x2="2408.565"
@@ -7291,7 +6877,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger496"
 								x1="2359.327"
 								y1="4480"
 								x2="2424.977"
@@ -7307,7 +6892,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord497"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -7321,9 +6905,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics498">
+							class="graphics">
 							<line
-								id="stem499"
 								x1="2994.326"
 								y1="4316.8"
 								x2="2994.326"
@@ -7340,7 +6923,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger500"
 								x1="2945.088"
 								y1="4480"
 								x2="3010.738"
@@ -7356,7 +6938,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord501"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -7370,9 +6951,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics502">
+							class="graphics">
 							<line
-								id="stem503"
 								x1="3580.087"
 								y1="4332.8"
 								x2="3580.087"
@@ -7389,7 +6969,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger504"
 								x1="3530.849"
 								y1="4480"
 								x2="3596.499"
@@ -7405,7 +6984,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord505"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -7419,9 +6997,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics506">
+							class="graphics">
 							<line
-								id="stem507"
 								x1="4165.848"
 								y1="4332.8"
 								x2="4165.848"
@@ -7438,7 +7015,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger508"
 								x1="4116.61"
 								y1="4480"
 								x2="4182.26"
@@ -7454,7 +7030,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord509"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -7468,9 +7043,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics510">
+							class="graphics">
 							<line
-								id="stem511"
 								x1="4751.608"
 								y1="4332.8"
 								x2="4751.608"
@@ -7492,7 +7066,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger512"
 								x1="4702.371"
 								y1="4480"
 								x2="4768.021"
@@ -7508,7 +7081,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord513"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -7522,9 +7094,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics514">
+							class="graphics">
 							<line
-								id="stem515"
 								x1="5337.369"
 								y1="4332.8"
 								x2="5337.369"
@@ -7546,7 +7117,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger516"
 								x1="5288.131"
 								y1="4480"
 								x2="5353.782"
@@ -7562,7 +7132,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord517"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -7576,9 +7145,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics518">
+							class="graphics">
 							<line
-								id="stem519"
 								x1="5923.13"
 								y1="4348.8"
 								x2="5923.13"
@@ -7595,7 +7163,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger520"
 								x1="5873.892"
 								y1="4480"
 								x2="5939.542"
@@ -7611,7 +7178,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord521"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -7625,9 +7191,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics522">
+							class="graphics">
 							<line
-								id="stem523"
 								x1="6508.891"
 								y1="4348.8"
 								x2="6508.891"
@@ -7644,7 +7209,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger524"
 								x1="6459.653"
 								y1="4480"
 								x2="6525.303"
@@ -7660,7 +7224,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord525"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -7674,9 +7237,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics526">
+							class="graphics">
 							<line
-								id="stem527"
 								x1="7094.651"
 								y1="4348.8"
 								x2="7094.651"
@@ -7698,7 +7260,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger528"
 								x1="7045.414"
 								y1="4480"
 								x2="7111.064"
@@ -7713,7 +7274,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline529"
+						class="barline"
 						x1="7680"
 						y1="4318"
 						x2="7680"
@@ -7723,41 +7284,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys1staff8"
 				score:staffName="7">
 				<g
-					class="stafflines"
-					id="sys1staff8stafflines">
+					class="stafflines">
 					<line
-						id="staffline530"
 						x1="400"
 						y1="4672"
 						x2="7680"
 						y2="4672"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline531"
 						x1="400"
 						y1="4704"
 						x2="7680"
 						y2="4704"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline532"
 						x1="400"
 						y1="4736"
 						x2="7680"
 						y2="4736"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline533"
 						x1="400"
 						y1="4768"
 						x2="7680"
 						y2="4768"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline534"
 						x1="400"
 						y1="4800"
 						x2="7680"
@@ -7766,24 +7320,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					id="sys1staff8voice1"
 					score:midiChannel="7"
 					score:masterVolume="100">
 					<use
-						id="clef535"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,4768) scale(125.44)" />
 					<line
-						id="barline536"
+						class="barline"
 						x1="503.2"
 						y1="4672"
 						x2="503.2"
 						y2="4800"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName537"
+						class="staffName"
 						x="232"
 						y="4761.6"
 						text-anchor="middle"
@@ -7791,7 +7344,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">7</text>
 					<g
 						class="outputChord"
-						id="outputChord538"
 						score:alignmentX="634.8693">
 						<score:midiChord>
 							<basicChords>
@@ -7805,9 +7357,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="0" />
 						</score:midiChord>
 						<g
-							id="graphics539">
+							class="graphics">
 							<line
-								id="stem540"
 								x1="651.282"
 								y1="4716.8"
 								x2="651.282"
@@ -7819,7 +7370,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger541"
 								x1="602.044"
 								y1="4832"
 								x2="667.6946"
@@ -7840,7 +7390,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord542"
 						score:alignmentX="1220.63">
 						<score:midiChord>
 							<basicChords>
@@ -7854,9 +7403,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="12" />
 						</score:midiChord>
 						<g
-							id="graphics543">
+							class="graphics">
 							<line
-								id="stem544"
 								x1="1237.043"
 								y1="4716.8"
 								x2="1237.043"
@@ -7868,7 +7416,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger545"
 								x1="1187.805"
 								y1="4832"
 								x2="1253.456"
@@ -7884,7 +7431,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord546"
 						score:alignmentX="1806.391">
 						<score:midiChord>
 							<basicChords>
@@ -7898,9 +7444,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics547">
+							class="graphics">
 							<line
-								id="stem548"
 								x1="1822.804"
 								y1="4716.8"
 								x2="1822.804"
@@ -7912,7 +7457,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger549"
 								x1="1773.566"
 								y1="4832"
 								x2="1839.216"
@@ -7928,7 +7472,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord550"
 						score:alignmentX="2392.152">
 						<score:midiChord>
 							<basicChords>
@@ -7942,9 +7485,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics551">
+							class="graphics">
 							<line
-								id="stem552"
 								x1="2408.565"
 								y1="4716.8"
 								x2="2408.565"
@@ -7956,7 +7498,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger553"
 								x1="2359.327"
 								y1="4832"
 								x2="2424.977"
@@ -7972,7 +7513,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord554"
 						score:alignmentX="2977.913">
 						<score:midiChord>
 							<basicChords>
@@ -7986,9 +7526,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics555">
+							class="graphics">
 							<line
-								id="stem556"
 								x1="2994.326"
 								y1="4716.8"
 								x2="2994.326"
@@ -8000,7 +7539,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger557"
 								x1="2945.088"
 								y1="4832"
 								x2="3010.738"
@@ -8016,7 +7554,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord558"
 						score:alignmentX="3563.674">
 						<score:midiChord>
 							<basicChords>
@@ -8030,9 +7567,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics559">
+							class="graphics">
 							<line
-								id="stem560"
 								x1="3580.087"
 								y1="4716.8"
 								x2="3580.087"
@@ -8044,7 +7580,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger561"
 								x1="3530.849"
 								y1="4832"
 								x2="3596.499"
@@ -8060,7 +7595,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord562"
 						score:alignmentX="4149.435">
 						<score:midiChord>
 							<basicChords>
@@ -8074,9 +7608,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics563">
+							class="graphics">
 							<line
-								id="stem564"
 								x1="4165.848"
 								y1="4716.8"
 								x2="4165.848"
@@ -8088,7 +7621,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger565"
 								x1="4116.61"
 								y1="4832"
 								x2="4182.26"
@@ -8104,7 +7636,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord566"
 						score:alignmentX="4735.196">
 						<score:midiChord>
 							<basicChords>
@@ -8118,9 +7649,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics567">
+							class="graphics">
 							<line
-								id="stem568"
 								x1="4751.608"
 								y1="4716.8"
 								x2="4751.608"
@@ -8132,7 +7662,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger569"
 								x1="4702.371"
 								y1="4832"
 								x2="4768.021"
@@ -8148,7 +7677,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord570"
 						score:alignmentX="5320.957">
 						<score:midiChord>
 							<basicChords>
@@ -8162,9 +7690,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics571">
+							class="graphics">
 							<line
-								id="stem572"
 								x1="5337.369"
 								y1="4716.8"
 								x2="5337.369"
@@ -8176,7 +7703,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger573"
 								x1="5288.131"
 								y1="4832"
 								x2="5353.782"
@@ -8192,7 +7718,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord574"
 						score:alignmentX="5906.717">
 						<score:midiChord>
 							<basicChords>
@@ -8206,9 +7731,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics575">
+							class="graphics">
 							<line
-								id="stem576"
 								x1="5923.13"
 								y1="4716.8"
 								x2="5923.13"
@@ -8220,7 +7744,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger577"
 								x1="5873.892"
 								y1="4832"
 								x2="5939.542"
@@ -8236,7 +7759,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord578"
 						score:alignmentX="6492.478">
 						<score:midiChord>
 							<basicChords>
@@ -8250,9 +7772,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics579">
+							class="graphics">
 							<line
-								id="stem580"
 								x1="6508.891"
 								y1="4716.8"
 								x2="6508.891"
@@ -8264,7 +7785,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger581"
 								x1="6459.653"
 								y1="4832"
 								x2="6525.303"
@@ -8280,7 +7800,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord582"
 						score:alignmentX="7078.239">
 						<score:midiChord>
 							<basicChords>
@@ -8294,9 +7813,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="127" />
 						</score:midiChord>
 						<g
-							id="graphics583">
+							class="graphics">
 							<line
-								id="stem584"
 								x1="7094.651"
 								y1="4716.8"
 								x2="7094.651"
@@ -8308,7 +7826,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger585"
 								x1="7045.414"
 								y1="4832"
 								x2="7111.064"
@@ -8323,7 +7840,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</g>
 					</g>
 					<line
-						id="barline586"
+						class="barline"
 						x1="7680"
 						y1="4670"
 						x2="7680"
@@ -8332,7 +7849,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 			</g>
 			<g
-				id="sys1connectors">
+				class="staffConnectors">
 				<line
 					x1="503.2"
 					y1="1088"
@@ -8420,45 +7937,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 		</g>
 		<g
-			class="system"
-			id="sys2">
+			class="system">
 			<g
 				class="outputStaff"
-				id="sys2staff1"
 				score:staffName="0">
 				<g
-					class="stafflines"
-					id="sys2staff1stafflines">
+					class="stafflines">
 					<line
-						id="staffline587"
 						x1="400"
 						y1="6208"
 						x2="7680"
 						y2="6208"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline588"
 						x1="400"
 						y1="6240"
 						x2="7680"
 						y2="6240"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline589"
 						x1="400"
 						y1="6272"
 						x2="7680"
 						y2="6272"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline590"
 						x1="400"
 						y1="6304"
 						x2="7680"
 						y2="6304"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline591"
 						x1="400"
 						y1="6336"
 						x2="7680"
@@ -8466,39 +7975,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff1voice1">
+					class="outputVoice">
 					<use
-						id="clef592"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,6304) scale(125.44)" />
 					<line
-						id="barline593"
+						class="barline"
 						x1="503.2"
 						y1="6208"
 						x2="503.2"
 						y2="6336"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName594"
+						class="staffName"
 						x="232"
 						y="6297.6"
 						text-anchor="middle"
 						font-size="70.4"
 						font-family="Arial">0</text>
 					<g
-						id="barNumber595">
+						class="barNumber">
 						<text
-							id="number596"
+							class="number"
 							x="503.2"
 							y="6016"
 							text-anchor="middle"
 							font-size="64"
 							font-family="Arial">2</text>
 						<rect
-							id="box597"
 							x="457.456"
 							y="5948.56"
 							width="91.48798"
@@ -8507,7 +8014,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord598"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -8521,9 +8027,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics599">
+							class="graphics">
 							<line
-								id="stem600"
 								x1="627.1948"
 								y1="6140.8"
 								x2="627.1948"
@@ -8550,7 +8055,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">n</text>
 							<line
-								id="ledger601"
 								x1="577.9568"
 								y1="6368"
 								x2="643.6074"
@@ -8566,7 +8070,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord602"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -8580,9 +8083,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics603">
+							class="graphics">
 							<line
-								id="stem604"
 								x1="1214.963"
 								y1="6140.8"
 								x2="1214.963"
@@ -8604,7 +8106,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger605"
 								x1="1165.725"
 								y1="6368"
 								x2="1231.375"
@@ -8620,7 +8121,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord606"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -8634,9 +8134,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="23" />
 						</score:midiChord>
 						<g
-							id="graphics607">
+							class="graphics">
 							<line
-								id="stem608"
 								x1="1769.906"
 								y1="6147.696"
 								x2="1769.906"
@@ -8678,21 +8177,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger609"
 								x1="1718.668"
 								y1="6144"
 								x2="1819.144"
 								y2="6144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger610"
 								x1="1718.668"
 								y1="6176"
 								x2="1819.144"
 								y2="6176"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger611"
 								x1="1753.493"
 								y1="6368"
 								x2="1819.144"
@@ -8708,7 +8204,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest612"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -8717,17 +8212,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
-					<g
-						id="clefChange613">
-						<use
-							id="clef614"
-							xlink:href="#bassClef"
-							x="0"
-							y="0"
-							transform="translate(7576.799,6240) scale(100.352)" />
-					</g>
 					<line
-						id="barline615"
+						class="barline"
 						x1="7680"
 						y1="6206"
 						x2="7680"
@@ -8737,41 +8223,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff2"
 				score:staffName="1">
 				<g
-					class="stafflines"
-					id="sys2staff2stafflines">
+					class="stafflines">
 					<line
-						id="staffline616"
 						x1="400"
 						y1="6624"
 						x2="7680"
 						y2="6624"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline617"
 						x1="400"
 						y1="6656"
 						x2="7680"
 						y2="6656"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline618"
 						x1="400"
 						y1="6688"
 						x2="7680"
 						y2="6688"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline619"
 						x1="400"
 						y1="6720"
 						x2="7680"
 						y2="6720"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline620"
 						x1="400"
 						y1="6752"
 						x2="7680"
@@ -8779,23 +8258,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff2voice1">
+					class="outputVoice">
 					<use
-						id="clef621"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,6720) scale(125.44)" />
 					<line
-						id="barline622"
+						class="barline"
 						x1="503.2"
 						y1="6624"
 						x2="503.2"
 						y2="6752"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName623"
+						class="staffName"
 						x="232"
 						y="6713.6"
 						text-anchor="middle"
@@ -8803,7 +8281,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">1</text>
 					<g
 						class="outputChord"
-						id="outputChord624"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -8817,9 +8294,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics625">
+							class="graphics">
 							<line
-								id="stem626"
 								x1="627.1948"
 								y1="6556.8"
 								x2="627.1948"
@@ -8841,7 +8317,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger627"
 								x1="577.9568"
 								y1="6784"
 								x2="643.6074"
@@ -8857,7 +8332,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord628"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -8871,9 +8345,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics629">
+							class="graphics">
 							<line
-								id="stem630"
 								x1="1214.963"
 								y1="6588.8"
 								x2="1214.963"
@@ -8895,7 +8368,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger631"
 								x1="1165.725"
 								y1="6784"
 								x2="1231.375"
@@ -8911,7 +8383,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord632"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -8925,9 +8396,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="35" />
 						</score:midiChord>
 						<g
-							id="graphics633">
+							class="graphics">
 							<line
-								id="stem634"
 								x1="1769.906"
 								y1="6595.696"
 								x2="1769.906"
@@ -8979,14 +8449,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger635"
 								x1="1753.493"
 								y1="6592"
 								x2="1819.144"
 								y2="6592"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								id="ledger636"
 								x1="1753.493"
 								y1="6784"
 								x2="1819.144"
@@ -9002,7 +8470,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest637"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -9012,7 +8479,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline638"
+						class="barline"
 						x1="7680"
 						y1="6622"
 						x2="7680"
@@ -9022,41 +8489,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff3"
 				score:staffName="2">
 				<g
-					class="stafflines"
-					id="sys2staff3stafflines">
+					class="stafflines">
 					<line
-						id="staffline639"
 						x1="400"
 						y1="7104"
 						x2="7680"
 						y2="7104"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline640"
 						x1="400"
 						y1="7136"
 						x2="7680"
 						y2="7136"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline641"
 						x1="400"
 						y1="7168"
 						x2="7680"
 						y2="7168"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline642"
 						x1="400"
 						y1="7200"
 						x2="7680"
 						y2="7200"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline643"
 						x1="400"
 						y1="7232"
 						x2="7680"
@@ -9064,23 +8524,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff3voice1">
+					class="outputVoice">
 					<use
-						id="clef644"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,7200) scale(125.44)" />
 					<line
-						id="barline645"
+						class="barline"
 						x1="503.2"
 						y1="7104"
 						x2="503.2"
 						y2="7232"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName646"
+						class="staffName"
 						x="232"
 						y="7193.6"
 						text-anchor="middle"
@@ -9088,7 +8547,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">2</text>
 					<g
 						class="outputChord"
-						id="outputChord647"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -9102,9 +8560,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics648">
+							class="graphics">
 							<line
-								id="stem649"
 								x1="627.1948"
 								y1="7068.8"
 								x2="627.1948"
@@ -9126,7 +8583,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger650"
 								x1="577.9568"
 								y1="7264"
 								x2="643.6074"
@@ -9142,7 +8598,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord651"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -9156,9 +8611,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics652">
+							class="graphics">
 							<line
-								id="stem653"
 								x1="1214.963"
 								y1="7068.8"
 								x2="1214.963"
@@ -9180,7 +8634,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger654"
 								x1="1165.725"
 								y1="7264"
 								x2="1231.375"
@@ -9196,7 +8649,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord655"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -9210,9 +8662,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="46" />
 						</score:midiChord>
 						<g
-							id="graphics656">
+							class="graphics">
 							<line
-								id="stem657"
 								x1="1802.731"
 								y1="6988.8"
 								x2="1802.731"
@@ -9264,7 +8715,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								id="ledger658"
 								x1="1753.493"
 								y1="7264"
 								x2="1819.144"
@@ -9280,7 +8730,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest659"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -9290,7 +8739,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline660"
+						class="barline"
 						x1="7680"
 						y1="7102"
 						x2="7680"
@@ -9300,41 +8749,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff4"
 				score:staffName="3">
 				<g
-					class="stafflines"
-					id="sys2staff4stafflines">
+					class="stafflines">
 					<line
-						id="staffline661"
 						x1="400"
 						y1="7488"
 						x2="7680"
 						y2="7488"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline662"
 						x1="400"
 						y1="7520"
 						x2="7680"
 						y2="7520"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline663"
 						x1="400"
 						y1="7552"
 						x2="7680"
 						y2="7552"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline664"
 						x1="400"
 						y1="7584"
 						x2="7680"
 						y2="7584"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline665"
 						x1="400"
 						y1="7616"
 						x2="7680"
@@ -9342,23 +8784,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff4voice1">
+					class="outputVoice">
 					<use
-						id="clef666"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,7584) scale(125.44)" />
 					<line
-						id="barline667"
+						class="barline"
 						x1="503.2"
 						y1="7488"
 						x2="503.2"
 						y2="7616"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName668"
+						class="staffName"
 						x="232"
 						y="7577.6"
 						text-anchor="middle"
@@ -9366,7 +8807,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">3</text>
 					<g
 						class="outputChord"
-						id="outputChord669"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -9380,9 +8820,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics670">
+							class="graphics">
 							<line
-								id="stem671"
 								x1="627.1948"
 								y1="7452.8"
 								x2="627.1948"
@@ -9409,7 +8848,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">n</text>
 							<line
-								id="ledger672"
 								x1="577.9568"
 								y1="7648"
 								x2="643.6074"
@@ -9425,7 +8863,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord673"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -9439,9 +8876,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics674">
+							class="graphics">
 							<line
-								id="stem675"
 								x1="1214.963"
 								y1="7468.8"
 								x2="1214.963"
@@ -9463,7 +8899,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger676"
 								x1="1165.725"
 								y1="7648"
 								x2="1231.375"
@@ -9479,7 +8914,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord677"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -9493,9 +8927,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="58" />
 						</score:midiChord>
 						<g
-							id="graphics678">
+							class="graphics">
 							<line
-								id="stem679"
 								x1="1802.731"
 								y1="7388.8"
 								x2="1802.731"
@@ -9552,7 +8985,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger680"
 								x1="1753.493"
 								y1="7648"
 								x2="1819.144"
@@ -9568,7 +9000,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest681"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -9578,7 +9009,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline682"
+						class="barline"
 						x1="7680"
 						y1="7486"
 						x2="7680"
@@ -9588,41 +9019,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff5"
 				score:staffName="4">
 				<g
-					class="stafflines"
-					id="sys2staff5stafflines">
+					class="stafflines">
 					<line
-						id="staffline683"
 						x1="400"
 						y1="7840"
 						x2="7680"
 						y2="7840"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline684"
 						x1="400"
 						y1="7872"
 						x2="7680"
 						y2="7872"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline685"
 						x1="400"
 						y1="7904"
 						x2="7680"
 						y2="7904"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline686"
 						x1="400"
 						y1="7936"
 						x2="7680"
 						y2="7936"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline687"
 						x1="400"
 						y1="7968"
 						x2="7680"
@@ -9630,23 +9054,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff5voice1">
+					class="outputVoice">
 					<use
-						id="clef688"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,7936) scale(125.44)" />
 					<line
-						id="barline689"
+						class="barline"
 						x1="503.2"
 						y1="7840"
 						x2="503.2"
 						y2="7968"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName690"
+						class="staffName"
 						x="232"
 						y="7929.6"
 						text-anchor="middle"
@@ -9654,7 +9077,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">4</text>
 					<g
 						class="outputChord"
-						id="outputChord691"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -9668,9 +9090,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics692">
+							class="graphics">
 							<line
-								id="stem693"
 								x1="627.1948"
 								y1="7820.8"
 								x2="627.1948"
@@ -9702,7 +9123,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">n</text>
 							<line
-								id="ledger694"
 								x1="577.9568"
 								y1="8000"
 								x2="643.6074"
@@ -9718,7 +9138,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord695"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -9732,9 +9151,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics696">
+							class="graphics">
 							<line
-								id="stem697"
 								x1="1214.963"
 								y1="7820.8"
 								x2="1214.963"
@@ -9761,7 +9179,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger698"
 								x1="1165.725"
 								y1="8000"
 								x2="1231.375"
@@ -9777,7 +9194,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord699"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -9791,9 +9207,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="69" />
 						</score:midiChord>
 						<g
-							id="graphics700">
+							class="graphics">
 							<line
-								id="stem701"
 								x1="1802.731"
 								y1="7756.8"
 								x2="1802.731"
@@ -9850,7 +9265,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger702"
 								x1="1753.493"
 								y1="8000"
 								x2="1819.144"
@@ -9866,7 +9280,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest703"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -9876,7 +9289,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline704"
+						class="barline"
 						x1="7680"
 						y1="7838"
 						x2="7680"
@@ -9886,41 +9299,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff6"
 				score:staffName="5">
 				<g
-					class="stafflines"
-					id="sys2staff6stafflines">
+					class="stafflines">
 					<line
-						id="staffline705"
 						x1="400"
 						y1="8192"
 						x2="7680"
 						y2="8192"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline706"
 						x1="400"
 						y1="8224"
 						x2="7680"
 						y2="8224"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline707"
 						x1="400"
 						y1="8256"
 						x2="7680"
 						y2="8256"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline708"
 						x1="400"
 						y1="8288"
 						x2="7680"
 						y2="8288"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline709"
 						x1="400"
 						y1="8320"
 						x2="7680"
@@ -9928,23 +9334,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff6voice1">
+					class="outputVoice">
 					<use
-						id="clef710"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,8288) scale(125.44)" />
 					<line
-						id="barline711"
+						class="barline"
 						x1="503.2"
 						y1="8192"
 						x2="503.2"
 						y2="8320"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName712"
+						class="staffName"
 						x="232"
 						y="8281.6"
 						text-anchor="middle"
@@ -9952,7 +9357,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">5</text>
 					<g
 						class="outputChord"
-						id="outputChord713"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -9966,9 +9370,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics714">
+							class="graphics">
 							<line
-								id="stem715"
 								x1="627.1948"
 								y1="8172.8"
 								x2="627.1948"
@@ -9995,7 +9398,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger716"
 								x1="577.9568"
 								y1="8352"
 								x2="643.6074"
@@ -10011,7 +9413,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord717"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -10025,9 +9426,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics718">
+							class="graphics">
 							<line
-								id="stem719"
 								x1="1214.963"
 								y1="8188.8"
 								x2="1214.963"
@@ -10054,7 +9454,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger720"
 								x1="1165.725"
 								y1="8352"
 								x2="1231.375"
@@ -10070,7 +9469,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord721"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -10084,9 +9482,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="81" />
 						</score:midiChord>
 						<g
-							id="graphics722">
+							class="graphics">
 							<line
-								id="stem723"
 								x1="1802.731"
 								y1="8124.8"
 								x2="1802.731"
@@ -10153,7 +9550,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger724"
 								x1="1753.493"
 								y1="8352"
 								x2="1819.144"
@@ -10169,7 +9565,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest725"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -10179,7 +9574,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline726"
+						class="barline"
 						x1="7680"
 						y1="8190"
 						x2="7680"
@@ -10189,41 +9584,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff7"
 				score:staffName="6">
 				<g
-					class="stafflines"
-					id="sys2staff7stafflines">
+					class="stafflines">
 					<line
-						id="staffline727"
 						x1="400"
 						y1="8512"
 						x2="7680"
 						y2="8512"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline728"
 						x1="400"
 						y1="8544"
 						x2="7680"
 						y2="8544"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline729"
 						x1="400"
 						y1="8576"
 						x2="7680"
 						y2="8576"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline730"
 						x1="400"
 						y1="8608"
 						x2="7680"
 						y2="8608"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline731"
 						x1="400"
 						y1="8640"
 						x2="7680"
@@ -10231,23 +9619,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff7voice1">
+					class="outputVoice">
 					<use
-						id="clef732"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,8608) scale(125.44)" />
 					<line
-						id="barline733"
+						class="barline"
 						x1="503.2"
 						y1="8512"
 						x2="503.2"
 						y2="8640"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName734"
+						class="staffName"
 						x="232"
 						y="8601.6"
 						text-anchor="middle"
@@ -10255,7 +9642,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">6</text>
 					<g
 						class="outputChord"
-						id="outputChord735"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -10269,9 +9655,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics736">
+							class="graphics">
 							<line
-								id="stem737"
 								x1="627.1948"
 								y1="8508.8"
 								x2="627.1948"
@@ -10298,7 +9683,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger738"
 								x1="577.9568"
 								y1="8672"
 								x2="643.6074"
@@ -10314,7 +9698,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord739"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -10328,9 +9711,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics740">
+							class="graphics">
 							<line
-								id="stem741"
 								x1="1214.963"
 								y1="8508.8"
 								x2="1214.963"
@@ -10352,7 +9734,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger742"
 								x1="1165.725"
 								y1="8672"
 								x2="1231.375"
@@ -10368,7 +9749,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord743"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -10382,9 +9762,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="92" />
 						</score:midiChord>
 						<g
-							id="graphics744">
+							class="graphics">
 							<line
-								id="stem745"
 								x1="1802.731"
 								y1="8460.8"
 								x2="1802.731"
@@ -10441,7 +9820,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger746"
 								x1="1753.493"
 								y1="8672"
 								x2="1819.144"
@@ -10457,7 +9835,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest747"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -10467,7 +9844,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline748"
+						class="barline"
 						x1="7680"
 						y1="8510"
 						x2="7680"
@@ -10477,41 +9854,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				id="sys2staff8"
 				score:staffName="7">
 				<g
-					class="stafflines"
-					id="sys2staff8stafflines">
+					class="stafflines">
 					<line
-						id="staffline749"
 						x1="400"
 						y1="8832"
 						x2="7680"
 						y2="8832"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline750"
 						x1="400"
 						y1="8864"
 						x2="7680"
 						y2="8864"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline751"
 						x1="400"
 						y1="8896"
 						x2="7680"
 						y2="8896"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline752"
 						x1="400"
 						y1="8928"
 						x2="7680"
 						y2="8928"
 						style="stroke:black; stroke-width:4px" />
 					<line
-						id="staffline753"
 						x1="400"
 						y1="8960"
 						x2="7680"
@@ -10519,23 +9889,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					id="sys2staff8voice1">
+					class="outputVoice">
 					<use
-						id="clef754"
+						class="clef"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,8928) scale(125.44)" />
 					<line
-						id="barline755"
+						class="barline"
 						x1="503.2"
 						y1="8832"
 						x2="503.2"
 						y2="8960"
 						style="stroke:black; stroke-width:8px" />
 					<text
-						id="staffName756"
+						class="staffName"
 						x="232"
 						y="8921.6"
 						text-anchor="middle"
@@ -10543,7 +9912,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">7</text>
 					<g
 						class="outputChord"
-						id="outputChord757"
 						score:alignmentX="610.7821">
 						<score:midiChord>
 							<basicChords>
@@ -10557,9 +9925,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics758">
+							class="graphics">
 							<line
-								id="stem759"
 								x1="627.1948"
 								y1="8828.8"
 								x2="627.1948"
@@ -10581,7 +9948,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								id="ledger760"
 								x1="577.9568"
 								y1="8992"
 								x2="643.6074"
@@ -10597,7 +9963,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord761"
 						score:alignmentX="1198.55">
 						<score:midiChord>
 							<basicChords>
@@ -10611,9 +9976,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="115" />
 						</score:midiChord>
 						<g
-							id="graphics762">
+							class="graphics">
 							<line
-								id="stem763"
 								x1="1214.963"
 								y1="8844.8"
 								x2="1214.963"
@@ -10640,7 +10004,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger764"
 								x1="1165.725"
 								y1="8992"
 								x2="1231.375"
@@ -10656,7 +10019,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						id="outputChord765"
 						score:alignmentX="1786.318">
 						<score:midiChord>
 							<basicChords>
@@ -10670,9 +10032,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								pan="104" />
 						</score:midiChord>
 						<g
-							id="graphics766">
+							class="graphics">
 							<line
-								id="stem767"
 								x1="1802.731"
 								y1="8796.8"
 								x2="1802.731"
@@ -10729,7 +10090,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
-								id="ledger768"
 								x1="1753.493"
 								y1="8992"
 								x2="1819.144"
@@ -10745,7 +10105,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						id="rest769"
 						score:alignmentX="2366.086"
 						score:msDuration="8100">
 						<text
@@ -10755,7 +10114,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							font-family="CLicht">∑</text>
 					</g>
 					<line
-						id="barline770"
+						class="barline"
 						x1="7680"
 						y1="8830"
 						x2="7680"
@@ -10764,7 +10123,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 			</g>
 			<g
-				id="sys2connectors">
+				class="staffConnectors">
 				<line
 					x1="503.2"
 					y1="6336"
