@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music, page 6 of 8</dc:title>
-				<dc:date>Wednesday 16.03.2016, 11:45:18</dc:date>
+				<dc:date>Monday 21.03.2016, 10:48:07</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -325,7 +325,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Pianola Music page 6, Wednesday 16.03.2016, 11:45:11</text>
+			font-family="Arial">Pianola Music page 6, Monday 21.03.2016, 10:48:07</text>
 		<g
 			class="system">
 			<g
@@ -840,35 +840,35 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10104.26 1044.365 L 10142.66 1047.64 10142.66 1067.8 10104.26 1064.525 z" />
+							d="M 10104.26 1002.392 L 10142.66 1005.666 10142.66 1025.826 10104.26 1022.552 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10104.26 1030.925 L 10142.66 1034.2 10142.66 1047.64 10104.26 1044.365 z" />
+							d="M 10104.26 988.9516 L 10142.66 992.2264 10142.66 1005.666 10104.26 1002.392 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 9642.365 1036.973 L 9680.766 1040.248 9680.766 1060.408 9642.365 1057.133 z" />
+							d="M 9642.365 994.9998 L 9680.766 998.2747 9680.766 1018.435 9642.365 1015.16 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9642.365 1023.533 L 9680.766 1026.808 9680.766 1040.248 9642.365 1036.973 z" />
+							d="M 9642.365 981.5598 L 9680.766 984.8347 9680.766 998.2747 9642.365 994.9998 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10104.26 1076.365 L 10142.66 1079.64 10142.66 1099.8 10104.26 1096.525 z" />
+							d="M 10104.26 1034.392 L 10142.66 1037.666 10142.66 1057.826 10104.26 1054.552 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10104.26 1062.925 L 10142.66 1066.2 10142.66 1079.64 10104.26 1076.365 z" />
+							d="M 10104.26 1020.952 L 10142.66 1024.226 10142.66 1037.666 10104.26 1034.392 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9642.365 1055.533 L 10142.66 1098.2 10142.66 1111.64 9642.365 1068.973 z" />
+							d="M 9642.365 1013.56 L 10142.66 1056.226 10142.66 1069.666 9642.365 1027 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -888,7 +888,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x1="9642.365"
 								y1="611.696"
 								x2="9642.365"
-								y2="1055.533"
+								y2="1013.56"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9640.365"
@@ -939,7 +939,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x1="9764.784"
 								y1="931.696"
 								x2="9764.784"
-								y2="1065.974"
+								y2="1024"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9762.784"
@@ -983,7 +983,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x1="10142.66"
 								y1="739.696"
 								x2="10142.66"
-								y2="1098.2"
+								y2="1056.226"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10140.66"
@@ -1030,7 +1030,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10603.96 761.0343 L 10848.79 797.76 10848.79 811.2 10603.96 774.4743 z" />
+							d="M 10603.96 773.2762 L 10848.79 797.76 10848.79 811.2 10603.96 786.7162 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -1048,7 +1048,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10603.96"
-								y1="761.0343"
+								y1="773.2762"
 								x2="10603.96"
 								y2="1036.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3521,17 +3521,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10892 2800.32 L 10930.41 2794.56 10930.41 2814.72 10892 2820.48 z" />
+							d="M 10892 2792.96 L 10930.41 2789.12 10930.41 2809.28 10892 2813.12 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10892 2813.76 L 10930.41 2808 10930.41 2821.44 10892 2827.2 z" />
+							d="M 10892 2806.4 L 10930.41 2802.56 10930.41 2816 10892 2819.84 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10726.37 2806.605 L 10930.41 2776 10930.41 2789.44 10726.37 2820.045 z" />
+							d="M 10726.37 2790.963 L 10930.41 2770.56 10930.41 2784 10726.37 2804.403 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -3549,7 +3549,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10726.37"
-								y1="2806.605"
+								y1="2790.963"
 								x2="10726.37"
 								y2="3100.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3624,7 +3624,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10930.41"
-								y1="2776"
+								y1="2770.56"
 								x2="10930.41"
 								y2="2988.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3680,6 +3680,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					class="stafflines">
 					<line
 						x1="400"
+						y1="3488"
+						x2="11032"
+						y2="3488"
+						style="stroke:black; stroke-width:4px" />
+					<line
+						x1="400"
+						y1="3520"
+						x2="11032"
+						y2="3520"
+						style="stroke:black; stroke-width:4px" />
+					<line
+						x1="400"
 						y1="3552"
 						x2="11032"
 						y2="3552"
@@ -3696,18 +3708,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						x2="11032"
 						y2="3616"
 						style="stroke:black; stroke-width:4px" />
-					<line
-						x1="400"
-						y1="3648"
-						x2="11032"
-						y2="3648"
-						style="stroke:black; stroke-width:4px" />
-					<line
-						x1="400"
-						y1="3680"
-						x2="11032"
-						y2="3680"
-						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
 					class="outputVoice">
@@ -3716,18 +3716,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
-						transform="translate(400,3648) scale(125.44)" />
+						transform="translate(400,3584) scale(125.44)" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="3552"
+						y1="3488"
 						x2="503.2"
-						y2="3680"
+						y2="3616"
 						style="stroke:black; stroke-width:8px" />
 					<text
 						class="staffName"
 						x="232"
-						y="3641.6"
+						y="3577.6"
 						text-anchor="middle"
 						font-size="70.4"
 						font-family="Arial">6</text>
@@ -3736,14 +3736,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g>
 							<text
 								x="585.0939"
-								y="3968"
+								y="3904"
 								font-size="100.352"
 								font-family="CLicht">œ</text>
 							<text
 								x="542.4"
-								y="3968"
+								y="3904"
 								font-size="100.352"
 								font-family="CLicht">#</text>
+							<line
+								x1="574.3637"
+								y1="3648"
+								x2="625.2842"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="574.3637"
+								y1="3680"
+								x2="625.2842"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="574.3637"
 								y1="3712"
@@ -3786,41 +3798,29 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x2="625.2842"
 								y2="3904"
 								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="574.3637"
-								y1="3936"
-								x2="625.2842"
-								y2="3936"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="574.3637"
-								y1="3968"
-								x2="625.2842"
-								y2="3968"
-								style="stroke:black; stroke-width:4px" />
 							<path
 								stroke="black"
 								fill="none"
 								stroke-width="4px"
 								stroke-linecap="butt"
-								d="M 539.2,3929.141 L 523.2,3929.141 523.2,4006.859 539.2,4006.859" />
+								d="M 539.2,3865.141 L 523.2,3865.141 523.2,3942.859 539.2,3942.859" />
 							<path
 								stroke="black"
 								fill="none"
 								stroke-width="4px"
 								stroke-linecap="butt"
-								d="M 633.2842,3929.141 L 649.2842,3929.141 649.2842,4006.859 633.2842,4006.859" />
+								d="M 633.2842,3865.141 L 649.2842,3865.141 649.2842,3942.859 633.2842,3942.859" />
 							<line
 								x1="491.2"
-								y1="3968"
+								y1="3904"
 								x2="523.2"
-								y2="3968"
+								y2="3904"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
 								x1="649.2842"
-								y1="3968"
+								y1="3904"
 								x2="992.1849"
-								y2="3968"
+								y2="3904"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
@@ -3840,7 +3840,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								x="1001.203"
-								y="3648"
+								y="3584"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 						</g>
@@ -3861,15 +3861,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3003.393"
-								y1="3612.8"
+								y1="3548.8"
 								x2="3003.393"
-								y2="3836.304"
+								y2="3772.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="2968.568"
-								y="3840"
+								y="3776"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
+							<line
+								x1="2954.155"
+								y1="3648"
+								x2="3019.805"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="2954.155"
+								y1="3680"
+								x2="3019.805"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="2954.155"
 								y1="3712"
@@ -3887,18 +3899,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y1="3776"
 								x2="3019.805"
 								y2="3776"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2954.155"
-								y1="3808"
-								x2="3019.805"
-								y2="3808"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2954.155"
-								y1="3840"
-								x2="3019.805"
-								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -3918,31 +3918,31 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								x="3939.241"
-								y="3776"
+								y="3712"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
 								x="3878.001"
-								y="3776"
+								y="3712"
 								font-size="125.44"
 								font-family="CLicht">#</text>
+							<line
+								x1="3916.156"
+								y1="3648"
+								x2="4016.497"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="3916.156"
+								y1="3680"
+								x2="4016.497"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="3916.156"
 								y1="3712"
 								x2="4016.497"
 								y2="3712"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3916.156"
-								y1="3744"
-								x2="4016.497"
-								y2="3744"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3916.156"
-								y1="3776"
-								x2="4016.497"
-								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -3962,12 +3962,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								x="6142.771"
-								y="3536"
+								y="3472"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
 								x="6103.599"
-								y="3536"
+								y="3472"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 						</g>
@@ -3988,9 +3988,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								x="7856.627"
-								y="3408"
+								y="3344"
 								font-size="125.44"
 								font-family="CLicht">w</text>
+							<line
+								x1="7833.542"
+								y1="3360"
+								x2="7933.883"
+								y2="3360"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="7833.542"
+								y1="3392"
+								x2="7933.883"
+								y2="3392"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="7833.542"
 								y1="3424"
@@ -4003,18 +4015,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x2="7933.883"
 								y2="3456"
 								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="7833.542"
-								y1="3488"
-								x2="7933.883"
-								y2="3488"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="7833.542"
-								y1="3520"
-								x2="7933.883"
-								y2="3520"
-								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
@@ -4022,98 +4022,98 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10031.49 3300.359 L 10069.89 3299.965 10069.89 3320.125 10031.49 3320.519 z" />
+							d="M 10031.49 3278.333 L 10069.89 3277.939 10069.89 3298.099 10031.49 3298.492 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10031.49 3313.799 L 10069.89 3313.405 10069.89 3326.845 10031.49 3327.239 z" />
+							d="M 10031.49 3291.772 L 10069.89 3291.379 10069.89 3304.819 10031.49 3305.212 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 9800.017 3270.731 L 9838.417 3270.337 9838.417 3290.497 9800.017 3290.891 z" />
+							d="M 9800.017 3248.705 L 9838.417 3248.311 9838.417 3268.471 9800.017 3268.865 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9800.017 3284.171 L 9838.417 3283.777 9838.417 3297.217 9800.017 3297.611 z" />
+							d="M 9800.017 3262.145 L 9838.417 3261.751 9838.417 3275.191 9800.017 3275.584 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10031.49 3268.359 L 10069.89 3267.965 10069.89 3288.125 10031.49 3288.519 z" />
+							d="M 10031.49 3246.333 L 10069.89 3245.939 10069.89 3266.099 10031.49 3266.492 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10031.49 3281.799 L 10069.89 3281.405 10069.89 3294.845 10031.49 3295.239 z" />
+							d="M 10031.49 3259.772 L 10069.89 3259.379 10069.89 3272.819 10031.49 3273.212 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 9800.017 3238.731 L 9838.417 3238.337 9838.417 3258.497 9800.017 3258.891 z" />
+							d="M 9800.017 3216.704 L 9838.417 3216.311 9838.417 3236.471 9800.017 3236.864 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9800.017 3252.171 L 9838.417 3251.777 9838.417 3265.217 9800.017 3265.611 z" />
+							d="M 9800.017 3230.144 L 9838.417 3229.751 9838.417 3243.191 9800.017 3243.584 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10031.49 3236.359 L 10069.89 3235.965 10069.89 3256.125 10031.49 3256.519 z" />
+							d="M 10031.49 3214.332 L 10069.89 3213.939 10069.89 3234.099 10031.49 3234.492 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10031.49 3249.799 L 10069.89 3249.405 10069.89 3262.845 10031.49 3263.239 z" />
+							d="M 10031.49 3227.772 L 10069.89 3227.379 10069.89 3240.819 10031.49 3241.212 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10359.12 3233.001 L 10397.52 3232.607 10397.52 3252.767 10359.12 3253.161 z" />
+							d="M 10359.12 3210.975 L 10397.52 3210.581 10397.52 3230.741 10359.12 3231.135 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10359.12 3246.441 L 10397.52 3246.047 10397.52 3259.487 10359.12 3259.881 z" />
+							d="M 10359.12 3224.415 L 10397.52 3224.021 10397.52 3237.461 10359.12 3237.854 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10545.15 3231.094 L 10583.55 3230.701 10583.55 3250.861 10545.15 3251.254 z" />
+							d="M 10545.15 3209.068 L 10583.55 3208.675 10583.55 3228.835 10545.15 3229.228 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10545.15 3244.534 L 10583.55 3244.141 10583.55 3257.581 10545.15 3257.974 z" />
+							d="M 10545.15 3222.508 L 10583.55 3222.115 10583.55 3235.555 10545.15 3235.948 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 9800.017 3206.731 L 9838.417 3206.337 9838.417 3226.497 9800.017 3226.891 z" />
+							d="M 9800.017 3184.704 L 9838.417 3184.311 9838.417 3204.471 9800.017 3204.864 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9800.017 3220.171 L 9838.417 3219.777 9838.417 3233.217 9800.017 3233.611 z" />
+							d="M 9800.017 3198.144 L 9838.417 3197.751 9838.417 3211.191 9800.017 3211.584 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10031.49 3204.359 L 10069.89 3203.965 10069.89 3224.125 10031.49 3224.519 z" />
+							d="M 10031.49 3182.332 L 10069.89 3181.939 10069.89 3202.099 10031.49 3202.492 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10031.49 3217.799 L 10069.89 3217.405 10069.89 3230.845 10031.49 3231.239 z" />
+							d="M 10031.49 3195.772 L 10069.89 3195.379 10069.89 3208.819 10031.49 3209.212 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 10359.12 3201.001 L 10930.41 3195.146 10930.41 3215.306 10359.12 3221.161 z" />
+							d="M 10359.12 3178.975 L 10930.41 3173.12 10930.41 3193.28 10359.12 3199.135 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 10359.12 3214.441 L 10930.41 3208.586 10930.41 3222.026 10359.12 3227.881 z" />
+							d="M 10359.12 3192.415 L 10930.41 3186.56 10930.41 3200 10359.12 3205.854 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 9369.146 3192.586 L 10930.41 3176.586 10930.41 3190.026 9369.146 3206.026 z" />
+							d="M 9369.146 3170.56 L 10930.41 3154.56 10930.41 3168 9369.146 3184 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -4131,15 +4131,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="9369.146"
-								y1="3192.586"
+								y1="3170.56"
 								x2="9369.146"
-								y2="3404.304"
+								y2="3340.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9334.319"
-								y="3408"
+								y="3344"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
+							<line
+								x1="9319.907"
+								y1="3360"
+								x2="9385.558"
+								y2="3360"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="9319.907"
+								y1="3392"
+								x2="9385.558"
+								y2="3392"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="9319.907"
 								y1="3424"
@@ -4151,18 +4163,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y1="3456"
 								x2="9385.558"
 								y2="3456"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="9319.907"
-								y1="3488"
-								x2="9385.558"
-								y2="3488"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="9319.907"
-								y1="3520"
-								x2="9385.558"
-								y2="3520"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4182,20 +4182,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="9593.579"
-								y1="3190.286"
+								y1="3168.26"
 								x2="9593.579"
-								y2="3964.304"
+								y2="3900.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9558.753"
-								y="3968"
+								y="3904"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="9506.187"
-								y="3968"
+								y="3904"
 								font-size="125.44"
 								font-family="CLicht">#</text>
+							<line
+								x1="9544.341"
+								y1="3648"
+								x2="9609.991"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="9544.341"
+								y1="3680"
+								x2="9609.991"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="9544.341"
 								y1="3712"
@@ -4238,18 +4250,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x2="9609.991"
 								y2="3904"
 								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="9544.341"
-								y1="3936"
-								x2="9609.991"
-								y2="3936"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="9544.341"
-								y1="3968"
-								x2="9609.991"
-								y2="3968"
-								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
@@ -4268,20 +4268,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="9838.417"
-								y1="3187.777"
+								y1="3165.751"
 								x2="9838.417"
-								y2="3708.304"
+								y2="3644.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9803.591"
-								y="3712"
+								y="3648"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
 								x1="9789.179"
-								y1="3712"
+								y1="3648"
 								x2="9854.829"
-								y2="3712"
+								y2="3648"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4301,13 +4301,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="9886.261"
-								y1="3187.287"
+								y1="3165.26"
 								x2="9886.261"
-								y2="3644.304"
+								y2="3580.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="9851.435"
-								y="3648"
+								y="3584"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 						</g>
@@ -4328,15 +4328,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10069.89"
-								y1="3185.405"
+								y1="3163.379"
 								x2="10069.89"
-								y2="3836.304"
+								y2="3772.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10035.06"
-								y="3840"
+								y="3776"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
+							<line
+								x1="10020.65"
+								y1="3648"
+								x2="10086.3"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10020.65"
+								y1="3680"
+								x2="10086.3"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10020.65"
 								y1="3712"
@@ -4354,18 +4366,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y1="3776"
 								x2="10086.3"
 								y2="3776"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10020.65"
-								y1="3808"
-								x2="10086.3"
-								y2="3808"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10020.65"
-								y1="3840"
-								x2="10086.3"
-								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4385,18 +4385,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10155.09"
-								y1="3184.532"
+								y1="3162.506"
 								x2="10155.09"
-								y2="3532.304"
+								y2="3468.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10120.26"
-								y="3536"
+								y="3472"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="10081.09"
-								y="3536"
+								y="3472"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 						</g>
@@ -4417,26 +4417,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10359.12"
-								y1="3182.441"
+								y1="3160.415"
 								x2="10359.12"
-								y2="3468.304"
+								y2="3404.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10324.29"
-								y="3472"
+								y="3408"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
 								x1="10309.88"
-								y1="3488"
+								y1="3424"
 								x2="10375.53"
-								y2="3488"
+								y2="3424"
 								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10309.88"
-								y1="3520"
+								y1="3456"
 								x2="10375.53"
-								y2="3520"
+								y2="3456"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4456,32 +4456,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10440.73"
-								y1="3181.604"
+								y1="3159.578"
 								x2="10440.73"
-								y2="3772.304"
+								y2="3708.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10405.9"
-								y="3776"
+								y="3712"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
+							<line
+								x1="10391.49"
+								y1="3648"
+								x2="10457.14"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10391.49"
+								y1="3680"
+								x2="10457.14"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10391.49"
 								y1="3712"
 								x2="10457.14"
 								y2="3712"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10391.49"
-								y1="3744"
-								x2="10457.14"
-								y2="3744"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10391.49"
-								y1="3776"
-								x2="10457.14"
-								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4501,18 +4501,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10583.55"
-								y1="3180.141"
+								y1="3158.115"
 								x2="10583.55"
-								y2="3596.304"
+								y2="3532.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10548.73"
-								y="3600"
+								y="3536"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="10509.55"
-								y="3600"
+								y="3536"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 						</g>
@@ -4533,37 +4533,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10644.76"
-								y1="3179.514"
+								y1="3157.487"
 								x2="10644.76"
-								y2="3772.304"
+								y2="3708.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10609.94"
-								y="3776"
+								y="3712"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="10557.37"
-								y="3776"
+								y="3712"
 								font-size="125.44"
 								font-family="CLicht">#</text>
+							<line
+								x1="10595.52"
+								y1="3648"
+								x2="10661.17"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10595.52"
+								y1="3680"
+								x2="10661.17"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10595.52"
 								y1="3712"
 								x2="10661.17"
 								y2="3712"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10595.52"
-								y1="3744"
-								x2="10661.17"
-								y2="3744"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10595.52"
-								y1="3776"
-								x2="10661.17"
-								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
@@ -4583,15 +4583,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10807.99"
-								y1="3177.841"
+								y1="3155.814"
 								x2="10807.99"
-								y2="3900.304"
+								y2="3836.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10773.16"
-								y="3904"
+								y="3840"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
+							<line
+								x1="10758.75"
+								y1="3648"
+								x2="10824.4"
+								y2="3648"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10758.75"
+								y1="3680"
+								x2="10824.4"
+								y2="3680"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10758.75"
 								y1="3712"
@@ -4622,18 +4634,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x2="10824.4"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10758.75"
-								y1="3872"
-								x2="10824.4"
-								y2="3872"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10758.75"
-								y1="3904"
-								x2="10824.4"
-								y2="3904"
-								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
@@ -4652,20 +4652,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="10930.41"
-								y1="3176.586"
+								y1="3154.56"
 								x2="10930.41"
-								y2="3356.304"
+								y2="3292.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="10895.58"
-								y="3360"
+								y="3296"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="10843.01"
-								y="3360"
+								y="3296"
 								font-size="125.44"
 								font-family="CLicht">#</text>
+							<line
+								x1="10881.17"
+								y1="3296"
+								x2="10946.82"
+								y2="3296"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10881.17"
+								y1="3328"
+								x2="10946.82"
+								y2="3328"
+								style="stroke:black; stroke-width:4px" />
 							<line
 								x1="10881.17"
 								y1="3360"
@@ -4690,26 +4702,14 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x2="10946.82"
 								y2="3456"
 								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10881.17"
-								y1="3488"
-								x2="10946.82"
-								y2="3488"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="10881.17"
-								y1="3520"
-								x2="10946.82"
-								y2="3520"
-								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="11032.01"
-						y1="3550"
+						y1="3486"
 						x2="11032.01"
-						y2="3682"
+						y2="3618"
 						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
@@ -4767,13 +4767,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					x1="503.2"
 					y1="2848"
 					x2="503.2"
-					y2="3552"
+					y2="3488"
 					style="stroke:black; stroke-width:8px" />
 				<line
 					x1="11032.01"
 					y1="2848"
 					x2="11032.01"
-					y2="3552"
+					y2="3488"
 					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>

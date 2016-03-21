@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 1, page 1 of 7</dc:title>
-				<dc:date>Wednesday 16.03.2016, 11:46:01</dc:date>
+				<dc:date>Monday 21.03.2016, 10:48:26</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -325,7 +325,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 1 page 1, Wednesday 16.03.2016, 11:46:00</text>
+			font-family="Arial">Study 1 page 1, Monday 21.03.2016, 10:48:26</text>
 		<g
 			id="titles">
 			<text
@@ -1629,7 +1629,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2067,7 +2067,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2285,7 +2285,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2525,7 +2525,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2677,7 +2677,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="60 64 67"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2725,7 +2725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="62 66"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2843,7 +2843,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -2962,7 +2962,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3086,7 +3086,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3167,7 +3167,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="63 67"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3209,7 +3209,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="128"
 									patch="0"
 									pitches="60 61 63 66 70 75 82 94"
-									velocities="45 45 45 45 45 45 45 45" />
+									velocities="29 29 29 29 29 29 29 29" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3516,7 +3516,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3597,7 +3597,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3677,7 +3677,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="60 64 67"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3725,7 +3725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="62 66"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3805,7 +3805,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3885,7 +3885,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -3928,7 +3928,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="174"
 									patch="0"
 									pitches="60 63 67 69"
-									velocities="100 100 100 100" />
+									velocities="85 85 85 85" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4029,7 +4029,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4115,7 +4115,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4157,7 +4157,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4321,7 +4321,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="64 68"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4363,7 +4363,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4437,7 +4437,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="60 64 67"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4485,7 +4485,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="65 69"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4522,7 +4522,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4597,7 +4597,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4639,7 +4639,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="62 66"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4681,7 +4681,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4762,7 +4762,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4810,7 +4810,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="128"
 									patch="0"
 									pitches="61 62 64 67 71 76 83 95"
-									velocities="45 45 45 45 45 45 45 45" />
+									velocities="29 29 29 29 29 29 29 29" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4918,7 +4918,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -4966,7 +4966,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5041,7 +5041,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5171,7 +5171,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5209,7 +5209,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="160"
 									patch="0"
 									pitches="61 64 66 70 71"
-									velocities="90 90 90 90 90" />
+									velocities="71 71 71 71 71" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5282,7 +5282,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="63 67 70"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5334,7 +5334,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5425,7 +5425,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5473,7 +5473,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="67 71"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5505,7 +5505,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5542,7 +5542,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="66 70"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5627,7 +5627,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5675,7 +5675,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="62 66"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5712,7 +5712,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5754,7 +5754,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5792,7 +5792,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5866,7 +5866,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -5909,7 +5909,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6049,7 +6049,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6091,7 +6091,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="174"
 									patch="0"
 									pitches="60 63 67 69"
-									velocities="100 100 100 100" />
+									velocities="85 85 85 85" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6149,7 +6149,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6191,7 +6191,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="63 67"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6228,7 +6228,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6303,7 +6303,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6345,7 +6345,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6382,7 +6382,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6420,7 +6420,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6457,7 +6457,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="65 69"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6489,7 +6489,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6564,7 +6564,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="147"
 									patch="0"
 									pitches="64 66 69 70 74 79"
-									velocities="78 78 78 78 78 78" />
+									velocities="57 57 57 57 57 57" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6631,7 +6631,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6678,7 +6678,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6715,7 +6715,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="62 66 69"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6767,7 +6767,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6902,7 +6902,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -6940,7 +6940,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="128"
 									patch="0"
 									pitches="61 62 64 67 71 76 83 95"
-									velocities="45 45 45 45 45 45 45 45" />
+									velocities="29 29 29 29 29 29 29 29" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7048,7 +7048,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="63 67"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7090,7 +7090,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7127,7 +7127,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7164,7 +7164,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7202,7 +7202,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7282,7 +7282,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7324,7 +7324,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7361,7 +7361,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7399,7 +7399,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7451,7 +7451,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7493,7 +7493,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7530,7 +7530,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7567,7 +7567,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7605,7 +7605,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="137"
 									patch="0"
 									pitches="63 65 66 69 73 78 85"
-									velocities="64 64 64 64 64 64 64" />
+									velocities="43 43 43 43 43 43 43" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7704,7 +7704,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7839,7 +7839,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7876,7 +7876,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7956,7 +7956,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -7998,7 +7998,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8036,7 +8036,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8088,7 +8088,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="174"
 									patch="0"
 									pitches="61 64 68 70"
-									velocities="100 100 100 100" />
+									velocities="85 85 85 85" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8156,7 +8156,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8198,7 +8198,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="62 66"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8240,7 +8240,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8282,7 +8282,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8319,7 +8319,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8357,7 +8357,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8394,7 +8394,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8468,7 +8468,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8520,7 +8520,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="65 69"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8562,7 +8562,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8687,7 +8687,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="67 71"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8719,7 +8719,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8756,7 +8756,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8793,7 +8793,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="128"
 									patch="0"
 									pitches="60 61 63 66 70 75 82 94"
-									velocities="45 45 45 45 45 45 45 45" />
+									velocities="29 29 29 29 29 29 29 29" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8931,7 +8931,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -8973,7 +8973,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="160"
 									patch="0"
 									pitches="61 64 66 70 71"
-									velocities="90 90 90 90 90" />
+									velocities="71 71 71 71 71" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9046,7 +9046,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9093,7 +9093,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9145,7 +9145,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9230,7 +9230,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9272,7 +9272,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="63 67"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9309,7 +9309,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="60 64"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9352,7 +9352,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9389,7 +9389,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192"
 									patch="0"
 									pitches="61 65 68"
-									velocities="110 110 110" />
+									velocities="99 99 99" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9441,7 +9441,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="66 70"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9488,7 +9488,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="213"
 									patch="0"
 									pitches="61 65"
-									velocities="119 119" />
+									velocities="113 113" />
 							</basicChords>
 						</score:midiChord>
 						<g
@@ -9530,7 +9530,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="174"
 									patch="0"
 									pitches="61 64 68 70"
-									velocities="100 100 100 100" />
+									velocities="85 85 85 85" />
 							</basicChords>
 						</score:midiChord>
 						<g

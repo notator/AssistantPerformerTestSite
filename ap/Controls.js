@@ -46,10 +46,9 @@ _AP.controls = (function(document, window)
 	STUDY2_SCORE_INDEX = 3,
 	STUDY3_SKETCH1_SCORE_INDEX1 = 4,
 	STUDY3_SKETCH1_SCORE_INDEX2 = 5,
-	SONG_SIX_SCORE_INDEX = 6,
-	STUDY3_SKETCH2_SCORE_INDEX1 = 7,
-	STUDY3_SKETCH2_SCORE_INDEX2 = 8,
-	TOMBEAU1_SCORE_INDEX = 9,
+	STUDY3_SKETCH2_SCORE_INDEX1 = 6,
+	STUDY3_SKETCH2_SCORE_INDEX2 = 7,
+	TOMBEAU1_SCORE_INDEX = 8,
 
 	RESIDENT_SYNTH_INDEX = 1,
 
@@ -991,7 +990,7 @@ _AP.controls = (function(document, window)
     					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
     					break;
     				case STUDY2_SCORE_INDEX:
-    					scoreInfo.path = "Study 2c3.1/Study 2c3.1 (scroll)";
+    					scoreInfo.path = "Study 2/Study 2 (scroll)";
     					scoreInfo.inputHandler = "none";
     					scoreInfo.aboutText = "about Study 2";
     					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
@@ -1019,13 +1018,7 @@ _AP.controls = (function(document, window)
     					scoreInfo.inputHandler = "keyboard1";
     					scoreInfo.aboutText = "about Study 3 Sketch";
     					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-    					break;
-    				case SONG_SIX_SCORE_INDEX:
-    					scoreInfo.path = "Song Six/annotated/Song Six (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Song Six";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/songSix/aboutSongSix.html";
-    					break;
+                        break;
     				case TOMBEAU1_SCORE_INDEX:
     					scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
     					scoreInfo.inputHandler = "none";

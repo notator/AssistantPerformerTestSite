@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music, page 1 of 8</dc:title>
-				<dc:date>Wednesday 16.03.2016, 11:45:18</dc:date>
+				<dc:date>Monday 21.03.2016, 10:48:07</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -325,7 +325,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Pianola Music page 1, Wednesday 16.03.2016, 11:45:11</text>
+			font-family="Arial">Pianola Music page 1, Monday 21.03.2016, 10:48:07</text>
 		<g
 			id="titles">
 			<text
@@ -1488,17 +1488,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 637.5422 2184.894 L 675.9423 2179.134 675.9423 2199.294 637.5422 2205.054 z" />
+							d="M 637.5422 2149.503 L 675.9423 2145.663 675.9423 2165.823 637.5422 2169.663 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 637.5422 2198.334 L 675.9423 2192.574 675.9423 2206.014 637.5422 2211.774 z" />
+							d="M 637.5422 2162.943 L 675.9423 2159.103 675.9423 2172.542 637.5422 2176.383 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 637.5422 2166.334 L 801.3682 2141.76 801.3682 2155.2 637.5422 2179.774 z" />
+							d="M 637.5422 2130.943 L 801.3682 2114.56 801.3682 2128 637.5422 2144.383 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -1516,7 +1516,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="637.5422"
-								y1="2166.334"
+								y1="2130.943"
 								x2="637.5422"
 								y2="2364.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -1571,7 +1571,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="801.3682"
-								y1="2141.76"
+								y1="2114.56"
 								x2="801.3682"
 								y2="2236.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -1707,26 +1707,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 2741.278 2070.534 L 2779.678 2076.294 2779.678 2096.454 2741.278 2090.694 z" />
+							d="M 2741.278 2098.045 L 2779.678 2101.885 2779.678 2122.045 2741.278 2118.205 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 2741.278 2083.974 L 2779.678 2089.734 2779.678 2103.174 2741.278 2097.414 z" />
+							d="M 2741.278 2111.485 L 2779.678 2115.325 2779.678 2128.765 2741.278 2124.925 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 2741.278 2038.534 L 2779.678 2044.294 2779.678 2064.454 2741.278 2058.694 z" />
+							d="M 2741.278 2066.045 L 2779.678 2069.885 2779.678 2090.045 2741.278 2086.205 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 2741.278 2051.974 L 2779.678 2057.734 2779.678 2071.174 2741.278 2065.414 z" />
+							d="M 2741.278 2079.485 L 2779.678 2083.325 2779.678 2096.765 2741.278 2092.925 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 2452.026 1976.586 L 2779.678 2025.734 2779.678 2039.174 2452.026 1990.026 z" />
+							d="M 2452.026 2018.56 L 2779.678 2051.325 2779.678 2064.765 2452.026 2032 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -1744,7 +1744,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="2452.026"
-								y1="1976.586"
+								y1="2018.56"
 								x2="2452.026"
 								y2="2124.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -1776,7 +1776,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="2779.678"
-								y1="2025.734"
+								y1="2051.325"
 								x2="2779.678"
 								y2="2364.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3141,35 +3141,35 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1464.803 3279.41 L 1503.203 3285.17 1503.203 3305.33 1464.803 3299.57 z" />
+							d="M 1464.803 3277.64 L 1503.203 3281.48 1503.203 3301.64 1464.803 3297.8 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1464.803 3265.97 L 1503.203 3271.73 1503.203 3285.17 1464.803 3279.41 z" />
+							d="M 1464.803 3264.2 L 1503.203 3268.04 1503.203 3281.48 1464.803 3277.64 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1464.803 3311.41 L 1503.203 3317.17 1503.203 3337.33 1464.803 3331.57 z" />
+							d="M 1464.803 3309.64 L 1503.203 3313.48 1503.203 3333.64 1464.803 3329.8 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1464.803 3297.97 L 1503.203 3303.73 1503.203 3317.17 1464.803 3311.41 z" />
+							d="M 1464.803 3296.2 L 1503.203 3300.04 1503.203 3313.48 1464.803 3309.64 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1464.803 3343.41 L 1503.203 3349.17 1503.203 3369.33 1464.803 3363.57 z" />
+							d="M 1464.803 3341.64 L 1503.203 3345.48 1503.203 3365.64 1464.803 3361.8 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1464.803 3329.97 L 1503.203 3335.73 1503.203 3349.17 1464.803 3343.41 z" />
+							d="M 1464.803 3328.2 L 1503.203 3332.04 1503.203 3345.48 1464.803 3341.64 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1464.803 3361.97 L 1518.158 3369.974 1518.158 3383.414 1464.803 3375.41 z" />
+							d="M 1464.803 3360.2 L 1518.158 3365.535 1518.158 3378.975 1464.803 3373.64 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -3189,7 +3189,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x1="1464.803"
 								y1="3139.696"
 								x2="1464.803"
-								y2="3361.97"
+								y2="3360.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1462.803"
@@ -3227,7 +3227,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								x1="1518.158"
 								y1="3203.696"
 								x2="1518.158"
-								y2="3369.974"
+								y2="3365.535"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1516.158"
@@ -3330,44 +3330,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 3068.93 2903.32 L 3107.33 2904.616 3107.33 2924.776 3068.93 2923.48 z" />
+							d="M 3068.93 2892.12 L 3107.33 2893.417 3107.33 2913.576 3068.93 2912.28 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 3068.93 2916.76 L 3107.33 2918.056 3107.33 2931.496 3068.93 2930.2 z" />
+							d="M 3068.93 2905.56 L 3107.33 2906.856 3107.33 2920.296 3068.93 2919 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 2738.721 2860.172 L 2777.121 2861.468 2777.121 2881.628 2738.721 2880.332 z" />
+							d="M 2738.721 2848.972 L 2777.121 2850.268 2777.121 2870.428 2738.721 2869.132 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 2738.721 2873.612 L 2777.121 2874.908 2777.121 2888.348 2738.721 2887.052 z" />
+							d="M 2738.721 2862.412 L 2777.121 2863.708 2777.121 2877.148 2738.721 2875.852 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 3068.93 2871.32 L 3107.33 2872.616 3107.33 2892.776 3068.93 2891.48 z" />
+							d="M 3068.93 2860.12 L 3107.33 2861.417 3107.33 2881.576 3068.93 2880.28 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 3068.93 2884.76 L 3107.33 2886.056 3107.33 2899.496 3068.93 2898.2 z" />
+							d="M 3068.93 2873.56 L 3107.33 2874.856 3107.33 2888.296 3068.93 2887 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 3642.32 2890.678 L 3680.72 2891.974 3680.72 2912.134 3642.32 2910.838 z" />
+							d="M 3642.32 2879.478 L 3680.72 2880.774 3680.72 2900.934 3642.32 2899.638 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 3642.32 2904.118 L 3680.72 2905.414 3680.72 2918.854 3642.32 2917.558 z" />
+							d="M 3642.32 2892.918 L 3680.72 2894.214 3680.72 2907.654 3642.32 2906.358 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 2738.721 2841.612 L 3844.546 2878.945 3844.546 2892.385 2738.721 2855.052 z" />
+							d="M 2738.721 2830.412 L 3844.546 2867.745 3844.546 2881.185 2738.721 2843.852 z" />
 					</g>
 					<g
 						class="outputChord"
@@ -3385,7 +3385,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="2738.721"
-								y1="2841.612"
+								y1="2830.412"
 								x2="2738.721"
 								y2="3372.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3429,7 +3429,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="2861.591"
-								y1="2845.76"
+								y1="2834.56"
 								x2="2861.591"
 								y2="2940.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3498,7 +3498,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3107.33"
-								y1="2854.056"
+								y1="2842.856"
 								x2="3107.33"
 								y2="3244.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3525,7 +3525,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3189.242"
-								y1="2856.822"
+								y1="2845.622"
 								x2="3189.242"
 								y2="3068.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3570,7 +3570,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3475.938"
-								y1="2866.501"
+								y1="2855.301"
 								x2="3475.938"
 								y2="3612.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3662,7 +3662,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3680.72"
-								y1="2873.414"
+								y1="2862.214"
 								x2="3680.72"
 								y2="3484.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
@@ -3725,7 +3725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								x1="3844.546"
-								y1="2878.945"
+								y1="2867.745"
 								x2="3844.546"
 								y2="3484.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />

@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Tombeau 1, page 1 of 2</dc:title>
-				<dc:date>Wednesday 16.03.2016, 11:53:39</dc:date>
+				<dc:date>Monday 21.03.2016, 10:50:38</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -325,7 +325,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Tombeau 1 page 1, Wednesday 16.03.2016, 11:53:39</text>
+			font-family="Arial">Tombeau 1 page 1, Monday 21.03.2016, 10:50:38</text>
 		<g
 			id="titles">
 			<text
@@ -384,7 +384,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="0"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -1905,7 +1905,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="1"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -3126,7 +3126,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="2"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -4209,7 +4209,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="3"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -5147,7 +5147,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="4"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -5969,7 +5969,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="5"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -6680,7 +6680,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="6"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -7321,7 +7321,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<g
 					class="outputVoice"
 					score:midiChannel="7"
-					score:masterVolume="100">
+					score:masterVolume="127">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
