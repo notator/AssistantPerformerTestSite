@@ -1281,7 +1281,7 @@ _AP.score = (function (document)
     		    // Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
     			function getTimeObjects(systemIndex, noteObjectElems)
     			{
-    			    var timeObjects = [], noteObjectClass,
+    			    var timeObjects = [], noteObjectClass, alignmentXAttribute,
                         timeObject, i, j, length, noteObjectElem, chordChildElems, otpmc = outputTrackPerMidiChannel;
 
     			    function getMsDuration(midiChordDef)
@@ -1332,7 +1332,11 @@ _AP.score = (function (document)
     			        else if(noteObjectClass === 'rest')
     			        {
     			            timeObject = {};
-    			            timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX') / viewBoxScale1);
+    			            alignmentXAttribute = noteObjectElem.getAttribute('score:alignmentX');
+    			            if(alignmentXAttribute !== null)
+    			            {
+    			                timeObject.alignmentX = parseFloat(alignmentXAttribute) / viewBoxScale1;
+    			            }
     			            timeObject.systemIndex = systemIndex;
     			            timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
     			            timeObjects.push(timeObject);
@@ -1450,6 +1454,69 @@ _AP.score = (function (document)
     				}
 
     			}
+    		}
+
+    	    // If the first timeObject in a voice has no AlignmentX attribute,
+            // it is set to the value for the system.
+    		function setFirstDurationObjectAlignmentX(systems)
+    		{
+    		    var i, nSystems = systems.length, system,
+                        j, nStaves, staff,
+                        k, nVoices, voice,
+                        firstAlignmentX;
+
+    		    function getFirstAlignmentX(system)
+    		    {
+    		        var j, k, staff, nStaves = system.staves.length,
+    		            voice, nVoices, firstAlignmentX = -1;
+
+    		        for(j = 0; j < nStaves; ++j)
+    		        {
+    		            staff = system.staves[j];
+    		            nVoices = staff.voices.length;
+    		            for(k = 0; k < nVoices; ++k)
+    		            {
+    		                voice = staff.voices[k];
+    		                if(voice.timeObjects[0].alignmentX !== undefined)
+    		                {
+    		                    firstAlignmentX = voice.timeObjects[0].alignmentX;
+    		                    break;
+    		                }
+    		            }
+    		            if(firstAlignmentX > -1)
+    		            {
+    		                break;
+    		            }
+    		        }
+    		        return firstAlignmentX;
+    		    }
+
+    		    function setFirstAlignmentX(system, firstAlignmentX)
+    		    {
+    		        var j, k, staff, nStaves = system.staves.length,
+    		            voice, nVoices;
+
+    		        for(j = 0; j < nStaves; ++j)
+    		        {
+    		            staff = system.staves[j];
+    		            nVoices = staff.voices.length;
+    		            for(k = 0; k < nVoices; ++k)
+    		            {
+    		                voice = staff.voices[k];
+    		                if(voice.timeObjects[0].alignmentX === undefined)
+    		                {
+    		                    voice.timeObjects[0].alignmentX = firstAlignmentX;
+    		                }
+    		            }
+    		        }
+    		    }
+
+    		    for(i = 0; i < nSystems; ++i)
+    		    {
+    		        system = systems[i];
+    		        firstAlignmentX = getFirstAlignmentX(system);
+    		        setFirstAlignmentX(system, firstAlignmentX);
+    		    } 
     		}
 
 			// The rightmost barlines all need an AlignmentX to which the EndMarker can be set.
@@ -1635,6 +1702,7 @@ _AP.score = (function (document)
     		}
 
     		setMsPositions(systems);
+    		setFirstDurationObjectAlignmentX(systems);
     		setRightmostBarlinesAlignmentX(systems);
 
     		if(speed !== 1)
