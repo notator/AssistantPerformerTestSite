@@ -1458,7 +1458,7 @@ _AP.score = (function (document)
 
     	    // If the first timeObject in a voice has no AlignmentX attribute,
             // it is set to the value for the system.
-    		function setFirstDurationObjectAlignmentX(systems)
+    		function setFirstTimeObjectAlignmentX(systems)
     		{
     		    var i, nSystems = systems.length, system,
                         j, nStaves, staff,
@@ -1702,7 +1702,7 @@ _AP.score = (function (document)
     		}
 
     		setMsPositions(systems);
-    		setFirstDurationObjectAlignmentX(systems);
+    		setFirstTimeObjectAlignmentX(systems);
     		setRightmostBarlinesAlignmentX(systems);
 
     		if(speed !== 1)
