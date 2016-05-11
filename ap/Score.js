@@ -895,28 +895,31 @@ _AP.score = (function (document)
 
             	if(staff.isVisible)
             	{
-            		stafflinesElems = staffElem.getElementsByClassName("stafflines");
-            		stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
-            		system.left = stafflineInfo.left;
-            		system.right = stafflineInfo.right;
+            	    stafflinesElems = staffElem.getElementsByClassName("stafflines");
+            	    if(stafflinesElems !== undefined && stafflinesElems.length > 0)
+            	    {
+            	        stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
+            	        system.left = stafflineInfo.left;
+            	        system.right = stafflineInfo.right;
 
-            		staff.topLineY = stafflineInfo.stafflineYs[0];
-            		staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-            		staff.svgStafflines = stafflineInfo.svgStafflines; // top down
+            	        staff.topLineY = stafflineInfo.stafflineYs[0];
+            	        staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+            	        staff.svgStafflines = stafflineInfo.svgStafflines; // top down
 
-            		setStaffColours(staff, isLivePerformance);
-            		setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+            	        setStaffColours(staff, isLivePerformance);
+            	        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
 
-            		if(system.topLineY === undefined)
-            		{
-            			system.topLineY = staff.topLineY;
-            			system.bottomLineY = staff.bottomLineY;
-            		}
-            		else
-            		{
-            			system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
-            			system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
-            		}
+            	        if(system.topLineY === undefined)
+            	        {
+            	            system.topLineY = staff.topLineY;
+            	            system.bottomLineY = staff.bottomLineY;
+            	        }
+            	        else
+            	        {
+            	            system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
+            	            system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
+            	        }
+            	    }
             	}
             }
 
@@ -1334,7 +1337,8 @@ _AP.score = (function (document)
     			            timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
     			            timeObjects.push(timeObject);
     			        }
-    			        else if(i === length - 1)
+
+    			        if(i === length - 1)
     			        {
     			            timeObject = {}; // the final barline in the voice (used when changing speed)
     			            timeObject.msDuration = 0;
