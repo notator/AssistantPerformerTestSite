@@ -406,43 +406,53 @@ _AP.score = (function (document)
             return systemIndex1;
         }
 
-        // Returns the index of the staff having stafflines closest to cursorY
+        // Returns the index of the visible staff having stafflines closest to cursorY
+        // Invisble staves have undefined topLineY and bottomLineY attributes.
+        // Note that the correct staff index will be returned, even if the staff has been disabled.
         function findStaffIndex(cursorY, staves)
         {
-            var rStaffIndex, i, nStaves, topLimit, bottomLimit;
+            var rStaffIndex, i, nStaves = staves.length, staff, topLimit, bottomLimit,
+                topYs = [], bottomYs = [], visibleStaffIndices = [], midYBelows = [];
 
-            if (cursorY <= staves[0].bottomLineY)
+            for(i = 0; i < nStaves; ++i)
             {
-                rStaffIndex = 0;
+                staff = staves[i];
+                if(staff.topLineY !== undefined ) 
+                {
+                    // the staff has stafflines (i.e. is visible)
+                    visibleStaffIndices.push(i);
+                    topYs.push(staff.topLineY);
+                    bottomYs.push(staff.bottomLineY)
+                }
             }
-            else if (cursorY >= staves[staves.length - 1].topLineY)
+
+            if(visibleStaffIndices.length == 1)
             {
-                rStaffIndex = staves.length - 1;
+                rStaffIndex = visibleStaffIndices[0];
             }
             else
             {
-                nStaves = staves.length;
-                for (i = 1; i < nStaves; ++i)
+                for(i = 1; i < visibleStaffIndices.length; ++i)
                 {
-                    topLimit = staves[i - 1].bottomLineY;
-                    bottomLimit = staves[i].topLineY;
-                    if (cursorY >= topLimit && cursorY <= bottomLimit)
-                    {
-                        rStaffIndex = ((cursorY - topLimit) < (bottomLimit - cursorY)) ? i - 1 : i;
-                        break;
-                    }
+                    midYBelows[i - 1] = (bottomYs[i - 1] + topYs[i]) / 2;
+                }
+                midYBelows[visibleStaffIndices.length - 1] = Number.MAX_VALUE;
 
-                    if (cursorY >= staves[i].topLineY && cursorY <= staves[i].bottomLineY)
+                for(i = 0; i < midYBelows.length; ++i)
+                {
+                    if(cursorY < midYBelows[i])
                     {
-                        rStaffIndex = i;
+                        rStaffIndex = visibleStaffIndices[i];
                         break;
                     }
                 }
             }
+
             return rStaffIndex;
         }
 
         // Returns the index of the voice closest to cursorY
+        // The staff containing the voice is visible, but may have been disabled.
         function findVoiceIndex(cursorY, voices)
         {
             var index, nVoices = voices.length, midY;
@@ -458,6 +468,7 @@ _AP.score = (function (document)
             return index;
         }
 
+        // Returns the track closest to the cursor, even if the track has been disabled.
         function findTrackIndex(cursorY, system)
         {
         	var i, j, staff, staffIndex = findStaffIndex(cursorY, system.staves),
@@ -550,7 +561,7 @@ _AP.score = (function (document)
             	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
             }
 
-            // timeObject is now the nearest performing chord to the click,
+            // timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
             // either in a live performers voice (if there is one and it is performing) or in a performing output voice.
             if(timeObject !== null)
             {
