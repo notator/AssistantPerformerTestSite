@@ -15,7 +15,7 @@
  */
 
 /*jslint white */
-/*global WebMIDI, _AP,  window,  document */
+/*global _AP,  window,  document */
 
 _AP.namespace('_AP.markers');
 
@@ -355,8 +355,6 @@ _AP.markers = (function ()
 		// msPosition must be in the current system
 		moveTo = function(msPosition)
 		{
-			var i;
-
 			positionIndex = 0;
 			while(timeObjects[positionIndex].msPosition !== msPosition)
 			{
@@ -375,7 +373,7 @@ _AP.markers = (function ()
         moveToStartMarker = function (startMarker)
         {
         	//moveTo(startMarker.timeObject().msPosition);
-        	var i, msPosition = startMarker.timeObject().msPosition;
+        	var msPosition = startMarker.timeObject().msPosition;
 
         	positionIndex = 0;
         	while(timeObjects[positionIndex].msPosition < msPosition)
