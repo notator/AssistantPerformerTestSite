@@ -10,8 +10,8 @@
 *  Assistant Performer's Graphic User Interface. 
 */
 
-/*jslint white */
-/*global WebMIDI, _AP,  window,  document */
+/*jslint white:true */
+/*global WebMIDI, _AP,  window,  document, console, alert */
 
 _AP.namespace('_AP.controls');
 
@@ -19,8 +19,8 @@ _AP.controls = (function(document, window)
 {
     "use strict";
 
-	var
-	residentSf2Synth,
+    var
+    residentSf2Synth,
 
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
@@ -34,23 +34,23 @@ _AP.controls = (function(document, window)
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
     globalElements = {}, // assistantPerformer.html elements 
-	cl = {}, // control layers
+    cl = {}, // control layers
 
     // constants for control layer opacity values
     METAL = "1", // control layer is completely opaque
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
 
-	PIANOLA_MUSIC_SCORE_INDEX = 1,
-	STUDY1_SCORE_INDEX = 2,
-	STUDY2_SCORE_INDEX = 3,
-	STUDY3_SKETCH1_SCORE_INDEX1 = 4,
-	STUDY3_SKETCH1_SCORE_INDEX2 = 5,
-	STUDY3_SKETCH2_SCORE_INDEX1 = 6,
-	STUDY3_SKETCH2_SCORE_INDEX2 = 7,
-	TOMBEAU1_SCORE_INDEX = 8,
+    PIANOLA_MUSIC_SCORE_INDEX = 1,
+    STUDY1_SCORE_INDEX = 2,
+    STUDY2_SCORE_INDEX = 3,
+    STUDY3_SKETCH1_SCORE_INDEX1 = 4,
+    STUDY3_SKETCH1_SCORE_INDEX2 = 5,
+    STUDY3_SKETCH2_SCORE_INDEX1 = 6,
+    STUDY3_SKETCH2_SCORE_INDEX2 = 7,
+    TOMBEAU1_SCORE_INDEX = 8,
 
-	RESIDENT_SYNTH_INDEX = 1,
+    RESIDENT_SYNTH_INDEX = 1,
 
     // options set in the top dialog
     options = {},
@@ -189,11 +189,11 @@ _AP.controls = (function(document, window)
 
                     a.onmouseout = function() // there is an event argument, but it is ignored
                     {
-                    	var img = document.getElementById("saveImg");
-                    	if(img !== null)
-                    	{
-                    		img.src = "images/saveMouseOut.png";
-						}
+                        var img = document.getElementById("saveImg");
+                        if(img !== null)
+                        {
+                            img.src = "images/saveMouseOut.png";
+                        }
                     };
 
                     a.onclick = function() // there is an event argument, but it is ignored
@@ -207,66 +207,66 @@ _AP.controls = (function(document, window)
         }
     },
 
-	residentSynthCanPlayScore = function(scoreIndex)
-	{
-		var rval = false,
-			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX];
+    residentSynthCanPlayScore = function(scoreIndex)
+    {
+        var rval = false,
+            playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX];
 
-		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
+        console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
-		if(playableScores.indexOf(scoreIndex) >= 0)
-		{
-			rval = true;
-		}
-		return rval;
-	},
+        if(playableScores.indexOf(scoreIndex) >= 0)
+        {
+            rval = true;
+        }
+        return rval;
+    },
 
     setMainOptionsState = function(mainOptionsState)
     {
-    	var
+        var
         scoreIndex = globalElements.scoreSelect.selectedIndex,
         outputDeviceIndex = globalElements.outputDeviceSelect.selectedIndex;
 
         switch(mainOptionsState)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
-            	globalElements.titleOptionsDiv.style.visibility = "visible";	
-            	globalElements.globalSpeedDiv.style.display = "none";
-            	globalElements.needsMIDIAccessDiv.style.display = "none";
-            	globalElements.aboutLinkDiv.style.display = "none";
+                globalElements.titleOptionsDiv.style.visibility = "visible";    
+                globalElements.globalSpeedDiv.style.display = "none";
+                globalElements.needsMIDIAccessDiv.style.display = "none";
+                globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
 
                 if(scoreIndex > 0)
                 {
-                	globalElements.aboutLinkDiv.style.display = "block";
+                    globalElements.aboutLinkDiv.style.display = "block";
 
-                	if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
-                	{
+                    if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
+                    {
 
-                		if(globalElements.waitingForSoundFontDiv.style.display === "none"
-							&& scoreIndex > 0 && outputDeviceIndex > 0)
-                		{
-                			globalElements.globalSpeedDiv.style.display = "block";
+                        if(globalElements.waitingForSoundFontDiv.style.display === "none"
+                            && scoreIndex > 0 && outputDeviceIndex > 0)
+                        {
+                            globalElements.globalSpeedDiv.style.display = "block";
 
-                			if(globalElements.globalSpeedInput.value <= 0)
-                			{
-                				globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
-                				globalElements.startRuntimeButton.style.display = "none";
-                				alert("Error: The speed must be set to a value greater than 0%!");
-                			}
-                			else
-                			{
-                				globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
-                				globalElements.startRuntimeButton.style.display = "initial";
-                			}
-                		}
-                	}
-                	else
-                	{
-                		globalElements.needsMIDIAccessDiv.style.display = "block";
-                	}
+                            if(globalElements.globalSpeedInput.value <= 0)
+                            {
+                                globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
+                                globalElements.startRuntimeButton.style.display = "none";
+                                alert("Error: The speed must be set to a value greater than 0%!");
+                            }
+                            else
+                            {
+                                globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
+                                globalElements.startRuntimeButton.style.display = "initial";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        globalElements.needsMIDIAccessDiv.style.display = "block";
+                    }
                 }
                 break;
             case "toBack": // set svg controls and score visible
@@ -474,7 +474,7 @@ _AP.controls = (function(document, window)
             }
             else if(player.isStopped())
             {
-            	sequenceRecording = new SequenceRecording(player.outputTracks.length);
+                sequenceRecording = new SequenceRecording(player.outputTracks.length);
 
                 // the running marker is at its correct position:
                 // either at the start marker, or somewhere paused.
@@ -604,8 +604,8 @@ _AP.controls = (function(document, window)
                     setPaused();
                 }
                 break;
-        	case 'playing':
-        		setPlaying(options.livePerformance);
+            case 'playing':
+                setPlaying(options.livePerformance);
                 break;
             case 'settingStart':
                 setSettingStart();
@@ -617,118 +617,118 @@ _AP.controls = (function(document, window)
     },
 
     // sets the options in the input device selector
-	// midiAccess can be null
-	setMIDIInputDeviceSelector = function(midiAccess)
-	{
-		var
-		option,
-		is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
+    // midiAccess can be null
+    setMIDIInputDeviceSelector = function(midiAccess)
+    {
+        var
+        option,
+        is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
 
-		is.options.length = 0; // important when called by midiAccess.onstatechange 
+        is.options.length = 0; // important when called by midiAccess.onstatechange 
 
-		option = document.createElement("option");
-		if(midiAccess !== null)
-		{
-			option.text = "choose a MIDI input device";
-			is.add(option, null);
-			midiAccess.inputs.forEach(function(port)
-			{
-				//console.log('input id:', port.id, ' input name:', port.name);
-				option = document.createElement("option");
-				option.inputDevice = port;
-				option.text = port.name;
-				is.add(option, null);
-			});
-		}
-		else
-		{
-			option.text = "browser does not support Web MIDI";
-			is.add(option, null);
-			globalElements.inputDeviceSelect.disabled = true;
-		}
-	},
+        option = document.createElement("option");
+        if(midiAccess !== null)
+        {
+            option.text = "choose a MIDI input device";
+            is.add(option, null);
+            midiAccess.inputs.forEach(function(port)
+            {
+                //console.log('input id:', port.id, ' input name:', port.name);
+                option = document.createElement("option");
+                option.inputDevice = port;
+                option.text = port.name;
+                is.add(option, null);
+            });
+        }
+        else
+        {
+            option.text = "browser does not support Web MIDI";
+            is.add(option, null);
+            globalElements.inputDeviceSelect.disabled = true;
+        }
+    },
 
-	// sets the options in the output device selector
-	// midiAccess can be null
-	setMIDIOutputDeviceSelector = function(midiAccess, residentSf2Synth)
-	{
-		var
-		option,
-		os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
+    // sets the options in the output device selector
+    // midiAccess can be null
+    setMIDIOutputDeviceSelector = function(midiAccess, residentSf2Synth)
+    {
+        var
+        option,
+        os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
 
-		os.options.length = 0; // important when called by midiAccess.onstatechange
+        os.options.length = 0; // important when called by midiAccess.onstatechange
 
-		option = document.createElement("option");
-		option.text = "choose a MIDI output device";
-		os.add(option, null);
+        option = document.createElement("option");
+        option.text = "choose a MIDI output device";
+        os.add(option, null);
 
-		option = document.createElement("option");
-		option.outputDevice = residentSf2Synth;
-		option.text = "Resident Sf2 Synth";
-		os.add(option, null);
+        option = document.createElement("option");
+        option.outputDevice = residentSf2Synth;
+        option.text = "Resident Sf2 Synth";
+        os.add(option, null);
 
-		if(midiAccess !== null)
-		{
-			midiAccess.outputs.forEach(function(port)
-			{
-				//console.log('output id:', port.id, ' output name:', port.name);
-				option = document.createElement("option");
-				option.outputDevice = port;
-				option.text = port.name;
-				os.add(option, null);
-			});
-		}
-	},
+        if(midiAccess !== null)
+        {
+            midiAccess.outputs.forEach(function(port)
+            {
+                //console.log('output id:', port.id, ' output name:', port.name);
+                option = document.createElement("option");
+                option.outputDevice = port;
+                option.text = port.name;
+                os.add(option, null);
+            });
+        }
+    },
 
-	onMIDIDeviceStateChange = function(e)
-	{
-		var
-		is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
-		os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
-		inputOptionsLength = is.options.length,
-		currentOutputDeviceIndex = os.selectedIndex;
+    onMIDIDeviceStateChange = function(e)
+    {
+        var
+        is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
+        os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
+        inputOptionsLength = is.options.length,
+        currentOutputDeviceIndex = os.selectedIndex;
 
-		switch(e.port.type)
-		{
-			case "input":
-				setMIDIInputDeviceSelector(midiAccess);
-				if(inputOptionsLength < is.options.length)
-				{
-					// input device added
-					is.selectedIndex = is.options.length - 1;
-				}
-				else
-				{
-					// input device removed
-					is.selectedIndex = 0;
-				}
-				break;
-			case "output":
-				setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
-				// Output devices are currently handled differently from the input devices...
-				// (I don't want the output device selector's selected index to change 
-				// every time an input device is connected or disconnected.)
-				if(currentOutputDeviceIndex < os.options.length)
-				{
-					os.selectedIndex = currentOutputDeviceIndex;
-				}
-				else
-				{
-					os.SelectedIndex = 0;
-				}
-				break;
-		}
-	},
+        switch(e.port.type)
+        {
+            case "input":
+                setMIDIInputDeviceSelector(midiAccess);
+                if(inputOptionsLength < is.options.length)
+                {
+                    // input device added
+                    is.selectedIndex = is.options.length - 1;
+                }
+                else
+                {
+                    // input device removed
+                    is.selectedIndex = 0;
+                }
+                break;
+            case "output":
+                setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
+                // Output devices are currently handled differently from the input devices...
+                // (I don't want the output device selector's selected index to change 
+                // every time an input device is connected or disconnected.)
+                if(currentOutputDeviceIndex < os.options.length)
+                {
+                    os.selectedIndex = currentOutputDeviceIndex;
+                }
+                else
+                {
+                    os.SelectedIndex = 0;
+                }
+                break;
+        }
+    },
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
-	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
-	// mAccess is null if the browser does not support the Web MIDI API
+    // Loads SoundFonts, adding them to the relevant scoreSelect option(s).
+    // mAccess is null if the browser does not support the Web MIDI API
     init = function(mAccess)
     {
-		function getGlobalElements()
+        function getGlobalElements()
         {
-        	globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
+            globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
@@ -745,119 +745,119 @@ _AP.controls = (function(document, window)
 
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(runningMarkerHeightChanged)
-		{
-        	// There is one soundFont per score type.
-        	// The soundFont is added as an attribute to the scoreSelect option for the score.
-        	function loadSoundFonts(scoreSelect)
-        	{
-        		var
-				firstSoundFontLoaded = false,
-				soundFontIndex = 0,
-				soundFontData =
-				[
-					//{
-					//	name: "SongSix",
-					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
-					//	presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
-					//	scoreSelectIndices: [1]
-					//},
-					//{
-					//	name: "Study2",
-					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
-					//	presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
-					//	scoreSelectIndices: [2]
-					//},
-					//{
-					//	name: "Study3Sketch",
-					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
-					//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
-					//	scoreSelectIndices: [3, 4, 5, 6]
-					//},
-					{
-						name: "Grand Piano",
-						url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
-						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX]
-					}
-				];
+        {
+            // There is one soundFont per score type.
+            // The soundFont is added as an attribute to the scoreSelect option for the score.
+            function loadSoundFonts(scoreSelect)
+            {
+                var
+                firstSoundFontLoaded = false,
+                soundFontIndex = 0,
+                soundFontData =
+                [
+                    //{
+                    //    name: "SongSix",
+                    //    url: "http://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+                    //    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
+                    //    scoreSelectIndices: [1]
+                    //},
+                    //{
+                    //    name: "Study2",
+                    //    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+                    //    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
+                    //    scoreSelectIndices: [2]
+                    //},
+                    //{
+                    //    name: "Study3Sketch",
+                    //    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+                    //    presetIndices: [72, 78, 79, 113, 115, 117, 118],
+                    //    scoreSelectIndices: [3, 4, 5, 6]
+                    //},
+                    {
+                        name: "Grand Piano",
+                        url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+                        presetIndices: [0],
+                        scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX]
+                    }
+                ];
 
-        		// Note that XMLHttpRequest does not work with local files (localhost:).
-        		// To make it work, run the app from the web (http:).
-        		function loadSoundFontAsynch()
-        		{
-        			var
-					soundFont,
-					soundFontURL = soundFontData[soundFontIndex].url,
-					soundFontName = soundFontData[soundFontIndex].name,
-					presetIndices = soundFontData[soundFontIndex].presetIndices,
-					scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
+                // Note that XMLHttpRequest does not work with local files (localhost:).
+                // To make it work, run the app from the web (http:).
+                function loadSoundFontAsynch()
+                {
+                    var
+                    soundFont,
+                    soundFontURL = soundFontData[soundFontIndex].url,
+                    soundFontName = soundFontData[soundFontIndex].name,
+                    presetIndices = soundFontData[soundFontIndex].presetIndices,
+                    scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
 
-        			function onLoad()
-        			{
-        				var i, option;
+                    function onLoad()
+                    {
+                        var i, option;
 
-        				function loadFirstSoundFont(synth, soundFont)
-        				{
-        					var channelIndex;
+                        function loadFirstSoundFont(synth, soundFont)
+                        {
+                            var channelIndex;
 
-        					synth.setSoundFont(soundFont);
+                            synth.setSoundFont(soundFont);
 
-        					// For some reason, the first noteOn to be sent by the host, reacts only after a delay.
-        					// This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
-        					// This is actually a kludge. I have been unable to solve the root problem.
-        					// (Is there an uninitialized buffer somewhere?)
-        					if(synth.setMasterVolume)
-        					{
-        						// consoleSf2Synth can't/shouldn't do this.
-        						// (It has no setMasterVolume function)
-        						synth.setMasterVolume(0);
-        						for(channelIndex = 0; channelIndex < 16; ++channelIndex)
-        						{
-        							synth.noteOn(channelIndex, 64, 100);
-        							synth.noteOff(channelIndex, 64, 100);
-        						}
-        					}
-        					// Wait for the above noteOn/noteOff kludge to work.
-        					setTimeout(function()
-        					{
-        						if(synth.setMasterVolume)
-        						{
-        							synth.setMasterVolume(16384);
-        						}
-        						firstSoundFontLoaded = true;
-        					}, 2400);
+                            // For some reason, the first noteOn to be sent by the host, reacts only after a delay.
+                            // This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
+                            // This is actually a kludge. I have been unable to solve the root problem.
+                            // (Is there an uninitialized buffer somewhere?)
+                            if(synth.setMasterVolume)
+                            {
+                                // consoleSf2Synth can't/shouldn't do this.
+                                // (It has no setMasterVolume function)
+                                synth.setMasterVolume(0);
+                                for(channelIndex = 0; channelIndex < 16; ++channelIndex)
+                                {
+                                    synth.noteOn(channelIndex, 64, 100);
+                                    synth.noteOff(channelIndex, 64, 100);
+                                }
+                            }
+                            // Wait for the above noteOn/noteOff kludge to work.
+                            setTimeout(function()
+                            {
+                                if(synth.setMasterVolume)
+                                {
+                                    synth.setMasterVolume(16384);
+                                }
+                                firstSoundFontLoaded = true;
+                            }, 2400);
 
-        					setMainOptionsState("toFront"); // hides "soundFont loading" message
-        				}
+                            setMainOptionsState("toFront"); // hides "soundFont loading" message
+                        }
 
-        				soundFont.init();
-        				for(i = 0; i < scoreSelectIndices.length; ++i)
-        				{
-        					option = scoreSelect.options[scoreSelectIndices[i]];
-        					option.soundFont = soundFont;
-        				}
+                        soundFont.init();
+                        for(i = 0; i < scoreSelectIndices.length; ++i)
+                        {
+                            option = scoreSelect.options[scoreSelectIndices[i]];
+                            option.soundFont = soundFont;
+                        }
 
-        				if(!firstSoundFontLoaded)
-        				{
-        					loadFirstSoundFont(residentSf2Synth, soundFont);
-        				}
+                        if(!firstSoundFontLoaded)
+                        {
+                            loadFirstSoundFont(residentSf2Synth, soundFont);
+                        }
 
-        				console.log(soundFontName + ": loading complete.");
+                        console.log(soundFontName + ": loading complete.");
 
-        				soundFontIndex++;
-        				if(soundFontIndex < soundFontData.length)
-        				{
-        					console.log('loading the "' + soundFontData[soundFontIndex].name + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
-        					loadSoundFontAsynch();
-        				}
-        			}
+                        soundFontIndex++;
+                        if(soundFontIndex < soundFontData.length)
+                        {
+                            console.log('loading the "' + soundFontData[soundFontIndex].name + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+                            loadSoundFontAsynch();
+                        }
+                    }
 
-        			console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
-        			soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
-        		}
+                    console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+                    soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
+                }
 
-        		loadSoundFontAsynch();
-        	}
+                loadSoundFontAsynch();
+            }
 
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
@@ -908,265 +908,264 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-    	midiAccess = mAccess;
+        midiAccess = mAccess;
 
-    	residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
-		residentSf2Synth.init();
+        residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
+        residentSf2Synth.init();
 
-    	getGlobalElements();
+        getGlobalElements();
 
-    	setMIDIInputDeviceSelector(midiAccess);
-    	setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
+        setMIDIInputDeviceSelector(midiAccess);
+        setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
 
-    	if(midiAccess !== null)
-    	{
-    		// update the device selectors when devices get connected, disconnected, opened or closed
-    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
-    	}
+        if(midiAccess !== null)
+        {
+            // update the device selectors when devices get connected, disconnected, opened or closed
+            midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+        }
 
-    	initScoreSelector(runningMarkerHeightChanged);
+        initScoreSelector(runningMarkerHeightChanged);
 
-    	setSvgPagesDivHeight();
+        setSvgPagesDivHeight();
 
-    	getControlLayers(document);
+        getControlLayers(document);
 
-    	setSvgControlsState('disabled');
+        setSvgControlsState('disabled');
     },
 
-	// The Go control can be clicked directly.
-	// Also, it is called automatically when assisted performances start.
-	goControlClicked = function()
-	{
-		if(svgControlsState === 'stopped' || svgControlsState === 'paused')
-		{
-			setSvgControlsState('playing');
-		}
-		else if(svgControlsState === 'playing')
-		{
-			setSvgControlsState('paused');
-		}
-	},
+    // The Go control can be clicked directly.
+    // Also, it is called automatically when assisted performances start.
+    goControlClicked = function()
+    {
+        if(svgControlsState === 'stopped' || svgControlsState === 'paused')
+        {
+            setSvgControlsState('playing');
+        }
+        else if(svgControlsState === 'playing')
+        {
+            setSvgControlsState('paused');
+        }
+    },
 
     // called when the user clicks a control in the GUI
     doControl = function(controlID)
     {
-    	// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
-    	// and uses the information to load the score's svg files into the "svgPagesFrame" div,
-    	// The score is actually analysed when the Start button is clicked.
-    	function setScore(scoreIndex)
-    	{
-    		var scoreInfo;
+        // This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
+        // and uses the information to load the score's svg files into the "svgPagesFrame" div,
+        // The score is actually analysed when the Start button is clicked.
+        function setScore(scoreIndex)
+        {
+            var scoreInfo;
 
-    		// The scoreSelectIndex argument is the index of the score in the score selector
-    		// Returns a scoreInfo object having the following fields:
-    		//	scoreInfo.path -- the path to the score's file
-    		//	scoreInfo.inputHandler
-    		//	scoreInfo.aboutText
-    		//	scoreInfo.aboutURL
-    		// The path setting includes the complete path from the Assistant Performer's "scores" folder
-    		// to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
-    		// "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
-    		// "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
-    		// Note that if annotated page(s) are to be used, their path value will include the name of their
-    		// folder (e.g. "Song Six/annotated/Song Six (14 pages)").
-    		// If the score contains input voices, the inputHandler= option will be defined: It selects one of the
-    		// Assistant Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
-    		function getScoreInfo(scoreSelectIndex)
-    		{
-    			var scoreInfo = { path: "", inputHandler: "none", aboutText: "", aboutURL: "" };
+            // The scoreSelectIndex argument is the index of the score in the score selector
+            // Returns a scoreInfo object having the following fields:
+            //    scoreInfo.path -- the path to the score's file
+            //    scoreInfo.inputHandler
+            //    scoreInfo.aboutText
+            //    scoreInfo.aboutURL
+            // The path setting includes the complete path from the Assistant Performer's "scores" folder
+            // to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
+            // "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
+            // "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
+            // Note that if annotated page(s) are to be used, their path value will include the name of their
+            // folder (e.g. "Song Six/annotated/Song Six (14 pages)").
+            // If the score contains input voices, the inputHandler= option will be defined: It selects one of the
+            // Assistant Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
+            function getScoreInfo(scoreSelectIndex)
+            {
+                var scoreInfo = { path: "", inputHandler: "none", aboutText: "", aboutURL: "" };
 
-    			switch(scoreSelectIndex)
-    			{
-    				case PIANOLA_MUSIC_SCORE_INDEX:
-    					scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Pianola Music";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
-    					break;
-    				case STUDY1_SCORE_INDEX:
-    					scoreInfo.path = "Study 1/Study 1 (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Study 1";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
-    					break;
-    				case STUDY2_SCORE_INDEX:
-    					scoreInfo.path = "Study 2/Study 2 (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Study 2";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
-    					break;
-    				case STUDY3_SKETCH1_SCORE_INDEX1:
-    					scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Study 3 Sketch";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-    					break;
-    				case STUDY3_SKETCH1_SCORE_INDEX2:
-    					scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Study 3 Sketch";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-    					break;
-    				case STUDY3_SKETCH2_SCORE_INDEX1:
-    					scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
-    					scoreInfo.inputHandler = "keyboard1";
-    					scoreInfo.aboutText = "about Study 3 Sketch";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-    					break;
-    				case STUDY3_SKETCH2_SCORE_INDEX2:
-    					scoreInfo.path = "Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (scroll)";
-    					scoreInfo.inputHandler = "keyboard1";
-    					scoreInfo.aboutText = "about Study 3 Sketch";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                switch(scoreSelectIndex)
+                {
+                    case PIANOLA_MUSIC_SCORE_INDEX:
+                        scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Pianola Music";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
-    				case TOMBEAU1_SCORE_INDEX:
-    					scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
-    					scoreInfo.inputHandler = "none";
-    					scoreInfo.aboutText = "about Tombeau 1";
-    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
-    					break;
-    			}
+                    case STUDY1_SCORE_INDEX:
+                        scoreInfo.path = "Study 1/Study 1 (scroll)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Study 1";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
+                        break;
+                    case STUDY2_SCORE_INDEX:
+                        scoreInfo.path = "Study 2/Study 2 (scroll)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Study 2";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+                        break;
+                    case STUDY3_SKETCH1_SCORE_INDEX1:
+                        scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
+                    case STUDY3_SKETCH1_SCORE_INDEX2:
+                        scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
+                    case STUDY3_SKETCH2_SCORE_INDEX1:
+                        scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
+                        scoreInfo.inputHandler = "keyboard1";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
+                    case STUDY3_SKETCH2_SCORE_INDEX2:
+                        scoreInfo.path = "Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (scroll)";
+                        scoreInfo.inputHandler = "keyboard1";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
+                    case TOMBEAU1_SCORE_INDEX:
+                        scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
+                        scoreInfo.inputHandler = "none";
+                        scoreInfo.aboutText = "about Tombeau 1";
+                        scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+                        break;
+                }
 
-    			return scoreInfo;
-    		}
+                return scoreInfo;
+            }
 
-    		function embedPageCode(url)
-    		{
-    			var code = "<embed " +
-								"src=\'" + url + "\' " +
-								"content-type=\'image/svg+xml\' " +
-								"class=\'svgPage\' />";
-    			return code;
-    		}
+            function embedPageCode(url)
+            {
+                var code = "<embed " +
+                                "src=\'" + url + "\' " +
+                                "content-type=\'image/svg+xml\' " +
+                                "class=\'svgPage\' />";
+                return code;
+            }
 
-    		// Returns the URL of the scores directory. This can either be a file:
-    		// e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
-    		// served from IIS:
-    		// e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-    		// or on the web:
-    		// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-			// Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
-    		function scoresURL(documentURL)
-    		{
-    			var
-				apIndex = documentURL.search("assistantPerformer.html"),
-				url = documentURL.slice(0, apIndex) + "scores/";
+            // Returns the URL of the scores directory. This can either be a file:
+            // e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
+            // served from IIS:
+            // e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // or on the web:
+            // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
+            function scoresURL(documentURL)
+            {
+                var
+                apIndex = documentURL.search("assistantPerformer.html"),
+                url = documentURL.slice(0, apIndex) + "scores/";
 
-    			return url;
-    		}
+                return url;
+            }
 
-    		function getPathData(path)
-    		{
-    			var pathData = {}, components;
+            function getPathData(path)
+            {
+                var pathData = {}, components;
 
-    			components = path.split("(");
-    			if(components[0][components[0].length - 1] !== ' ')
-    			{
-    				alert("Error in pages path string:\nThere must be a space character before the '('");
-    			}
-    			pathData.basePath = components[0] + "page ";
+                components = path.split("(");
+                if(components[0][components[0].length - 1] !== ' ')
+                {
+                    alert("Error in pages path string:\nThere must be a space character before the '('");
+                }
+                pathData.basePath = components[0] + "page ";
 
-    			// the second search argument is a regular expression for a single ')' character.
-    			if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0) 
-    			{
-    				alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
-    			}
+                // the second search argument is a regular expression for a single ')' character.
+                if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0) 
+                {
+                    alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
+                }
 
-    			pathData.nPages = parseInt(components[1], 10);
-    			if(pathData.nPages === null || pathData.nPages === undefined || pathData.nPages < 1)
-    			{
-    				alert("Error in pages path string:\nIllegal number of pages.");
-    			}
+                pathData.nPages = parseInt(components[1], 10);
+                if(pathData.nPages === null || pathData.nPages === undefined || pathData.nPages < 1)
+                {
+                    alert("Error in pages path string:\nIllegal number of pages.");
+                }
 
-    			return pathData;
-    		}
+                return pathData;
+            }
 
-    		function setAboutLink(scoreInfo)
-    		{
-    			var linkDivElem = document.getElementById('aboutLinkDiv');
+            function setAboutLink(scoreInfo)
+            {
+                var linkDivElem = document.getElementById('aboutLinkDiv');
 
-    			linkDivElem.style.display = "none";
-    			if(scoreInfo.aboutURL !== undefined)
-    			{
-    				linkDivElem.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
-    				linkDivElem.style.display = "block"; 
-    			}
-    		}
+                linkDivElem.style.display = "none";
+                if(scoreInfo.aboutURL !== undefined)
+                {
+                    linkDivElem.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
+                    linkDivElem.style.display = "block"; 
+                }
+            }
 
-    		function setPages(scoreInfo)
-    		{
-    			var i, rootURL,
+            function setPages(scoreInfo)
+            {
+                var i, rootURL,
                     svgPagesFrame,
                     embedCode = "",
-					pathData,
-					pageURL;
+                    pathData,
+                    pageURL;
 
-    			rootURL = scoresURL(document.URL);
+                rootURL = scoresURL(document.URL);
 
-    			if(scoreInfo.path.search("(scroll)") >= 0)
-    			{
-    				pageURL = rootURL + scoreInfo.path + ".svg";
-    				embedCode += embedPageCode(pageURL);
-    			}
-    			else
-    			{
-    				pathData = getPathData(scoreInfo.path);
+                if(scoreInfo.path.search("(scroll)") >= 0)
+                {
+                    pageURL = rootURL + scoreInfo.path + ".svg";
+                    embedCode += embedPageCode(pageURL);
+                }
+                else
+                {
+                    pathData = getPathData(scoreInfo.path);
 
-    				for(i = 0; i < pathData.nPages; ++i)
-    				{
-    					pageURL = rootURL + pathData.basePath + (i + 1).toString(10) + ".svg";
-    					embedCode += embedPageCode(pageURL);
-    				}
-    			}
+                    for(i = 0; i < pathData.nPages; ++i)
+                    {
+                        pageURL = rootURL + pathData.basePath + (i + 1).toString(10) + ".svg";
+                        embedCode += embedPageCode(pageURL);
+                    }
+                }
 
-    			svgPagesFrame = document.getElementById('svgPagesFrame');
-    			svgPagesFrame.innerHTML = embedCode;
-    		}
+                svgPagesFrame = document.getElementById('svgPagesFrame');
+                svgPagesFrame.innerHTML = embedCode;
+            }
 
-    		function setOptionsInputHandler(scoreInfoInputHandler)
-    		{
-    			if(scoreInfoInputHandler === "none")
-    			{
-    				if(globalElements.inputDeviceSelect.disabled === false)
-    				{
-    					globalElements.inputDeviceSelect.selectedIndex = 0;
-    					globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
-    					globalElements.inputDeviceSelect.disabled = true;
-    					options.inputHandler = undefined;
-    				}
-    			}
-    			else
-    			{
-    				// globalElements.inputDeviceSelect.selectedIndex is not changed here
-    				globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
-    				globalElements.inputDeviceSelect.disabled = false;
+            function setOptionsInputHandler(scoreInfoInputHandler)
+            {
+                if(scoreInfoInputHandler === "none")
+                {
+                    if(globalElements.inputDeviceSelect.disabled === false)
+                    {
+                        globalElements.inputDeviceSelect.selectedIndex = 0;
+                        globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
+                        globalElements.inputDeviceSelect.disabled = true;
+                        options.inputHandler = undefined;
+                    }
+                }
+                else
+                {
+                    // globalElements.inputDeviceSelect.selectedIndex is not changed here
+                    globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
+                    globalElements.inputDeviceSelect.disabled = false;
 
-    				switch(scoreInfoInputHandler)
-    				{
-    					case "keyboard1":
-    						options.inputHandler = _AP.keyboard1;
-    						break;
-    					default:
-    						console.assert(false, "Error: unknown scoreInfo.inputType");
-    						break;
-    				}
-    			}
-    		}
+                    if(scoreInfoInputHandler === "keyboard1")
+                    {
+                        options.inputHandler = _AP.keyboard1;
+                    }
+                    else
+                    {
+                        console.assert(false, "Error: unknown scoreInfo.inputType");
+                    }
+                }
+            }
 
-    		scoreInfo = getScoreInfo(scoreIndex);
+            scoreInfo = getScoreInfo(scoreIndex);
 
-    		setAboutLink(scoreInfo);
+            setAboutLink(scoreInfo);
 
-    		if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
-    		{
-    			setPages(scoreInfo);
+            if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
+            {
+                setPages(scoreInfo);
 
-    			setOptionsInputHandler(scoreInfo.inputHandler);
+                setOptionsInputHandler(scoreInfo.inputHandler);
 
-    			svgPagesDiv.scrollTop = 0;
-    			scoreHasJustBeenSelected = true;
-    		}
-    	}
+                svgPagesDiv.scrollTop = 0;
+                scoreHasJustBeenSelected = true;
+            }
+        }
 
         // used when the control automatically toggles back
         // toggleBack('setStartControlSelected')
@@ -1179,7 +1178,7 @@ _AP.controls = (function(document, window)
             }, 200);
         }
 
-    	// goControlClicked is an outer function
+        // goControlClicked is an outer function
 
         function stopControlClicked()
         {
@@ -1242,111 +1241,111 @@ _AP.controls = (function(document, window)
 
         function waitForSoundFont()
         {
-        	if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
-			&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
-        	{
-        		globalElements.waitingForSoundFontDiv.style.display = "block";
-        		globalElements.outputDeviceSelect.disabled = true;
-        	}
-        	else
-        	{
-        		globalElements.waitingForSoundFontDiv.style.display = "none";
-        		globalElements.outputDeviceSelect.disabled = false;
-        	}
-        	doControl("scoreSelect");
+            if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+            && globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
+            {
+                globalElements.waitingForSoundFontDiv.style.display = "block";
+                globalElements.outputDeviceSelect.disabled = true;
+            }
+            else
+            {
+                globalElements.waitingForSoundFontDiv.style.display = "none";
+                globalElements.outputDeviceSelect.disabled = false;
+            }
+            doControl("scoreSelect");
         }
 
-    	if(controlID === "scoreSelect")
-    	{
-    		globalElements.outputDeviceSelect.selectedIndex = 0;
+        if(controlID === "scoreSelect")
+        {
+            globalElements.outputDeviceSelect.selectedIndex = 0;
 
-    		if(globalElements.scoreSelect.selectedIndex > 0)
-    		{
-    			if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
-    			{
-    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
-    			}
-    			else
-    			{
-    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
-    			}
-    			
-    			setScore(globalElements.scoreSelect.selectedIndex);
-    		}
-    		else
-    		{
-    			setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
-    		}
-    	}
+            if(globalElements.scoreSelect.selectedIndex > 0)
+            {
+                if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
+                {
+                    globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
+                }
+                else
+                {
+                    globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
+                }
+                
+                setScore(globalElements.scoreSelect.selectedIndex);
+            }
+            else
+            {
+                setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
+            }
+        }
 
-    	/**** controls in options panel ***/
-    	if(controlID === "inputDeviceSelect"
-		|| controlID === "outputDeviceSelect"
-		|| controlID === "globalSpeedInput")
-    	{
-    		setMainOptionsState("toFront"); // enables only the appropriate controls
-    	}
+        /**** controls in options panel ***/
+        if(controlID === "inputDeviceSelect"
+        || controlID === "outputDeviceSelect"
+        || controlID === "globalSpeedInput")
+        {
+            setMainOptionsState("toFront"); // enables only the appropriate controls
+        }
 
-    	if(controlID === "scoreSelect")
-    	{
-    		if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
-			&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
-    		{
-    			setTimeout(waitForSoundFont, 200);
-    		}
-    		setMainOptionsState("toFront"); // enables only the appropriate controls
-    	}
+        if(controlID === "scoreSelect")
+        {
+            if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+            && globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
+            {
+                setTimeout(waitForSoundFont, 200);
+            }
+            setMainOptionsState("toFront"); // enables only the appropriate controls
+        }
 
-    	/*** SVG controls ***/
-    	if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
-    	{
-    		switch(controlID)
-    		{
-    			case "goControl":
-    				goControlClicked();
-    				break;
-    			case "stopControl":
-    				stopControlClicked();
-    				break;
-    			case "setStartControl":
-    				setStartControlClicked();
-    				break;
-    			case "setEndControl":
-    				setEndControlClicked();
-    				break;
-    			case "sendStartToBeginningControl":
-    				sendStartToBeginningControlClicked();
-    				break;
-    			case "sendStopToEndControl":
-    				sendStopToEndControlClicked();
-    				break;
-    			default:
-    				break;
-    		}
-    	}
+        /*** SVG controls ***/
+        if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
+        {
+            switch(controlID)
+            {
+                case "goControl":
+                    goControlClicked();
+                    break;
+                case "stopControl":
+                    stopControlClicked();
+                    break;
+                case "setStartControl":
+                    setStartControlClicked();
+                    break;
+                case "setEndControl":
+                    setEndControlClicked();
+                    break;
+                case "sendStartToBeginningControl":
+                    sendStartToBeginningControlClicked();
+                    break;
+                case "sendStopToEndControl":
+                    sendStopToEndControlClicked();
+                    break;
+                default:
+                    break;
+            }
+        }
 
-    	if(controlID === "gotoOptions")
-    	{
-    		deleteSaveMIDIFileButton();
+        if(controlID === "gotoOptions")
+        {
+            deleteSaveMIDIFileButton();
 
-    		if(midiAccess !== null)
-    		{
-    			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
-    		}
+            if(midiAccess !== null)
+            {
+                midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+            }
 
-    		if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
-    		{
-    			setSvgControlsState('disabled');
-    			score.moveStartMarkerToTop(svgPagesDiv);
-    			scoreHasJustBeenSelected = false;
-    		}
-    	}
+            if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+            {
+                setSvgControlsState('disabled');
+                score.moveStartMarkerToTop(svgPagesDiv);
+                scoreHasJustBeenSelected = false;
+            }
+        }
     },
 
     // functions for adjusting the appearance of the score options
     showOverRect = function(overRectID, disabledID)
     {
-    	var overRectElem = document.getElementById(overRectID),
+        var overRectElem = document.getElementById(overRectID),
             disabledElem = document.getElementById(disabledID),
             disabledOpacity = disabledElem.getAttribute("opacity");
 
@@ -1368,111 +1367,111 @@ _AP.controls = (function(document, window)
     // It does not require a MIDI input.
     beginRuntime = function()
     {
-    	function setMIDIDevices(options)
-    	{
-    		var i,
-			inSelector = document.getElementById("inputDeviceSelect"),
-			scoreSelector = document.getElementById("scoreSelect"),
-			outSelector = document.getElementById("outputDeviceSelect");
+        function setMIDIDevices(options)
+        {
+            var i,
+            inSelector = document.getElementById("inputDeviceSelect"),
+            scoreSelector = document.getElementById("scoreSelect"),
+            outSelector = document.getElementById("outputDeviceSelect");
 
-    		// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
-    		if(inSelector.selectedIndex === 0)
-    		{
-    			options.inputDevice = null;
-    		}
-    		else
-    		{
-    			options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
-    		}
+            // inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
+            if(inSelector.selectedIndex === 0)
+            {
+                options.inputDevice = null;
+            }
+            else
+            {
+                options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
+            }
 
-    		for(i = 1; i < outSelector.options.length; ++i)
-    		{
-    			if(outSelector.options[i].outputDevice)
-    			{
-    				outSelector.options[i].outputDevice.close();
-    			}
-    		}
+            for(i = 1; i < outSelector.options.length; ++i)
+            {
+                if(outSelector.options[i].outputDevice)
+                {
+                    outSelector.options[i].outputDevice.close();
+                }
+            }
 
-    		if(outSelector.selectedIndex === 0)
-    		{
-    			options.outputDevice = null;
-    		}
-    		else
-    		{
-    			options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
-    			options.outputDevice.open();
-    		}
+            if(outSelector.selectedIndex === 0)
+            {
+                options.outputDevice = null;
+            }
+            else
+            {
+                options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
+                options.outputDevice.open();
+            }
 
-    		if(options.outputDevice.setSoundFont !== undefined)
-    		{
-    			options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
-    		}
-    	}
+            if(options.outputDevice.setSoundFont !== undefined)
+            {
+                options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
+            }
+        }
 
-    	function getTracksAndPlayer(score, options)
-    	{
-    		var tracksData;
+        function getTracksAndPlayer(score, options)
+        {
+            var tracksData;
 
-    		if(scoreHasJustBeenSelected)
-    		{
-    			// everything except the timeObjects (which have to take account of speed)
-    			score.getEmptyPagesAndSystems(options.livePerformance);
-    		}
+            if(scoreHasJustBeenSelected)
+            {
+                // everything except the timeObjects (which have to take account of speed)
+                score.getEmptyPagesAndSystems(options.livePerformance);
+            }
 
-    		// tracksData will contain the following defined attributes:
-    		//		inputTracks[]
-    		//		outputTracks[]
-    		//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
-    		//			inputKeyRange.bottomKey
-    		//			inputKeyRange.topKey
-    		tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
+            // tracksData will contain the following defined attributes:
+            //        inputTracks[]
+            //        outputTracks[]
+            //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+            //            inputKeyRange.bottomKey
+            //            inputKeyRange.topKey
+            tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
 
-    		if(options.livePerformance)
-    		{
-    			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-    			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-    			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
-    		}
-    		else
-    		{
-    			player = sequence; // sequence is a namespace, not a class.
-    			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-    			player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
-    		}
+            if(options.livePerformance)
+            {
+                player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
+                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+                player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+            }
+            else
+            {
+                player = sequence; // sequence is a namespace, not a class.
+                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+                player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
+            }
 
-    		// The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-    		// It calls the score.refreshDisplay(isLivePerformance, trackIsOnArray) function as a callback when one
-    		// of its track controls is turned on or off.
-    		// score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
-    		// Repainting includes using the correct staff colours, but the score may also update the position of
-    		// its start marker (which always starts on a chord) if a track is turned off.
-    		tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
-    	}
+            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
+            // It calls the score.refreshDisplay(isLivePerformance, trackIsOnArray) function as a callback when one
+            // of its track controls is turned on or off.
+            // score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
+            // Repainting includes using the correct staff colours, but the score may also update the position of
+            // its start marker (which always starts on a chord) if a track is turned off.
+            tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+        }
 
-    	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
-    	options.globalSpeed = globalElements.globalSpeedInput.value / 100;
+        options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
+        options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
-    	setMIDIDevices(options);
+        setMIDIDevices(options);
 
-    	// This function can throw an exception
-    	// (e.g. if an attempt is made to create an event that has no duration).
-    	getTracksAndPlayer(score, options);
+        // This function can throw an exception
+        // (e.g. if an attempt is made to create an event that has no duration).
+        getTracksAndPlayer(score, options);
 
-    	if(midiAccess !== null)
-    	{
-    		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
-    	}
+        if(midiAccess !== null)
+        {
+            midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+        }
 
-    	score.refreshDisplay(); // undefined trackIsOnArray
+        score.refreshDisplay(); // undefined trackIsOnArray
 
-    	score.moveStartMarkerToTop(svgPagesDiv);
+        score.moveStartMarkerToTop(svgPagesDiv);
 
-    	setSvgControlsState('stopped');
+        setSvgControlsState('stopped');
 
-    	if(options.livePerformance === true)
-    	{
-    		goControlClicked();
-    	}
+        if(options.livePerformance === true)
+        {
+            goControlClicked();
+        }
     },
 
     publicAPI =
