@@ -629,19 +629,19 @@ _AP.score = (function (document)
         showRunningMarker();
     },
 
-    // The svg argument contains pointers to functions that work on the SVG score.
-    // Constructs all pages, complete except for the timeObjects.
+    // Constructs empty systems for all the pages.
     // Each page has a frame and the correct number of empty systems.
-    // Each system has the correct number of empty staves and barlines, it also has
-    // a startMarker, a runningMarker and an endMarker.
-    // Each staff has empty voices, each voice has an empty timeObjects array.
-    // If these objects have graphic parameters, they are set.
-    // the score's trackIsOnArray is initialized to all tracks on (=true).
+    // Each system has a startMarker, a runningMarker and an endMarker, but these are left
+    // on the left edge of the page.
+    // Each system has the correct number of staves containing the correct number of voices.
+    // The staves have set boolean isOutput and isVisible attributes.
+    // The voices have a set boolean isOutput attribute, but as yet no timeObject arrays.
+    // The score's trackIsOnArray is initialized to all tracks on (=true).
     // If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (isLivePerformanceArg)
     {
-        var system, sysElems, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY,
+        var system, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY,
             i, j, k,
             svgPage, svgElem, svgChildren, systemsContainerChildren, markersLayer,
             pageHeight, pageSystems;
@@ -663,14 +663,14 @@ _AP.score = (function (document)
             trackIsOnArray = []; // reset global
         }
 
-        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemElem, isLivePerformance)
+        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemElem)
         {
             var i, j,
                 systemDy, staffDy,
                 staffElems, staffElem, stafflinesElems,
                 outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,                
                 staff, stafflineInfo,
-                voice, channel, midiChannelPerOutputTrack = [];
+                voice;
 
             function getHasMidiElems(systemElem)
             {
@@ -715,7 +715,7 @@ _AP.score = (function (document)
 
             function setVoiceCentreYs(staffTopY, staffBottomY, voices)
             {
-                if (voices.length === 1)
+                if(voices.length === 1)
                 {
                     voices[0].centreY = (staffTopY + staffBottomY) / 2;
                 }
@@ -724,7 +724,7 @@ _AP.score = (function (document)
                     voices[0].centreY = staffTopY;
                     voices[1].centreY = staffBottomY;
                 }
-            }
+                }
 
             function setStaffColours(staff, isLivePerformance)
             {
@@ -834,17 +834,7 @@ _AP.score = (function (document)
                 return dy;
             }
 
-            function getInverseArray(midiChannelPerOutputTrack)
-            {
-                var midiChannel, n = midiChannelPerOutputTrack.length, rval = [];
-                for(midiChannel = 0; midiChannel < n; ++midiChannel)
-                {
-                    rval.push(midiChannelPerOutputTrack.indexOf(midiChannel));
-                }
-                return rval;
-            }
-
-            function setCursorLimits(system, systemElem)
+            function getSystemMarkerLimits(system, systemElem, systemDY)
             {
                 var i, sysElemChildren, leftToRightElem, topToBottomElem;
                 
@@ -854,155 +844,155 @@ _AP.score = (function (document)
                     if(sysElemChildren[i].nodeName === "score:leftToRight")
                     {
                         leftToRightElem = sysElemChildren[i];
-                        system.cursorTop = parseInt(leftToRightElem.getAttribute("systemTop"), 10);
-                        system.cursorBottom = parseInt(leftToRightElem.getAttribute("systemBottom"), 10);
+                        system.markersTop = systemDY + parseInt(leftToRightElem.getAttribute("systemTop"), 10);
+                        system.markersBottom = systemDY + parseInt(leftToRightElem.getAttribute("systemBottom"), 10);
                         break;
                     }
                     if(sysElemChildren[i].nodeName === "score:topToBottom")
                     {
                         topToBottomElem = sysElemChildren[i];
-                        system.cursorLeft = parseInt(topToBottomElem.getAttribute("systemLeft"), 10);
-                        system.cursorRight = parseInt(topToBottomElem.getAttribute("systemRight"), 10);
+                        system.markersLeft = parseInt(topToBottomElem.getAttribute("systemLeft"), 10);
+                        system.markersRight = parseInt(topToBottomElem.getAttribute("systemRight"), 10);
                         break;
                     }
                 }
             }
 
-            function getChannel(outputVoiceElem)
-            {
-                var i, channel = -1, voiceChildren, voiceChild;
+            //function getChannel(outputVoiceElem)
+            //{
+            //    var i, channel = -1, voiceChildren, voiceChild;
 
-                function getDSChannel(durationSymbolElem)
-                {
-                    var i, j, channel = - 1, dsChildren, dsChild,
-                        scoreMidiChildren, scoreMidiChild, momentsElem, envsElem;
+            //    function getDSChannel(durationSymbolElem)
+            //    {
+            //        var i, j, channel = - 1, dsChildren, dsChild,
+            //            scoreMidiChildren, scoreMidiChild, momentsElem, envsElem;
 
-                    function getMomentsChannel(momentsElem)
-                    {
-                        var i, j, channel = -1, msChildren = momentsElem.children,
-                            momentChildren, noteOnsElem, switchesElem;
+            //        function getMomentsChannel(momentsElem)
+            //        {
+            //            var i, j, channel = -1, msChildren = momentsElem.children,
+            //                momentChildren, noteOnsElem, switchesElem;
 
-                        function getMsgsChannel(msgsElem)
-                        {
-                            var i, channel = -1, msgsChildren = msgsElem.children,
-                                msgStr, statusByte;
+            //            function getMsgsChannel(msgsElem)
+            //            {
+            //                var i, channel = -1, msgsChildren = msgsElem.children,
+            //                    msgStr, statusByte;
 
-                            for(i = 0; i < msgsChildren.length; ++i)
-                            {
-                                if(msgsChildren[i].nodeName === "msg")
-                                {
-                                    msgStr = msgsChildren[i].getAttribute("m");
-                                    statusByte = msgStr.split(' ')[0];
-                                    channel = parseInt(statusByte, 16) % 16;
-                                    break;
-                                }
-                            }
-                            return channel;
-                        }
+            //                for(i = 0; i < msgsChildren.length; ++i)
+            //                {
+            //                    if(msgsChildren[i].nodeName === "msg")
+            //                    {
+            //                        msgStr = msgsChildren[i].getAttribute("m");
+            //                        statusByte = msgStr.split(' ')[0];
+            //                        channel = parseInt(statusByte, 16) % 16;
+            //                        break;
+            //                    }
+            //                }
+            //                return channel;
+            //            }
 
-                        for(i = 0; i < msChildren.length; ++i)
-                        {
-                            if(msChildren[i].nodeName === "moment")
-                            {
-                                momentChildren = msChildren[i].children;
-                                for(j = 0; j < momentChildren.length; ++j)
-                                {
-                                    // there will be no noteOffs in the first <score:midi>
-                                    if(momentChildren[j].nodeName === "switches")
-                                    {
-                                        switchesElem = momentChildren[j];
-                                    }
-                                    else if(momentChildren[j].nodeName === "noteOns")
-                                    {
-                                        noteOnsElem = momentChildren[j];
-                                    }
-                                }
-                                break;
-                            }
-                        }
+            //            for(i = 0; i < msChildren.length; ++i)
+            //            {
+            //                if(msChildren[i].nodeName === "moment")
+            //                {
+            //                    momentChildren = msChildren[i].children;
+            //                    for(j = 0; j < momentChildren.length; ++j)
+            //                    {
+            //                        // there will be no noteOffs in the first <score:midi>
+            //                        if(momentChildren[j].nodeName === "switches")
+            //                        {
+            //                            switchesElem = momentChildren[j];
+            //                        }
+            //                        else if(momentChildren[j].nodeName === "noteOns")
+            //                        {
+            //                            noteOnsElem = momentChildren[j];
+            //                        }
+            //                    }
+            //                    break;
+            //                }
+            //            }
 
-                        channel = getMsgsChannel(switchesElem);
-                        if(channel === -1)
-                        {
-                            channel = getMsgsChannel(noteOnsElem);
-                        }
+            //            channel = getMsgsChannel(switchesElem);
+            //            if(channel === -1)
+            //            {
+            //                channel = getMsgsChannel(noteOnsElem);
+            //            }
 
-                        return channel;
-                    }
+            //            return channel;
+            //        }
 
-                    function getEnvsChannel(envsElem)
-                    {
-                        var i, channel = -1, envsChildren = envsElem.children, statusByte;
+            //        function getEnvsChannel(envsElem)
+            //        {
+            //            var i, channel = -1, envsChildren = envsElem.children, statusByte;
 
-                        for(i = 0; i < envsChildren.length; ++i)
-                        {
-                            if(envsChildren[i].nodeName === "env")
-                            {
-                                statusByte = envsChildren[i].getAttribute("s");
-                                channel = parseInt(statusByte, 16) % 16;
-                                break;
-                            }
-                        }
+            //            for(i = 0; i < envsChildren.length; ++i)
+            //            {
+            //                if(envsChildren[i].nodeName === "env")
+            //                {
+            //                    statusByte = envsChildren[i].getAttribute("s");
+            //                    channel = parseInt(statusByte, 16) % 16;
+            //                    break;
+            //                }
+            //            }
 
-                        return channel;
-                    }
+            //            return channel;
+            //        }
 
-                    dsChildren = durationSymbolElem.children;
-                    for(i = 0; i < dsChildren.length; ++i)
-                    {
-                        dsChild = dsChildren[i];
-                        if(dsChild.nodeName === "score:midi")
-                        {
-                            scoreMidiChildren = dsChild.children;
-                            for(j = 0; j < scoreMidiChildren.length; ++j)
-                            {
-                                scoreMidiChild = scoreMidiChildren[j];
-                                if(scoreMidiChild.nodeName === "moments")
-                                {
-                                    momentsElem = scoreMidiChild;
-                                }
-                                if(scoreMidiChild.nodeName === "envs")
-                                {
-                                    envsElem = scoreMidiChild;
-                                }
-                            }
-                            break;
-                        }
-                    }
+            //        dsChildren = durationSymbolElem.children;
+            //        for(i = 0; i < dsChildren.length; ++i)
+            //        {
+            //            dsChild = dsChildren[i];
+            //            if(dsChild.nodeName === "score:midi")
+            //            {
+            //                scoreMidiChildren = dsChild.children;
+            //                for(j = 0; j < scoreMidiChildren.length; ++j)
+            //                {
+            //                    scoreMidiChild = scoreMidiChildren[j];
+            //                    if(scoreMidiChild.nodeName === "moments")
+            //                    {
+            //                        momentsElem = scoreMidiChild;
+            //                    }
+            //                    if(scoreMidiChild.nodeName === "envs")
+            //                    {
+            //                        envsElem = scoreMidiChild;
+            //                    }
+            //                }
+            //                break;
+            //            }
+            //        }
 
-                    if(momentsElem !== undefined)
-                    {
-                        channel = getMomentsChannel(momentsElem);
-                    }
-                    if(channel === -1 && envsElem !== undefined)
-                    {
-                        channel = getEnvsChannel(envsElem);
-                    }
+            //        if(momentsElem !== undefined)
+            //        {
+            //            channel = getMomentsChannel(momentsElem);
+            //        }
+            //        if(channel === -1 && envsElem !== undefined)
+            //        {
+            //            channel = getEnvsChannel(envsElem);
+            //        }
 
-                    return channel;
-                }
+            //        return channel;
+            //    }
 
-                voiceChildren = outputVoiceElem.children;
-                for(i = 0; i < voiceChildren.length; ++i)
-                {
-                    voiceChild = voiceChildren[i];
-                    if(voiceChild.nodeName === "g" && (voiceChild.getAttribute("score:alignment") !== null))
-                    {
-                        channel = getDSChannel(voiceChild);
-                        if(channel >= 0)
-                        {
-                            break;
-                        }
-                    }
-                }
+            //    voiceChildren = outputVoiceElem.children;
+            //    for(i = 0; i < voiceChildren.length; ++i)
+            //    {
+            //        voiceChild = voiceChildren[i];
+            //        if(voiceChild.nodeName === "g" && (voiceChild.getAttribute("score:alignment") !== null))
+            //        {
+            //            channel = getDSChannel(voiceChild);
+            //            if(channel >= 0)
+            //            {
+            //                break;
+            //            }
+            //        }
+            //    }
 
-                return channel;
-            }
+            //    return channel;
+            //}
 
             system = {};
             systemDy = getDy(systemElem);
 
-            setCursorLimits(system, systemElem);
+            getSystemMarkerLimits(system, systemElem, systemDy);
 
             system.staves = [];
 
@@ -1027,8 +1017,6 @@ _AP.score = (function (document)
                         staff.nameElem = getNameElem(outputVoiceElem);
                         voice = {};
                         voice.isOutput = true;
-                        channel = getChannel(outputVoiceElem);
-                        midiChannelPerOutputTrack.push(channel);
                         staff.voices.push(voice);
                     }
                 }
@@ -1046,14 +1034,6 @@ _AP.score = (function (document)
                 }
             }
 
-            if(midiChannelPerOutputTrack[0] !== undefined) // is undefined on systems after the first.
-            {
-                // score variable: outputTrackPerMidiChannel[] is used
-                //    1. with trackIsOnArray[] when checking that inputNotes have at least one performing track.
-                //    2. For quickly finding the number of outputTracks in the score.
-                outputTrackPerMidiChannel = getInverseArray(midiChannelPerOutputTrack);
-            }
-
             return system;
         }
 
@@ -1065,7 +1045,7 @@ _AP.score = (function (document)
             var i, markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
                 rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-            function createMarkers(markersLayer, viewBox, system)
+            function createMarkers(markersLayer, viewBox, system, systIndex)
             {
                 var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
                     runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
@@ -1095,7 +1075,7 @@ _AP.score = (function (document)
 
                 endMarkerLine.setAttribute("x1", "0");
                 endMarkerLine.setAttribute("y1", "0");
-                endMarkerLine.setAttribute("x2", "0");
+                endMarkerLine.setAttribute("x2", "0");                               
                 endMarkerLine.setAttribute("y2", "0");
                 endMarkerLine.setAttribute("style", "stroke-width:1px");
 
@@ -1115,9 +1095,9 @@ _AP.score = (function (document)
                 markersLayer.appendChild(runningMarkerElem);
                 markersLayer.appendChild(endMarkerElem);
 
-                system.startMarker = new Markers.StartMarker(startMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.runningMarker = new Markers.RunningMarker(runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.endMarker = new Markers.EndMarker(endMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.startMarker = new Markers.StartMarker(system, systIndex, startMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.runningMarker = new Markers.RunningMarker(system, systIndex, runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.endMarker = new Markers.EndMarker(system, systIndex, endMarkerElem, markersLayer.rect.originY, viewBox.scale);
             }
 
             markersLayer.setAttribute("style", "display:inline");
@@ -1133,7 +1113,7 @@ _AP.score = (function (document)
 
             for(i = 0; i < pageSystems.length; i++)
             {
-                createMarkers(markersLayer, viewBox, pageSystems[i]);
+                createMarkers(markersLayer, viewBox, pageSystems[i], i);
             }
 
             svgElem.appendChild(markersLayer);
@@ -1255,7 +1235,7 @@ _AP.score = (function (document)
                     {
                         if(systemsContainerChildren[k].getAttribute("score:hasMidi") !== null)
                         {
-                            system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemsContainerChildren[k], isLivePerformance);
+                            system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemsContainerChildren[k]);
                             systems.push(system); // systems is global inside this namespace
                             systemElems.push(systemsContainerChildren[k]); // used when creating timeObjects...
                             pageSystems.push(system);

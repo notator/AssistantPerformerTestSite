@@ -1426,6 +1426,22 @@ _AP.controls = (function(document, window)
             //            inputKeyRange.topKey
             tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
 
+            // ***************dont forget to do this... **************************
+            //system.RunningMarker.setTimeObjects(system, options.isLivePerformance, trackIsOnArray);
+            //do for StartMarker:
+            //for(i = 0; i < system.staves.length; ++i)
+            //{
+            //    if(!isNaN(system.staves[i].voices[0].timeObjects[0].alignment))
+            //    {
+            //        moveTo(system.staves[i].voices[0].timeObjects[0]);
+            //        break;
+            //    }
+            //}
+            //do for Endmarker:
+            //
+            //do for RunningMarker:
+            // runningMarker.moveToStartOfSystem();
+            // *******************************************************************
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
