@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 2, page 1 of 1</dc:title>
-				<dc:date>Thursday 26.01.2017, 16:08:09</dc:date>
+				<dc:date>Thursday 26.01.2017, 20:49:50</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -327,7 +327,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 3 sketch 2 page 1, Thursday 26.01.2017, 16:08:09</text>
+			font-family="Arial">Study 3 sketch 2 page 1, Thursday 26.01.2017, 20:49:50</text>
 		<g
 			class="titles">
 			<text
@@ -357,8 +357,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -3734,8 +3733,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -6806,8 +6804,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -10076,8 +10073,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -11449,8 +11445,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -14791,8 +14786,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -17510,8 +17504,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:invisible="invisible">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<g
 						class="outputChord">
 						<score:midi>
@@ -20228,8 +20221,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#bassClef8"

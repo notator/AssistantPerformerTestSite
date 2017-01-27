@@ -641,9 +641,9 @@ _AP.score = (function (document)
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (isLivePerformanceArg)
     {
-        var system, sysElems, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY, scoreLayerElem,
+        var system, sysElems, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY,
             i, j, k,
-            svgPage, svgElem, svgChildren, layerName, markersLayer,
+            svgPage, svgElem, svgChildren, systemsContainerChildren, markersLayer,
             pageHeight, pageSystems;
 
         function resetContent(isLivePerformanceArg)
@@ -670,21 +670,19 @@ _AP.score = (function (document)
                 staffElems, staffElem, stafflinesElems,
                 outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,                
                 staff, stafflineInfo,
-                voice, midiChannelPerOutputTrack = [];
+                voice, channel, midiChannelPerOutputTrack = [];
 
-            function getStaffElems(systemElem)
+            function getHasMidiElems(systemElem)
             {
-                var staffElemsNodeList, staffElems = [];
+                var i, sysChildren, staffElems = [];
 
-                staffElemsNodeList = systemElem.getElementsByClassName("outputStaff");
-                for(i = 0; i < staffElemsNodeList.length; ++i)
+                sysChildren = systemElem.children;
+                for(i = 0; i < sysChildren.length; ++i)
                 {
-                    staffElems.push(staffElemsNodeList[i]);
-                }
-                staffElemsNodeList = systemElem.getElementsByClassName("inputStaff");
-                for(i = 0; i < staffElemsNodeList.length; ++i)
-                {
-                    staffElems.push(staffElemsNodeList[i]);
+                    if(sysChildren[i].getAttribute("score:hasMidi") !== null)
+                    {
+                        staffElems.push(sysChildren[i]);
+                    }
                 }
                 return staffElems;
             }
@@ -725,20 +723,6 @@ _AP.score = (function (document)
                 {
                     voices[0].centreY = staffTopY;
                     voices[1].centreY = staffBottomY;
-                }
-            }
-            
-            function getOutputVoiceAttributes(outputVoice, voiceNode)
-            {
-                var
-                midiChannel = voiceNode.getAttribute('score:midiChannel'),
-                masterVolume = voiceNode.getAttribute('score:masterVolume');
-
-                // This condition will only be true in the first bar of the piece.
-                if(midiChannel !== null && masterVolume !== null)
-                {
-                    outputVoice.midiChannel = parseInt(midiChannel, 10);
-                    outputVoice.masterVolume = parseInt(masterVolume, 10);
                 }
             }
 
@@ -860,11 +844,169 @@ _AP.score = (function (document)
                 return rval;
             }
 
+            function setCursorLimits(system, systemElem)
+            {
+                var i, sysElemChildren, leftToRightElem, topToBottomElem;
+                
+                sysElemChildren = systemElem.children;
+                for(i = 0; i < sysElemChildren.length; ++i)
+                {
+                    if(sysElemChildren[i].nodeName === "score:leftToRight")
+                    {
+                        leftToRightElem = sysElemChildren[i];
+                        system.cursorTop = parseInt(leftToRightElem.getAttribute("systemTop"), 10);
+                        system.cursorBottom = parseInt(leftToRightElem.getAttribute("systemBottom"), 10);
+                        break;
+                    }
+                    if(sysElemChildren[i].nodeName === "score:topToBottom")
+                    {
+                        topToBottomElem = sysElemChildren[i];
+                        system.cursorLeft = parseInt(topToBottomElem.getAttribute("systemLeft"), 10);
+                        system.cursorRight = parseInt(topToBottomElem.getAttribute("systemRight"), 10);
+                        break;
+                    }
+                }
+            }
+
+            function getChannel(outputVoiceElem)
+            {
+                var i, channel = -1, voiceChildren, voiceChild;
+
+                function getDSChannel(durationSymbolElem)
+                {
+                    var i, j, channel = - 1, dsChildren, dsChild,
+                        scoreMidiChildren, scoreMidiChild, momentsElem, envsElem;
+
+                    function getMomentsChannel(momentsElem)
+                    {
+                        var i, j, channel = -1, msChildren = momentsElem.children,
+                            momentChildren, noteOnsElem, switchesElem;
+
+                        function getMsgsChannel(msgsElem)
+                        {
+                            var i, channel = -1, msgsChildren = msgsElem.children,
+                                msgStr, statusByte;
+
+                            for(i = 0; i < msgsChildren.length; ++i)
+                            {
+                                if(msgsChildren[i].nodeName === "msg")
+                                {
+                                    msgStr = msgsChildren[i].getAttribute("m");
+                                    statusByte = msgStr.split(' ')[0];
+                                    channel = parseInt(statusByte, 16) % 16;
+                                    break;
+                                }
+                            }
+                            return channel;
+                        }
+
+                        for(i = 0; i < msChildren.length; ++i)
+                        {
+                            if(msChildren[i].nodeName === "moment")
+                            {
+                                momentChildren = msChildren[i].children;
+                                for(j = 0; j < momentChildren.length; ++j)
+                                {
+                                    // there will be no noteOffs in the first <score:midi>
+                                    if(momentChildren[j].nodeName === "switches")
+                                    {
+                                        switchesElem = momentChildren[j];
+                                    }
+                                    else if(momentChildren[j].nodeName === "noteOns")
+                                    {
+                                        noteOnsElem = momentChildren[j];
+                                    }
+                                }
+                                break;
+                            }
+                        }
+
+                        channel = getMsgsChannel(switchesElem);
+                        if(channel === -1)
+                        {
+                            channel = getMsgsChannel(noteOnsElem);
+                        }
+
+                        return channel;
+                    }
+
+                    function getEnvsChannel(envsElem)
+                    {
+                        var i, channel = -1, envsChildren = envsElem.children, statusByte;
+
+                        for(i = 0; i < envsChildren.length; ++i)
+                        {
+                            if(envsChildren[i].nodeName === "env")
+                            {
+                                statusByte = envsChildren[i].getAttribute("s");
+                                channel = parseInt(statusByte, 16) % 16;
+                                break;
+                            }
+                        }
+
+                        return channel;
+                    }
+
+                    dsChildren = durationSymbolElem.children;
+                    for(i = 0; i < dsChildren.length; ++i)
+                    {
+                        dsChild = dsChildren[i];
+                        if(dsChild.nodeName === "score:midi")
+                        {
+                            scoreMidiChildren = dsChild.children;
+                            for(j = 0; j < scoreMidiChildren.length; ++j)
+                            {
+                                scoreMidiChild = scoreMidiChildren[j];
+                                if(scoreMidiChild.nodeName === "moments")
+                                {
+                                    momentsElem = scoreMidiChild;
+                                }
+                                if(scoreMidiChild.nodeName === "envs")
+                                {
+                                    envsElem = scoreMidiChild;
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    if(momentsElem !== undefined)
+                    {
+                        channel = getMomentsChannel(momentsElem);
+                    }
+                    if(channel === -1 && envsElem !== undefined)
+                    {
+                        channel = getEnvsChannel(envsElem);
+                    }
+
+                    return channel;
+                }
+
+                voiceChildren = outputVoiceElem.children;
+                for(i = 0; i < voiceChildren.length; ++i)
+                {
+                    voiceChild = voiceChildren[i];
+                    if(voiceChild.nodeName === "g" && (voiceChild.getAttribute("score:alignment") !== null))
+                    {
+                        channel = getDSChannel(voiceChild);
+                        if(channel >= 0)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                return channel;
+            }
+
             system = {};
             systemDy = getDy(systemElem);
+
+            setCursorLimits(system, systemElem);
+
             system.staves = [];
 
-            staffElems = getStaffElems(systemElem);
+            staffElems = getHasMidiElems(systemElem);
 
             for(i = 0; i < staffElems.length; ++i)
             {
@@ -878,22 +1020,21 @@ _AP.score = (function (document)
 
                 if(staff.isOutput === true)
                 {
-                    outputVoiceElems = staffElem.getElementsByClassName("outputVoice");
+                    outputVoiceElems = getHasMidiElems(staffElem);
                     for(j = 0; j < outputVoiceElems.length; ++j)
                     {
                         outputVoiceElem = outputVoiceElems[j];
                         staff.nameElem = getNameElem(outputVoiceElem);
                         voice = {};
                         voice.isOutput = true;
-                        // the attributes are only defined in the first bar of the piece
-                        getOutputVoiceAttributes(voice, outputVoiceElem);
-                        midiChannelPerOutputTrack.push(voice.midiChannel);
+                        channel = getChannel(outputVoiceElem);
+                        midiChannelPerOutputTrack.push(channel);
                         staff.voices.push(voice);
                     }
                 }
                 else // input staff
                 {
-                    inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
+                    inputVoiceElems = getHasMidiElems(staffElem);
                     for(j = 0; j < inputVoiceElems.length; ++j)
                     {
                         inputVoiceElem = inputVoiceElems[j];
@@ -901,35 +1042,6 @@ _AP.score = (function (document)
                         voice = {};
                         voice.isOutput = false;
                         staff.voices.push(voice);
-                    }
-                }
-
-                if(staff.isVisible)
-                {
-                    stafflinesElems = staffElem.getElementsByClassName("stafflines");
-                    if(stafflinesElems !== undefined && stafflinesElems.length > 0)
-                    {
-                        stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
-                        system.left = stafflineInfo.left;
-                        system.right = stafflineInfo.right;
-
-                        staff.topLineY = stafflineInfo.stafflineYs[0];
-                        staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                        staff.svgStafflines = stafflineInfo.svgStafflines; // top down
-
-                        setStaffColours(staff, isLivePerformance);
-                        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
-
-                        if(system.topLineY === undefined)
-                        {
-                            system.topLineY = staff.topLineY;
-                            system.bottomLineY = staff.bottomLineY;
-                        }
-                        else
-                        {
-                            system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
-                            system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
-                        }
                     }
                 }
             }
@@ -1135,19 +1247,21 @@ _AP.score = (function (document)
             pageSystems = [];
             for(j = 0; j < svgChildren.length; ++j)
             {
-                layerName = svgChildren[j].getAttribute("inkscape:label");
-                if(layerName === "score")
+                if(svgChildren[j].getAttribute("score:hasMidi") !== null)
                 {
-                    scoreLayerElem = svgChildren[j];
-                    sysElems = scoreLayerElem.getElementsByClassName("system");
-                
-                    for(k = 0; k < sysElems.length; ++k)
+                    // svgChildren[j] is the unique "systems" container
+                    systemsContainerChildren = svgChildren[j].children;
+                    for(k = 0; k < systemsContainerChildren.length; ++k)
                     {
-                        system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, sysElems[k], isLivePerformance);
-                        systems.push(system); // systems is global inside this namespace
-                        systemElems.push(sysElems[k]); // used when creating timeObjects...
-                        pageSystems.push(system);
+                        if(systemsContainerChildren[k].getAttribute("score:hasMidi") !== null)
+                        {
+                            system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemsContainerChildren[k], isLivePerformance);
+                            systems.push(system); // systems is global inside this namespace
+                            systemElems.push(systemsContainerChildren[k]); // used when creating timeObjects...
+                            pageSystems.push(system);
+                        }
                     }
+                    break; // there is only one container of systems
                 }
             }
 

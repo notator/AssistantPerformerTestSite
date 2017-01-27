@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 2, page 3 of 3</dc:title>
-				<dc:date>Thursday 26.01.2017, 16:07:26</dc:date>
+				<dc:date>Thursday 26.01.2017, 20:48:57</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -327,7 +327,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 2 page 3, Thursday 26.01.2017, 16:07:25</text>
+			font-family="Arial">Study 2 page 3, Thursday 26.01.2017, 20:48:56</text>
 		<g
 			class="system"
 			score:hasMidi="true">

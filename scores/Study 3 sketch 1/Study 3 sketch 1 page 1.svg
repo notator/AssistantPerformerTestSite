@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 1, page 1 of 2</dc:title>
-				<dc:date>Thursday 26.01.2017, 16:07:42</dc:date>
+				<dc:date>Thursday 26.01.2017, 20:49:13</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -327,7 +327,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 3 sketch 1 page 1, Thursday 26.01.2017, 16:07:42</text>
+			font-family="Arial">Study 3 sketch 1 page 1, Thursday 26.01.2017, 20:49:12</text>
 		<g
 			class="titles">
 			<text
@@ -390,8 +390,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -2306,8 +2305,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -4212,8 +4210,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -6364,8 +6361,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -7535,8 +7531,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#bassClef8"
@@ -9866,8 +9861,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#bassClef8"
@@ -12125,8 +12119,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#bassClef8"
@@ -14370,8 +14363,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="100">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#bassClef8"

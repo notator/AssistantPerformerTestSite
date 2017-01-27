@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music, page 4 of 8</dc:title>
-				<dc:date>Thursday 26.01.2017, 16:06:42</dc:date>
+				<dc:date>Thursday 26.01.2017, 20:48:15</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -327,7 +327,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Pianola Music page 4, Thursday 26.01.2017, 16:06:41</text>
+			font-family="Arial">Pianola Music page 4, Thursday 26.01.2017, 20:48:14</text>
 		<g
 			class="system"
 			score:hasMidi="true">

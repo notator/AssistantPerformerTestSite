@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Tombeau 1, page 1 of 1</dc:title>
-				<dc:date>Thursday 26.01.2017, 16:08:34</dc:date>
+				<dc:date>Thursday 26.01.2017, 20:50:04</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -327,7 +327,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Tombeau 1 page 1, Thursday 26.01.2017, 16:08:34</text>
+			font-family="Arial">Tombeau 1 page 1, Thursday 26.01.2017, 20:50:03</text>
 		<g
 			class="titles">
 			<text
@@ -356,8 +356,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:hasMidi="true">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="127">
+					score:hasMidi="true">
 					<g
 						class="outputRest">
 						<score:midi>
@@ -374,8 +373,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:hasMidi="true">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="127">
+					score:hasMidi="true">
 					<g
 						class="outputRest">
 						<score:midi>
@@ -426,8 +424,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="127">
+					score:hasMidi="true">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -4772,8 +4769,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:hasMidi="true">
 				<g
 					class="outputVoice"
-					score:hasMidi="true"
-					score:masterVolume="127">
+					score:hasMidi="true">
 					<g
 						class="outputRest">
 						<score:midi>
