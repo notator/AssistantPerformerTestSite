@@ -1032,10 +1032,10 @@ _AP.controls = (function(document, window)
 
             function embedPageCode(url)
             {
-                var code = "<embed " +
-                                "src=\'" + url + "\' " +
-                                "content-type=\'image/svg+xml\' " +
-                                "class=\'svgPage\' />";
+                var code = "<object " +
+                                "data=\'" + url + "\' " +
+                                "type=\'image/svg+xml\' " +
+                                "class=\'svgPage\'>Browser does not support SVG!</object>";
                 return code;
             }
 
@@ -1415,7 +1415,7 @@ _AP.controls = (function(document, window)
             if(scoreHasJustBeenSelected)
             {
                 // everything except the timeObjects (which have to take account of speed)
-                score.getEmptyPagesAndSystems(options.livePerformance);
+                score.getEmptySystems(options.livePerformance);
             }
 
             // tracksData will contain the following defined attributes:
@@ -1426,22 +1426,6 @@ _AP.controls = (function(document, window)
             //            inputKeyRange.topKey
             tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
 
-            // ***************dont forget to do this... **************************
-            //system.RunningMarker.setTimeObjects(system, options.isLivePerformance, trackIsOnArray);
-            //do for StartMarker:
-            //for(i = 0; i < system.staves.length; ++i)
-            //{
-            //    if(!isNaN(system.staves[i].voices[0].timeObjects[0].alignment))
-            //    {
-            //        moveTo(system.staves[i].voices[0].timeObjects[0]);
-            //        break;
-            //    }
-            //}
-            //do for Endmarker:
-            //
-            //do for RunningMarker:
-            // runningMarker.moveToStartOfSystem();
-            // *******************************************************************
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
