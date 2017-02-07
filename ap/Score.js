@@ -30,9 +30,6 @@ _AP.score = (function (document)
     InputChordDef = _AP.inputChordDef.InputChordDef,
     InputChord = _AP.inputChord.InputChord,
     InputRest = _AP.inputRest.InputRest,
-    MidiChordDef = _AP.midiChordDef.MidiChordDef,
-    MidiChord = _AP.midiChord.MidiChord,
-    MidiRest = _AP.midiRest.MidiRest,
 
     BLACK_COLOR = "#000000",
     GREY_COLOR = "#7888A0",
@@ -152,10 +149,10 @@ _AP.score = (function (document)
         return timeObjectsArray;
     },
 
-    // Returns the performing restDef or (in any performing input or output track, depending on findInput) midiChordDef or inputChordDef closest to alignmentX.
+    // Returns the performing restDef or (in any performing input or output track, depending on findInput) midiChordDef or inputChordDef closest to alignment.
     // If trackIndex is defined, the returned timeObject will be in that track.
     // If there are no chordDefs matching the arguments (i.e. if all the timeObjects are restDefs), the returned timeObject will be null.
-    findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignmentX, trackIndex)
+    findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex)
     {
         var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
             nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
@@ -201,20 +198,20 @@ _AP.score = (function (document)
                             (timeObject.inputChordDef === undefined // a rest in an inputVoice
                             || (timeObject.inputChordDef !== undefined && hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray)))))
                         {
-                            if(alignmentX === timeObject.alignmentX)
+                            if(alignment === timeObject.alignment)
                             {
                                 returnTimeObject = timeObject;
                                 break;
                             }
-                            if(alignmentX > timeObject.alignmentX && (deltaBefore > (alignmentX - timeObject.alignmentX)))
+                            if(alignment > timeObject.alignment && (deltaBefore > (alignment - timeObject.alignment)))
                             {
                                 timeObjectBefore = timeObject;
-                                deltaBefore = alignmentX - timeObject.alignmentX;
+                                deltaBefore = alignment - timeObject.alignment;
                             }
-                            if(alignmentX < timeObject.alignmentX && (deltaAfter > (timeObject.alignmentX - alignmentX)))
+                            if(alignment < timeObject.alignment && (deltaAfter > (timeObject.alignment - alignment)))
                             {
                                 timeObjectAfter = timeObject;
-                                deltaAfter = timeObject.alignmentX - alignmentX;
+                                deltaAfter = timeObject.alignment - alignment;
                             }
                         }
                     }
@@ -228,15 +225,15 @@ _AP.score = (function (document)
         return returnTimeObject;
     },
      
-    findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignmentX, trackIndex)
+    findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex)
     {
-        var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignmentX, trackIndex);
+        var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignment, trackIndex);
         return returnTimeObject;
     },
 
-    findPerformingOutputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignmentX, trackIndex)
+    findPerformingOutputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex)
     {
-        var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, false, alignmentX, trackIndex);
+        var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, false, alignment, trackIndex);
         return returnTimeObject;
     },
 
@@ -246,11 +243,11 @@ _AP.score = (function (document)
 
         if(isLivePerformance === false)
         {
-            timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignmentX);
+            timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
         }
         else
         {
-            timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignmentX);
+            timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
         }
 
         if(timeObject.msPosition < endMarker.msPosition())
@@ -264,7 +261,7 @@ _AP.score = (function (document)
     refreshDisplay = function(trackIsOnArrayArg)
     {
         var i, system = systems[startMarker.systemIndex()],
-        startMarkerAlignmentX = startMarker.timeObject().alignmentX,
+        startMarkerAlignment = startMarker.timeObject().alignment,
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
         nOutputTracks = outputTrackPerMidiChannel.length;
 
@@ -348,15 +345,15 @@ _AP.score = (function (document)
 
         if(isLivePerformance)
         {
-            timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
+            timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment);
         }
         else
         {
-            timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
+            timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment);
         }
         // Move the start marker if necessary.
         // timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
-        if(timeObject !== null && timeObject.alignmentX !== startMarkerAlignmentX)
+        if(timeObject !== null && timeObject.alignment !== startMarkerAlignment)
         {
             updateStartMarker(timeObjectsArray, timeObject);
         }
@@ -501,11 +498,11 @@ _AP.score = (function (document)
             var returnObject,
                 voiceTimeObjects = systems[systemIndex].staves[0].voices[0].timeObjects,
                 rightBarlineTimeObject = voiceTimeObjects[voiceTimeObjects.length - 1],
-                earliestAlignmentX;
+                earliestAlignment;
 
-            function findEarliestChordAlignmentX(system)
+            function findEarliestChordAlignment(system)
             {
-                var i, j, k, staff, earliestAlignmentX = Number.MAX_VALUE, timeObjects, timeObject;
+                var i, j, k, staff, earliestAlignment = Number.MAX_VALUE, timeObjects, timeObject;
 
                 for(i = 0; i < system.staves.length; ++i)
                 {
@@ -521,19 +518,19 @@ _AP.score = (function (document)
                                 break;
                             }
                         }
-                        earliestAlignmentX = (earliestAlignmentX < timeObject.alignmentX) ? earliestAlignmentX : timeObject.alignmentX;
+                        earliestAlignment = (earliestAlignment < timeObject.alignment) ? earliestAlignment : timeObject.alignment;
                     }
                 }
-                return earliestAlignmentX;
+                return earliestAlignment;
             }
 
-            earliestAlignmentX = findEarliestChordAlignmentX(systems[systemIndex]);
+            earliestAlignment = findEarliestChordAlignment(systems[systemIndex]);
 
-            if(cursorX > rightBarlineTimeObject.alignmentX || ((rightBarlineTimeObject.alignmentX - cursorX) < (cursorX - timeObject.alignmentX)))
+            if(cursorX > rightBarlineTimeObject.alignment || ((rightBarlineTimeObject.alignment - cursorX) < (cursorX - timeObject.alignment)))
             {
                 returnObject = rightBarlineTimeObject;
             }
-            else if(timeObject.alignmentX === earliestAlignmentX)
+            else if(timeObject.alignment === earliestAlignment)
             {
                 returnObject = null;
             }
@@ -578,7 +575,7 @@ _AP.score = (function (document)
                         break;
                     case 'settingEnd':
                         // returns the rightmost barline if that is closer to cursorX than the timeObject
-                        // returns null if timeObject.alignmentX is the alignmentx of the first chord on the system.
+                        // returns null if timeObject.alignment is the alignmentx of the first chord on the system.
                         timeObject = getEndMarkerTimeObject(timeObject, cursorX, systems, systemIndex);
                         if(timeObject !== null && startMarker.msPosition() < timeObject.msPosition)
                         {
@@ -639,24 +636,27 @@ _AP.score = (function (document)
     // The score's trackIsOnArray is initialized to all tracks on (=true).
     // If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-    getEmptyPagesAndSystems = function (isLivePerformanceArg)
+    getEmptySystems = function (isLivePerformanceArg)
     {
         var system, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY,
             i, j, k,
             svgPage, svgElem, svgChildren, systemsContainerChildren, markersLayer,
-            pageHeight, pageSystems;
+            pageHeight, pageSystems, attrVal;
 
         function resetContent(isLivePerformanceArg)
         {
-            while (markersLayers.length > 0)
-            {
-                markersLayers.pop();
-            }
-            while (systems.length > 0)
-            {
-                systems.pop();
-                systemElems.pop();
-            }
+            markersLayers.length = 0;
+            systems.length = 0;
+            systemElems.length = 0;
+            //while (markersLayers.length > 0)
+            //{
+            //    markersLayers.pop();
+            //}
+            //while (systems.length > 0)
+            //{
+            //    systems.pop();
+            //    systemElems.pop();
+            //}
 
             isLivePerformance = isLivePerformanceArg;
             outputTrackPerMidiChannel = []; // reset global
@@ -672,19 +672,20 @@ _AP.score = (function (document)
                 staff, stafflineInfo,
                 voice;
 
-            function getHasMidiElems(systemElem)
+            function getInputAndOutputElems(containerElem)
             {
-                var i, sysChildren, staffElems = [];
+                var i, containerChildren, inputAndOutputElems = [], attrVal;
 
-                sysChildren = systemElem.children;
-                for(i = 0; i < sysChildren.length; ++i)
+                containerChildren = containerElem.children;
+                for(i = 0; i < containerChildren.length; ++i)
                 {
-                    if(sysChildren[i].getAttribute("score:hasMidi") !== null)
+                    attrVal = containerChildren[i].getAttribute("score:hasMidi");
+                    if(attrVal === "true" || attrVal === "false")
                     {
-                        staffElems.push(sysChildren[i]);
+                        inputAndOutputElems.push(containerChildren[i]);
                     }
                 }
-                return staffElems;
+                return inputAndOutputElems;
             }
 
             // returns an info object containing left, right and stafflineYs
@@ -858,137 +859,6 @@ _AP.score = (function (document)
                 }
             }
 
-            //function getChannel(outputVoiceElem)
-            //{
-            //    var i, channel = -1, voiceChildren, voiceChild;
-
-            //    function getDSChannel(durationSymbolElem)
-            //    {
-            //        var i, j, channel = - 1, dsChildren, dsChild,
-            //            scoreMidiChildren, scoreMidiChild, momentsElem, envsElem;
-
-            //        function getMomentsChannel(momentsElem)
-            //        {
-            //            var i, j, channel = -1, msChildren = momentsElem.children,
-            //                momentChildren, noteOnsElem, switchesElem;
-
-            //            function getMsgsChannel(msgsElem)
-            //            {
-            //                var i, channel = -1, msgsChildren = msgsElem.children,
-            //                    msgStr, statusByte;
-
-            //                for(i = 0; i < msgsChildren.length; ++i)
-            //                {
-            //                    if(msgsChildren[i].nodeName === "msg")
-            //                    {
-            //                        msgStr = msgsChildren[i].getAttribute("m");
-            //                        statusByte = msgStr.split(' ')[0];
-            //                        channel = parseInt(statusByte, 16) % 16;
-            //                        break;
-            //                    }
-            //                }
-            //                return channel;
-            //            }
-
-            //            for(i = 0; i < msChildren.length; ++i)
-            //            {
-            //                if(msChildren[i].nodeName === "moment")
-            //                {
-            //                    momentChildren = msChildren[i].children;
-            //                    for(j = 0; j < momentChildren.length; ++j)
-            //                    {
-            //                        // there will be no noteOffs in the first <score:midi>
-            //                        if(momentChildren[j].nodeName === "switches")
-            //                        {
-            //                            switchesElem = momentChildren[j];
-            //                        }
-            //                        else if(momentChildren[j].nodeName === "noteOns")
-            //                        {
-            //                            noteOnsElem = momentChildren[j];
-            //                        }
-            //                    }
-            //                    break;
-            //                }
-            //            }
-
-            //            channel = getMsgsChannel(switchesElem);
-            //            if(channel === -1)
-            //            {
-            //                channel = getMsgsChannel(noteOnsElem);
-            //            }
-
-            //            return channel;
-            //        }
-
-            //        function getEnvsChannel(envsElem)
-            //        {
-            //            var i, channel = -1, envsChildren = envsElem.children, statusByte;
-
-            //            for(i = 0; i < envsChildren.length; ++i)
-            //            {
-            //                if(envsChildren[i].nodeName === "env")
-            //                {
-            //                    statusByte = envsChildren[i].getAttribute("s");
-            //                    channel = parseInt(statusByte, 16) % 16;
-            //                    break;
-            //                }
-            //            }
-
-            //            return channel;
-            //        }
-
-            //        dsChildren = durationSymbolElem.children;
-            //        for(i = 0; i < dsChildren.length; ++i)
-            //        {
-            //            dsChild = dsChildren[i];
-            //            if(dsChild.nodeName === "score:midi")
-            //            {
-            //                scoreMidiChildren = dsChild.children;
-            //                for(j = 0; j < scoreMidiChildren.length; ++j)
-            //                {
-            //                    scoreMidiChild = scoreMidiChildren[j];
-            //                    if(scoreMidiChild.nodeName === "moments")
-            //                    {
-            //                        momentsElem = scoreMidiChild;
-            //                    }
-            //                    if(scoreMidiChild.nodeName === "envs")
-            //                    {
-            //                        envsElem = scoreMidiChild;
-            //                    }
-            //                }
-            //                break;
-            //            }
-            //        }
-
-            //        if(momentsElem !== undefined)
-            //        {
-            //            channel = getMomentsChannel(momentsElem);
-            //        }
-            //        if(channel === -1 && envsElem !== undefined)
-            //        {
-            //            channel = getEnvsChannel(envsElem);
-            //        }
-
-            //        return channel;
-            //    }
-
-            //    voiceChildren = outputVoiceElem.children;
-            //    for(i = 0; i < voiceChildren.length; ++i)
-            //    {
-            //        voiceChild = voiceChildren[i];
-            //        if(voiceChild.nodeName === "g" && (voiceChild.getAttribute("score:alignment") !== null))
-            //        {
-            //            channel = getDSChannel(voiceChild);
-            //            if(channel >= 0)
-            //            {
-            //                break;
-            //            }
-            //        }
-            //    }
-
-            //    return channel;
-            //}
-
             system = {};
             systemDy = getDy(systemElem);
 
@@ -996,7 +866,7 @@ _AP.score = (function (document)
 
             system.staves = [];
 
-            staffElems = getHasMidiElems(systemElem);
+            staffElems = getInputAndOutputElems(systemElem);
 
             for(i = 0; i < staffElems.length; ++i)
             {
@@ -1010,7 +880,7 @@ _AP.score = (function (document)
 
                 if(staff.isOutput === true)
                 {
-                    outputVoiceElems = getHasMidiElems(staffElem);
+                    outputVoiceElems = getInputAndOutputElems(staffElem);
                     for(j = 0; j < outputVoiceElems.length; ++j)
                     {
                         outputVoiceElem = outputVoiceElems[j];
@@ -1022,7 +892,7 @@ _AP.score = (function (document)
                 }
                 else // input staff
                 {
-                    inputVoiceElems = getHasMidiElems(staffElem);
+                    inputVoiceElems = getInputAndOutputElems(staffElem);
                     for(j = 0; j < inputVoiceElems.length; ++j)
                     {
                         inputVoiceElem = inputVoiceElems[j];
@@ -1030,6 +900,35 @@ _AP.score = (function (document)
                         voice = {};
                         voice.isOutput = false;
                         staff.voices.push(voice);
+                    }
+                }
+
+                if(staff.isVisible)
+                {
+                    stafflinesElems = staffElem.getElementsByClassName("stafflines");
+                    if(stafflinesElems !== undefined && stafflinesElems.length > 0)
+                    {
+                        stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
+                        system.left = stafflineInfo.left;
+                        system.right = stafflineInfo.right;
+
+                        staff.topLineY = stafflineInfo.stafflineYs[0];
+                        staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+                        staff.svgStafflines = stafflineInfo.svgStafflines; // top down
+
+                        setStaffColours(staff, isLivePerformance);
+                        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+
+                        if(system.topLineY === undefined)
+                        {
+                            system.topLineY = staff.topLineY;
+                            system.bottomLineY = staff.bottomLineY;
+                        }
+                        else
+                        {
+                            system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
+                            system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
+                        }
                     }
                 }
             }
@@ -1209,13 +1108,14 @@ _AP.score = (function (document)
             return viewBox;
         }
 
-        /*************** end of getEmptyPagesAndSystems function definitions *****************************/
+        /*************** end of getEmptySystems function definitions *****************************/
 
         resetContent(isLivePerformanceArg);
 
         viewBox = setGraphics();
 
         svgPageEmbeds = document.getElementsByClassName("svgPage");
+
         nPages = svgPageEmbeds.length;
         runningViewBoxOriginY = 0; // absolute coordinates
         for(i = 0; i < nPages; ++i)
@@ -1227,13 +1127,15 @@ _AP.score = (function (document)
             pageSystems = [];
             for(j = 0; j < svgChildren.length; ++j)
             {
-                if(svgChildren[j].getAttribute("score:hasMidi") !== null)
+                attrVal = svgChildren[j].getAttribute("score:hasMidi"); 
+                if(attrVal === "true")
                 {
                     // svgChildren[j] is the unique "systems" container
                     systemsContainerChildren = svgChildren[j].children;
                     for(k = 0; k < systemsContainerChildren.length; ++k)
                     {
-                        if(systemsContainerChildren[k].getAttribute("score:hasMidi") !== null)
+                        attrVal = systemsContainerChildren[k].getAttribute("score:hasMidi"); 
+                        if(attrVal === "true")
                         {
                             system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemsContainerChildren[k]);
                             systems.push(system); // systems is global inside this namespace
@@ -1377,55 +1279,583 @@ _AP.score = (function (document)
                     systemChildren, systemChildClass,
                     staff, staffChildren, staffChildClass, staffChild,
                     voice,
-                    staffIndex = 0,
-                    voiceIndex = 0,
-                    voiceIndexInStaff = 0;
+                    staffIndex,
+                    voiceIndex,
+                    isFirstVoiceInStaff,
+                    attrVal;
 
                 // There is a timeObject for every input and output chord or rest and the final barline in each voice.
-                // All timeObjects are allocated alignmentX and msDuration fields.
-                // Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
-                function getTimeObjects(systemIndex, noteObjectElems)
+                // All timeObjects are allocated alignment and msDuration fields.
+                // Chord timeObjects are allocated either a moments[] or an inputChordDef field depending on whether they are input or output chords.
+                function getTimeObjects(systemIndex, noteObjectElems, isOutput)
                 {
-                    var timeObjects = [], noteObjectClass, alignmentXAttribute,
+                    var timeObjects = [], noteObjectAlignment, alignmentAttribute,
                         timeObject, i, j, length, noteObjectElem, chordChildElems, otpmc = outputTrackPerMidiChannel;
 
-                    function getMsDuration(midiChordDef)
+                    function getMsDuration(moments)
                     {
-                        var i,
-                            msDuration = 0,
-                            basicChordsArray = midiChordDef.basicChordsArray;
+                        var i, msDuration = 0;
 
-                        for(i = 0; i < basicChordsArray.length; ++i)
+                        for(i = 0; i < moments.length; ++i)
                         {
-                            msDuration += basicChordsArray[i].msDuration;
+                            msDuration += moments[i].msDuration;
                         }
 
                         return msDuration;
+                    }
+
+                    function getMoments(scoreMidiElem)
+                    {
+                        var i, moments, momentMoments, envMoments, envsGridMoments, envsVtMoments, combinedMoments, msDuration = 0,
+                            scoreMidiChild, scoreMidiChildren = scoreMidiElem.children;
+
+                        function getMsg(bytes)
+                        {
+                            var i, msg = new Uint8Array(bytes.length);
+                            for(i = 0; i < bytes.length; ++i)
+                            {
+                                msg[i] = bytes[i];
+                            }
+                            return msg;
+                        }
+
+                        // adds the momentsToCombine to moments,
+                        // if msPos is equal, either msgs or the envMsgs are moved.
+                        function combineMoments(moments, momentsToCombine, msDuration, setMomentEnvMsgsAttribute, gridWidth)
+                        {
+                            var mi, mci, msgIndex, prevMsPos, momentToCombine, mcMsPos,
+                                moment, mMsPos, mMsgs, mcMsgs, momentInsertion, momentInsertions = [];
+
+                            if(momentsToCombine === undefined)
+                            {
+                                return moments;
+                            }
+
+                            for(mci = 0; mci < momentsToCombine.length; ++mci)
+                            {
+                                prevMsPos = -1;
+                                momentToCombine = momentsToCombine[mci];
+                                mcMsPos = momentToCombine.msPos;
+                                for(mi = 0; mi < moments.length; ++mi)
+                                {
+                                    moment = moments[mi];
+                                    mMsPos = moment.msPos;
+                                    mMsgs = moment.msgs;
+                                    if(mMsPos === mcMsPos)
+                                    {
+                                        if(setMomentEnvMsgsAttribute === false)
+                                        {
+                                            mcMsgs = momentToCombine.msgs;
+                                            for(msgIndex = 0; msgIndex < mcMsgs.length; ++msgIndex)
+                                            {
+                                                mMsgs.push(mcMsgs[msgIndex]);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            moment.envMsgs = momentToCombine.msgs;
+                                        }
+                                        break;
+                                    }
+                                    else if(mcMsPos > prevMsPos && mcMsPos < mMsPos)
+                                    {
+                                        momentInsertion = {};
+                                        momentInsertion.index = mi;
+                                        momentInsertion.moment = momentToCombine;
+                                        momentInsertions.push(momentInsertion);
+                                        break;
+                                    }
+                                    else if(mi === moments.length - 1)
+                                    {
+                                        momentInsertion = {};
+                                        momentInsertion.index = moments.length;
+                                        momentInsertion.moment = momentToCombine;
+                                        momentInsertions.push(momentInsertion);
+                                    }
+
+                                    prevMsPos = mMsPos;
+                                }
+                            }
+                            for(mi = momentInsertions.length - 1; mi >= 0; --mi)
+                            {
+                                momentInsertion = momentInsertions[mi];
+                                moments.splice(momentInsertion.index, 0, momentInsertion.moment);
+                            }
+                            moments[moments.length - 1].msDuration = msDuration - moments[moments.length - 1].msPos;
+                        }
+
+                        // returns the moments in the momentsElem, with all the msgs
+                        // converted to Uint8 arrays.
+                        function getMomentsMoments(momentsElem)
+                        { 
+                            var i, j, msPos = 0, momentsMoment, momentsMoments = [], msChildren = momentsElem.children,
+                                momentChildren, noteOnsElem, switchesElem;
+
+                            function getMsgs(msgsElem)
+                            {
+                                var i, j, msgsChildren = msgsElem.children,
+                                    msgStr, byteStrs, byteStr, bytes = [], byte, msgs = [], msg;
+
+                                for(i = 0; i < msgsChildren.length; ++i)
+                                {
+                                    if(msgsChildren[i].nodeName === "msg")
+                                    {
+                                        msgStr = msgsChildren[i].getAttribute("m");
+                                        byteStrs = msgStr.split(' ');
+                                        bytes.length = 0;
+                                        for(j = 0; j < byteStrs.length; ++j)
+                                        {
+                                            byteStr = byteStrs[j]; 
+                                            if(byteStr.indexOf("0x") >= 0)
+                                            {
+                                                byte = parseInt(byteStr, 16);
+                                            }
+                                            else
+                                            {
+                                                byte = parseInt(byteStr, 10);
+                                            }
+                                            bytes.push(byte);
+                                        }
+                                        msg = getMsg(bytes);
+                                        msgs.push(msg);
+                                    }
+                                }
+                                return msgs;
+                            }
+
+                            function getMomentsMoment(momentElem)
+                            { 
+                                var i, momentChildren = momentElem.children,
+                                    momentsMoment = {};
+
+                                momentsMoment.msDuration = parseInt(momentElem.getAttribute("msDuration"), 10);
+                                momentsMoment.noteOffMsgs = [];
+                                momentsMoment.switchesMsgs = [];
+                                momentsMoment.noteOnMsgs = [];
+
+                                for(i = 0; i < momentChildren.length; ++i)
+                                {
+                                    if(momentChildren[i].nodeName === "noteOffs")
+                                    {
+                                        momentsMoment.noteOffMsgs = getMsgs(momentChildren[i]);
+                                    }
+                                    if(momentChildren[i].nodeName === "switches")
+                                    {
+                                        momentsMoment.switchesMsgs = getMsgs(momentChildren[i]);
+                                    }
+                                    if(momentChildren[i].nodeName === "noteOns")
+                                    {
+                                        momentsMoment.noteOnMsgs = getMsgs(momentChildren[i]);
+                                    }
+                                }
+                                return momentsMoment;
+                            }
+
+                            for(i = 0; i < msChildren.length; ++i)
+                            {
+                                if(msChildren[i].nodeName === "moment")
+                                {  
+                                    momentsMoment = getMomentsMoment(msChildren[i]);
+                                    momentsMoment.msPos = msPos;
+                                    msPos += momentsMoment.msDuration;
+                                    momentsMoments.push(momentsMoment);
+                                }
+                            }
+
+                            return momentsMoments;
+                        }
+
+                        function getDuration(moments)
+                        {
+                            var lastMoment = moments[moments.length - 1];
+
+                            return (lastMoment.msPos + lastMoment.msDuration);
+                        }
+
+                        function getEnvMoments(envsElem, msDuration)
+                        {
+                            var i, envElem, envMoments, status, data1, vts, gridWidth = 100,
+                                envsChildren = envsElem.children;
+
+                            function getEmptyGridMoments(msDuration, gridWidth)
+                            {
+                                var mmt, mmts = [], msPos = 0;
+                                // Algorithm: a set of moments every gridWidth ms, then add the moments between that are the vertices of the envs.
+                                // Most env moments will then be on the 100ms grid.
+                                do
+                                {
+                                    mmt = {};
+                                    mmt.msPos = msPos;
+                                    mmt.msgs = [];
+                                    mmts.push(mmt);
+                                    msPos += gridWidth;
+                                }
+                                while(msPos < msDuration);
+
+                                return mmts;
+                            }
+
+                            function getVtsData2ConstD1(envElem, data1)
+                            {
+                                var i, vtElem, envElemChildren = envElem.children, vt, vts = [];
+
+                                for(i = 0; i < envElemChildren.length; ++i)
+                                {
+                                    if(envElemChildren[i].nodeName === "vt")
+                                    {
+                                        vtElem = envElemChildren[i];
+                                        vt = {};
+                                        vt.data1 = data1;
+                                        vt.data2 = parseInt(vtElem.getAttribute("d2"), 10);
+                                        vt.msDur = parseInt(vtElem.getAttribute("msDur"), 10);
+                                        vts.push(vt);
+                                    }
+                                }
+                                return vts;
+                            }
+
+                            function getVtsData1UndefinedData2(envElem)
+                            {
+                                var i, vtElem, envElemChildren = envElem.children, vt, vts = [];
+
+                                for(i = 0; i < envElemChildren.length; ++i)
+                                {
+                                    if(envElemChildren[i].nodeName === "vt")
+                                    {
+                                        vtElem = envElemChildren[i];
+                                        vt = {};
+                                        vt.data1 = parseInt(vtElem.getAttribute("d1"), 10);
+                                        vt.msDur = parseInt(vtElem.getAttribute("msDur"), 10);
+                                        vts.push(vt);
+                                    }
+                                }
+
+                                return vts;
+                            }
+
+                            function getVtsData1AndData2(envElem)
+                            {
+                                var i, vtElem, envElemChildren = envElem.children, vt, vts = [];
+
+                                for(i = 0; i < envElemChildren.length; ++i)
+                                {
+                                    if(envElemChildren[i].nodeName === "vt")
+                                    {
+                                        vtElem = envElemChildren[i];
+                                        vt = {};
+                                        vt.data1 = parseInt(vtElem.getAttribute("d1"), 10);
+                                        vt.data2 = parseInt(vtElem.getAttribute("d2"), 10);
+                                        vt.msDur = parseInt(vtElem.getAttribute("msDur"), 10);
+                                        vts.push(vt);
+                                    }
+                                }
+                                return vts;
+                            }
+
+                            function setGridMoments(envMoments, status, vts, gridWidth)
+                            {
+                                var i, msg, vtsState = {}, oldVtIndex = 0, bytes = [];
+
+                                function getD1IncrPerMs(vtIndex, vt1s)
+                                {
+                                    var d1IncrPerMs = 0;
+                                    if(vt1s[vtIndex].msDur > 0 && (vt1s.length > vtIndex + 1))
+                                    {
+                                        d1IncrPerMs = (vt1s[vtIndex + 1].data2 - vt1s[vtIndex].data2) / (vt1s[vtIndex].msDur);
+                                    }
+                                    return d1IncrPerMs;
+                                }
+                                function getD2IncrPerMs(vtIndex, vt2s)
+                                {
+                                    var d2IncrPerMs = 0;
+                                    if(vt2s[vtIndex].msDur > 0 && (vt2s.length > vtIndex + 1))
+                                    {
+                                        d2IncrPerMs = (vt2s[vtIndex + 1].data2 - vt2s[vtIndex].data2) / (vt2s[vtIndex].msDur);
+                                    }
+                                    return d2IncrPerMs;
+                                }
+                                // sets vtsState to the state of the vt2s at msPos.
+                                // sets vtsState.vtIndex = 0;
+                                // sets vtsState.data1Value = vts[0].data1;
+                                // sets vtsState.data2Value = vts[0].data2;
+                                // sets vtsState.data1IncrPerMillisecond = (vts[1].data1 - vts[0].data1) / vts[vtsState.vtIndex].msDur;
+                                // sets vtsState.data2IncrPerMillisecond = (vts[1].data2 - vts[0].data2) / vts[vtsState.vtIndex].msDur;
+                                // sets vtsState.currentVtMsPos = 0;
+                                // sets vtsState.nextVtMsPos = vts[0].msDur;
+                                function nextData(msPos, vts, vtsState)
+                                {
+                                    if(msPos >= vtsState.nextVtMsPos)
+                                    {
+                                        vtsState.vtIndex++;
+                                        vtsState.currentVtMsPos = vtsState.nextVtMsPos;
+                                        vtsState.nextVtMsPos += vts[vtsState.vtIndex].msDur;
+                                        if(vts[vtsState.vtIndex].msDur > 0)
+                                        {
+                                            vtsState.data1IncrPerMillisecond =
+                                                (vts[vtsState.vtIndex + 1].data1 - vts[vtsState.vtIndex].data1) / vts[vtsState.vtIndex].msDur;
+                                            if(vts[vtsState.vtIndex].data2 !== undefined)
+                                            {
+                                                vtsState.data2IncrPerMillisecond =
+                                                    (vts[vtsState.vtIndex + 1].data2 - vts[vtsState.vtIndex].data2) / vts[vtsState.vtIndex].msDur;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            vtsState.dataIncrPerMillisecond = 0;
+                                        }
+                                    }
+
+                                    vtsState.data1Value = Math.floor(vts[vtsState.vtIndex].data1 +
+                                            ((msPos - vtsState.currentVtMsPos) * vtsState.data1IncrPerMillisecond));
+                                    if(vts[vtsState.vtIndex].data2 === undefined)
+                                    {
+                                        vtsState.data2Value = undefined;
+                                    }
+                                    else
+                                    {
+                                        vtsState.data2Value = Math.floor(vts[vtsState.vtIndex].data2 +
+                                                ((msPos - vtsState.currentVtMsPos) * vtsState.data2IncrPerMillisecond));
+                                    }
+
+                                    return vtsState;
+                                }
+
+                                bytes.push(status);
+                                bytes.push(vts[0].data1);
+                                if(vts[0].data2 !== undefined)
+                                {
+                                    bytes.push(vts[0].data2);
+                                }
+
+                                msg = getMsg(bytes);
+
+                                envMoments[0].msgs.push(msg);
+
+                                if(vts.length > 1 && vts[0].msDur > 0)
+                                {
+                                    vtsState.vtIndex = 0;
+                                    vtsState.data1Value = vts[vtsState.vtIndex].data1;
+                                    vtsState.data2Value = vts[vtsState.vtIndex].data2;
+                                    vtsState.data1IncrPerMillisecond = (vts[1].data1 - vts[0].data1) / vts[vtsState.vtIndex].msDur;
+                                    vtsState.data2IncrPerMillisecond = (vts[1].data2 - vts[0].data2) / vts[vtsState.vtIndex].msDur;
+                                    vtsState.currentVtMsPos = 0;
+                                    vtsState.nextVtMsPos = vts[0].msDur;
+
+                                    for(i = 1; i < envMoments.length; ++i)
+                                    {
+                                        vtsState = nextData(envMoments[i].msPos, vts, vtsState);
+
+                                        if(vtsState.data1Value !== msg[1]
+                                        || (vtsState.data2Value !== undefined && msg[2] !== undefined && vtsState.data2Value !== msg[2]
+                                        || (vtsState.vtIndex !== oldVtIndex)))
+                                        {
+                                            // messages will always be written when the vtIndex has changed
+                                            oldVtIndex = vtsState.vtIndex;
+
+                                            bytes.length = 0;
+                                            bytes.push(status);
+                                            bytes.push(vtsState.data1Value);
+                                            if(vtsState.data2Value !== undefined)
+                                            {
+                                                bytes.push(vtsState.data2Value);
+                                            }
+
+                                            msg = getMsg(bytes);
+
+                                            envMoments[i].msgs.push(msg);
+                                        }
+                                    }
+                                }
+                            }
+
+                            function setVtMoments(envMoments, status, vts, msDuration, gridWidth)
+                            {
+                                var i, localEnvMoments = [], localEnvMoment,
+                                    msg, msgs, msPos = 0, vt, bytes = [];
+
+                                for(i = 0; i < vts.length; ++i)
+                                {
+                                    localEnvMoment = {};
+                                    localEnvMoment.msPos = msPos;
+                                    localEnvMoment.msgs = [];
+                                    vt = vts[i];
+
+                                    if(Math.floor(msPos % gridWidth) !== 0)
+                                    {
+                                        bytes.length = 0;
+                                        bytes.push(status);
+                                        bytes.push(vt.data1);
+                                        if(vt.data2 !== undefined)
+                                        {
+                                            bytes.push(vt.data2);
+                                        }
+                                        msg = getMsg(bytes);
+                                        localEnvMoment.msgs.push(msg);
+                                        localEnvMoments.push(localEnvMoment);
+                                    }
+
+                                    msPos += vt.msDur;
+                                }
+
+                                combineMoments(envMoments, localEnvMoments, msDuration, false, gridWidth); 
+                            }
+
+                            envMoments = getEmptyGridMoments(msDuration, gridWidth);
+
+                            for(i = 0; i < envsChildren.length; ++i)
+                            {
+                                if(envsChildren[i].nodeName === "env")
+                                {
+                                    envElem = envsChildren[i];
+                                    status = parseInt(envElem.getAttribute("s"), 16);
+                                    switch(Math.floor(status / 16))
+                                    {
+                                        case 10: // 0xA Aftertouch
+                                            data1 = parseInt(envElem.getAttribute("d1"), 10);
+                                            vts = getVtsData2ConstD1(envElem, data1);
+                                            setGridMoments(envMoments, status, vts);
+                                            setVtMoments(envMoments, status, vts, msDuration, gridWidth);
+                                            break;
+                                        case 11: // 0xB ControlChange
+                                            data1 = parseInt(envElem.getAttribute("d1"), 10);
+                                            vts = getVtsData2ConstD1(envElem, data1);
+                                            setGridMoments(envMoments, status, vts);
+                                            setVtMoments(envMoments, status, vts, msDuration, gridWidth);
+                                            break;
+                                        case 13: // 0xD ChannelPressure
+                                            vts = getVtsData1UndefinedData2(envElem);
+                                            setGridMoments(envMoments, status, vts);
+                                            setVtMoments(envMoments, status, vts, msDuration, gridWidth);
+                                            break;
+                                        case 14: // 0xE PitchWheel
+                                            vts = getVtsData1AndData2(envElem);
+                                            setGridMoments(envMoments, status, vts);
+                                            setVtMoments(envMoments, status, vts, msDuration, gridWidth);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+
+                            return envMoments;
+                        }
+
+                        function getFlatMoments(momentMoments, envsMoments, msDuration)
+                        {
+                            var i, flatMoment, flatMoments = [],
+                                moment, noteOffMsgs, switchesMsgs, envMsgs, noteOnMsgs;
+
+                            function setMsDurations(flatMoments, moments)
+                            {
+                                var i;
+
+                                console.assert(flatMoments.length === moments.length, "Moments length error.");
+                                console.assert(moments[moments.length - 1].msDuration !== undefined, "Last moment msDuration undefined.");
+
+                                for(i = 1; i < moments.length; ++i)
+                                {
+                                    flatMoments[i - 1].msDuration = moments[i].msPos - moments[i - 1].msPos;
+                                }
+                                flatMoments[flatMoments.length - 1].msDuration = moments[moments.length - 1].msDuration;
+                            }
+
+                            combineMoments(momentMoments, envsMoments, msDuration, true);
+
+                            for(i = 0; i < momentMoments.length; ++i)
+                            {
+                                flatMoment = {};
+                                flatMoment.msgs = [];
+                                flatMoments.push(flatMoment);
+
+                                moment = momentMoments[i];
+
+                                if(moment.noteOffMsgs !== undefined)
+                                {
+                                    noteOffMsgs = moment.noteOffMsgs;
+                                    for(j = 0; j < noteOffMsgs.length; ++j)
+                                    {
+                                        flatMoment.msgs.push(noteOffMsgs[j]);
+                                    }
+                                }
+
+                                if(moment.switchesMsgs !== undefined)
+                                {
+                                    switchesMsgs = moment.switchesMsgs;
+                                    for(j = 0; j < switchesMsgs.length; ++j)
+                                    {
+                                        flatMoment.msgs.push(switchesMsgs[j]);
+                                    }
+                                }
+
+                                if(moment.envMsgs !== undefined)
+                                {
+                                    envMsgs = moment.envMsgs;
+                                    for(j = 0; j < envMsgs.length; ++j)
+                                    {
+                                        flatMoment.msgs.push(envMsgs[j]);
+                                    }
+                                }
+
+                                if(moment.noteOnMsgs !== undefined)
+                                {
+                                    noteOnMsgs = moment.noteOnMsgs;
+                                    for(j = 0; j < noteOnMsgs.length; ++j)
+                                    {
+                                        flatMoment.msgs.push(noteOnMsgs[j]);
+                                    }
+                                }
+                            }
+                            setMsDurations(flatMoments, momentMoments);
+
+                            return flatMoments;
+                        }
+
+                        for(i = 0; i < scoreMidiChildren.length; ++i)
+                        {
+                            scoreMidiChild = scoreMidiChildren[i];
+                            if(scoreMidiChild.nodeName === "moments")
+                            {
+                                momentMoments = getMomentsMoments(scoreMidiChild);
+                                msDuration = getDuration(momentMoments);
+                            }
+                           
+                            if(scoreMidiChild.nodeName === "envs")
+                            {
+                                envMoments = getEnvMoments(scoreMidiChild, msDuration);
+                            }
+                        }
+
+                        moments = getFlatMoments(momentMoments, envMoments, msDuration);
+
+                        return moments;
                     }
 
                     length = noteObjectElems.length;
                     for(i = 0; i < length; ++i)
                     {
                         noteObjectElem = noteObjectElems[i];
-                        noteObjectClass = noteObjectElem.getAttribute('class');
-                        if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
+                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment');
+                        if(noteObjectAlignment !== null)
                         {
                             timeObject = {};
-                            timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX')) / viewBoxScale1;
+                            timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
                             timeObject.systemIndex = systemIndex;
                             chordChildElems = noteObjectElem.children;
                             for(j = 0; j < chordChildElems.length; ++j)
                             {
-                                switch(chordChildElems[j].nodeName)
+                                if(isOutput)
                                 {
-                                    case 'score:midiChord':
-                                        timeObject.midiChordDef = new MidiChordDef(chordChildElems[j]);
-                                        timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
-                                        break;
-                                    case 'score:inputNotes':
-                                        timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
-                                        timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
-                                        break;
+                                    if(chordChildElems[j].nodeName === "score:midi")
+                                    {
+                                        timeObject.moments = getMoments(chordChildElems[j]);
+                                        timeObject.msDuration = getMsDuration(timeObject.moments); // was midiChordDef
+                                    }
+                                }
+                                else
+                                {
+                                    timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
+                                    timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
                                 }
                             }
                             if(timeObject.msDuration < 1)
@@ -1434,27 +1864,15 @@ _AP.score = (function (document)
                             }
                             timeObjects.push(timeObject);
                         }
-                        else if(noteObjectClass === 'rest')
-                        {
-                            timeObject = {};
-                            alignmentXAttribute = noteObjectElem.getAttribute('score:alignmentX');
-                            if(alignmentXAttribute !== null)
-                            {
-                                timeObject.alignmentX = parseFloat(alignmentXAttribute) / viewBoxScale1;
-                            }
-                            timeObject.systemIndex = systemIndex;
-                            timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
-                            timeObjects.push(timeObject);
-                        }
 
                         if(i === length - 1)
                         {
                             timeObject = {}; // the final barline in the voice (used when changing speed)
                             timeObject.msDuration = 0;
                             timeObject.systemIndex = systemIndex;
-                            // msPosition and alignmentX are set later
+                            // msPosition and alignment are set later
                             // timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
-                            // timeObject.alignmentX = system.right;
+                            // timeObject.alignment = system.right;
                             timeObjects.push(timeObject);
                         }
                     }
@@ -1501,31 +1919,32 @@ _AP.score = (function (document)
                 }
 
                 systemChildren = systemElem.children;
+                staffIndex = 0;
                 for(i = 0; i < systemChildren.length; ++i)
                 {
-                    systemChildClass = systemChildren[i].getAttribute("class");
-                    if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
+                    attrVal = systemChildren[i].getAttribute("score:hasMidi");
+                    if(attrVal === "true")  // input staves have attrVal === "false"
                     {
                         staff = system.staves[staffIndex++];
                         staffChildren = systemChildren[i].children;
+                        isFirstVoiceInStaff = true;
+                        voiceIndex = 0;
                         for(j = 0; j < staffChildren.length; ++j)
                         {
                             staffChild = staffChildren[j];
-                            staffChildClass = staffChild.getAttribute('class');
-                            voiceIndexInStaff = 0;
-                            if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
+                            attrVal = staffChild.getAttribute("score:hasMidi");
+                            if(attrVal === "true")
                             {
                                 voice = staff.voices[voiceIndex++];
-                                voice.timeObjects = getTimeObjects(systemIndex, staffChild.children);
+                                voice.timeObjects = getTimeObjects(systemIndex, staffChild.children, voice.isOutput);
                                 voice.graphicElements = getGraphicElements(systemIndex, staffChild.children); // will be used to set opacity when the voice is disabled
-                                if(voiceIndexInStaff === 0)
+                                if(isFirstVoiceInStaff === true)
                                 {
                                     voice.staffLinesElem = getStaffLinesElem(staffChildren);
-                                    voiceIndexInStaff++;
+                                    isFirstVoiceInStaff = false;
                                 }
                             }
                         }
-                        voiceIndex = 0;
                     }
                 }
             }
@@ -1561,17 +1980,17 @@ _AP.score = (function (document)
                 }
             }
 
-            // If the first timeObject in a voice has no AlignmentX attribute,
+            // If the first timeObject in a voice has no Alignment attribute,
             // it is set to the value for the system.
-            function setFirstTimeObjectAlignmentX(systems)
+            function setFirstTimeObjectAlignment(systems)
             {
                 var i, nSystems = systems.length, system,
-                        firstAlignmentX;
+                        firstAlignment;
 
-                function getFirstAlignmentX(system)
+                function getFirstAlignment(system)
                 {
                     var j, k, staff, nStaves = system.staves.length,
-                        voice, nVoices, firstAlignmentX = -1;
+                        voice, nVoices, firstAlignment = -1;
 
                     for(j = 0; j < nStaves; ++j)
                     {
@@ -1580,21 +1999,21 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            if(voice.timeObjects[0].alignmentX !== undefined)
+                            if(voice.timeObjects[0].alignment !== undefined)
                             {
-                                firstAlignmentX = voice.timeObjects[0].alignmentX;
+                                firstAlignment = voice.timeObjects[0].alignment;
                                 break;
                             }
                         }
-                        if(firstAlignmentX > -1)
+                        if(firstAlignment > -1)
                         {
                             break;
                         }
                     }
-                    return firstAlignmentX;
+                    return firstAlignment;
                 }
 
-                function setFirstAlignmentX(system, firstAlignmentX)
+                function setFirstAlignment(system, firstAlignment)
                 {
                     var j, k, staff, nStaves = system.staves.length,
                         voice, nVoices;
@@ -1606,9 +2025,9 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            if(voice.timeObjects[0].alignmentX === undefined)
+                            if(voice.timeObjects[0].alignment === undefined)
                             {
-                                voice.timeObjects[0].alignmentX = firstAlignmentX;
+                                voice.timeObjects[0].alignment = firstAlignment;
                             }
                         }
                     }
@@ -1617,19 +2036,19 @@ _AP.score = (function (document)
                 for(i = 0; i < nSystems; ++i)
                 {
                     system = systems[i];
-                    firstAlignmentX = getFirstAlignmentX(system);
-                    setFirstAlignmentX(system, firstAlignmentX);
+                    firstAlignment = getFirstAlignment(system);
+                    setFirstAlignment(system, firstAlignment);
                 } 
             }
 
-            // The rightmost barlines all need an AlignmentX to which the EndMarker can be set.
-            function setRightmostBarlinesAlignmentX(systems)
+            // The rightmost barlines all need an Alignment to which the EndMarker can be set.
+            function setRightmostBarlinesAlignment(systems)
             {
                 var i, nSystems = systems.length, system,
                     j, nStaves, staff,
                     k, nVoices, voice,
                     finalBarline,
-                    rightmostAlignmentX = systems[0].right;
+                    rightmostAlignment = systems[0].right;
 
                 for(i = 0; i < nSystems; ++i)
                 {
@@ -1643,7 +2062,7 @@ _AP.score = (function (document)
                         {
                             voice = staff.voices[k];
                             finalBarline = voice.timeObjects[voice.timeObjects.length - 1];
-                            finalBarline.alignmentX = rightmostAlignmentX;
+                            finalBarline.alignment = rightmostAlignment;
                         }
                     }
                 }
@@ -1805,8 +2224,8 @@ _AP.score = (function (document)
             }
 
             setMsPositions(systems);
-            setFirstTimeObjectAlignmentX(systems);
-            setRightmostBarlinesAlignmentX(systems);
+            setFirstTimeObjectAlignment(systems);
+            setRightmostBarlinesAlignment(systems);
 
             if(speed !== 1)
             {
@@ -1817,18 +2236,25 @@ _AP.score = (function (document)
             finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
         }
 
-        function setSystemMarkerParameters(systems, isLivePerformance)
+        function setMarkers(systems, isLivePerformance)
         {
-            var i, nSystems = systems.length, system;
+            var i, j, nSystems = systems.length, system;
             for(i = 0; i < nSystems; ++i)
             {
                 system = systems[i];
-                system.startMarker.setParameters(system, i);
                 system.startMarker.setVisible(false);
-                system.runningMarker.setParameters(system, i, isLivePerformance, trackIsOnArray);
                 system.runningMarker.setVisible(false);
-                system.endMarker.setParameters(system, i);
                 system.endMarker.setVisible(false);
+
+                system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
+                for(j = 0; j < system.staves.length; ++j)
+                {
+                    if(!isNaN(system.staves[j].voices[0].timeObjects[0].alignment))
+                    {
+                        system.startMarker.moveTo(system.staves[j].voices[0].timeObjects[0]);
+                        break;
+                    }
+                }
             }
 
             startMarker = systems[0].startMarker;
@@ -1839,37 +2265,6 @@ _AP.score = (function (document)
             endMarker = systems[systems.length - 1].endMarker;
             endMarker.moveTo(finalBarlineInScore);
             endMarker.setVisible(true);
-        }
-
-        // inserts each midiChord's finalChordOffMoment.messages in the first moment in the following midiObject.
-        function transferFinalChordOffMoments(outputTracks)
-        {
-            var track, trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i, previousMidiChord;
-
-            for(trackIndex = 0; trackIndex < outputTracks.length; ++trackIndex)
-            {
-                track = outputTracks[trackIndex];
-                if(track.midiObjects.length > 1)
-                {
-                    for(midiObjectIndex = 1; midiObjectIndex < track.midiObjects.length; ++midiObjectIndex)
-                    {
-                        if(track.midiObjects[midiObjectIndex - 1] instanceof MidiChord)
-                        {
-                            previousMidiChord = track.midiObjects[midiObjectIndex - 1];
-                            console.assert(previousMidiChord.finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
-
-                            finalChordOffMessages = previousMidiChord.finalChordOffMoment.messages;
-                            nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
-                            for(i = 0; i < finalChordOffMessages.length; ++i)
-                            {
-                                nextObjectMessages.splice(0, 0, finalChordOffMessages[i]);
-                            }
-                            //previousMidiChord.finalChordOffMoment = undefined;
-                            previousMidiChord.moments.length -= 1;    
-                        }
-                    }
-                }
-            }
         }
 
         function setTrackAttributes(outputTracks, inputTracks, system0staves)
@@ -1884,13 +2279,11 @@ _AP.score = (function (document)
                     if(voice.isOutput === true)
                     {
                         outputTracks.push(new Track());
-                        outputTracks[outputTrackIndex].midiObjects = [];
-                        outputTracks[outputTrackIndex].midiChannel = voice.midiChannel;
-                        outputTracks[outputTrackIndex].masterVolume = voice.masterVolume;
+                        outputTracks[outputTrackIndex].outputObjects = [];
                         outputTracks[outputTrackIndex].isVisible = staff.isVisible;
                         outputTrackIndex++;
                     }
-                    else // voice.class === "inputVoice" 
+                    else // voice.isOutput === false 
                     {
                         inputTracks.push(new Track());
                         inputTracks[inputTrackIndex].inputObjects = [];
@@ -1933,7 +2326,7 @@ _AP.score = (function (document)
 
         getVoiceObjects(globalSpeed);
 
-        setSystemMarkerParameters(systems, isLivePerformance);
+        setMarkers(systems, isLivePerformance);
 
         setTrackAttributes(outputTracks, inputTracks, systems[0].staves);
 
@@ -1958,21 +2351,7 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.midiChordDef === undefined)
-                            {
-                                if(timeObjectIndex < (nTimeObjects - 1))
-                                {
-                                    // A real rest. All barlines on the right ends of staves are ignored.
-                                    midiRest = new MidiRest(timeObject);
-                                    outputTrack.midiObjects.push(midiRest);
-                                }
-                            }
-                            else
-                            {
-                                midiChordDef = timeObject.midiChordDef;
-                                midiChord = new MidiChord(outputTrack.midiChannel, midiChordDef, timeObject);
-                                outputTrack.midiObjects.push(midiChord);
-                            }
+                            outputTrack.outputObjects.push(timeObject);
                         }
                         ++outputTrackIndex;
                     }
@@ -2002,8 +2381,6 @@ _AP.score = (function (document)
                 }
             }
         }
-
-        transferFinalChordOffMoments(outputTracks);
 
         tracksData.inputTracks = inputTracks;
         tracksData.outputTracks = outputTracks;
@@ -2070,7 +2447,7 @@ _AP.score = (function (document)
         // setting them.
         this.markersLayers = markersLayers;
 
-        this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
+        this.getEmptySystems = getEmptySystems;
 
         // Returns a tracksData object having the following defined attributes:
         //        inputTracks[] - an array of tracks containing inputChords and inputRests

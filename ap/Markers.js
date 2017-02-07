@@ -48,7 +48,7 @@ _AP.markers = (function ()
 
         moveTo = function (tObject)
         {
-            var x = tObject.alignmentX;
+            var x = tObject.alignment;
 
             timObject = tObject;
 
@@ -111,12 +111,14 @@ _AP.markers = (function ()
             return val;
         };
 
-        function setParameters(system, viewBoxOriginY, viewBoxScale)
+        function setParameters(system, vbOriginY, vbScale)
         {
-            var i, top, bottom;
+            var top, bottom;
 
-            top = (viewBoxScale * (system.markersTop - viewBoxOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (viewBoxScale * (system.markersBottom - viewBoxOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            viewBoxScale = vbScale;
+
+            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
+            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', top);
@@ -127,12 +129,12 @@ _AP.markers = (function ()
             line.style.stroke = color;
 
             circle.setAttribute('cy', top);
-            circle.setAttribute('r', (viewBoxScale * CIRCLE_RADIUS).toString());
+            circle.setAttribute('r', (vbScale * CIRCLE_RADIUS).toString());
             circle.style.strokeWidth = 0;
             circle.style.fill = color;
 
-            yCoordinates.top = Math.round(parseFloat(top) / vbScale) + viewBoxOriginY;
-            yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + viewBoxOriginY;
+            yCoordinates.top = Math.round(parseFloat(top) / vbScale) + vbOriginY;
+            yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + vbOriginY;
         }
 
         groupChildren = svgStartMarkerGroup.childNodes;
@@ -178,10 +180,10 @@ _AP.markers = (function ()
         sysIndex, millisecondPosition,
         groupChildren, i,
 
-        // the argument's alignmentX is in user html pixels
+        // the argument's alignment is in user html pixels
         moveTo = function (timeObject)
         {
-            var x = timeObject.alignmentX;
+            var x = timeObject.alignment;
 
             millisecondPosition = timeObject.msPosition;
 
@@ -229,18 +231,20 @@ _AP.markers = (function ()
             }
         };
 
-        function setParameters(system, viewBoxOriginY, viewBoxScale)
+        function setParameters(system, vbOriginY, vbScale)
         {
             var top, bottom, rectX, rectY, widthHeight;
 
-            top = (viewBoxScale * (system.markersTop - viewBoxOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (viewBoxScale * (system.markersBottom - viewBoxOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            viewBoxScale = vbScale;
 
-            rectX = (viewBoxScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString(10);
-            rectY = (top - (viewBoxScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString(10);
+            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
+            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
 
-            halfRectWidth = (viewBoxScale * RECT_WIDTH_AND_HEIGHT) / 2;
-            widthHeight = (viewBoxScale * RECT_WIDTH_AND_HEIGHT).toString(10);
+            rectX = (vbScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString(10);
+            rectY = (top - (vbScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString(10);
+
+            halfRectWidth = (vbScale * RECT_WIDTH_AND_HEIGHT) / 2;
+            widthHeight = (vbScale * RECT_WIDTH_AND_HEIGHT).toString(10);
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', top);
@@ -301,9 +305,9 @@ _AP.markers = (function ()
         sysIndex, yCoordinates = {},
         groupChildren, i,
 
-        moveLineToAlignmentX = function (alignmentX)
+        moveLineToAlignment = function (alignment)
         {
-            var x = alignmentX * viewBoxScale;
+            var x = alignment * viewBoxScale;
             line.setAttribute('x1', x.toString());
             line.setAttribute('x2', x.toString());
         },
@@ -330,7 +334,7 @@ _AP.markers = (function ()
                 positionIndex++;
             }
 
-            moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
+            moveLineToAlignment(timeObjects[positionIndex].alignment);
             nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
         },
 
@@ -350,7 +354,7 @@ _AP.markers = (function ()
                 positionIndex++;
             }
 
-            moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
+            moveLineToAlignment(timeObjects[positionIndex].alignment);
             nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
         },
 
@@ -364,7 +368,7 @@ _AP.markers = (function ()
             //console.log("runningMarker: msPos before increment=%i, after increment=%i", timeObjects[positionIndex].msPosition, timeObjects[positionIndex + 1].msPosition);
             positionIndex++;
             setNextMsPosition(positionIndex);
-            moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
+            moveLineToAlignment(timeObjects[positionIndex].alignment);
         },
 
         systemIndex = function ()
@@ -451,7 +455,7 @@ _AP.markers = (function ()
                     endBarlineTimeObject = topVoiceTimeObjects[topVoiceTimeObjects.length - 1],
                     systemRestTimeObject = {};
 
-                systemRestTimeObject.alignmentX = firstSystemTimeObject.alignmentX;
+                systemRestTimeObject.alignment = firstSystemTimeObject.alignment;
                 systemRestTimeObject.msPosition = firstSystemTimeObject.msPosition;
                 systemRestTimeObject.msDuration = endBarlineTimeObject.msPosition - firstSystemTimeObject.msPosition;
 
@@ -462,8 +466,8 @@ _AP.markers = (function ()
             timeObjects = [];
             timeObject = {};
             timeObject.msPosition = -1;
-            timeObject.alignmentX = -1;
-            while(timeObject.alignmentX < system.right)
+            timeObject.alignment = -1;
+            while(timeObject.alignment < system.right)
             {
                 timeObject = findFollowingTimeObject(system, timeObject.msPosition, isLivePerformance, trackIsOnArray);
                 if(timeObject === undefined)
@@ -500,12 +504,14 @@ _AP.markers = (function ()
         };
 
         // The trackIsOnArray contains the boolean on/off state of eack track.
-        function setParameters(system, viewBoxOriginY, viewBoxScale)
+        function setParameters(system, vbOriginY, vbScale)
         {
             var top, bottom, color = '#999999';
 
-            top = (viewBoxScale * (system.markersTop - viewBoxOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (viewBoxScale * (system.markersBottom - viewBoxOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            viewBoxScale = vbScale;
+
+            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
+            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', top);
@@ -515,8 +521,8 @@ _AP.markers = (function ()
             line.style.strokeWidth = 8; // 1 pixel
             line.style.stroke = color;
 
-            yCoordinates.top = Math.round(parseFloat(top) / vbScale) + viewBoxOriginY;
-            yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + viewBoxOriginY;
+            yCoordinates.top = Math.round(parseFloat(top) / vbScale) + vbOriginY;
+            yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + vbOriginY;
         }
 
         groupChildren = svgStartMarkerGroup.childNodes;
@@ -544,8 +550,6 @@ _AP.markers = (function ()
 
         return this;
     },
-
-
 
     // public API
     publicAPI =
