@@ -1,17 +1,14 @@
-﻿<!DOCTYPE html />
-<html
-lang="en"
-xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html lang="en"
+      xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Assistant Performer</title>
-    <link
-        href="assistantPerformerStyleSheet.css"
-        media="all"
-        rel="stylesheet"
-        type="text/css" />
-
-    <!-- Javascript files are included at the end of the body element -->
-
+    <link href="assistantPerformerStyleSheet.css"
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
+    <link rel="shortcut icon" href="http://james-ingram-act-two.de/open-source/AP.ico">
+    <!-- Javascript files are included at the end of the body element --> 
 </head>
 <body style="text-align: center; font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; padding: 0; margin: 0; overflow:hidden">
     <div id="titleOptionsDiv" style="text-align: center; visibility: visible; margin:0;">
@@ -73,6 +70,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             </div>
             <div id="aboutLinkDiv" class="helpText" style="display:none; padding-top:3px"></div>
             <div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundFont is still loading...</div>
+            <div id="waitingForScoreDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the score is loading...</div>
             <div id="needsMIDIAccessDiv" class="helpText" style="display:none; padding-top:3px">This score can only be played on a browser that supports Web MIDI.</div>
             <div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
                 <label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
@@ -327,7 +325,6 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <script src="ap/InputChordDef.js" type="text/javascript"></script>
     <script src="ap/InputChord.js" type="text/javascript"></script>
     <script src="ap/InputRest.js" type="text/javascript"></script>
-    <script src="ap/MidiChordDef.js" type="text/javascript"></script>
     <script src="ap/Score.js" type="text/javascript"></script>
     <script src="ap/TracksControl.js" type="text/javascript"></script>
     <script src="ap/Controls.js" type="text/javascript"></script>

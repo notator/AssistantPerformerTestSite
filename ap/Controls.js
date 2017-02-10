@@ -31,6 +31,7 @@ _AP.controls = (function(document, window)
 
     midiAccess,
     score,
+    nPagesLoading,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
     globalElements = {}, // assistantPerformer.html elements 
@@ -733,6 +734,7 @@ _AP.controls = (function(document, window)
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
             globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
+            globalElements.waitingForScoreDiv = document.getElementById("waitingForScoreDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.needsMIDIAccessDiv = document.getElementById("needsMIDIAccessDiv");
@@ -1082,6 +1084,26 @@ _AP.controls = (function(document, window)
                 }
             }
 
+            function setScoreLoadedState()
+            {
+                nPagesLoading--;
+                if(nPagesLoading === 0)
+                {
+                    globalElements.waitingForScoreDiv.style.display = "none";
+                    globalElements.outputDeviceSelect.disabled = false;
+                }
+            }
+
+            function setLoadingScoreState()
+            {
+                if(nPagesLoading === 0)
+                {
+                    globalElements.waitingForScoreDiv.style.display = "block";
+                    globalElements.outputDeviceSelect.disabled = true;
+                }
+                nPagesLoading++;
+            }
+
             function getNewSvgPageElem(pageURL)
             {
                 var newNode;
@@ -1091,6 +1113,7 @@ _AP.controls = (function(document, window)
                 newNode.setAttribute("data", pageURL);
                 newNode.setAttribute("type", "image/svg+xml");
                 newNode.setAttribute("class", "svgPage");
+                newNode.addEventListener('load', function() { setScoreLoadedState(); });
 
                 return newNode;
             }
@@ -1120,9 +1143,11 @@ _AP.controls = (function(document, window)
 
                 scoresURL = getScoresURL();
                 svgPagesFrame = document.getElementById('svgPagesFrame');
+                nPagesLoading = 0;
 
                 if(scoreInfo.path.search("(scroll)") >= 0)
                 {
+                    setLoadingScoreState();
                     pageURL = scoresURL + scoreInfo.path + ".svg";
                     newNode = getNewSvgPageElem(pageURL);
                     svgPagesFrame.appendChild(newNode);
@@ -1130,9 +1155,9 @@ _AP.controls = (function(document, window)
                 else
                 {
                     pathData = getPathData(scoreInfo.path);
-
                     for(i = 0; i < pathData.nPages; ++i)
                     {
+                        setLoadingScoreState();
                         pageURL = scoresURL + pathData.basePath + (i + 1).toString(10) + ".svg";
                         newNode = getNewSvgPageElem(pageURL);
                         svgPagesFrame.appendChild(newNode);
