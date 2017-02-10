@@ -1030,30 +1030,19 @@ _AP.controls = (function(document, window)
                 return scoreInfo;
             }
 
-            function embedPageCode(url)
-            {
-                var code = "<object " +
-                                "data=\'" + url + "\' " +
-                                "type=\'image/svg+xml\' " +
-                                "class=\'svgPage\'>Browser does not support SVG!</object>";
-                return code;
-            }
+            //function doIt()
+            //{
 
-            // Returns the URL of the scores directory. This can either be a file:
-            // e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
-            // served from IIS:
-            // e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-            // or on the web:
-            // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-            // Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
-            function scoresURL(documentURL)
-            {
-                var
-                apIndex = documentURL.search("assistantPerformer.html"),
-                url = documentURL.slice(0, apIndex) + "scores/";
-
-                return url;
-            }
+            //}
+            //function embedPageCode(url)
+            //{
+            //    var code = "<object " +
+            //                    "data=\'" + url + "\' " +
+            //                    "type=\'image/svg+xml\' " +
+            //                    "onLoad=doIt()"
+            //                    "class=\'svgPage\'>Browser does not support SVG!</object>";
+            //    return code;
+            //}
 
             function getPathData(path)
             {
@@ -1093,20 +1082,50 @@ _AP.controls = (function(document, window)
                 }
             }
 
+            function getNewSvgPageElem(pageURL)
+            {
+                var newNode;
+
+                newNode = document.createElement("object");
+
+                newNode.setAttribute("data", pageURL);
+                newNode.setAttribute("type", "image/svg+xml");
+                newNode.setAttribute("class", "svgPage");
+
+                return newNode;
+            }
+
+            // Returns the URL of the scores directory. This can either be a file:
+            // e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
+            // served from IIS:
+            // e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // or on the web:
+            // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
+            function getScoresURL()
+            {
+                var documentURL = document.URL,
+                apIndex = documentURL.search("assistantPerformer.html"),
+                url = documentURL.slice(0, apIndex) + "scores/";
+
+                return url;
+            }
+
             function setPages(scoreInfo)
             {
-                var i, rootURL,
+                var i, scoresURL, newNode,
                     svgPagesFrame,
-                    embedCode = "",
                     pathData,
                     pageURL;
 
-                rootURL = scoresURL(document.URL);
+                scoresURL = getScoresURL();
+                svgPagesFrame = document.getElementById('svgPagesFrame');
 
                 if(scoreInfo.path.search("(scroll)") >= 0)
                 {
-                    pageURL = rootURL + scoreInfo.path + ".svg";
-                    embedCode += embedPageCode(pageURL);
+                    pageURL = scoresURL + scoreInfo.path + ".svg";
+                    newNode = getNewSvgPageElem(pageURL);
+                    svgPagesFrame.appendChild(newNode);
                 }
                 else
                 {
@@ -1114,13 +1133,11 @@ _AP.controls = (function(document, window)
 
                     for(i = 0; i < pathData.nPages; ++i)
                     {
-                        pageURL = rootURL + pathData.basePath + (i + 1).toString(10) + ".svg";
-                        embedCode += embedPageCode(pageURL);
+                        pageURL = scoresURL + pathData.basePath + (i + 1).toString(10) + ".svg";
+                        newNode = getNewSvgPageElem(pageURL);
+                        svgPagesFrame.appendChild(newNode);
                     }
                 }
-
-                svgPagesFrame = document.getElementById('svgPagesFrame');
-                svgPagesFrame.innerHTML = embedCode;
             }
 
             function setOptionsInputHandler(scoreInfoInputHandler)
