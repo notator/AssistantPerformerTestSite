@@ -1351,7 +1351,7 @@ _AP.score = (function (document)
                     for(i = 0; i < noteObjectElems.length; ++i)
                     {
                         noteObjectElem = noteObjectElems[i];
-                        type = noteObjectElem.getAttribute('score:class');
+                        type = noteObjectElem.getAttribute('class');
                         if(type === 'outputChord' || type === 'inputChord' || type === 'cautionaryChord'
                         || type === 'inputRest' || type === 'outputRest'
                         || type === 'clef' || type === 'barline' || type === 'staffName' || type === 'beamBlock' || type === 'clefChange'
@@ -1391,7 +1391,7 @@ _AP.score = (function (document)
             function setMsPositions(systems)
             {
                 var nStaves, staffIndex, nVoices, voiceIndex, nSystems, systemIndex, msPosition,
-                    timeObjects, nTimeObjects, tIndex;
+                    timeObject, timeObjects, nTimeObjects, tIndex;
 
                 nSystems = systems.length;
                 nStaves = systems[0].staves.length;
@@ -1407,8 +1407,11 @@ _AP.score = (function (document)
                             nTimeObjects = timeObjects.length;
                             for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                             {
-                                timeObjects[tIndex].msPosition = msPosition;
-                                msPosition += timeObjects[tIndex].msDuration;
+                                timeObject = timeObjects[tIndex];
+                                timeObject.midiObject.msPositionInScore = msPosition;
+                                timeObject.msPosition = msPosition;
+                                
+                                msPosition += timeObject.msDuration;
                             }
                         }
                         msPosition = 0;
@@ -1507,7 +1510,7 @@ _AP.score = (function (document)
 
             // voice.timeObjects is an array of timeObject.
             // speed is a floating point number, greater than zero.
-            // timeObject.msPosition and timeObject.msDuration have the values set in the score (speed === 1).
+            // timeObject.msPosition and timeObject.msDuration currently have the values set in the score (speed === 1).
             function changeSpeed(systems, speed)
             {
                 var i, j, k, nSystems = systems.length, system, staff, voice;

@@ -25,16 +25,16 @@
  *      advanceCurrentMoment()
  */
 
-/*jslint white */
-/*global WebMIDI, _AP,  window,  document */
+/*jslint white:true */
+/*global _AP,  window,  document */
 
 _AP.namespace('_AP.track');
 
 _AP.track = (function()
 {
     "use strict";
-	var
-	MidiChord = _AP.midiChord.MidiChord,
+    var
+    MidiChord = _AP.midiObject.MidiChord,
     // An empty track is created.
     Track = function()
     {
@@ -57,124 +57,134 @@ _AP.track = (function()
 
     Track.prototype.finalBarlineMsPosition = function()
     {
-        var lastMidiObject = this.midiObjects[this.midiObjects.length - 1],
-            finalBarlineMsPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+        var lastMidiObject, finalBarlineMsPos;
+
+        if(this.midiObjects === undefined)
+        {
+            throw "Can't get finalBarlineMsPosition!";
+        }
+
+        lastMidiObject = this.midiObjects[this.midiObjects.length - 1];
+        finalBarlineMsPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
 
         return finalBarlineMsPos;
     };
 
-	// Sets track._currentMidiObjectIndex and track._currentMidiObject:
-	// track._currentMidiObjectIndex is the index of track._currentMidiObject, which is the first
-	// InputChord or InputRest at or after the startMarkerMsPositionInScore.
-	// Also sets track.currentMoment to null (track.currentMoment is always null, and ignored in inputTracks) 
+    // Sets track._currentMidiObjectIndex and track._currentMidiObject:
+    // track._currentMidiObjectIndex is the index of track._currentMidiObject, which is the first
+    // InputChord or InputRest at or after the startMarkerMsPositionInScore.
+    // Also sets track.currentMoment to null (track.currentMoment is always null, and ignored in inputTracks) 
     Track.prototype.setForInputSpan = function(startMarkerMsPositionInScore)
     {
-    	var i, index, inputObjects = this.inputObjects,
-    		nTimeObjects = inputObjects.length;
+        var i, index, inputObjects, nTimeObjects;
 
-    	for(i = 0; i < nTimeObjects; ++i)
-    	{
-    		index = i;
-    		// find the index of the first inputChord or inputRest at or after startMarkerMsPositionInScore
-    		if(inputObjects[i].msPositionInScore >= startMarkerMsPositionInScore)
-    		{
-    			break;
-    		}
-    	}
+        if(this.inputObjects === undefined)
+        {
+            throw "Can't set InputSpan for output track!";
+        }
 
-    	this._currentMidiObjectIndex = index;
-    	this._currentMidiObject = inputObjects[index];
-    	this.currentMoment = null; // always null for inputChords and inputRests
+        inputObjects = this.inputObjects;
+        nTimeObjects = inputObjects.length;
+
+        for(i = 0; i < nTimeObjects; ++i)
+        {
+            index = i;
+            // find the index of the first inputChord or inputRest at or after startMarkerMsPositionInScore
+            if(inputObjects[i].msPositionInScore >= startMarkerMsPositionInScore)
+            {
+                break;
+            }
+        }
+
+        this._currentMidiObjectIndex = index;
+        this._currentMidiObject = inputObjects[index];
+        this.currentMoment = null; // always null for inputChords and inputRests
     };
 
-	// Sets track._currentMidiObjectIndex, track._currentMidiObject and track.currentMoment.
-	// If a MidiChord starts at or straddles the startMarker, it becomes the track._currentMidiObject, and
-	// track.currentMoment is set to the its first moment at or after the startMarker.
-	// If a MidiRest begins at the startMarker, it becomes the track._currentMidiObject, and
-	// track.currentMoment is set to its (only) moment (which may be empty).
-	// If a MidiRest straddles the startMarker, track._currentMidiObject is set to the following MidiChord, and
-	// track.currentMoment is set to the its first moment.
-	// track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
+    // Sets track._currentMidiObjectIndex, track._currentMidiObject and track.currentMoment.
+    // If a MidiChord starts at or straddles the startMarker, it becomes the track._currentMidiObject, and
+    // track.currentMoment is set to the its first moment at or after the startMarker.
+    // If a MidiRest begins at the startMarker, it becomes the track._currentMidiObject, and
+    // track.currentMoment is set to its (only) moment (which may be empty).
+    // If a MidiRest straddles the startMarker, track._currentMidiObject is set to the following MidiChord, and
+    // track.currentMoment is set to the its first moment.
+    // track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
     Track.prototype.setForOutputSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
     {
-    	var i, index, midiObject, midiObjects = this.midiObjects,
-			midiChord, nMidiObjects = midiObjects.length;
+        var i, index, midiObject, midiObjects, midiChord, nMidiObjects;
 
-    	for(i = 0; i < nMidiObjects; ++i)
-    	{
-    		index = i;
-    		// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
-    		// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
-    		// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
-    		if(midiObjects[i] instanceof MidiChord)
-    		{
-    			midiChord = midiObjects[i];
-    			if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
-				&& (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
-    			{
-    				// if the MidiChord is at or straddles the startMarkerMsPositionInScore
-    				// set its moment pointers to startMarkerMsPositionInScore
-    				// midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
-    				midiChord.setToStartMarker(startMarkerMsPositionInScore);
-    				if(midiChord.currentMoment !== undefined)
-    				{
-    					break;
-    				}
-    			}
+        if(this.midiObjects === undefined)
+        {
+            throw "Can't set OutputSpan!";
+        }
 
-    			if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
-    			{
-    				// a MidiRest straddles the startMarker. 
-    				midiChord.setToStartAtBeginning();
-    				break;
-    			}
-    		}
-    		else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
-    		{
-    			// a MidiRest
-    			break;
-    		}
-    	}
+        midiObjects = this.midiObjects;
+        nMidiObjects = midiObjects.length;
 
-    	this._currentMidiObjectIndex = index;
-    	this._currentMidiObject = midiObjects[index];
-    	this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
+        for(i = 0; i < nMidiObjects; ++i)
+        {
+            index = i;
+            // find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
+            // or the index of the MidiChord that starts after the startMarkerMsPositionInScore
+            // or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
+            if(midiObjects[i] instanceof MidiChord)
+            {
+                midiChord = midiObjects[i];
+                if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
+                && (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
+                {
+                    // if the MidiChord is at or straddles the startMarkerMsPositionInScore
+                    // set its moment pointers to startMarkerMsPositionInScore
+                    // midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
+                    midiChord.setToStartMarker(startMarkerMsPositionInScore);
+                    if(midiChord.currentMoment !== undefined)
+                    {
+                        break;
+                    }
+                }
 
-    	// Set all further MidiChords up to the endMarker to start at their beginnings.
-    	for(i = index + 1; i < nMidiObjects; ++i)
-    	{
-    		midiObject = midiObjects[i];
+                if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
+                {
+                    // a MidiRest straddles the startMarker. 
+                    midiChord.setToStartAtBeginning();
+                    break;
+                }
+            }
+            else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
+            {
+                midiRest.setToStartAtBeginning();
+                break;
+            }
+        }
 
-    		if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
-    		{
-    			break;
-    		}
+        this._currentMidiObjectIndex = index;
+        this._currentMidiObject = midiObjects[index];
+        this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
 
-    		if(midiObjects[i] instanceof MidiChord)
-    		{ 
-    			midiObject.setToStartAtBeginning();
-    		}
-    	}
+        // Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
+        for(i = index + 1; i < nMidiObjects; ++i)
+        {
+            midiObject = midiObjects[i];
+
+            if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
+            {
+                break;
+            }
+
+            midiObject.setToStartAtBeginning();
+        }
     };
 
     // Returns Number.MAX_VALUE at end of track.
     Track.prototype.currentMsPosition = function()
     {
-    	var msPos = Number.MAX_VALUE,
+        var msPos = Number.MAX_VALUE,
             cmObj = this._currentMidiObject,
             cMom = this.currentMoment;
 
-    	if(cmObj !== null)
+        if(cmObj !== null && cMom !== null)
         {
-        	if(cmObj instanceof _AP.midiChord.MidiChord)
-        	{
-        		msPos = cmObj.msPositionInScore + cMom.msPositionInChord;
-        	}
-        	else
-        	{
-        		// a rest
-        		msPos = cmObj.msPositionInScore;
-        	}
+            msPos = cmObj.msPositionInScore + cMom.msPositionInChord;
         }
 
         return msPos;
@@ -182,16 +192,16 @@ _AP.track = (function()
 
     Track.prototype.advanceCurrentMoment = function()
     {
-    	var currentIndex;
+        var currentIndex;
 
-    	if(this.class === "inputTrack")
-    	{
-    		throw "Can't advance moments in input tracks. InputTracks don't have moments.";
-    	}
+        if(this.midiObjects === undefined)
+        {
+            throw "Can't advance currentMoment!";
+        }
 
         this.currentMoment = this._currentMidiObject.advanceCurrentMoment();
 
-    	// MidiRests, and MidiChords that have ended, return null.
+        // MidiRests, and MidiChords that have ended, return null.
         if(this.currentMoment === null)
         {
             this._currentMidiObjectIndex++;

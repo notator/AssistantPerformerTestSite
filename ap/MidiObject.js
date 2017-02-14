@@ -7,18 +7,7 @@
  *
  *  ap/MidiObject.js
  *  Public interface:
- *  MidiChord
- *  This constructor can be called with either a midiChord or a scoreMidiElem argument:
- *  either
- *      MidiChord(midiChord) // MidiChord Clone constructor
- *  or
  *      MidiChord(scoreMidiElem) // MidiChord constructor
- * 
- *  MidiRest
- *  This constructor can be called with either a midiRest or a scoreMidiElem argument:
- *  either
- *      MidiRest(midiRest) // MidiRest Clone constructor
- *  or
  *      MidiRest(scoreMidiElem) // MidiRest constructor
  */
 
@@ -39,80 +28,46 @@ _AP.midiObject = (function()
     // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 100,
 
+    defineMidiObjectProperties = function(that, scoreMidiElem)
+    {
+        // moments is an ordered array of Moment objects.
+        // A Moment is a list of logically synchronous Messages.
+        // The msDurationInScore property does not take the global speed option into account.
+        // The moments, msDurationInScore and msPositionInScore properties do not change at runtime.
+        Object.defineProperty(that, "moments", { value: that._getMoments(scoreMidiElem), writable: false });
+        Object.defineProperty(that, "msDurationInScore", { value: that.msDurationInScore, writable: false });
+        Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
+
+        // used at runtime
+        Object.defineProperty(that, "currentMoment", { value: that.moments[0], writable: true });
+        Object.defineProperty(that, "_currentMomentIndex", { value: -1, writable: true });
+    },
+
     // public MidiChord constructor
     // A MidiChord contains all the midi messages required for playing an (ornamented) chord. 
-    MidiChord = function(arg1)
+    MidiChord = function(scoreMidiElem)
     {
         if(!(this instanceof MidiChord))
         {
-            return new MidiChord(arg1);
+            return new MidiChord(scoreMidiElem);
         }
 
-        if(arg1 instanceof MidiChord) // clone constructor
-        {
-            // this clone constructor does not make a deep clone of the moments since they are not changed at runtime.
-            // initialised below, not changed at runtime.
-            Object.defineProperty(this, "moments", { value: arg1.moments, writable: false });
-            Object.defineProperty(this, "msDurationInScore", { value: arg1.msDurationInScore, writable: false });
-            Object.defineProperty(this, "msPositionInScore", { value: arg1.msPositionInScore, writable: true });
-
-            // used at runtime
-            Object.defineProperty(this, "currentMoment", { value: arg1.currentMoment, writable: true });
-            Object.defineProperty(this, "_currentMomentIndex", { value: arg1._currentMomentIndex, writable: true });
-        }
-        else // construct MidiChord from scoreMidiElem
-        {
-            // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
-            // A Moment is a list of logically synchronous MIDI messages.
-            // The msPositionInScore and msDurationInScore properties do not take the global speed option into account.
-            // None of these properties change at runtime.
-            Object.defineProperty(this, "moments", { value: this._getMoments(arg1), writable: false });
-            Object.defineProperty(this, "msDurationInScore", { value: this.msDurationInScore, writable: false });
-            Object.defineProperty(this, "msPositionInScore", { value: 0, writable: true });
-
-            // used at runtime
-            Object.defineProperty(this, "currentMoment", { value: this.moments[0], writable: true });
-            Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
-        }
+        defineMidiObjectProperties(this, scoreMidiElem);
 
         return this;
     },
 
     // public MidiRest constructor
-    // A MidiRest contains all the midi messages required for playing an (ornamented) chord. 
-    MidiRest = function(arg1)
+    // A MidiRest is functionally identical to a MidiChord.
+    // The only way to distinguish between the two is by using the instanceof operator.
+    MidiRest = function(scoreMidiElem)
     {
         if(!(this instanceof MidiRest))
         {
-            return new MidiRest(arg1);
+            return new MidiRest(scoreMidiElem);
         }
 
-        if(arg1 instanceof MidiRest) // clone constructor
-        {
-            // this clone constructor does not make a deep clone of the moments since they are not changed at runtime.
-            // initialised below, not changed at runtime.
-            Object.defineProperty(this, "moments", { value: arg1.moments, writable: false });
-            Object.defineProperty(this, "msDurationInScore", { value: arg1.msDurationInScore, writable: false });
-            Object.defineProperty(this, "msPositionInScore", { value: arg1.msPositionInScore, writable: true });
-
-            // used at runtime
-            Object.defineProperty(this, "currentMoment", { value: arg1.currentMoment, writable: true });
-            Object.defineProperty(this, "_currentMomentIndex", { value: arg1._currentMomentIndex, writable: true });
-        }
-        else // construct MidiRest from scoreMidiElem
-        {
-            // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
-            // A Moment is a list of logically synchronous MIDI messages.
-            // The msPositionInScore and msDurationInScore properties do not take the global speed option into account.
-            // None of these properties change at runtime.
-            Object.defineProperty(this, "moments", { value: this._getMoments(arg1), writable: false });
-            Object.defineProperty(this, "msDurationInScore", { value: this.msDurationInScore, writable: false });
-            Object.defineProperty(this, "msPositionInScore", { value: 0, writable: true });
-
-            // used at runtime
-            Object.defineProperty(this, "currentMoment", { value: this.moments[0], writable: true });
-            Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
-        }
+        defineMidiObjectProperties(this, scoreMidiElem);
 
         return this;
     },
@@ -124,11 +79,10 @@ _AP.midiObject = (function()
         // the midi messages required for playing an (ornamented) chord.
         // A Moment is a collection of logically synchronous MIDI Messages.
         MidiChord: MidiChord,
-        // public MidiChord constructor
-        // A MidiChord contains a private array of Moments containing all
-        // the midi messages required for playing an (ornamented) chord.
-        // A Moment is a collection of logically synchronous MIDI Messages.
-        MidiRest: MidiRest,
+        // public MidiRest constructor
+        // A MidiRest is functionally identical to a MidiChord.
+        // The only way to distinguish between the two is by using the instanceof operator.
+        MidiRest: MidiRest
     };
     // end var
 
@@ -668,7 +622,7 @@ _AP.midiObject = (function()
         console.assert(
             ((this.msPositionInScore <= startMarkerMsPositionInScore)
             && (this.msPositionInScore + this.msDurationInScore > startMarkerMsPositionInScore)),
-            "This chord must be at or straddle the start marker.");
+            "This chord or rest must be at or straddle the start marker.");
 
         for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
         {
