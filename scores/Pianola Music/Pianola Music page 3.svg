@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music, page 3 of 8</dc:title>
-				<dc:date>Thursday 26.01.2017, 20:48:15</dc:date>
+				<dc:date>Monday 13.02.2017, 11:46:34</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -304,7 +304,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 	</defs>
 	<g
 		inkscape:groupmode="layer"
-		class="layer1"
+		id="layer1"
 		inkscape:label="frame"
 		style="display:inline"
 		sodipodi:insensitive="true">
@@ -316,9 +316,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			style="stroke:black; stroke-width:4; fill:#ffffff" />
 	</g>
 	<g
-		score:hasMidi="true"
+		class="systems"
 		inkscape:groupmode="layer"
-		class="layer2"
+		id="layer2"
 		inkscape:label="score"
 		style="display:inline"
 		sodipodi:insensitive="true">
@@ -327,16 +327,14 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Pianola Music page 3, Thursday 26.01.2017, 20:48:14</text>
+			font-family="Arial">Pianola Music page 3, Monday 13.02.2017, 11:46:34</text>
 		<g
-			class="system"
-			score:hasMidi="true">
+			class="system">
 			<score:leftToRight
 				systemTop="476,56"
 				systemBottom="4041,974" />
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="1">
 				<g
 					class="stafflines">
@@ -372,8 +370,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -427,17 +424,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="432">
 									<switches>
 										<msg
-											m="B0 0 0" />
+											m="0xB0 0 0" />
 										<msg
-											m="C0 0" />
+											m="0xC0 0" />
 										<msg
-											m="B0 101 0" />
+											m="0xB0 101 0" />
 										<msg
-											m="B0 6 2" />
+											m="0xB0 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="90 32 127" />
+											m="0x90 32 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -525,11 +522,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="576">
 									<noteOffs>
 										<msg
-											m="80 32 64" />
+											m="0x80 32 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 45 127" />
+											m="0x90 45 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -588,11 +585,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="864">
 									<noteOffs>
 										<msg
-											m="80 45 64" />
+											m="0x80 45 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 71 127" />
+											m="0x90 71 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -656,11 +653,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="144">
 									<noteOffs>
 										<msg
-											m="80 71 64" />
+											m="0x80 71 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 78 127" />
+											m="0x90 78 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -694,11 +691,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="720">
 									<noteOffs>
 										<msg
-											m="80 78 64" />
+											m="0x80 78 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 58 127" />
+											m="0x90 58 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -744,11 +741,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="288">
 									<noteOffs>
 										<msg
-											m="80 58 64" />
+											m="0x80 58 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 91 127" />
+											m="0x90 91 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -801,11 +798,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1152">
 									<noteOffs>
 										<msg
-											m="80 91 64" />
+											m="0x80 91 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 97 127" />
+											m="0x90 97 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -869,11 +866,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1584">
 									<noteOffs>
 										<msg
-											m="80 97 64" />
+											m="0x80 97 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 64 127" />
+											m="0x90 64 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -902,11 +899,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1008">
 									<noteOffs>
 										<msg
-											m="80 64 64" />
+											m="0x80 64 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 84 127" />
+											m="0x90 84 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -947,11 +944,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1728">
 									<noteOffs>
 										<msg
-											m="80 84 64" />
+											m="0x80 84 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 77 127" />
+											m="0x90 77 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -980,11 +977,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1440">
 									<noteOffs>
 										<msg
-											m="80 77 64" />
+											m="0x80 77 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 51 127" />
+											m="0x90 51 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1042,11 +1039,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1296">
 									<noteOffs>
 										<msg
-											m="80 51 64" />
+											m="0x80 51 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 38 127" />
+											m="0x90 38 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1117,11 +1114,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3840">
 									<noteOffs>
 										<msg
-											m="80 38 64" />
+											m="0x80 38 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 38 127" />
+											m="0x90 38 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1186,11 +1183,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4320">
 									<noteOffs>
 										<msg
-											m="80 38 64" />
+											m="0x80 38 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 97 127" />
+											m="0x90 97 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1248,11 +1245,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="5280">
 									<noteOffs>
 										<msg
-											m="80 97 64" />
+											m="0x80 97 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="90 71 127" />
+											m="0x90 71 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1277,7 +1274,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="2">
 				<g
 					class="stafflines">
@@ -1313,8 +1309,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -1344,17 +1339,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3696">
 									<switches>
 										<msg
-											m="B1 0 0" />
+											m="0xB1 0 0" />
 										<msg
-											m="C1 0" />
+											m="0xC1 0" />
 										<msg
-											m="B1 101 0" />
+											m="0xB1 101 0" />
 										<msg
-											m="B1 6 2" />
+											m="0xB1 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="91 82 127" />
+											m="0x91 82 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1388,11 +1383,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4224">
 									<noteOffs>
 										<msg
-											m="81 82 64" />
+											m="0x81 82 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 69 127" />
+											m="0x91 69 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1415,11 +1410,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="5280">
 									<noteOffs>
 										<msg
-											m="81 69 64" />
+											m="0x81 69 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 43 127" />
+											m="0x91 43 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1478,11 +1473,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2640">
 									<noteOffs>
 										<msg
-											m="81 43 64" />
+											m="0x81 43 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 36 127" />
+											m="0x91 36 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1559,11 +1554,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4752">
 									<noteOffs>
 										<msg
-											m="81 36 64" />
+											m="0x81 36 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 56 127" />
+											m="0x91 56 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1603,11 +1598,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3168">
 									<noteOffs>
 										<msg
-											m="81 56 64" />
+											m="0x81 56 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 95 127" />
+											m="0x91 95 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1666,11 +1661,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="6336">
 									<noteOffs>
 										<msg
-											m="81 95 64" />
+											m="0x81 95 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="91 101 127" />
+											m="0x91 101 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1736,7 +1731,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="3">
 				<g
 					class="stafflines">
@@ -1772,8 +1766,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -1803,17 +1796,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1680">
 									<switches>
 										<msg
-											m="B2 0 0" />
+											m="0xB2 0 0" />
 										<msg
-											m="C2 0" />
+											m="0xC2 0" />
 										<msg
-											m="B2 101 0" />
+											m="0xB2 101 0" />
 										<msg
-											m="B2 6 2" />
+											m="0xB2 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="92 54 127" />
+											m="0x92 54 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1865,11 +1858,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2016">
 									<noteOffs>
 										<msg
-											m="82 54 64" />
+											m="0x82 54 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 67 127" />
+											m="0x92 67 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1898,11 +1891,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2688">
 									<noteOffs>
 										<msg
-											m="82 67 64" />
+											m="0x82 67 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 93 127" />
+											m="0x92 93 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -1955,11 +1948,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1008">
 									<noteOffs>
 										<msg
-											m="82 93 64" />
+											m="0x82 93 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 40 127" />
+											m="0x92 40 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2030,11 +2023,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2352">
 									<noteOffs>
 										<msg
-											m="82 40 64" />
+											m="0x82 40 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 80 127" />
+											m="0x92 80 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2068,11 +2061,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1344">
 									<noteOffs>
 										<msg
-											m="82 80 64" />
+											m="0x82 80 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 53 127" />
+											m="0x92 53 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2119,11 +2112,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3360">
 									<noteOffs>
 										<msg
-											m="82 53 64" />
+											m="0x82 53 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 47 127" />
+											m="0x92 47 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2176,11 +2169,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="336">
 									<noteOffs>
 										<msg
-											m="82 47 64" />
+											m="0x82 47 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 86 127" />
+											m="0x92 86 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2226,11 +2219,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3024">
 									<noteOffs>
 										<msg
-											m="82 86 64" />
+											m="0x82 86 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 34 127" />
+											m="0x92 34 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2318,11 +2311,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="672">
 									<noteOffs>
 										<msg
-											m="82 34 64" />
+											m="0x82 34 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 99 127" />
+											m="0x92 99 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2397,11 +2390,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4032">
 									<noteOffs>
 										<msg
-											m="82 99 64" />
+											m="0x82 99 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 73 127" />
+											m="0x92 73 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2429,11 +2422,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3696">
 									<noteOffs>
 										<msg
-											m="82 73 64" />
+											m="0x82 73 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="92 60 127" />
+											m="0x92 60 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2463,7 +2456,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="4">
 				<g
 					class="stafflines">
@@ -2499,8 +2491,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -2530,17 +2521,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1296">
 									<switches>
 										<msg
-											m="B3 0 0" />
+											m="0xB3 0 0" />
 										<msg
-											m="C3 0" />
+											m="0xC3 0" />
 										<msg
-											m="B3 101 0" />
+											m="0xB3 101 0" />
 										<msg
-											m="B3 6 2" />
+											m="0xB3 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="93 77 127" />
+											m="0x93 77 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2569,11 +2560,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1728">
 									<noteOffs>
 										<msg
-											m="83 77 64" />
+											m="0x83 77 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 78 127" />
+											m="0x93 78 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2607,11 +2598,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2592">
 									<noteOffs>
 										<msg
-											m="83 78 64" />
+											m="0x83 78 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 32 127" />
+											m="0x93 32 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2699,11 +2690,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="432">
 									<noteOffs>
 										<msg
-											m="83 32 64" />
+											m="0x83 32 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 51 127" />
+											m="0x93 51 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2766,11 +2757,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2160">
 									<noteOffs>
 										<msg
-											m="83 51 64" />
+											m="0x83 51 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 91 127" />
+											m="0x93 91 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2823,11 +2814,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="864">
 									<noteOffs>
 										<msg
-											m="83 91 64" />
+											m="0x83 91 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 64 127" />
+											m="0x93 64 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2856,11 +2847,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3456">
 									<noteOffs>
 										<msg
-											m="83 64 64" />
+											m="0x83 64 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 58 127" />
+											m="0x93 58 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2900,11 +2891,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4752">
 									<noteOffs>
 										<msg
-											m="83 58 64" />
+											m="0x83 58 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 97 127" />
+											m="0x93 97 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -2962,11 +2953,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3024">
 									<noteOffs>
 										<msg
-											m="83 97 64" />
+											m="0x83 97 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 45 127" />
+											m="0x93 45 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3025,11 +3016,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="5184">
 									<noteOffs>
 										<msg
-											m="83 45 64" />
+											m="0x83 45 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="93 38 127" />
+											m="0x93 38 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3095,7 +3086,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="5">
 				<g
 					class="stafflines">
@@ -3131,8 +3121,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -3179,17 +3168,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="240">
 									<switches>
 										<msg
-											m="B4 0 0" />
+											m="0xB4 0 0" />
 										<msg
-											m="C4 0" />
+											m="0xC4 0" />
 										<msg
-											m="B4 101 0" />
+											m="0xB4 101 0" />
 										<msg
-											m="B4 6 2" />
+											m="0xB4 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="94 49 127" />
+											m="0x94 49 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3247,11 +3236,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="480">
 									<noteOffs>
 										<msg
-											m="84 49 64" />
+											m="0x84 49 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 36 127" />
+											m="0x94 36 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3328,11 +3317,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="960">
 									<noteOffs>
 										<msg
-											m="84 36 64" />
+											m="0x84 36 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 82 127" />
+											m="0x94 82 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3372,11 +3361,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2640">
 									<noteOffs>
 										<msg
-											m="84 82 64" />
+											m="0x84 82 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 75 127" />
+											m="0x94 75 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3410,11 +3399,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="720">
 									<noteOffs>
 										<msg
-											m="84 75 64" />
+											m="0x84 75 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 95 127" />
+											m="0x94 95 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3478,11 +3467,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2880">
 									<noteOffs>
 										<msg
-											m="84 95 64" />
+											m="0x84 95 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 62 127" />
+											m="0x94 62 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3511,11 +3500,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1440">
 									<noteOffs>
 										<msg
-											m="84 62 64" />
+											m="0x84 62 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 56 127" />
+											m="0x94 56 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3561,11 +3550,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2160">
 									<noteOffs>
 										<msg
-											m="84 56 64" />
+											m="0x84 56 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 101 127" />
+											m="0x94 101 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3636,11 +3625,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1200">
 									<noteOffs>
 										<msg
-											m="84 101 64" />
+											m="0x84 101 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 69 127" />
+											m="0x94 69 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3669,11 +3658,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2400">
 									<noteOffs>
 										<msg
-											m="84 69 64" />
+											m="0x84 69 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 88 127" />
+											m="0x94 88 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3720,11 +3709,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1920">
 									<noteOffs>
 										<msg
-											m="84 88 64" />
+											m="0x84 88 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 30 127" />
+											m="0x94 30 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3818,11 +3807,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="1680">
 									<noteOffs>
 										<msg
-											m="84 30 64" />
+											m="0x84 30 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 43 127" />
+											m="0x94 43 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3887,11 +3876,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3840">
 									<noteOffs>
 										<msg
-											m="84 43 64" />
+											m="0x84 43 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 43 127" />
+											m="0x94 43 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3950,11 +3939,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4224">
 									<noteOffs>
 										<msg
-											m="84 43 64" />
+											m="0x84 43 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="94 56 127" />
+											m="0x94 56 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -3995,7 +3984,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			</g>
 			<g
 				class="outputStaff"
-				score:hasMidi="true"
 				score:staffName="6">
 				<g
 					class="stafflines">
@@ -4031,8 +4019,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice"
-					score:hasMidi="true">
+					class="outputVoice">
 					<use
 						class="clef"
 						xlink:href="#trebleClef"
@@ -4160,17 +4147,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="240">
 									<switches>
 										<msg
-											m="B5 0 0" />
+											m="0xB5 0 0" />
 										<msg
-											m="C5 0" />
+											m="0xC5 0" />
 										<msg
-											m="B5 101 0" />
+											m="0xB5 101 0" />
 										<msg
-											m="B5 6 2" />
+											m="0xB5 6 2" />
 									</switches>
 									<noteOns>
 										<msg
-											m="95 99 127" />
+											m="0x95 99 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4240,11 +4227,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="288">
 									<noteOffs>
 										<msg
-											m="85 99 64" />
+											m="0x85 99 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 40 127" />
+											m="0x95 40 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4315,11 +4302,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="384">
 									<noteOffs>
 										<msg
-											m="85 40 64" />
+											m="0x85 40 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 54 127" />
+											m="0x95 54 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4371,11 +4358,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="144">
 									<noteOffs>
 										<msg
-											m="85 54 64" />
+											m="0x85 54 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 73 127" />
+											m="0x95 73 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4409,11 +4396,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="336">
 									<noteOffs>
 										<msg
-											m="85 73 64" />
+											m="0x85 73 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 53 127" />
+											m="0x95 53 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4460,11 +4447,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="192">
 									<noteOffs>
 										<msg
-											m="85 53 64" />
+											m="0x85 53 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 86 127" />
+											m="0x95 86 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4505,11 +4492,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="480">
 									<noteOffs>
 										<msg
-											m="85 86 64" />
+											m="0x85 86 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 80 127" />
+											m="0x95 80 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4543,11 +4530,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="48">
 									<noteOffs>
 										<msg
-											m="85 80 64" />
+											m="0x85 80 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 47 127" />
+											m="0x95 47 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4606,11 +4593,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="432">
 									<noteOffs>
 										<msg
-											m="85 47 64" />
+											m="0x85 47 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 67 127" />
+											m="0x95 67 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4639,11 +4626,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="96">
 									<noteOffs>
 										<msg
-											m="85 67 64" />
+											m="0x85 67 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 60 127" />
+											m="0x95 60 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4678,11 +4665,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="576">
 									<noteOffs>
 										<msg
-											m="85 60 64" />
+											m="0x85 60 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 34 127" />
+											m="0x95 34 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4770,11 +4757,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="528">
 									<noteOffs>
 										<msg
-											m="85 34 64" />
+											m="0x85 34 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 93 127" />
+											m="0x95 93 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4827,11 +4814,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="3456">
 									<noteOffs>
 										<msg
-											m="85 93 64" />
+											m="0x85 93 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 93 127" />
+											m="0x95 93 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4878,11 +4865,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4032">
 									<noteOffs>
 										<msg
-											m="85 93 64" />
+											m="0x85 93 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 80 127" />
+											m="0x95 80 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4910,11 +4897,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="5184">
 									<noteOffs>
 										<msg
-											m="85 80 64" />
+											m="0x85 80 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 54 127" />
+											m="0x95 54 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -4960,11 +4947,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2304">
 									<noteOffs>
 										<msg
-											m="85 54 64" />
+											m="0x85 54 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 47 127" />
+											m="0x95 47 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -5023,11 +5010,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="4608">
 									<noteOffs>
 										<msg
-											m="85 47 64" />
+											m="0x85 47 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 67 127" />
+											m="0x95 67 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -5050,11 +5037,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									msDuration="2880">
 									<noteOffs>
 										<msg
-											m="85 67 64" />
+											m="0x85 67 64" />
 									</noteOffs>
 									<noteOns>
 										<msg
-											m="95 34 127" />
+											m="0x95 34 127" />
 									</noteOns>
 								</moment>
 							</moments>
@@ -5208,7 +5195,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 	</g>
 	<g
 		inkscape:groupmode="layer"
-		class="layer3"
+		id="layer3"
 		inkscape:label="user annotations"
 		style="display:inline"
 		sodipodi:insensitive="true" />

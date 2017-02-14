@@ -31,7 +31,6 @@ _AP.controls = (function(document, window)
 
     midiAccess,
     score,
-    nPagesLoading,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
     globalElements = {}, // assistantPerformer.html elements 
@@ -957,7 +956,7 @@ _AP.controls = (function(document, window)
         // The score is actually analysed when the Start button is clicked.
         function setScore(scoreIndex)
         {
-            var scoreInfo;
+            var scoreInfo, nPagesLoading;
 
             // The scoreSelectIndex argument is the index of the score in the score selector
             // Returns a scoreInfo object having the following fields:
@@ -1031,20 +1030,6 @@ _AP.controls = (function(document, window)
 
                 return scoreInfo;
             }
-
-            //function doIt()
-            //{
-
-            //}
-            //function embedPageCode(url)
-            //{
-            //    var code = "<object " +
-            //                    "data=\'" + url + "\' " +
-            //                    "type=\'image/svg+xml\' " +
-            //                    "onLoad=doIt()"
-            //                    "class=\'svgPage\'>Browser does not support SVG!</object>";
-            //    return code;
-            //}
 
             function getPathData(path)
             {

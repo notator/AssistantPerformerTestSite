@@ -91,7 +91,7 @@ _AP.moment = (function ()
 
         if (moment2.systemIndex !== undefined)
         {
-        	Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
+            Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
         }
 
         this.messages = this.messages.concat(moment2.messages);
