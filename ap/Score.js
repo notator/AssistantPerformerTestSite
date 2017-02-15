@@ -84,7 +84,7 @@ _AP.score = (function (document)
     {
         var 
         noteOffMessage, channelIndex, noteIndex,
-        nOutputChannels = outputTrackPerMidiChannel.length,
+        nOutputChannels = 16,
         now = performance.now();
 
         if (midiOutputDevice !== undefined && midiOutputDevice !== null)
