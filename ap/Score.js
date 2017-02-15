@@ -1061,7 +1061,7 @@ _AP.score = (function (document)
             svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
             svgPagesFrameElem = document.getElementById("svgPagesFrame"),
             svgPageEmbeds = svgPagesFrameElem.getElementsByClassName("svgPage"),
-            nPages = svgPageEmbeds.length;
+            leftpx, nPages = svgPageEmbeds.length;
 
             function getViewBox(svgElem)
             {
@@ -1080,22 +1080,24 @@ _AP.score = (function (document)
                 return viewBox;
             }
 
-            svgRuntimeControlsElem.style.left = ((window.innerWidth - parseInt(svgRuntimeControlsElem.style.width, 10)) / 2).toString();
+            leftpx = ((window.innerWidth - parseInt(svgRuntimeControlsElem.style.width, 10)) / 2).toString() + "px"; 
+            svgRuntimeControlsElem.style.left = leftpx;
 
             for(i = 0; i < nPages; ++i)
             {
-                svgPage = svgPageEmbeds[i].getSVGDocument();
+                svgPage = svgPageEmbeds[i].contentDocument;
                 svgElem = getSVGElem(svgPage);
                 viewBox = getViewBox(svgElem); // global
                 embedsWidth = Math.ceil(viewBox.width / viewBox.scale);
-                svgPageEmbeds[i].style.width = embedsWidth.toString();
-                svgPageEmbeds[i].style.height = (Math.ceil(viewBox.height / viewBox.scale)).toString();
+                svgPageEmbeds[i].style.width = embedsWidth.toString() + "px";
+                svgPageEmbeds[i].style.height = (Math.ceil(viewBox.height / viewBox.scale)).toString() + "px";
             }
 
             pagesFrameWidth = embedsWidth + 17; 
-            svgPagesFrameElem.style.width = pagesFrameWidth.toString();
-            svgPagesFrameElem.style.height = (window.innerHeight - parseInt(svgPagesFrameElem.style.top, 10) -2).toString();
-            svgPagesFrameElem.style.left = (Math.ceil((window.innerWidth - pagesFrameWidth) / 2)).toString();
+            svgPagesFrameElem.style.width = pagesFrameWidth.toString() + "px";
+            svgPagesFrameElem.style.height = (window.innerHeight - parseInt(svgPagesFrameElem.style.top, 10) - 2).toString() + "px";
+            leftpx = (Math.ceil((window.innerWidth - pagesFrameWidth) / 2)).toString() + "px";
+            svgPagesFrameElem.style.left = leftpx;
 
             viewBoxScale = viewBox.scale;
             
