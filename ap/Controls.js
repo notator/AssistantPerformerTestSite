@@ -1475,29 +1475,36 @@ _AP.controls = (function(document, window)
             tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
         }
 
-        options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
-        options.globalSpeed = globalElements.globalSpeedInput.value / 100;
-
-        setMIDIDevices(options);
-
-        // This function can throw an exception
-        // (e.g. if an attempt is made to create an event that has no duration).
-        getTracksAndPlayer(score, options);
-
-        if(midiAccess !== null)
+        try
         {
-            midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+            options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
+            options.globalSpeed = globalElements.globalSpeedInput.value / 100;
+
+            setMIDIDevices(options);
+
+            // This function can throw an exception
+            // (e.g. if an attempt is made to create an event that has no duration).
+            getTracksAndPlayer(score, options);
+
+            if(midiAccess !== null)
+            {
+                midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+            }
+
+            score.refreshDisplay(); // undefined trackIsOnArray
+
+            score.moveStartMarkerToTop(svgPagesDiv);
+
+            setSvgControlsState('stopped');
+
+            if(options.livePerformance === true)
+            {
+                goControlClicked();
+            }
         }
-
-        score.refreshDisplay(); // undefined trackIsOnArray
-
-        score.moveStartMarkerToTop(svgPagesDiv);
-
-        setSvgControlsState('stopped');
-
-        if(options.livePerformance === true)
+        catch(e)
         {
-            goControlClicked();
+            window.alert(e);
         }
     },
 

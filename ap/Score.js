@@ -30,7 +30,8 @@ _AP.score = (function (document)
     MidiRest = _AP.midiObject.MidiRest,
     Track = _AP.track.Track,
 
-    InputChordDef = _AP.inputChordDef.InputChordDef,
+    InputChordDef = _AP.inputObjectDef.InputChordDef,
+    InputRestDef = _AP.inputObjectDef.InputRestDef,
     InputChord = _AP.inputChord.InputChord,
     InputRest = _AP.inputRest.InputRest,
 
@@ -39,7 +40,7 @@ _AP.score = (function (document)
     ENABLED_INPUT_TITLE_COLOR = "#3333EE",
     DISABLED_PINK_COLOR = "#FFBBBB",
 
-    outputTrackPerMidiChannel = [], // only output tracks
+    midiChannelPerOutputTrack = [], // only output tracks
 
     // This array is initialized to all tracks on (=true) when the score is loaded,
     // and reset when the tracksControl calls refreshDisplay().
@@ -197,8 +198,8 @@ _AP.score = (function (document)
                         timeObject = timeObjects[j];
                         if((!findInput)  // timeObject is a restDef or midiChordDef in an outputVoice
                         || (findInput &&
-                            (timeObject.inputChordDef === undefined // a rest in an inputVoice
-                            || (timeObject.inputChordDef !== undefined && hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray)))))
+                            (timeObject.inputObjectDef === undefined // a rest in an inputVoice
+                            || (timeObject.inputObjectDef !== undefined && hasPerformingTrack(timeObject.inputObjectDef, trackIsOnArray)))))
                         {
                             if(alignment === timeObject.alignment)
                             {
@@ -241,7 +242,7 @@ _AP.score = (function (document)
 
     updateStartMarker = function(timeObjectsArray, timeObject)
     {
-        var nOutputTracks = outputTrackPerMidiChannel.length;
+        var nOutputTracks = midiChannelPerOutputTrack.length;
 
         if(isLivePerformance === false)
         {
@@ -265,7 +266,7 @@ _AP.score = (function (document)
         var i, system = systems[startMarker.systemIndex()],
         startMarkerAlignment = startMarker.timeObject().alignment,
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
-        nOutputTracks = outputTrackPerMidiChannel.length;
+        nOutputTracks = midiChannelPerOutputTrack.length;
 
         // This function sets the opacity of the visible OutputStaves.
         // (there are no InputStaves in the system, when isLivePerformance === false)
@@ -368,7 +369,7 @@ _AP.score = (function (document)
             cursorX = e.pageX,
             cursorY = e.pageY + frame.originY,
             systemIndex, system,
-            timeObjectsArray, timeObject, trackIndex, nOutputTracks = outputTrackPerMidiChannel.length;
+            timeObjectsArray, timeObject, trackIndex, nOutputTracks = midiChannelPerOutputTrack.length;
 
         // cursorX and cursorY now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
@@ -515,7 +516,7 @@ _AP.score = (function (document)
                         for(k = 0; k < timeObjects.length; ++k)
                         {
                             timeObject = timeObjects[k];
-                            if(timeObject.midiChord !== undefined || timeObject.inputChordDef !== undefined)
+                            if(timeObject.midiChord !== undefined || timeObject.inputObjectDef !== undefined)
                             {
                                 break;
                             }
@@ -650,7 +651,7 @@ _AP.score = (function (document)
             markersLayers.length = 0;
             systemElems.length = 0;
             systems.length = 0;
-            outputTrackPerMidiChannel.length = 0;
+            midiChannelPerOutputTrack.length = 0;
             trackIsOnArray.length = 0;
         }
 
@@ -1254,137 +1255,250 @@ _AP.score = (function (document)
         {
             var i, lastSystemTimeObjects;
 
-            function getSystemVoiceObjects(systemElem, system, systemIndex, viewBoxScale1)
+            function getStaffElems(systemElem)
             {
-                var outputStaffElems, staffElem, voiceElems, voiceElem,
-                    staff, voice,
-                    staffIndex,
-                    voiceIndex,
-                    isFirstVoiceInStaff;
+                var outputStaffElems = systemElem.getElementsByClassName("outputStaff"),
+                    inputStaffElems = systemElem.getElementsByClassName("inputStaff"),
+                    i, staffElems = [];
 
-                // There is a timeObject for every input and output chord or rest and the final barline in each voice.
-                // All timeObjects are allocated alignment and msDuration fields as they appear in the score.
-                // Chord timeObjects are allocated either a MidiChord, MidiRest or an inputChordDef field depending on whether they are output or input objects.
-                function getTimeObjects(systemIndex, outputVoiceElem)
+                for(i = 0; i < outputStaffElems.length; ++i)
                 {
-                    var noteObjectElems, noteObjectClass,
-                        timeObjects = [], noteObjectAlignment,
-                        timeObject, i, j, length, noteObjectElem, noteObjectChildren, otpmc = outputTrackPerMidiChannel,
-                        scoreMidiElem;
+                    staffElems.push(outputStaffElems[i]);
+                }
+                for(i = 0; i < inputStaffElems.length; ++i)
+                {
+                    staffElems.push(inputStaffElems[i]);
+                }
+                return staffElems;
+            }
 
-                    noteObjectElems = outputVoiceElem.children;
-                    for(i = 0; i < noteObjectElems.length; ++i)
-                    {
-                        noteObjectElem = noteObjectElems[i];
-                        noteObjectClass = noteObjectElem.getAttribute('class');
+            // There is a timeObject for every input and output chord or rest and the final barline in each voice.
+            // All timeObjects are allocated alignment and msDuration fields as they appear in the score.
+            // Chord timeObjects are allocated either a MidiChord, MidiRest or an inputChordDef field depending on whether they are output or input objects.
+            function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
+            {
+                var noteObjectElems, noteObjectClass,
+                    timeObjects = [], noteObjectAlignment,
+                    timeObject, i, j, length, noteObjectElem, noteObjectChildren,
+                    scoreMidiElem;
+
+                noteObjectElems = voiceElem.children;
+                for(i = 0; i < noteObjectElems.length; ++i)
+                {
+                    noteObjectElem = noteObjectElems[i];
+                    noteObjectClass = noteObjectElem.getAttribute('class');
                                                
-                        if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
-                        {
-                            noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
-                            timeObject = {};
-                            timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                            timeObject.systemIndex = systemIndex;
-
-                            noteObjectChildren = noteObjectElem.children;
-                            for(j = 0; j < noteObjectChildren.length; ++j)
-                            {
-                                if(noteObjectChildren[j].nodeName === "score:midi")
-                                {
-                                    scoreMidiElem = noteObjectChildren[j];
-                                    if(noteObjectClass === 'outputChord')
-                                    {
-                                        timeObject.midiObject = new MidiChord(scoreMidiElem);
-                                        timeObject.msDuration = timeObject.midiObject.msDurationInScore;
-                                    }
-                                    else
-                                    {
-                                        timeObject.midiObject = new MidiRest(scoreMidiElem); // see MidiChord constructor.
-                                        timeObject.msDuration = timeObject.midiObject.msDurationInScore;
-                                    }
-                                    break;
-                                }
-                            }
-                            if(timeObject.msDuration < 1)
-                            {
-                                throw "Error: The score contains chords having zero duration!";
-                            }
-                            timeObjects.push(timeObject);
-                        }
-                        else if(noteObjectClass === 'inputChord')
-                        {
-                            noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
-                            timeObject = {};
-                            timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                            timeObject.systemIndex = systemIndex;
-
-                            noteObjectChildren = noteObjectElem.children;
-                            for(j = 0; j < noteObjectChildren.length; ++j)
-                            {
-                                if(noteObjectChildren[j].nodeName === 'score:inputNotes')
-                                {
-                                    timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
-                                    timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
-                                    break;
-                                }
-                            }
-                        }
-
-                        if(i === length - 1)
-                        {
-                            timeObject = {}; // the final barline in the voice (used when changing speed)
-                            timeObject.msDuration = 0;
-                            timeObject.systemIndex = systemIndex;
-                            // msPosition and alignment are set later
-                            // timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
-                            // timeObject.alignment = system.right;
-                            timeObjects.push(timeObject);
-                        }
-                    }
-
-                    return timeObjects;
-                }
-
-                // These are SVG elements in the voice that will have their opacity changed when the voice is disabled.
-                function getGraphicElements(systemIndex, voiceElem)
-                {
-                    var graphicElements = [], type, i, noteObjectElems, noteObjectElem;
-
-                    noteObjectElems = voiceElem.children;
-                    for(i = 0; i < noteObjectElems.length; ++i)
+                    if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
                     {
-                        noteObjectElem = noteObjectElems[i];
-                        type = noteObjectElem.getAttribute('class');
-                        if(type === 'outputChord' || type === 'inputChord' || type === 'cautionaryChord'
-                        || type === 'inputRest' || type === 'outputRest'
-                        || type === 'clef' || type === 'barline' || type === 'staffName' || type === 'beamBlock' || type === 'clefChange'
-                        || type === 'endBarlineLeft' || type === 'endBarlineRight')
+                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
+                        timeObject = {};
+                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+                        timeObject.systemIndex = systemIndex;
+
+                        noteObjectChildren = noteObjectElem.children;
+                        for(j = 0; j < noteObjectChildren.length; ++j)
                         {
-                            graphicElements.push(noteObjectElem);
+                            if(noteObjectChildren[j].nodeName === "score:midi")
+                            {
+                                scoreMidiElem = noteObjectChildren[j];
+                                if(noteObjectClass === 'outputChord')
+                                {
+                                    timeObject.midiObject = new MidiChord(scoreMidiElem);
+                                    timeObject.msDuration = timeObject.midiObject.msDurationInScore;
+                                }
+                                else
+                                {
+                                    timeObject.midiObject = new MidiRest(scoreMidiElem); // see MidiChord constructor.
+                                    timeObject.msDuration = timeObject.midiObject.msDurationInScore;
+                                }
+                                break;
+                            }
                         }
+                        if(timeObject.msDuration < 1)
+                        {
+                            throw "Error: The score contains chords having zero duration!";
+                        }
+                        timeObjects.push(timeObject);
+                    }
+                    else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
+                    {
+                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
+                        timeObject = {};
+                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+                        //timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
+                        timeObject.systemIndex = systemIndex;
+
+                        if(noteObjectClass === 'inputChord')
+                        {
+                            timeObject.inputObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
+                        }
+                        else
+                        {
+                            //timeObject.inputObject = new InputRestDef(timeObject.msDuration);
+                            timeObject.inputObject = new InputRestDef();
+                        }
+                        timeObjects.push(timeObject);
                     }
 
-                    return graphicElements;
+                    if(i === length - 1)
+                    {
+                        timeObject = {}; // the final barline in the voice (used when changing speed)
+                        timeObject.msDuration = 0;
+                        timeObject.systemIndex = systemIndex;
+                        // msPosition and alignment are set later
+                        // timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
+                        // timeObject.alignment = system.right;
+                        timeObjects.push(timeObject);
+                    }
                 }
 
-                outputStaffElems = systemElem.getElementsByClassName("outputStaff");
-                for(staffIndex = 0; staffIndex < outputStaffElems.length; ++staffIndex)
+                return timeObjects;
+            }
+
+            // These are SVG elements in the voice that will have their opacity changed when the voice is disabled.
+            function getGraphicElements(systemIndex, voiceElem)
+            {
+                var graphicElements = [], type, i, noteObjectElems, noteObjectElem;
+
+                noteObjectElems = voiceElem.children;
+                for(i = 0; i < noteObjectElems.length; ++i)
+                {
+                    noteObjectElem = noteObjectElems[i];
+                    type = noteObjectElem.getAttribute('class');
+                    if(type === 'outputChord' || type === 'inputChord' || type === 'cautionaryChord'
+                    || type === 'inputRest' || type === 'outputRest'
+                    || type === 'clef' || type === 'barline' || type === 'staffName' || type === 'beamBlock' || type === 'clefChange'
+                    || type === 'endBarlineLeft' || type === 'endBarlineRight')
+                    {
+                        graphicElements.push(noteObjectElem);
+                    }
+                }
+
+                return graphicElements;
+            }
+
+            function setVoices(systemIndex, staff, staffElem, voiceType, viewBoxScale1)
+            {
+                var voiceElems, voiceElem, isFirstVoiceInStaff;
+
+                voiceElems = staffElem.getElementsByClassName(voiceType);
+                isFirstVoiceInStaff = true;
+                for(voiceIndex = 0; voiceIndex < voiceElems.length; ++voiceIndex)
+                {
+                    voiceElem = voiceElems[voiceIndex];
+                    voice = staff.voices[voiceIndex];
+                    voice.timeObjects = getTimeObjects(systemIndex, voiceElem, viewBoxScale1);
+                    voice.graphicElements = getGraphicElements(systemIndex, voiceElem); // will be used to set opacity when the voice is disabled
+                    if(isFirstVoiceInStaff === true)
+                    {
+                        voice.staffLinesElem = staffElem.getElementsByClassName("staffLines");
+                        isFirstVoiceInStaff = false;
+                    }
+                }
+            }
+
+            function getMidiChannelPerOutputTrack(systems)
+            {
+                var i, staves, systemIndex, timeObjectIndex, nTracks, channel,
+                voice, timeObject, messages, flatOutputVoicesPerSystem;
+
+                function getFlatOutputVoicesPerSystem(systems)
+                {
+                    var i, j, k, voices, flatOutputVoices, flatOutputVoicesPerSystem = [];
+
+                    for(i = 0; i < systems.length; ++i)
+                    {
+                        staves = systems[i].staves;
+                        flatOutputVoices = [];
+                        for(j = 0; j < staves.length; ++j)
+                        {
+                            if(staves[j].isOutput === false)
+                            {
+                                break;
+                            }
+                            voices = staves[j].voices;
+                            for(k = 0; k < voices.length; ++k)
+                            {
+                                flatOutputVoices.push(voices[k]);
+                            }
+                        }
+                        flatOutputVoicesPerSystem.push(flatOutputVoices);
+                    }
+                    return flatOutputVoicesPerSystem;
+                }
+                    
+                midiChannelPerOutputTrack.length = 0; // global array
+                flatOutputVoicesPerSystem = getFlatOutputVoicesPerSystem(systems);
+
+                systemIndex = 0;
+                timeObjectIndex = 0;
+                nTracks = flatOutputVoicesPerSystem[0].length; 
+                for(i = 0; i < nTracks; ++i)
+                {
+                    channel = -1;
+                    while(channel < 0 && systemIndex < systems.length)
+                    {
+                        voice = flatOutputVoicesPerSystem[systemIndex][i];
+                        timeObject = voice.timeObjects[timeObjectIndex];
+                        messages = timeObject.midiObject.moments[0].messages;
+                        if(messages.length > 0)
+                        {
+                            channel = messages[0].channel();
+                        }
+                        else
+                        {
+                            timeObjectIndex++;
+                            if(timeObjectIndex === voice.timeObjects.length)
+                            {
+                                timeObjectIndex = 0;
+                                systemIndex++;
+                            }
+                        }
+                    }
+                    midiChannelPerOutputTrack.push(channel);
+                }
+            }
+
+            function getSystemOutputVoiceObjects(systemElems, systems, systemIndex, viewBoxScale1)
+            {
+                var systemElem, system, staffElems, staffElem,
+                    staff,
+                    staffIndex;
+
+                systemElem = systemElems[systemIndex];
+                system = systems[systemIndex];
+                staffElems = getStaffElems(systemElem);
+                staffIndex = 0;
+                while(staffIndex < staffElems.length)
                 {
                     staff = system.staves[staffIndex];
-                    staffElem = outputStaffElems[staffIndex];
-                    voiceElems = staffElem.getElementsByClassName("outputVoice"); 
-                    isFirstVoiceInStaff = true;
-                    for(voiceIndex = 0; voiceIndex < voiceElems.length; ++voiceIndex)
+                    if(staff.isOutput === false)
                     {
-                        voiceElem = voiceElems[voiceIndex];
-                        voice = staff.voices[voiceIndex];
-                        voice.timeObjects = getTimeObjects(systemIndex, voiceElem);
-                        voice.graphicElements = getGraphicElements(systemIndex, voiceElem); // will be used to set opacity when the voice is disabled
-                        if(isFirstVoiceInStaff === true)
-                        {
-                            voice.staffLinesElem = staffElem.getElementsByClassName("staffLines");
-                            isFirstVoiceInStaff = false;
-                        }
+                        break;
                     }
+                    staffElem = staffElems[staffIndex];
+                    setVoices(systemIndex, staff, staffElem, "outputVoice", viewBoxScale1);
+                    staffIndex++;
+                }
+            }
+
+            function getSystemInputVoiceObjects(systemElems, systems, systemIndex, viewBoxScale1)
+            {
+                var systemElem, system, staffElems, staffElem,
+                    staff,
+                    staffIndex,
+                    nOutputTracks = midiChannelPerOutputTrack.length;
+
+                systemElem = systemElems[systemIndex];
+                system = systems[systemIndex];
+                staffElems = getStaffElems(systemElem);
+
+                for(staffIndex = nOutputTracks; staffIndex < staffElems.length; ++staffIndex)
+                {
+                    staff = system.staves[staffIndex];
+                    staffElem = staffElems[staffIndex];
+                    setVoices(systemIndex, staff, staffElem, "inputVoice", viewBoxScale1);
+                    staffIndex++;
                 }
             }
 
@@ -1410,7 +1524,10 @@ _AP.score = (function (document)
                             for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                             {
                                 timeObject = timeObjects[tIndex];
-                                timeObject.midiObject.msPositionInScore = msPosition;
+                                if(timeObject.midiObject !== undefined)
+                                {
+                                    timeObject.midiObject.msPositionInScore = msPosition;
+                                }
                                 timeObject.msPosition = msPosition;
                                 
                                 msPosition += timeObject.msDuration;
@@ -1541,94 +1658,79 @@ _AP.score = (function (document)
                     }
                 }
 
-                // Adjust the msDuration of each object in each timeObject.midiChordDef.basicChordsArray,
-                // correcting rounding errors to ensure that the sum of the durations of the
-                // basicChords is exactly equal to the containing timeObject.msDuration (which has
-                // already been adjusted).
-                function adjustBasicChordDurations(timeObjects, speed)
+                // Adjust the msPositionInChord of each Moment in each timeObject.midiObject.moments,
+                // An exception is thrown if the speed leads to an impossible result.
+                function adjustMomentMsPositions(timeObjects, speed)
                 {
                     var i, nTimeObjects = timeObjects.length;
 
-                    function adjustDurations(basicChords, speed, chordMsDuration)
+                    function adjustMsPositionsInChord(moments, speed, totalMsDuration)
                     {
-                        var i, nBasicChords = basicChords.length, msFPDuration,
-                        msFPPositions = [], totalBasicMsDurations = 0,
-                        excessDuration;
+                        var i, nMoments = moments.length;
 
-                        function correctRoundingError(basicChords, excessDuration)
+                        function adjustZeroMsDurations(moments, totalMsDuration)
                         {
-                            var changed;
+                            var i, j, tooFastException = "Too fast!";
 
-                            while(excessDuration !== 0)
+                            function checkMomentDurations(moments, totalMsDuration)
                             {
-                                changed = false;
+                                var durationCheckException = "Program error: Moment duration check failed!";
 
-                                for(i = basicChords.length - 1; i >= 0; --i)
+                                if(moments[moments.length-1].msPositionInChord >= totalMsDuration)
                                 {
-                                    if(excessDuration > 0)
+                                    throw durationCheckException;
+                                }
+                                for(i = moments.length - 1; i > 0; --i)
+                                {
+                                    if(moments[i].msPositionInChord <= moments[i-1].msPositionInChord)
                                     {
-                                        if(basicChords[i].msDuration > 1)
+                                        throw durationCheckException;
+                                    }
+                                }
+                            }
+
+                            if(moments[moments.length - 1].msPositionInChord === totalMsDuration)
+                            {
+                                moments[moments.length - 1].msPositionInChord -= 1;
+                            }
+
+                            for(i = moments.length - 1; i > 0; --i)
+                            {
+                                if(moments[i].msPositionInChord < moments[i - 1].msPositionInChord)
+                                {
+                                    throw tooFastException;
+                                }
+                                if(moments[i].msPositionInChord === moments[i - 1].msPositionInChord)
+                                {
+                                    for(j = i - 1; j >= 0; --j)
+                                    {
+                                        moments[j].msPositionInChord -= 1;
+                                        if(j > 0 && moments[j].msPositionInChord > moments[j-1].msPositionInChord)
                                         {
-                                            basicChords[i].msDuration -= 1;
-                                            excessDuration -= 1;
-                                            changed = true;
+                                            break;
                                         }
                                     }
-                                    else if(excessDuration < 0)
-                                    {
-                                        basicChords[nBasicChords - 1].msDuration += 1;
-                                        excessDuration += 1;
-                                        changed = true;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                if(excessDuration !== 0 && !changed)
-                                {
-                                    throw "Error: The speed has been set too high!\n\n" +
-                                            "(Can't adjust the duration of a set of basicChords.)";
-                                }
+                                }   
                             }
-                        }
-
-                        // get the speed changed (floating point) basic chord positions re start of chord.
-                        msFPPositions.push(0);
-                        for(i = 0; i < nBasicChords; ++i)
-                        {
-                            msFPDuration = basicChords[i].msDuration / speed;
-                            msFPPositions.push(msFPDuration + msFPPositions[i]);
-                        }
-
-                        // get the (integer) msDuration of each basic chord (possibly with rounding errors)
-                        // nMsPositions = nBasicChords + 1;
-                        for(i = 0; i < nBasicChords; ++i)
-                        {
-                            basicChords[i].msDuration = Math.round(msFPPositions[i + 1] - msFPPositions[i]);
-                            if(basicChords[i].msDuration < 1)
+                            if(moments[0].msPositionInChord !== 0)
                             {
-                                throw "Error: The speed has been set too high!\n\n" +
-                                      "(Attempt to create a basicChord with no duration.)";
+                                throw tooFastException;
                             }
-                            totalBasicMsDurations += basicChords[i].msDuration;
+                            checkMomentDurations(moments, totalMsDuration);
                         }
 
-                        // if there is a rounding error, correct it.
-                        excessDuration = totalBasicMsDurations - chordMsDuration;
-                        if(excessDuration !== 0)
+                        for(i = 0; i < nMoments; ++i)
                         {
-                            correctRoundingError(basicChords, excessDuration);
+                            moments[i].msPositionInChord = Math.floor(moments[i].msPositionInChord / speed);
                         }
+
+                        adjustZeroMsDurations(moments, totalMsDuration);
                     }
 
                     for(i = 0; i < nTimeObjects; ++i)
                     {
-                        if(timeObjects[i].midiChordDef !== undefined)
-                        {
-                            adjustDurations(timeObjects[i].midiChordDef.basicChordsArray, speed, timeObjects[i].msDuration);
-                        }
+                        console.assert(timeObjects[i].midiObject !== undefined);
+                        adjustMsPositionsInChord(timeObjects[i].midiObject.moments, speed, timeObjects[i].msDuration);
                     }
                 }
 
@@ -1644,14 +1746,14 @@ _AP.score = (function (document)
                             adjustTotalDurations(voice.timeObjects, speed);
                             if(voice.isOutput === true)
                             {
-                                adjustBasicChordDurations(voice.timeObjects, speed);
+                                adjustMomentMsPositions(voice.timeObjects, speed);
                             }                            
                         }
                     }
                 }
             }
 
-            /*************** end of getTimeObjects function definitions *****************************/
+            /*************** end of getVoiceObjects function definitions *****************************/
 
             for(i = 0; i < systemElems.length; ++i)
             {
@@ -1659,7 +1761,14 @@ _AP.score = (function (document)
                 {
                     delete systems[i].msDuration; // is reset in the following function
                 }
-                getSystemVoiceObjects(systemElems[i], systems[i], i, viewBoxScale);
+                getSystemOutputVoiceObjects(systemElems, systems, i, viewBoxScale);
+            }
+
+            getMidiChannelPerOutputTrack(systems);
+
+            for(i = 0; i < systemElems.length; ++i)
+            {
+                getSystemInputVoiceObjects(systemElems, systems, i, viewBoxScale);
             }
 
             setMsPositions(systems);
@@ -1800,14 +1909,11 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.inputChordDef === undefined)
+                            if(timeObject.inputObject instanceof InputRestDef)
                             {
-                                if(timeObjectIndex < (nTimeObjects - 1))
-                                {
-                                    // A real rest. All barlines on the right ends of staves are ignored.
-                                    inputRest = new InputRest(timeObject);
-                                    inputTrack.inputObjects.push(inputRest);
-                                }
+                                // A real rest. All barlines on the right ends of staves are ignored.
+                                inputRest = new InputRest(timeObject);
+                                inputTrack.inputObjects.push(inputRest);
                             }
                             else
                             {
