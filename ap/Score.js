@@ -30,10 +30,8 @@ _AP.score = (function (document)
     MidiRest = _AP.midiObject.MidiRest,
     Track = _AP.track.Track,
 
-    InputChordDef = _AP.inputObjectDef.InputChordDef,
-    InputRestDef = _AP.inputObjectDef.InputRestDef,
+    InputChordDef = _AP.inputChordDef.InputChordDef,
     InputChord = _AP.inputChord.InputChord,
-    InputRest = _AP.inputRest.InputRest,
 
     BLACK_COLOR = "#000000",
     GREY_COLOR = "#7888A0",
@@ -196,10 +194,9 @@ _AP.score = (function (document)
                     for(j = 0; j < nTimeObjects; ++j)
                     {
                         timeObject = timeObjects[j];
-                        if((!findInput)  // timeObject is a restDef or midiChordDef in an outputVoice
-                        || (findInput &&
-                            (timeObject.inputObjectDef === undefined // a rest in an inputVoice
-                            || (timeObject.inputObjectDef !== undefined && hasPerformingTrack(timeObject.inputObjectDef, trackIsOnArray)))))
+                        if((findInput === false)  // timeObject contains a midiRest or midiChord
+                        || (findInput && // find an inputChordDef
+                           (timeObject.inputChordDef !== undefined && hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray))))
                         {
                             if(alignment === timeObject.alignment)
                             {
@@ -516,7 +513,7 @@ _AP.score = (function (document)
                         for(k = 0; k < timeObjects.length; ++k)
                         {
                             timeObject = timeObjects[k];
-                            if(timeObject.midiChord !== undefined || timeObject.inputObjectDef !== undefined)
+                            if(timeObject.midiChord !== undefined || timeObject.inputChordDef !== undefined)
                             {
                                 break;
                             }
@@ -1274,7 +1271,8 @@ _AP.score = (function (document)
 
             // There is a timeObject for every input and output chord or rest and the final barline in each voice.
             // All timeObjects are allocated alignment and msDuration fields as they appear in the score.
-            // Chord timeObjects are allocated either a MidiChord, MidiRest or an inputChordDef field depending on whether they are output or input objects.
+            // Chord timeObjects are allocated either a midiObject or an inputChordDef field depending on
+            // whether they are output or input objects.
             function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
             {
                 var noteObjectElems, noteObjectClass,
@@ -1320,23 +1318,16 @@ _AP.score = (function (document)
                         }
                         timeObjects.push(timeObject);
                     }
-                    else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
+                    else if(noteObjectClass === 'inputChord') // inputRests are ignored!
                     {
                         noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
                         timeObject = {};
                         timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                        //timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
+                        timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
                         timeObject.systemIndex = systemIndex;
 
-                        if(noteObjectClass === 'inputChord')
-                        {
-                            timeObject.inputObjectDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
-                        }
-                        else
-                        {
-                            //timeObject.inputObjectDef = new InputRestDef(timeObject.msDuration);
-                            timeObject.inputObjectDef = new InputRestDef();
-                        }
+                        timeObject.inputChordDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
+
                         timeObjects.push(timeObject);
                     }
 
@@ -1634,9 +1625,9 @@ _AP.score = (function (document)
             {
                 var i, j, k, nSystems = systems.length, system, staff, voice;
 
-                // adjust the top level msDuration of each timeObject
+                // adjust the top level msPosition and msDuration of each input and output timeObject
                 // the final timeObject is the final barline (msDuration = 0).
-                function adjustTotalDurations(timeObjects, speed)
+                function adjustPositionsAndObjectDurations(timeObjects, speed)
                 {
                     var i, msDuration, nTimeObjects = timeObjects.length;
 
@@ -1755,16 +1746,13 @@ _AP.score = (function (document)
 
                     for(i = 0; i < nTimeObjects; ++i)
                     {
-                        if(timeObjects[i].inputObjectDef instanceof InputChordDef)
+                        inputNotes = timeObjects[i].inputChordDef.inputNotes;
+                        for(j = 0; j < inputNotes.length; ++j)
                         {
-                            inputNotes = timeObjects[i].inputObjectDef.inputNotes;
-                            for(j = 0; j < inputNotes.length; ++j)
-                            {
-                                noteOn = inputNotes[j].noteOn;
-                                adjustNoteOnOrOff(noteOn, speed);
-                                noteOff = inputNotes[j].noteOff;
-                                adjustNoteOnOrOff(noteOff, speed);
-                            }
+                            noteOn = inputNotes[j].noteOn;
+                            adjustNoteOnOrOff(noteOn, speed);
+                            noteOff = inputNotes[j].noteOff;
+                            adjustNoteOnOrOff(noteOff, speed);
                         }
                     }
                 }
@@ -1778,9 +1766,9 @@ _AP.score = (function (document)
                         for(k = 0; k < staff.voices.length; ++k)
                         {
                             voice = staff.voices[k];
+                            adjustPositionsAndObjectDurations(voice.timeObjects, speed);
                             if(voice.isOutput === true)
                             {
-                                adjustTotalDurations(voice.timeObjects, speed);
                                 adjustMomentMsPositions(voice.timeObjects, speed);
                             }
                             else
@@ -1948,17 +1936,8 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.inputObjectDef instanceof InputRestDef)
-                            {
-                                // A real rest. All barlines on the right ends of staves are ignored.
-                                inputRest = new InputRest(timeObject);
-                                inputTrack.inputObjects.push(inputRest);
-                            }
-                            else
-                            {
-                                inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
-                                inputTrack.inputObjects.push(inputChord);
-                            }
+                            inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
+                            inputTrack.inputObjects.push(inputChord);
                         }
                         ++inputTrackIndex;
                     }
