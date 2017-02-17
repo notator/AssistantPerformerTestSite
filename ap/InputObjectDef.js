@@ -50,7 +50,7 @@
  *  A trkRef, which has the element name "trk" in the score, has the following fields:
  *     trkOn.trkOptions -- undefined or an TrkOptions object
  *     trkOn.trackIndex (compulsory int >= 0. The trackIndex of the voice containing the referenced Trk. )
- *     trkOn.msPosition (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPositionInScore of the referenced Trk.
+ *     trkOn.msPosition (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPosition of the referenced Trk.
  *     trkOn.nMidiObjects (compulsory int >= 0 in seqDef elements, otherwise omitted). The number of MidiChords and Rests in the referenced Trk.)
  *  
  *  A trkOff, which also has the element name "trk" in the score, has the following fields:
@@ -286,7 +286,7 @@ _AP.inputObjectDef = (function ()
                                     seqTrk.trackIndex = outputTrackPerMidiChannel[parseInt(attr.value, 10)];
                                     break;
                                 case "msPosition":
-                                    seqTrk.msPositionInScore = parseInt(attr.value, 10);
+                                    seqTrk.msPosition = parseInt(attr.value, 10);
                                     break;
                                 case "nMidiObjects":
                                     seqTrk.nMidiObjects = parseInt(attr.value, 10);

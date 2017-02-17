@@ -1330,12 +1330,12 @@ _AP.score = (function (document)
 
                         if(noteObjectClass === 'inputChord')
                         {
-                            timeObject.inputObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
+                            timeObject.inputObjectDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
                         }
                         else
                         {
-                            //timeObject.inputObject = new InputRestDef(timeObject.msDuration);
-                            timeObject.inputObject = new InputRestDef();
+                            //timeObject.inputObjectDef = new InputRestDef(timeObject.msDuration);
+                            timeObject.inputObjectDef = new InputRestDef();
                         }
                         timeObjects.push(timeObject);
                     }
@@ -1652,7 +1652,7 @@ _AP.score = (function (document)
                         if(msDuration < 1)
                         {
                             throw "Error: The speed has been set too high!\n\n" +
-                                  "(Attempt to create a chord or rest having no duration.)";
+                                  "(Attempt to create a chord or rest having zero duration.)";
                         }
                         timeObjects[i - 1].msDuration = msDuration;
                     }
@@ -1734,6 +1734,41 @@ _AP.score = (function (document)
                     }
                 }
 
+                function adjustTrkRefs(timeObjects, speed)
+                {
+                    var i, j, nTimeObjects = timeObjects.length, inputNotes, noteOn, noteOff;
+
+                    function adjustNoteOnOrOff(noteOnOrOff, speed)
+                    {
+                        var i, seqDef, trkRef;
+
+                        if(noteOnOrOff !== undefined && noteOnOrOff.seqDef !== undefined)
+                        {
+                            seqDef = noteOnOrOff.seqDef;
+                            for(i = 0; i < seqDef.length; ++i)
+                            {
+                                trkRef = seqDef[i];
+                                trkRef.msPosition = Math.floor(trkRef.msPosition / speed);
+                            }
+                        }
+                    }
+
+                    for(i = 0; i < nTimeObjects; ++i)
+                    {
+                        if(timeObjects[i].inputObjectDef instanceof InputChordDef)
+                        {
+                            inputNotes = timeObjects[i].inputObjectDef.inputNotes;
+                            for(j = 0; j < inputNotes.length; ++j)
+                            {
+                                noteOn = inputNotes[j].noteOn;
+                                adjustNoteOnOrOff(noteOn, speed);
+                                noteOff = inputNotes[j].noteOff;
+                                adjustNoteOnOrOff(noteOff, speed);
+                            }
+                        }
+                    }
+                }
+
                 for(i = 0; i < nSystems; ++i)
                 {
                     system = systems[i];
@@ -1743,11 +1778,15 @@ _AP.score = (function (document)
                         for(k = 0; k < staff.voices.length; ++k)
                         {
                             voice = staff.voices[k];
-                            adjustTotalDurations(voice.timeObjects, speed);
                             if(voice.isOutput === true)
                             {
+                                adjustTotalDurations(voice.timeObjects, speed);
                                 adjustMomentMsPositions(voice.timeObjects, speed);
-                            }                            
+                            }
+                            else
+                            {
+                                adjustTrkRefs(voice.timeObjects, speed);
+                            }
                         }
                     }
                 }
@@ -1909,7 +1948,7 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.inputObject instanceof InputRestDef)
+                            if(timeObject.inputObjectDef instanceof InputRestDef)
                             {
                                 // A real rest. All barlines on the right ends of staves are ignored.
                                 inputRest = new InputRest(timeObject);
