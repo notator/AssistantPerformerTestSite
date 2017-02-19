@@ -7,7 +7,7 @@
  *
  *  ap/InputChord.js
  *  Public interface:
- *      InputChord(timeObject, outputTracks) // InputChord constructor 
+ *      InputChord(inputChordDef, outputTracks) // InputChord constructor 
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -23,27 +23,28 @@ _AP.inputChord = (function()
 
     // public InputChord constructor
     // An InputChord contains all the information required for playing an (ornamented) chord.
-    InputChord = function(timeObject, outputTracks)
+    InputChord = function(inputChordDef, outputTracks)
     {
         if(!(this instanceof InputChord))
         {
-            return new InputChord(timeObject, outputTracks);
+            return new InputChord(inputChordDef, outputTracks);
         }
 
-        // The timeObject takes the global speed option into account.
-        Object.defineProperty(this, "msPosition", { value: timeObject.msPosition, writable: false });
-        Object.defineProperty(this, "msDuration", { value: timeObject.msDuration, writable: false });
-        if(timeObject.inputChordDef.ccSettings !== undefined)
+        // The msDurationInScore and msPositionInScore properties are not subject to the global speed option!
+        // These values are used, but not changed, either when moving Markers about or during performances.)
+        Object.defineProperty(this, "msPositionInScore", { value: inputChordDef.msPositionInScore, writable: false });
+        Object.defineProperty(this, "msDurationInScore", { value: inputChordDef.msDurationInScore, writable: false });
+        if(inputChordDef.ccSettings !== undefined)
         {
-            Object.defineProperty(this, "ccSettings", { value: timeObject.inputChordDef.ccSettings, writable: false });
+            Object.defineProperty(this, "ccSettings", { value: inputChordDef.ccSettings, writable: false });
         }
 
-        if(timeObject.inputChordDef.trkOptions !== undefined)
+        if(inputChordDef.trkOptions !== undefined)
         {
-            Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: false });
+            Object.defineProperty(this, "trkOptions", { value: inputChordDef.trkOptions, writable: false });
         }
 
-        Object.defineProperty(this, "inputNotes", { value: this.getInputNotes(timeObject.inputChordDef.inputNotes, outputTracks, timeObject.msPosition), writable: false });
+        Object.defineProperty(this, "inputNotes", { value: this.getInputNotes(inputChordDef.inputNotes, outputTracks, inputChordDef.msPositionInScore), writable: false });
 
         return this;
     },
@@ -76,16 +77,16 @@ _AP.inputChord = (function()
     // getInputNotes() Returns:
     // An array of inputNote objects, the fields of which have been copied from the corresponding inputNoteDefs (see above)
     // but with trackIndex values converted to trackIndices:
-    InputChord.prototype.getInputNotes = function(inputNoteDefs, outputTracks, inputChordMsPosition)
+    InputChord.prototype.getInputNotes = function(inputNoteDefs, outputTracks, inputChordMsPositionInScore)
     {
         var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef,
             inputNote, inputNotes = [];
 
-        function getNoteOnOrOff(noteInfo, outputTracks, inputChordMsPosition)
+        function getNoteOnOrOff(noteInfo, outputTracks, inputChordMsPositionInScore)
         {
             var noteOnOrOff = {};
 
-            function getSeq(onSeq, outputTracks, inputChordMsPosition)
+            function getSeq(onSeq, outputTracks, inputChordMsPositionInScore)
             {
                 var trk, trks = [], i, trkOn, nTrkOns = onSeq.length, trackMidiObjects;
 
@@ -114,7 +115,7 @@ _AP.inputChord = (function()
 
                     for(i = 0; i < length; ++i)
                     {
-                        midiObjects.push(trackMidiObjects[midiObjIndex++]);
+                        midiObjects.push(trackMidiObjects[midiObjIndex++].midiObject);
                     }
                     return midiObjects;
                 }
@@ -130,8 +131,8 @@ _AP.inputChord = (function()
                     }
                     trk.trackIndex = trkOn.trackIndex;
                     trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
-                    trk.midiObjectIndex = getMidiObjectIndex(trkOn.msPosition, trackMidiObjects);
-                    trk.msOffset = trackMidiObjects[trk.midiObjectIndex].msPosition - inputChordMsPosition;
+                    trk.midiObjectIndex = getMidiObjectIndex(trkOn.msPositionInScore, trackMidiObjects);
+                    trk.msOffset = trackMidiObjects[trk.midiObjectIndex].midiObject.msPositionInScore - inputChordMsPositionInScore;
                     trk.midiObjects = getMidiObjects(trk.midiObjectIndex, trkOn.nMidiObjects, trackMidiObjects);
 
                     trks.push(trk);
@@ -147,7 +148,7 @@ _AP.inputChord = (function()
 
             if(noteInfo.seqDef !== undefined)
             {
-                noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks, inputChordMsPosition);
+                noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks, inputChordMsPositionInScore);
             }
 
             if(noteInfo.trkOffs !== undefined)
@@ -169,16 +170,78 @@ _AP.inputChord = (function()
             }
             if(inputNoteDef.noteOn !== undefined)
             {
-                inputNote.noteOn = getNoteOnOrOff(inputNoteDef.noteOn, outputTracks, inputChordMsPosition);
+                inputNote.noteOn = getNoteOnOrOff(inputNoteDef.noteOn, outputTracks, inputChordMsPositionInScore);
             }
             if(inputNoteDef.noteOff !== undefined)
             {
-                inputNote.noteOff = getNoteOnOrOff(inputNoteDef.noteOff, outputTracks, inputChordMsPosition);
+                inputNote.noteOff = getNoteOnOrOff(inputNoteDef.noteOff, outputTracks, inputChordMsPositionInScore);
             }
             inputNotes.push(inputNote);
         }
 
         return inputNotes;
+    };
+
+    InputChord.prototype.referencedOutputTrackIndices = function()
+    {
+        var i, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputIndices = [], returnArray = [];
+
+        function outIndices(noteOnOff)
+        {
+            var i,
+            seqDef = noteOnOff.seqDef, nSeqTrks,
+            trkOffs = noteOnOff.trkOffs, nTrkOffs,
+            outputIndices = [];
+
+            if(seqDef !== undefined)
+            {
+                nSeqTrks = seqDef.length;
+                for(i = 0; i < nSeqTrks; ++i)
+                {
+                    outputIndices.push(seqDef[i].trackIndex);
+                }
+            }
+            if(trkOffs !== undefined)
+            {
+                nTrkOffs = trkOffs.length;
+                for(i = 0; i < nTrkOffs; ++i)
+                {
+                    outputIndices.push(trkOffs[i]);
+                }
+            }
+
+            return outputIndices;
+        }
+
+        function uniqueOutputIndices(nonUniqueOutputIndices)
+        {
+            var i, nAllOutputIndices = nonUniqueOutputIndices.length, rVal = [];
+            for(i = 0; i < nAllOutputIndices; ++i)
+            {
+                if(rVal.indexOf(nonUniqueOutputIndices[i]) < 0)
+                {
+                    rVal.push(nonUniqueOutputIndices[i]);
+                }
+            }
+            return rVal;
+        }
+
+        for(i = 0; i < nInputNotes; ++i)
+        {
+            inputNote = this.inputNotes[i];
+            if(inputNote.noteOn !== undefined)
+            {
+                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOn));
+            }
+            if(inputNote.noteOff !== undefined)
+            {
+                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOff));
+            }
+        }
+
+        returnArray = uniqueOutputIndices(nonUniqueOutputIndices);
+
+        return returnArray;
     };
 
     return publicInputChordAPI;

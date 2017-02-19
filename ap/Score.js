@@ -30,7 +30,8 @@ _AP.score = (function (document)
     MidiRest = _AP.midiObject.MidiRest,
     Track = _AP.track.Track,
 
-    InputChordDef = _AP.inputChordDef.InputChordDef,
+    InputChordDef = _AP.inputObjectDef.InputChordDef,
+    InputRestDef = _AP.inputObjectDef.InputRestDef,
     InputChord = _AP.inputChord.InputChord,
 
     BLACK_COLOR = "#000000",
@@ -150,21 +151,22 @@ _AP.score = (function (document)
         return timeObjectsArray;
     },
 
-    // Returns the performing restDef or (in any performing input or output track, depending on findInput) midiChordDef or inputChordDef closest to alignment.
+    // Returns null or the performing midiChord, midiRest or inputChord closest to alignment
+    // (in any performing input or output track, depending on findInput)
     // If trackIndex is defined, the returned timeObject will be in that track.
-    // If there are no chordDefs matching the arguments (i.e. if all the timeObjects are restDefs), the returned timeObject will be null.
+    // Returns null if no timeObject can be found that matches the arguments.
     findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex)
     {
         var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
             nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
 
-        function hasPerformingTrack(inputChordDef, trackIsOnArray)
+        function hasPerformingTrack(inputChord, trackIsOnArray)
         {
             var i, outputTrackFound = false, outputTrackIndices;
 
-            console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
+            console.assert(inputChord !== undefined, "inputChord must be defined.");
 
-            outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
+            outputTrackIndices = inputChord.referencedOutputTrackIndices();
             for(i = 0; i < outputTrackIndices.length; ++i)
             {
                 if(trackIsOnArray[outputTrackIndices[i]])
@@ -195,8 +197,8 @@ _AP.score = (function (document)
                     {
                         timeObject = timeObjects[j];
                         if((findInput === false)  // timeObject contains a midiRest or midiChord
-                        || (findInput && // find an inputChordDef
-                           (timeObject.inputChordDef !== undefined && hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray))))
+                        || (findInput && // find an inputChord
+                           (timeObject.inputChord !== undefined && hasPerformingTrack(timeObject.inputChord, trackIsOnArray))))
                         {
                             if(alignment === timeObject.alignment)
                             {
@@ -1244,7 +1246,7 @@ _AP.score = (function (document)
         voiceIndex, nVoices, voice,
         staffIndex, nStaves, staff,
         sysIndex, nSystems = systems.length, system,
-        inputChord, inputRest;
+        inputChord;
 
         // Gets the timeObjects for both input and output voices. 
         // msDurations are retrieved from the score (not changed by the current speed option).
@@ -1318,7 +1320,7 @@ _AP.score = (function (document)
                         }
                         timeObjects.push(timeObject);
                     }
-                    else if(noteObjectClass === 'inputChord') // inputRests are ignored!
+                    else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
                     {
                         noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
                         timeObject = {};
@@ -1326,7 +1328,14 @@ _AP.score = (function (document)
                         timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
                         timeObject.systemIndex = systemIndex;
 
-                        timeObject.inputChordDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);  
+                        if(noteObjectClass === 'inputChord')
+                        {
+                            timeObject.inputChordDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);
+                        }
+                        else
+                        {
+                            timeObject.inputRestDef = new InputRestDef(timeObject.msDuration);
+                        }
 
                         timeObjects.push(timeObject);
                     }
@@ -1515,12 +1524,22 @@ _AP.score = (function (document)
                             for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                             {
                                 timeObject = timeObjects[tIndex];
+
+                                timeObject.msPosition = msPosition;
                                 if(timeObject.midiObject !== undefined)
                                 {
-                                    timeObject.midiObject.msPositionInScore = msPosition;
+                                    Object.defineProperty(timeObject.midiObject, "msPositionInScore", { value: msPosition, writable: false });
+                                    //timeObject.midiObject.msPositionInScore = msPosition;
                                 }
-                                timeObject.msPosition = msPosition;
-                                
+                                else if(timeObject.inputChordDef !== undefined)
+                                {
+                                    Object.defineProperty(timeObject.inputChordDef, "msPositionInScore", { value: msPosition, writable: false });
+                                }
+                                else if(timeObject.inputRestDef !== undefined)
+                                {
+                                    Object.defineProperty(timeObject.inputRestDef, "msPositionInScore", { value: msPosition, writable: false });
+                                }
+
                                 msPosition += timeObject.msDuration;
                             }
                         }
@@ -1625,7 +1644,7 @@ _AP.score = (function (document)
             {
                 var i, j, k, nSystems = systems.length, system, staff, voice;
 
-                // adjust the top level msPosition and msDuration of each input and output timeObject
+                // adjust the msPosition and msDuration of each input and output timeObject
                 // the final timeObject is the final barline (msDuration = 0).
                 function adjustPositionsAndObjectDurations(timeObjects, speed)
                 {
@@ -1725,38 +1744,6 @@ _AP.score = (function (document)
                     }
                 }
 
-                function adjustTrkRefs(timeObjects, speed)
-                {
-                    var i, j, nTimeObjects = timeObjects.length, inputNotes, noteOn, noteOff;
-
-                    function adjustNoteOnOrOff(noteOnOrOff, speed)
-                    {
-                        var i, seqDef, trkRef;
-
-                        if(noteOnOrOff !== undefined && noteOnOrOff.seqDef !== undefined)
-                        {
-                            seqDef = noteOnOrOff.seqDef;
-                            for(i = 0; i < seqDef.length; ++i)
-                            {
-                                trkRef = seqDef[i];
-                                trkRef.msPosition = Math.floor(trkRef.msPosition / speed);
-                            }
-                        }
-                    }
-
-                    for(i = 0; i < nTimeObjects; ++i)
-                    {
-                        inputNotes = timeObjects[i].inputChordDef.inputNotes;
-                        for(j = 0; j < inputNotes.length; ++j)
-                        {
-                            noteOn = inputNotes[j].noteOn;
-                            adjustNoteOnOrOff(noteOn, speed);
-                            noteOff = inputNotes[j].noteOff;
-                            adjustNoteOnOrOff(noteOff, speed);
-                        }
-                    }
-                }
-
                 for(i = 0; i < nSystems; ++i)
                 {
                     system = systems[i];
@@ -1770,10 +1757,6 @@ _AP.score = (function (document)
                             if(voice.isOutput === true)
                             {
                                 adjustMomentMsPositions(voice.timeObjects, speed);
-                            }
-                            else
-                            {
-                                adjustTrkRefs(voice.timeObjects, speed);
                             }
                         }
                     }
@@ -1936,8 +1919,17 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
-                            inputTrack.inputObjects.push(inputChord);
+                            if(timeObject.inputChordDef !== undefined)
+                            {
+                                inputChord = new InputChord(timeObject.inputChordDef, outputTracks); // the outputTracks should already be complete here
+                                inputTrack.inputObjects.push(inputChord);
+                                delete timeObject.inputChordDef;
+                            }
+                            if(timeObject.inputRestDef !== undefined)
+                            {
+                                delete timeObject.inputRestDef;
+                                // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
+                            }
                         }
                         ++inputTrackIndex;
                     }
@@ -2013,7 +2005,7 @@ _AP.score = (function (document)
         this.getEmptySystems = getEmptySystems;
 
         // Returns a tracksData object having the following defined attributes:
-        //        inputTracks[] - an array of tracks containing inputChords and inputRests
+        //        inputTracks[] - an array of tracks containing inputChords
         //        outputTracks[] - an array of tracks containing outputChords and outputRests
         //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
         //            inputKeyRange.bottomKey

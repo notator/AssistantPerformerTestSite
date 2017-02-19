@@ -50,7 +50,7 @@
  *  A trkRef, which has the element name "trk" in the score, has the following fields:
  *     trkOn.trkOptions -- undefined or an TrkOptions object
  *     trkOn.trackIndex (compulsory int >= 0. The trackIndex of the voice containing the referenced Trk. )
- *     trkOn.msPosition (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPosition of the referenced Trk.
+ *     trkOn.msPositionInScore (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPositioninScore of the referenced Trk.
  *     trkOn.nMidiObjects (compulsory int >= 0 in seqDef elements, otherwise omitted). The number of MidiChords and Rests in the referenced Trk.)
  *  
  *  A trkOff, which also has the element name "trk" in the score, has the following fields:
@@ -65,7 +65,7 @@
 
 _AP.namespace('_AP.inputChordDef');
 
-_AP.inputChordDef = (function ()
+_AP.inputObjectDef = (function ()
 {
     "use strict";
     var
@@ -79,6 +79,8 @@ _AP.inputChordDef = (function ()
         {
             return new InputChordDef(inputChordNode, midiChannelPerOutputTrack);
         }
+
+        Object.defineProperty(this, "msDurationInScore", { value: parseInt(inputChordNode.getAttribute('score:msDuration'), 10), writable: false });
 
         outputTrackPerMidiChannel = this.getOutputTrackPerMidiChannel(midiChannelPerOutputTrack);
 
@@ -103,10 +105,16 @@ _AP.inputChordDef = (function ()
         return this;
     },
 
+    InputRestDef = function(msDuration)
+    {
+        Object.defineProperty(this, "msDurationInScore", { value: msDuration, writable: false });
+    },
+
     // public API
     publicAPI =
     {
-        InputChordDef: InputChordDef
+        InputChordDef: InputChordDef,
+        InputRestDef: InputRestDef
     };
 
     InputChordDef.prototype.getOutputTrackPerMidiChannel = function(midiChannelPerOutputTrack)
@@ -261,13 +269,13 @@ _AP.inputChordDef = (function ()
                             switch(attr.name)
                             {
                                 case "midiChannel":
-                                    seqTrk.trackIndex = outputTrackPerMidiChannel[parseInt(attr.value, 10)];
+                                    Object.defineProperty(seqTrk, "trackIndex", { value: outputTrackPerMidiChannel[parseInt(attr.value, 10)], writable: false });
                                     break;
                                 case "msPosition":
-                                    seqTrk.msPosition = parseInt(attr.value, 10);
+                                    Object.defineProperty(seqTrk, "msPositionInScore", { value: parseInt(attr.value, 10), writable: false });
                                     break;
                                 case "nMidiObjects":
-                                    seqTrk.nMidiObjects = parseInt(attr.value, 10);
+                                    Object.defineProperty(seqTrk, "nMidiObjects", { value: parseInt(attr.value, 10), writable: false });
                                     break;
                                 default:
                                     console.assert(false, "Illegal attribute for trk element in seqDef.");
@@ -382,68 +390,68 @@ _AP.inputChordDef = (function ()
         return inputNotes;
     };
 
-    // returns an array of output track indices
-    InputChordDef.prototype.referencedOutputTrackIndices = function()
-    {
-        var i, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputIndices = [], returnArray = [];
+    //// returns an array of output track indices
+    //InputChordDef.prototype.referencedOutputTrackIndices = function()
+    //{
+    //    var i, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputIndices = [], returnArray = [];
 
-        function outIndices(noteOnOff)
-        {
-            var i,
-            seqDef = noteOnOff.seqDef, nSeqTrks,
-            trkOffs = noteOnOff.trkOffs, nTrkOffs,
-            outputIndices = [];
+    //    function outIndices(noteOnOff)
+    //    {
+    //        var i,
+    //        seqDef = noteOnOff.seqDef, nSeqTrks,
+    //        trkOffs = noteOnOff.trkOffs, nTrkOffs,
+    //        outputIndices = [];
 
-            if(seqDef !== undefined)
-            {
-                nSeqTrks = seqDef.length;
-                for(i = 0; i < nSeqTrks; ++i)
-                {
-                    outputIndices.push(seqDef[i].trackIndex);
-                }
-            }
-            if(trkOffs !== undefined)
-            {
-                nTrkOffs = trkOffs.length;
-                for(i = 0; i < nTrkOffs; ++i)
-                {
-                    outputIndices.push(trkOffs[i]);
-                }
-            }
+    //        if(seqDef !== undefined)
+    //        {
+    //            nSeqTrks = seqDef.length;
+    //            for(i = 0; i < nSeqTrks; ++i)
+    //            {
+    //                outputIndices.push(seqDef[i].trackIndex);
+    //            }
+    //        }
+    //        if(trkOffs !== undefined)
+    //        {
+    //            nTrkOffs = trkOffs.length;
+    //            for(i = 0; i < nTrkOffs; ++i)
+    //            {
+    //                outputIndices.push(trkOffs[i]);
+    //            }
+    //        }
 
-            return outputIndices;
-        }
+    //        return outputIndices;
+    //    }
 
-        function uniqueOutputIndices(nonUniqueOutputIndices)
-        {
-            var i, nAllOutputIndices = nonUniqueOutputIndices.length, rVal = [];
-            for(i = 0; i < nAllOutputIndices; ++i)
-            {
-                if(rVal.indexOf(nonUniqueOutputIndices[i]) < 0)
-                {
-                    rVal.push(nonUniqueOutputIndices[i]);
-                }
-            }
-            return rVal;
-        }
+    //    function uniqueOutputIndices(nonUniqueOutputIndices)
+    //    {
+    //        var i, nAllOutputIndices = nonUniqueOutputIndices.length, rVal = [];
+    //        for(i = 0; i < nAllOutputIndices; ++i)
+    //        {
+    //            if(rVal.indexOf(nonUniqueOutputIndices[i]) < 0)
+    //            {
+    //                rVal.push(nonUniqueOutputIndices[i]);
+    //            }
+    //        }
+    //        return rVal;
+    //    }
 
-        for(i = 0; i < nInputNotes; ++i)
-        {
-            inputNote = this.inputNotes[i];
-            if(inputNote.noteOn !== undefined)
-            {
-                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOn));
-            }
-            if(inputNote.noteOff !== undefined)
-            {
-                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOff));
-            }
-        }
+    //    for(i = 0; i < nInputNotes; ++i)
+    //    {
+    //        inputNote = this.inputNotes[i];
+    //        if(inputNote.noteOn !== undefined)
+    //        {
+    //            nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOn));
+    //        }
+    //        if(inputNote.noteOff !== undefined)
+    //        {
+    //            nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOff));
+    //        }
+    //    }
 
-        returnArray = uniqueOutputIndices(nonUniqueOutputIndices);
+    //    returnArray = uniqueOutputIndices(nonUniqueOutputIndices);
 
-        return returnArray;
-    };
+    //    return returnArray;
+    //};
 
     return publicAPI;
 

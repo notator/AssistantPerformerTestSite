@@ -32,11 +32,11 @@ _AP.midiObject = (function()
     {
         // moments is an ordered array of Moment objects.
         // A Moment is a list of logically synchronous Messages.
-        // The msDurationInScore property does not take the global speed option into account.
-        // The moments, msDurationInScore and msPositionInScore properties do not change at runtime.
-        Object.defineProperty(that, "moments", { value: that._getMoments(scoreMidiElem), writable: false });
+        // The msDurationInScore and msPositionInScore properties are not changed by the global speed option!
+        // These values are used, but not changed, either when moving Markers about or during performances.)
+        Object.defineProperty(that, "moments", { value: that._getMoments(scoreMidiElem), writable: true });
         Object.defineProperty(that, "msDurationInScore", { value: that.msDurationInScore, writable: false });
-        Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
+        //Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
 
         // used at runtime
         Object.defineProperty(that, "currentMoment", { value: that.moments[0], writable: true });
