@@ -151,8 +151,8 @@ _AP.score = (function (document)
         return timeObjectsArray;
     },
 
-    // Returns null or the performing midiChord, midiRest or inputChord closest to alignment
-    // (in any performing input or output track, depending on findInput)
+    // Returns null or the performing midiChord, midiRest, inputChord or voice end TimeObject closest to alignment
+    // (in any performing input or output track, depending on findInput).
     // If trackIndex is defined, the returned timeObject will be in that track.
     // Returns null if no timeObject can be found that matches the arguments.
     findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex)
@@ -1339,17 +1339,6 @@ _AP.score = (function (document)
 
                         timeObjects.push(timeObject);
                     }
-
-                    if(i === length - 1)
-                    {
-                        timeObject = {}; // the final barline in the voice (used when changing speed)
-                        timeObject.msDuration = 0;
-                        timeObject.systemIndex = systemIndex;
-                        // msPosition and alignment are set later
-                        // timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
-                        // timeObject.alignment = system.right;
-                        timeObjects.push(timeObject);
-                    }
                 }
 
                 return timeObjects;
@@ -1502,8 +1491,7 @@ _AP.score = (function (document)
                 }
             }
 
-            // Sets the msPosition of each timeObject (input and output rests and chords, and each voice's final barline)
-            // in the voice.timeObjectArrays.
+            // Sets the msPosition of each timeObject (input and output rests and chords) in the voice.timeObjects arrays.
             function setMsPositions(systems)
             {
                 var nStaves, staffIndex, nVoices, voiceIndex, nSystems, systemIndex, msPosition,
@@ -1539,6 +1527,7 @@ _AP.score = (function (document)
                                 {
                                     Object.defineProperty(timeObject.inputRestDef, "msPositionInScore", { value: msPosition, writable: false });
                                 }
+
 
                                 msPosition += timeObject.msDuration;
                             }
@@ -1610,18 +1599,41 @@ _AP.score = (function (document)
                 } 
             }
 
-            // The rightmost barlines all need an Alignment to which the EndMarker can be set.
-            function setRightmostBarlinesAlignment(systems)
+            // These are needed for aligning start and end markers.
+            function appendVoiceEndTimeObjects(systems)
             {
-                var i, nSystems = systems.length, system,
+                var systemIndex, nSystems = systems.length, system,
                     j, nStaves, staff,
                     k, nVoices, voice,
                     finalBarline,
-                    rightmostAlignment = systems[0].right;
+                    rightmostAlignment = systems[0].right,
+                    startMsPositionOfNextSystem,
+                    lastTimeObject,
+                    endMsPositionInScore;
 
-                for(i = 0; i < nSystems; ++i)
+                function getStartMsPositionOfNextSystem(staves)
                 {
-                    system = systems[i];
+                    var i, j, firstMsPos, nStaves = staves.length, minMsPos = Number.MAX_VALUE;
+
+                    for(i = 0; i < nStaves; ++i)
+                    {
+                        staff = staves[i];
+                        for(j = 0; j < staff.voices.length; ++j)
+                        {
+                            firstMsPos = staff.voices[j].timeObjects[0].msPosition;
+                            minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+                        }
+                    }
+                    return minMsPos;
+                }
+
+                for(systemIndex = 0; systemIndex < nSystems; ++systemIndex)
+                {
+                    system = systems[systemIndex];
+                    if(systemIndex < nSystems - 1)
+                    {
+                        startMsPositionOfNextSystem = getStartMsPositionOfNextSystem(systems[systemIndex + 1].staves);
+                    }
                     nStaves = system.staves.length;
                     for(j = 0; j < nStaves; ++j)
                     {
@@ -1630,8 +1642,22 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            finalBarline = voice.timeObjects[voice.timeObjects.length - 1];
-                            finalBarline.alignment = rightmostAlignment;
+                            timeObject = {}; // the final barline in the voice (used when changing speed)
+                            Object.defineProperty(timeObject, "msDuration", { value: 0, writable: true });
+                            Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
+                            Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
+                            if(systemIndex < nSystems - 1)
+                            {
+                                Object.defineProperty(timeObject, "msPosition", { value: startMsPositionOfNextSystem, writable: true });
+                            }
+                            else
+                            {
+                                lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1]; 
+                                endMsPositionInScore = lastTimeObject.msPosition + lastTimeObject.msDuration;
+                                Object.defineProperty(timeObject, "msPosition", { value: endMsPositionInScore, writable: true });
+                            }
+
+                            voice.timeObjects.push(timeObject);
                         }
                     }
                 }
@@ -1783,7 +1809,7 @@ _AP.score = (function (document)
 
             setMsPositions(systems);
             setFirstTimeObjectAlignment(systems);
-            setRightmostBarlinesAlignment(systems);
+            appendVoiceEndTimeObjects(systems);
 
             if(speed !== 1)
             {
@@ -1803,6 +1829,10 @@ _AP.score = (function (document)
                 system.startMarker.setVisible(false);
                 system.runningMarker.setVisible(false);
                 system.endMarker.setVisible(false);
+
+                system.startMarker.setVisible(true);
+                system.runningMarker.setVisible(true);
+                system.endMarker.setVisible(true);
 
                 system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
                 for(j = 0; j < system.staves.length; ++j)

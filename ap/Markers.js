@@ -117,8 +117,8 @@ _AP.markers = (function ()
 
             viewBoxScale = vbScale;
 
-            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', top);
@@ -237,8 +237,8 @@ _AP.markers = (function ()
 
             viewBoxScale = vbScale;
 
-            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
 
             rectX = (vbScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString(10);
             rectY = (top - (vbScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString(10);
@@ -510,8 +510,8 @@ _AP.markers = (function ()
 
             viewBoxScale = vbScale;
 
-            top = (vbScale * (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
-            bottom = (vbScale * (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
+            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', top);
