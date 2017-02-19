@@ -495,53 +495,6 @@ _AP.score = (function (document)
             return trackIndex;
         }
 
-        function getEndMarkerTimeObject(timeObject, cursorX, systems, systemIndex)
-        {
-            var returnObject,
-                voiceTimeObjects = systems[systemIndex].staves[0].voices[0].timeObjects,
-                rightBarlineTimeObject = voiceTimeObjects[voiceTimeObjects.length - 1],
-                earliestAlignment;
-
-            function findEarliestChordAlignment(system)
-            {
-                var i, j, k, staff, earliestAlignment = Number.MAX_VALUE, timeObjects, timeObject;
-
-                for(i = 0; i < system.staves.length; ++i)
-                {
-                    staff = system.staves[i];
-                    for(j = 0; j < staff.voices.length; ++j)
-                    {
-                        timeObjects = staff.voices[j].timeObjects;
-                        for(k = 0; k < timeObjects.length; ++k)
-                        {
-                            timeObject = timeObjects[k];
-                            if(timeObject.midiChord !== undefined || timeObject.inputChordDef !== undefined)
-                            {
-                                break;
-                            }
-                        }
-                        earliestAlignment = (earliestAlignment < timeObject.alignment) ? earliestAlignment : timeObject.alignment;
-                    }
-                }
-                return earliestAlignment;
-            }
-
-            earliestAlignment = findEarliestChordAlignment(systems[systemIndex]);
-
-            if(cursorX > rightBarlineTimeObject.alignment || ((rightBarlineTimeObject.alignment - cursorX) < (cursorX - timeObject.alignment)))
-            {
-                returnObject = rightBarlineTimeObject;
-            }
-            else if(timeObject.alignment === earliestAlignment)
-            {
-                returnObject = null;
-            }
-            else
-            {
-                returnObject = timeObject;
-            }
-            return returnObject;
-        }
 
         systemIndex = findSystemIndex(cursorY);
         if (systemIndex !== undefined)
@@ -576,10 +529,7 @@ _AP.score = (function (document)
                         }
                         break;
                     case 'settingEnd':
-                        // returns the rightmost barline if that is closer to cursorX than the timeObject
-                        // returns null if timeObject.alignment is the alignmentx of the first chord on the system.
-                        timeObject = getEndMarkerTimeObject(timeObject, cursorX, systems, systemIndex);
-                        if(timeObject !== null && startMarker.msPosition() < timeObject.msPosition)
+                        if(startMarker.msPosition() < timeObject.msPosition)
                         {
                             endMarker = system.endMarker;
                             hideEndMarkersExcept(endMarker);
