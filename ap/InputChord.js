@@ -70,7 +70,7 @@ _AP.inputChord = (function()
     //            Each trkRef has the following fields:
     //                .trkOptions -- undefined or an TrkOptions object
     //                .trackIndex (compulsory int >= 0. The trackIndex of the voice containing the referenced Trk. )
-    //                .msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
+    //                .msPositionInScore (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     //                .length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
     //                .trkOffs -- undefined or an array of trackIndex
     //------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ _AP.inputChord = (function()
 
                     for(midiObjectIndex = 0; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
                     {
-                        if(midiObjects[midiObjectIndex].msPosition === trkMsPosition)
+                        if(midiObjects[midiObjectIndex].msPositionInScore === trkMsPosition)
                         {
                             found = true;
                             break;
@@ -132,7 +132,7 @@ _AP.inputChord = (function()
                     trk.trackIndex = trkOn.trackIndex;
                     trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
                     trk.midiObjectIndex = getMidiObjectIndex(trkOn.msPositionInScore, trackMidiObjects);
-                    trk.msOffset = trackMidiObjects[trk.midiObjectIndex].midiObject.msPositionInScore - inputChordMsPositionInScore;
+                    trk.msOffset = trackMidiObjects[trk.midiObjectIndex].msPositionInScore - inputChordMsPositionInScore;
                     trk.midiObjects = getMidiObjects(trk.midiObjectIndex, trkOn.nMidiObjects, trackMidiObjects);
 
                     trks.push(trk);
