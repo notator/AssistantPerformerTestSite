@@ -1181,8 +1181,8 @@ _AP.score = (function (document)
 
 
     // Returns a tracksData object having the following defined attributes:
-    //        inputTracks[] - an array of tracks containing inputChords and inputRests
-    //        outputTracks[] - an array of tracks containing outputChords and outputRests
+    //        inputTracks[] - an array of tracks containing inputChords
+    //        outputTracks[] - an array of tracks containing midiChords and midiRests
     //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     //            inputKeyRange.bottomKey
     //            inputKeyRange.topKey
@@ -1743,10 +1743,6 @@ _AP.score = (function (document)
 
             for(i = 0; i < systemElems.length; ++i)
             {
-                if(systems[i].msDuration !== undefined)
-                {
-                    delete systems[i].msDuration; // is reset in the following function
-                }
                 getSystemOutputVoiceObjects(systemElems, systems, i, viewBoxScale);
             }
 
@@ -1779,10 +1775,6 @@ _AP.score = (function (document)
                 system.startMarker.setVisible(false);
                 system.runningMarker.setVisible(false);
                 system.endMarker.setVisible(false);
-
-                system.startMarker.setVisible(true);
-                system.runningMarker.setVisible(true);
-                system.endMarker.setVisible(true);
 
                 system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
                 for(j = 0; j < system.staves.length; ++j)
@@ -1889,7 +1881,10 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            outputTrack.midiObjects.push(timeObject);
+                            if(timeObject.midiObject !== undefined)
+                            {
+                                outputTrack.midiObjects.push(timeObject.midiObject);
+                            }
                         }
                         ++outputTrackIndex;
                     }
