@@ -79,27 +79,6 @@ _AP.score = (function (document)
         }
     },
 
-    // Sends a noteOff to all notes on all channels on the midi output device.
-    allNotesOff = function (midiOutputDevice)
-    {
-        var 
-        noteOffMessage, channelIndex, noteIndex,
-        nOutputChannels = 16,
-        now = performance.now();
-
-        if (midiOutputDevice !== undefined && midiOutputDevice !== null)
-        {
-            for (channelIndex = 0; channelIndex < nOutputChannels; ++channelIndex)
-            {
-                for (noteIndex = 0; noteIndex < 128; ++noteIndex)
-                {
-                    noteOffMessage = new Message(CMD.NOTE_OFF + channelIndex, noteIndex, 127);
-                    midiOutputDevice.send(noteOffMessage.data, now);
-                }
-            }
-        }
-    },
-
     hideStartMarkersExcept = function (startMarker)
     {
         var i, sMarker;
@@ -252,7 +231,7 @@ _AP.score = (function (document)
             timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
         }
 
-        if(timeObject.msPosition < endMarker.msPosition())
+        if(timeObject.msPositionInScore < endMarker.msPositionInScore())
         {
             startMarker.moveTo(timeObject);
         }
@@ -521,7 +500,7 @@ _AP.score = (function (document)
                 switch(state)
                 {
                     case 'settingStart':
-                        if(timeObject.msPosition < endMarker.msPosition())
+                        if(timeObject.msPositionInScore < endMarker.msPositionInScore())
                         {
                             startMarker = system.startMarker;
                             hideStartMarkersExcept(startMarker);
@@ -529,7 +508,7 @@ _AP.score = (function (document)
                         }
                         break;
                     case 'settingEnd':
-                        if(startMarker.msPosition() < timeObject.msPosition)
+                        if(startMarker.msPositionInScore() < timeObject.msPositionInScore)
                         {
                             endMarker = system.endMarker;
                             hideEndMarkersExcept(endMarker);
@@ -1119,12 +1098,12 @@ _AP.score = (function (document)
 
     startMarkerMsPosition = function ()
     {
-        return startMarker.msPosition();
+        return startMarker.msPositionInScore();
     },
 
     endMarkerMsPosition = function ()
     {
-        return endMarker.msPosition();
+        return endMarker.msPositionInScore();
     },
 
     // Called when the start button is clicked in the top options panel,
@@ -1221,15 +1200,11 @@ _AP.score = (function (document)
                 return staffElems;
             }
 
-            // There is a timeObject for every input and output chord or rest and the final barline in each voice.
-            // All timeObjects are allocated alignment and msDuration fields as they appear in the score.
-            // Chord timeObjects are allocated either a midiObject or an inputChordDef field depending on
-            // whether they are output or input objects.
             function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
             {
                 var noteObjectElems, noteObjectClass,
                     timeObjects = [], noteObjectAlignment,
-                    timeObject, i, j, length, noteObjectElem, noteObjectChildren,
+                    timeObject, i, j, noteObjectElem, noteObjectChildren,
                     scoreMidiElem;
 
                 noteObjectElems = voiceElem.children;
@@ -1240,11 +1215,6 @@ _AP.score = (function (document)
                                                
                     if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
                     {
-                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
-                        timeObject = {};
-                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                        timeObject.systemIndex = systemIndex;
-
                         noteObjectChildren = noteObjectElem.children;
                         for(j = 0; j < noteObjectChildren.length; ++j)
                         {
@@ -1253,38 +1223,34 @@ _AP.score = (function (document)
                                 scoreMidiElem = noteObjectChildren[j];
                                 if(noteObjectClass === 'outputChord')
                                 {
-                                    timeObject.midiObject = new MidiChord(scoreMidiElem);
-                                    timeObject.msDuration = timeObject.midiObject.msDurationInScore;
+                                    timeObject = new MidiChord(scoreMidiElem, systemIndex);
                                 }
                                 else
                                 {
-                                    timeObject.midiObject = new MidiRest(scoreMidiElem); // see MidiChord constructor.
-                                    timeObject.msDuration = timeObject.midiObject.msDurationInScore;
+                                    timeObject = new MidiRest(scoreMidiElem, systemIndex); // see MidiChord constructor.
                                 }
                                 break;
                             }
                         }
-                        if(timeObject.msDuration < 1)
+                        if(timeObject.msDurationInScore < 1)
                         {
                             throw "Error: The score contains chords having zero duration!";
                         }
+
+                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
+                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+
                         timeObjects.push(timeObject);
                     }
                     else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
                     {
-                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
-                        timeObject = {};
-                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                        timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
-                        timeObject.systemIndex = systemIndex;
-
                         if(noteObjectClass === 'inputChord')
                         {
-                            timeObject.inputChordDef = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);
+                            timeObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);
                         }
                         else
                         {
-                            timeObject.inputRestDef = new InputRestDef(timeObject.msDuration);
+                            timeObject = new InputRestDef(timeObject.msDurationInScore);
                         }
 
                         timeObjects.push(timeObject);
@@ -1379,7 +1345,7 @@ _AP.score = (function (document)
                     {
                         voice = flatOutputVoicesPerSystem[systemIndex][i];
                         timeObject = voice.timeObjects[timeObjectIndex];
-                        messages = timeObject.midiObject.moments[0].messages;
+                        messages = timeObject.moments[0].messages;
                         if(messages.length > 0)
                         {
                             channel = messages[0].channel();
@@ -1463,23 +1429,13 @@ _AP.score = (function (document)
                             {
                                 timeObject = timeObjects[tIndex];
 
-                                timeObject.msPosition = msPosition;
-                                if(timeObject.midiObject !== undefined)
+                                if(timeObject instanceof MidiChord || timeObject instanceof MidiRest ||
+                                    timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
                                 {
-                                    Object.defineProperty(timeObject.midiObject, "msPositionInScore", { value: msPosition, writable: false });
-                                    //timeObject.midiObject.msPositionInScore = msPosition;
-                                }
-                                else if(timeObject.inputChordDef !== undefined)
-                                {
-                                    Object.defineProperty(timeObject.inputChordDef, "msPositionInScore", { value: msPosition, writable: false });
-                                }
-                                else if(timeObject.inputRestDef !== undefined)
-                                {
-                                    Object.defineProperty(timeObject.inputRestDef, "msPositionInScore", { value: msPosition, writable: false });
+                                    Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
                                 }
 
-
-                                msPosition += timeObject.msDuration;
+                                msPosition += timeObject.msDurationInScore;
                             }
                         }
                         msPosition = 0;
@@ -1555,7 +1511,6 @@ _AP.score = (function (document)
                 var systemIndex, nSystems = systems.length, system,
                     j, nStaves, staff,
                     k, nVoices, voice,
-                    finalBarline,
                     rightmostAlignment = systems[0].right,
                     startMsPositionOfNextSystem,
                     lastTimeObject,
@@ -1570,7 +1525,7 @@ _AP.score = (function (document)
                         staff = staves[i];
                         for(j = 0; j < staff.voices.length; ++j)
                         {
-                            firstMsPos = staff.voices[j].timeObjects[0].msPosition;
+                            firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
                             minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
                         }
                     }
@@ -1593,18 +1548,18 @@ _AP.score = (function (document)
                         {
                             voice = staff.voices[k];
                             timeObject = {}; // the final barline in the voice (used when changing speed)
-                            Object.defineProperty(timeObject, "msDuration", { value: 0, writable: true });
+                            Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
                             Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
                             Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
                             if(systemIndex < nSystems - 1)
                             {
-                                Object.defineProperty(timeObject, "msPosition", { value: startMsPositionOfNextSystem, writable: true });
+                                Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
                             }
                             else
                             {
                                 lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1]; 
-                                endMsPositionInScore = lastTimeObject.msPosition + lastTimeObject.msDuration;
-                                Object.defineProperty(timeObject, "msPosition", { value: endMsPositionInScore, writable: true });
+                                endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
+                                Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
                             }
 
                             voice.timeObjects.push(timeObject);
@@ -1615,34 +1570,9 @@ _AP.score = (function (document)
 
             // voice.timeObjects is an array of timeObject.
             // speed is a floating point number, greater than zero.
-            // timeObject.msPosition and timeObject.msDuration currently have the values set in the score (speed === 1).
             function changeSpeed(systems, speed)
             {
                 var i, j, k, nSystems = systems.length, system, staff, voice;
-
-                // adjust the msPosition and msDuration of each input and output timeObject
-                // the final timeObject is the final barline (msDuration = 0).
-                function adjustPositionsAndObjectDurations(timeObjects, speed)
-                {
-                    var i, msDuration, nTimeObjects = timeObjects.length;
-
-                    for(i = 0; i < nTimeObjects; ++i)
-                    {
-                        timeObjects[i].msPosition = Math.round(timeObjects[i].msPosition / speed);
-                    }
-
-                    // the final timeObject is the final barline (msDuration = 0).
-                    for(i = 1; i < nTimeObjects; ++i)
-                    {
-                        msDuration = timeObjects[i].msPosition - timeObjects[i-1].msPosition;
-                        if(msDuration < 1)
-                        {
-                            throw "Error: The speed has been set too high!\n\n" +
-                                  "(Attempt to create a chord or rest having zero duration.)";
-                        }
-                        timeObjects[i - 1].msDuration = msDuration;
-                    }
-                }
 
                 // Adjust the msPositionInChord of each Moment in each timeObject.midiObject.moments,
                 // An exception is thrown if the speed leads to an impossible result.
@@ -1715,8 +1645,7 @@ _AP.score = (function (document)
 
                     for(i = 0; i < nTimeObjects; ++i)
                     {
-                        console.assert(timeObjects[i].midiObject !== undefined);
-                        adjustMsPositionsInChord(timeObjects[i].midiObject.moments, speed, timeObjects[i].msDuration);
+                        adjustMsPositionsInChord(timeObjects[i].moments, speed, timeObjects[i].msDurationInScore);
                     }
                 }
 
@@ -1729,7 +1658,6 @@ _AP.score = (function (document)
                         for(k = 0; k < staff.voices.length; ++k)
                         {
                             voice = staff.voices[k];
-                            adjustPositionsAndObjectDurations(voice.timeObjects, speed);
                             if(voice.isOutput === true)
                             {
                                 adjustMomentMsPositions(voice.timeObjects, speed);
@@ -1881,9 +1809,9 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.midiObject !== undefined)
+                            if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
                             {
-                                outputTrack.midiObjects.push(timeObject.midiObject);
+                                outputTrack.midiObjects.push(timeObject);
                             }
                         }
                         ++outputTrackIndex;
@@ -1894,17 +1822,12 @@ _AP.score = (function (document)
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
                             timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject.inputChordDef !== undefined)
+                            if(timeObject instanceof InputChordDef)
                             {
-                                inputChord = new InputChord(timeObject.inputChordDef, outputTracks); // the outputTracks should already be complete here
+                                inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
                                 inputTrack.inputObjects.push(inputChord);
-                                delete timeObject.inputChordDef;
                             }
-                            if(timeObject.inputRestDef !== undefined)
-                            {
-                                delete timeObject.inputRestDef;
-                                // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
-                            }
+                            // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
                         }
                         ++inputTrackIndex;
                     }
@@ -1938,9 +1861,6 @@ _AP.score = (function (document)
         systems = [];
 
         runningMarkerHeightChanged = callback;
-
-        // Sends a noteOff to all notes on all channels on the midi output device.
-        this.allNotesOff = allNotesOff;
 
         // functions called when setting the start or end marker
         this.setStartMarkerClick = setStartMarkerClick;

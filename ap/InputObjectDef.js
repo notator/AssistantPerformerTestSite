@@ -81,6 +81,7 @@ _AP.inputObjectDef = (function ()
         }
 
         Object.defineProperty(this, "msDurationInScore", { value: parseInt(inputChordNode.getAttribute('score:msDuration'), 10), writable: false });
+        Object.defineProperty(this, "alignment", { value: parseFloat(inputChordNode.getAttribute('score:alignment'), 10), writable: false });
 
         outputTrackPerMidiChannel = this.getOutputTrackPerMidiChannel(midiChannelPerOutputTrack);
 

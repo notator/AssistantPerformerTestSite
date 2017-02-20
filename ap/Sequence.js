@@ -59,35 +59,6 @@ _AP.sequence = (function(window)
 
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
-    allControllersOffMessages = [],
-    allSoundOffMessages = [],
-
-    initChannelResetMessages = function()
-    {
-        var byte1, channelIndex,
-            constants = _AP.constants,
-            CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-            ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
-            ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
-
-        for(channelIndex = 0; channelIndex < 16; channelIndex++)
-        {
-            byte1 = CONTROL_CHANGE + channelIndex;
-            allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-            allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
-        }
-    },
-
-    resetTracks = function()
-    {
-        var channelIndex;
-        for(channelIndex = 0; channelIndex < 16; channelIndex++)
-        {
-            outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
-            outputDevice.send(allSoundOffMessages[channelIndex], performance.now());
-        }
-    },
-
     setState = function(state)
     {
         switch(state)
@@ -154,7 +125,7 @@ _AP.sequence = (function(window)
         {
             setState("stopped");
             performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-            resetTracks();
+            outputDevice.reset();
             reportEndOfPerformance(sequenceRecording, performanceMsDuration);
         }
     },
@@ -432,8 +403,6 @@ _AP.sequence = (function(window)
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;
-
-        initChannelResetMessages();
     },
 
     // play()
@@ -477,7 +446,7 @@ _AP.sequence = (function(window)
         endMarkerMsPosition = endMarkerMsPosInScore;
         startTimeAdjustedForPauses = performanceStartTime;
 
-        resetTracks();
+        outputDevice.reset();
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 

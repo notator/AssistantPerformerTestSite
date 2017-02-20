@@ -23,17 +23,20 @@ _AP.inputChord = (function()
 
     // public InputChord constructor
     // An InputChord contains all the information required for playing an (ornamented) chord.
-    InputChord = function(inputChordDef, outputTracks)
+    InputChord = function(inputChordDef, outputTracks, systemIndex)
     {
         if(!(this instanceof InputChord))
         {
-            return new InputChord(inputChordDef, outputTracks);
+            return new InputChord(inputChordDef, outputTracks, systemIndex);
         }
 
         // The msDurationInScore and msPositionInScore properties are not subject to the global speed option!
         // These values are used, but not changed, either when moving Markers about or during performances.)
         Object.defineProperty(this, "msPositionInScore", { value: inputChordDef.msPositionInScore, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: inputChordDef.msDurationInScore, writable: false });
+        Object.defineProperty(this, "alignment", { value: inputChordDef.alignment, writable: false });
+        Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
+
         if(inputChordDef.ccSettings !== undefined)
         {
             Object.defineProperty(this, "ccSettings", { value: inputChordDef.ccSettings, writable: false });
@@ -115,7 +118,7 @@ _AP.inputChord = (function()
 
                     for(i = 0; i < length; ++i)
                     {
-                        midiObjects.push(trackMidiObjects[midiObjIndex++].midiObject);
+                        midiObjects.push(trackMidiObjects[midiObjIndex++]);
                     }
                     return midiObjects;
                 }

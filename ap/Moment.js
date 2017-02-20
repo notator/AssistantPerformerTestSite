@@ -50,7 +50,7 @@ _AP.moment = (function ()
     // it is initially set to the value sored in the score, but changes if the performance speed is not 100%.
     // During performances (when the absolute DOMHRT time is known) moment.msPositionInChord is used, with
     // the msPosition of the containing MidiChord or MidiRest, to set moment.timestamp. 
-    Moment = function (msPositionInChord)
+    Moment = function (msPositionInChord, systemIndex)
     {
         if (!(this instanceof Moment))
         {
@@ -63,6 +63,7 @@ _AP.moment = (function ()
         }
 
         Object.defineProperty(this, "msPositionInChord", { value: msPositionInChord, writable: true });
+        Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
 
         // The absolute time (DOMHRT) at which this moment is sent to the output device.
         // This value is always set in Sequence.nextMoment().

@@ -43,7 +43,7 @@ _AP.markers = (function ()
         viewBoxScale, line, circle,
         color = '#009900', disabledColor = '#AAFFAA',
         sysIndex, timObject,
-        millisecondPosition, yCoordinates = {},
+        msPosInScore, yCoordinates = {},
         groupChildren, i,
 
         moveTo = function (tObject)
@@ -52,7 +52,7 @@ _AP.markers = (function ()
 
             timObject = tObject;
 
-            millisecondPosition = tObject.msPosition;
+            msPosInScore = tObject.msPositionInScore;
 
             x *= viewBoxScale;
             line.setAttribute('x1', x.toString());
@@ -60,9 +60,9 @@ _AP.markers = (function ()
             circle.setAttribute('cx', x.toString());
         },
 
-        msPosition = function ()
+        msPositionInScore = function ()
         {
-            return millisecondPosition;
+            return msPosInScore;
         },
 
         systemIndex = function ()
@@ -155,7 +155,7 @@ _AP.markers = (function ()
 
         this.systemIndex = systemIndex; // function returns sysIndex
         this.timeObject = timeObject; // function returns timObject
-        this.msPosition = msPosition; // function returns millisecondPosition
+        this.msPositionInScore = msPositionInScore; // function returns msPosInScore
         this.moveTo = moveTo;
         this.setVisible = setVisible;
         this.setEnabledColor = setEnabledColor;
@@ -177,7 +177,7 @@ _AP.markers = (function ()
         viewBoxScale, line, rect,
         halfRectWidth,
         color = '#EE0000', disabledColor = '#FFC8C8',
-        sysIndex, millisecondPosition,
+        sysIndex, msPosInScore,
         groupChildren, i,
 
         // the argument's alignment is in user html pixels
@@ -185,7 +185,7 @@ _AP.markers = (function ()
         {
             var x = timeObject.alignment;
 
-            millisecondPosition = timeObject.msPosition;
+            msPosInScore = timeObject.msPositionInScore;
 
             x *= viewBoxScale;
             line.setAttribute('x1', x.toString());
@@ -193,9 +193,9 @@ _AP.markers = (function ()
             rect.setAttribute('x', (x - halfRectWidth).toString());
         },
 
-        msPosition = function ()
+        msPositionInScore = function ()
         {
-            return millisecondPosition;
+            return msPosInScore;
         },
 
         systemIndex = function()
@@ -275,12 +275,12 @@ _AP.markers = (function ()
                 rect = groupChildren[i];
             }
         }
-        sysIndex = systemIndex;
+        sysIndex = systIndex;
         setVisible(false);
         setParameters(system, vbOriginY, vbScale);
 
         this.systemIndex = systemIndex;
-        this.msPosition = msPosition;
+        this.msPositionInScore = msPositionInScore;
         this.moveTo = moveTo;
         this.setVisible = setVisible;
         this.setEnabledColor = setEnabledColor;
@@ -304,6 +304,9 @@ _AP.markers = (function ()
         nextMillisecondPosition,
         sysIndex, yCoordinates = {},
         groupChildren, i,
+        MidiChord = _AP.midiObject.MidiChord,
+        MidiRest = _AP.midiObject.MidiRest,
+        InputChord = _AP.inputChord.InputChord,
 
         moveLineToAlignment = function (alignment)
         {
@@ -316,7 +319,7 @@ _AP.markers = (function ()
         {
             if (currentIndex < (timeObjects.length - 1))
             {
-                nextMillisecondPosition = timeObjects[currentIndex + 1].msPosition;
+                nextMillisecondPosition = timeObjects[currentIndex + 1].msPositionInScore;
             }
             else
             {
@@ -325,17 +328,17 @@ _AP.markers = (function ()
         },
 
         // This function is necessary after changing systems, where the first position of the system needs to be skipped.
-        // msPosition must be in the current system
-        moveTo = function(msPosition)
+        // msPositionInScore must be in the current system
+        moveTo = function(msPosInScoreArg)
         {
             positionIndex = 0;
-            while(timeObjects[positionIndex].msPosition !== msPosition)
+            while(timeObjects[positionIndex].msPositionInScore !== msPosInScoreArg)
             {
                 positionIndex++;
             }
 
             moveLineToAlignment(timeObjects[positionIndex].alignment);
-            nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
+            nextMillisecondPosition = timeObjects[positionIndex + 1].msPositionInScore; // may be system's end msPosition
         },
 
         // The startMarker argument is in the same system as this runningMarker
@@ -345,27 +348,27 @@ _AP.markers = (function ()
         // the runningMarker.nextMsPosition should never be accessed.
         moveToStartMarker = function (startMarker)
         {
-            //moveTo(startMarker.timeObject().msPosition);
-            var msPosition = startMarker.timeObject().msPosition;
+            //moveTo(startMarker.timeObject().msPositionInScore);
+            var msPos = startMarker.timeObject().msPositionInScore;
 
             positionIndex = 0;
-            while(timeObjects[positionIndex].msPosition < msPosition)
+            while(timeObjects[positionIndex].msPositionInScore < msPos)
             {
                 positionIndex++;
             }
 
             moveLineToAlignment(timeObjects[positionIndex].alignment);
-            nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
+            nextMillisecondPosition = timeObjects[positionIndex + 1].msPositionInScore; // may be system's end msPosition
         },
 
         moveToStartOfSystem = function()
         {
-            moveTo(timeObjects[0].msPosition);
+            moveTo(timeObjects[0].msPositionInScore);
         },
 
         incrementPosition = function ()
         {
-            //console.log("runningMarker: msPos before increment=%i, after increment=%i", timeObjects[positionIndex].msPosition, timeObjects[positionIndex + 1].msPosition);
+            //console.log("runningMarker: msPos before increment=%i, after increment=%i", timeObjects[positionIndex].msPositionInScore, timeObjects[positionIndex + 1].msPositionInScore);
             positionIndex++;
             setNextMsPosition(positionIndex);
             moveLineToAlignment(timeObjects[positionIndex].alignment);
@@ -381,15 +384,15 @@ _AP.markers = (function ()
             return nextMillisecondPosition;
         },
 
-        // The timeObjects array contains one timeObject per msPosition in the system.
-        // It is ordered according to each timeObject msPosition.
+        // The timeObjects array contains one timeObject per msPositionInScore in the system.
+        // It is ordered according to each timeObject msPositionInScore.
         // If isLivePerformance === true, the timeObjects are inputObjects from inputVoices,
         // otherwise the timeObjects are midiObjects from outputVoices.
         setTimeObjects = function (system, isLivePerformance, trackIsOnArray)
         {
             var timeObject;
 
-            function findFollowingTimeObject(system, msPosition, isLivePerformance, trackIsOnArray)
+            function findFollowingTimeObject(system, msPositionInScore, isLivePerformance, trackIsOnArray)
             {
                 var nextTimeObject, staff, voice, i, k, voiceIndex, trackIndex = 0,
                         voiceTimeObjects = [];
@@ -408,7 +411,7 @@ _AP.markers = (function ()
                                 {
                                     for(k = 0; k < voice.timeObjects.length; ++k)
                                     {
-                                        if(voice.timeObjects[k].msPosition > msPosition)
+                                        if(voice.timeObjects[k].msPositionInScore > msPositionInScore)
                                         {
                                             voiceTimeObjects.push(voice.timeObjects[k]);
                                             break;
@@ -419,7 +422,7 @@ _AP.markers = (function ()
                                 {
                                     for(k = 0; k < voice.timeObjects.length; ++k)
                                     {
-                                        if(voice.timeObjects[k].msPosition > msPosition)
+                                        if(voice.timeObjects[k].msPositionInScore > msPositionInScore)
                                         {
                                             voiceTimeObjects.push(voice.timeObjects[k]);
                                             break;
@@ -433,13 +436,13 @@ _AP.markers = (function ()
                 }
 
                 // voiceTimeObjects now contains the next timeObject in each active, visible voice.
-                // Now find the one having the minimum msPosition.
+                // Now find the one having the minimum msPositionInScore.
                 nextTimeObject = voiceTimeObjects[0];
                 if (voiceTimeObjects.length > 1)
                 {
                     for (i = 1; i < voiceTimeObjects.length; ++i)
                     {
-                        if (voiceTimeObjects[i].msPosition < nextTimeObject.msPosition)
+                        if (voiceTimeObjects[i].msPositionInScore < nextTimeObject.msPositionInScore)
                         {
                             nextTimeObject = voiceTimeObjects[i];
                         }
@@ -448,38 +451,12 @@ _AP.markers = (function ()
                 return nextTimeObject;
             }
 
-            function addRestAndEndBarlineTimeObjects(timeObjects, system)
-            {                     
-                var topVoiceTimeObjects = system.staves[0].voices[0].timeObjects,
-                    firstSystemTimeObject = topVoiceTimeObjects[0],
-                    endBarlineTimeObject = topVoiceTimeObjects[topVoiceTimeObjects.length - 1],
-                    systemRestTimeObject = {};
-
-                systemRestTimeObject.alignment = firstSystemTimeObject.alignment;
-                systemRestTimeObject.msPosition = firstSystemTimeObject.msPosition;
-                systemRestTimeObject.msDuration = endBarlineTimeObject.msPosition - firstSystemTimeObject.msPosition;
-
-                timeObjects.push(systemRestTimeObject);
-                timeObjects.push(endBarlineTimeObject);
-            }
-
             timeObjects = [];
-            timeObject = {};
-            timeObject.msPosition = -1;
-            timeObject.alignment = -1;
-            while(timeObject.alignment < system.right)
+            timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
+            while(timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChord)
             {
-                timeObject = findFollowingTimeObject(system, timeObject.msPosition, isLivePerformance, trackIsOnArray);
-                if(timeObject === undefined)
-                {
-                    // the system has no performing timeObjects. Add a rest timeObject and final barline timeObject
-                    addRestAndEndBarlineTimeObjects(timeObjects, system);
-                    timeObject = timeObjects[1];
-                }
-                else
-                {
-                    timeObjects.push(timeObject);
-                }
+                timeObjects.push(timeObject);
+                timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
             }
         },
 

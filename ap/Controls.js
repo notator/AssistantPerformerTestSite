@@ -11,7 +11,7 @@
 */
 
 /*jslint white:true */
-/*global WebMIDI, _AP,  window,  document, console, alert */
+/*global WebMIDI, _AP,  window,  document, console, alert, performance */
 
 _AP.namespace('_AP.controls');
 
@@ -285,7 +285,7 @@ _AP.controls = (function(document, window)
 
         score.moveRunningMarkerToStartMarker();
 
-        score.allNotesOff(options.outputDevice);
+        options.outputDevice.reset();
 
         setMainOptionsState("toBack");
 
@@ -444,7 +444,7 @@ _AP.controls = (function(document, window)
                 player.pause();
             }
 
-            score.allNotesOff(options.outputDevice);
+            options.outputDevice.reset();
 
             tracksControl.setDisabled(true);
 
@@ -1476,12 +1476,51 @@ _AP.controls = (function(document, window)
             tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
         }
 
+        function setOutputDeviceResetFunction(outputDevice)
+        {
+            var resetMessages = [];
+
+            function getResetMessages()
+            {
+                var byte1, channelIndex,
+                    constants = _AP.constants,
+                    CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+                    ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
+                    ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
+
+                for(channelIndex = 0; channelIndex < 16; channelIndex++)
+                {
+                    byte1 = CONTROL_CHANGE + channelIndex;
+                    resetMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+                    resetMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
+                }
+            }
+
+            function reset()
+            {
+                var i;
+                for(i = 0; i < resetMessages.length; i++)
+                {
+                    this.send(resetMessages[i], performance.now());
+                }
+            }
+
+            getResetMessages();
+
+            if(outputDevice !== null)
+            {
+                outputDevice.reset = reset;
+            }
+        }
+
         try
         {
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
             options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
             setMIDIDevices(options);
+
+            setOutputDeviceResetFunction(options.outputDevice);
 
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).

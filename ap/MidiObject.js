@@ -28,13 +28,13 @@ _AP.midiObject = (function()
     // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 100,
 
-    defineMidiObjectProperties = function(that, scoreMidiElem)
+    defineMidiObjectProperties = function(that, scoreMidiElem, systemIndex)
     {
         // moments is an ordered array of Moment objects.
         // A Moment is a list of logically synchronous Messages.
         // The msDurationInScore and msPositionInScore properties are not changed by the global speed option!
         // These values are used, but not changed, either when moving Markers about or during performances.)
-        Object.defineProperty(that, "moments", { value: that._getMoments(scoreMidiElem), writable: true });
+        Object.defineProperty(that, "moments", { value: that._getMoments(scoreMidiElem, systemIndex), writable: true });
         Object.defineProperty(that, "msDurationInScore", { value: that.msDurationInScore, writable: false });
         //Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
 
@@ -45,14 +45,14 @@ _AP.midiObject = (function()
 
     // public MidiChord constructor
     // A MidiChord contains all the midi messages required for playing an (ornamented) chord. 
-    MidiChord = function(scoreMidiElem)
+    MidiChord = function(scoreMidiElem, systemIndex)
     {
         if(!(this instanceof MidiChord))
         {
-            return new MidiChord(scoreMidiElem);
+            return new MidiChord(scoreMidiElem, systemIndex);
         }
 
-        defineMidiObjectProperties(this, scoreMidiElem);
+        defineMidiObjectProperties(this, scoreMidiElem, systemIndex);
 
         return this;
     },
@@ -60,14 +60,14 @@ _AP.midiObject = (function()
     // public MidiRest constructor
     // A MidiRest is functionally identical to a MidiChord.
     // The only way to distinguish between the two is by using the instanceof operator.
-    MidiRest = function(scoreMidiElem)
+    MidiRest = function(scoreMidiElem, systemIndex)
     {
         if(!(this instanceof MidiRest))
         {
-            return new MidiRest(scoreMidiElem);
+            return new MidiRest(scoreMidiElem, systemIndex);
         }
 
-        defineMidiObjectProperties(this, scoreMidiElem);
+        defineMidiObjectProperties(this, scoreMidiElem, systemIndex);
 
         return this;
     },
@@ -87,7 +87,7 @@ _AP.midiObject = (function()
     // end var
 
     // returns strongly classed Moment objects containing strongly classed Message objects
-    MidiChord.prototype._getMoments = function(scoreMidiElem)
+    MidiChord.prototype._getMoments = function(scoreMidiElem, systemIndex)
     {
         var i, stronglyClassedMoment, stronglyClassedMoments = [], moments, momentMoments, envMoments, msDuration = 0,
             scoreMidiChild, scoreMidiChildren = scoreMidiElem.children;
@@ -599,7 +599,7 @@ _AP.midiObject = (function()
 
         for(i = 0; i < moments.length; ++i)
         {
-            stronglyClassedMoment = new Moment(moments[i].msPositionInChord);
+            stronglyClassedMoment = new Moment(moments[i].msPositionInChord, systemIndex);
             stronglyClassedMoment.messages = moments[i].msgs;
             stronglyClassedMoments.push(stronglyClassedMoment);
         }
