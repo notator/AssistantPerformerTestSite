@@ -1128,6 +1128,7 @@ _AP.controls = (function(document, window)
 
                 scoresURL = getScoresURL();
                 svgPagesFrame = document.getElementById('svgPagesFrame');
+                svgPagesFrame.innerHTML = "";
                 nPagesLoading = 0;
 
                 if(scoreInfo.path.search("(scroll)") >= 0)
