@@ -366,7 +366,7 @@ _AP.midiObject = (function()
                 // sets vtsState.nextVtMsPos = vts[0].msDur;
                 function nextData(msPos, vts, vtsState)
                 {
-                    if(msPos >= vtsState.nextVtMsPos)
+                    while(msPos >= vtsState.nextVtMsPos && vtsState.vtIndex < (vts.length - 2))
                     {
                         vtsState.vtIndex++;
                         vtsState.currentVtMsPos = vtsState.nextVtMsPos;
@@ -383,7 +383,8 @@ _AP.midiObject = (function()
                         }
                         else
                         {
-                            vtsState.dataIncrPerMillisecond = 0;
+                            vtsState.data1IncrPerMillisecond = 0;
+                            vtsState.data2IncrPerMillisecond = 0;
                         }
                     }
 
