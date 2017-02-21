@@ -1452,17 +1452,19 @@ _AP.controls = (function(document, window)
             //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
             //            inputKeyRange.bottomKey
             //            inputKeyRange.topKey
-            tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
+            tracksData = score.getTracksData();
 
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
+                // setSpeed(options.globalSpeed) should be implemented here as in Sequence (21.02.2017)
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
             else
             {
                 player = sequence; // sequence is a namespace, not a class.
+                player.setSpeed(options.globalSpeed);
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
             }

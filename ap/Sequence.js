@@ -57,7 +57,14 @@ _AP.sequence = (function(window)
     startTimeAdjustedForPauses = -1, // performanceStartTime minus the durations of pauses. Used in nextMoment()
     pauseStartTime = -1, // the performance.now() time at which the performance was paused.
 
+    speed = 1, // speed can be set at performance time using setSpeed(speed)
+
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
+
+    setSpeed = function(speedToSet)
+    {
+        speed = speedToSet;
+    },
 
     setState = function(state)
     {
@@ -183,7 +190,7 @@ _AP.sequence = (function(window)
             // The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
             setState("stopped");
             // Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-            delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
+            delay = (endMarkerMsPosition - previousMomtMsPos) / speed;
             window.setTimeout(stopAfterDelay, delay);
         }
         else
@@ -212,7 +219,7 @@ _AP.sequence = (function(window)
             }
             else
             {
-                nextMomt.timestamp = (nextMomtMsPos - previousMomtMsPos) + previousTimestamp;
+                nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) / speed) + previousTimestamp;
             }
 
             previousTimestamp = nextMomt.timestamp;
@@ -463,6 +470,8 @@ _AP.sequence = (function(window)
     publicAPI =
     {
         init: init,
+
+        setSpeed: setSpeed,
 
         play: play,
         pause: pause,

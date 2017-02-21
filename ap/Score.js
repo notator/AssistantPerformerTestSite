@@ -22,8 +22,6 @@ _AP.score = (function (document)
     "use strict";
 
     var
-    CMD = _AP.constants.COMMAND,
-    Message = _AP.message.Message,
     Markers = _AP.markers,
 
     MidiChord = _AP.midiObject.MidiChord,
@@ -1165,7 +1163,7 @@ _AP.score = (function (document)
     //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     //            inputKeyRange.bottomKey
     //            inputKeyRange.topKey
-    getTracksData = function(globalSpeed)
+    getTracksData = function()
     {
         // systems->staves->voices->timeObjects
         var
@@ -1178,8 +1176,7 @@ _AP.score = (function (document)
         inputChord;
 
         // Gets the timeObjects for both input and output voices. 
-        // msDurations are retrieved from the score (not changed by the current speed option).
-        function getVoiceObjects(speed)
+        function getVoiceObjects()
         {
             var i, lastSystemTimeObjects;
 
@@ -1568,105 +1565,6 @@ _AP.score = (function (document)
                 }
             }
 
-            // voice.timeObjects is an array of timeObject.
-            // speed is a floating point number, greater than zero.
-            function changeSpeed(systems, speed)
-            {
-                var i, j, k, nSystems = systems.length, system, staff, voice;
-
-                // Adjust the msPositionInChord of each Moment in each timeObject.midiObject.moments,
-                // An exception is thrown if the speed leads to an impossible result.
-                function adjustMomentMsPositions(timeObjects, speed)
-                {
-                    var i, nTimeObjects = timeObjects.length;
-
-                    function adjustMsPositionsInChord(moments, speed, totalMsDuration)
-                    {
-                        var i, nMoments = moments.length;
-
-                        function adjustZeroMsDurations(moments, totalMsDuration)
-                        {
-                            var i, j, tooFastException = "Too fast!";
-
-                            function checkMomentDurations(moments, totalMsDuration)
-                            {
-                                var durationCheckException = "Program error: Moment duration check failed!";
-
-                                if(moments[moments.length-1].msPositionInChord >= totalMsDuration)
-                                {
-                                    throw durationCheckException;
-                                }
-                                for(i = moments.length - 1; i > 0; --i)
-                                {
-                                    if(moments[i].msPositionInChord <= moments[i-1].msPositionInChord)
-                                    {
-                                        throw durationCheckException;
-                                    }
-                                }
-                            }
-
-                            if(moments[moments.length - 1].msPositionInChord === totalMsDuration)
-                            {
-                                moments[moments.length - 1].msPositionInChord -= 1;
-                            }
-
-                            for(i = moments.length - 1; i > 0; --i)
-                            {
-                                if(moments[i].msPositionInChord < moments[i - 1].msPositionInChord)
-                                {
-                                    throw tooFastException;
-                                }
-                                if(moments[i].msPositionInChord === moments[i - 1].msPositionInChord)
-                                {
-                                    for(j = i - 1; j >= 0; --j)
-                                    {
-                                        moments[j].msPositionInChord -= 1;
-                                        if(j > 0 && moments[j].msPositionInChord > moments[j-1].msPositionInChord)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }   
-                            }
-                            if(moments[0].msPositionInChord !== 0)
-                            {
-                                throw tooFastException;
-                            }
-                            checkMomentDurations(moments, totalMsDuration);
-                        }
-
-                        for(i = 0; i < nMoments; ++i)
-                        {
-                            moments[i].msPositionInChord = Math.floor(moments[i].msPositionInChord / speed);
-                        }
-
-                        adjustZeroMsDurations(moments, totalMsDuration);
-                    }
-
-                    for(i = 0; i < nTimeObjects; ++i)
-                    {
-                        adjustMsPositionsInChord(timeObjects[i].moments, speed, timeObjects[i].msDurationInScore);
-                    }
-                }
-
-                for(i = 0; i < nSystems; ++i)
-                {
-                    system = systems[i];
-                    for(j = 0; j < system.staves.length; ++j)
-                    {
-                        staff = system.staves[j];
-                        for(k = 0; k < staff.voices.length; ++k)
-                        {
-                            voice = staff.voices[k];
-                            if(voice.isOutput === true)
-                            {
-                                adjustMomentMsPositions(voice.timeObjects, speed);
-                            }
-                        }
-                    }
-                }
-            }
-
             /*************** end of getVoiceObjects function definitions *****************************/
 
             for(i = 0; i < systemElems.length; ++i)
@@ -1684,11 +1582,6 @@ _AP.score = (function (document)
             setMsPositions(systems);
             setFirstTimeObjectAlignment(systems);
             appendVoiceEndTimeObjects(systems);
-
-            if(speed !== 1)
-            {
-                changeSpeed(systems, speed); // can throw an exception
-            }
 
             lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
             finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
@@ -1782,7 +1675,7 @@ _AP.score = (function (document)
             return inputKeyRange;
         }
 
-        getVoiceObjects(globalSpeed);
+        getVoiceObjects();
 
         setMarkers(systems, isLivePerformance);
 
