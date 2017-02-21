@@ -425,7 +425,7 @@ _AP.midiObject = (function()
 
                     for(i = 1; i < envMoments.length; ++i)
                     {
-                        vtsState = nextData(envMoments[i].msPos, vts, vtsState);
+                        vtsState = nextData(envMoments[i].msPositionInChord, vts, vtsState);
 
                         if(vtsState.data1Value !== msg[1]
                         || (vtsState.data2Value !== undefined && msg[2] !== undefined && vtsState.data2Value !== msg[2]
