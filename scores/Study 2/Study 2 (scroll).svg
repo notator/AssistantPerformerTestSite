@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 2 (scroll)</dc:title>
-				<dc:date>Monday 13.02.2017, 11:47:37</dc:date>
+				<dc:date>Tuesday 21.02.2017, 14:55:59</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -314,7 +314,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 2 (scroll), Monday 13.02.2017, 11:47:36</text>
+			font-family="Arial">Study 2 (scroll), Tuesday 21.02.2017, 14:55:53</text>
 		<g
 			class="titles">
 			<text
@@ -15963,14 +15963,14 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="176" />
+									msDuration="1234" />
 							</moments>
 						</score:midi>
 						<text
-							x="569.5923"
+							x="568.6583"
 							y="2048"
 							font-size="125.44"
-							font-family="CLicht">®</text>
+							font-family="CLicht">Œ</text>
 					</g>
 					<line
 						class="barline"
@@ -53898,7 +53898,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="369">
+									msDuration="761">
 									<noteOffs>
 										<msg
 											m="0x82 113 64" />
@@ -53912,7 +53912,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="1276.822"
 							y="5792"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<line
 						class="barline"
@@ -54567,7 +54567,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="508">
+									msDuration="1080">
 									<noteOffs>
 										<msg
 											m="0x82 113 64" />
@@ -54578,10 +54578,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="3362.002"
+							x="3361.202"
 							y="5792"
 							font-size="125.44"
-							font-family="CLicht">‰</text>
+							font-family="CLicht">Œ</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -71603,7 +71603,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="77">
+									msDuration="154">
 									<noteOffs>
 										<msg
 											m="0x82 113 64" />
@@ -71615,9 +71615,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						</score:midi>
 						<text
 							x="848.0091"
-							y="7712"
+							y="7680"
 							font-size="125.44"
-							font-family="CLicht">Ù</text>
+							font-family="CLicht">®</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -73409,7 +73409,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="320">
+									msDuration="654">
 									<noteOffs>
 										<msg
 											m="0x82 111 64" />
@@ -73423,7 +73423,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="5638.043"
 							y="7680"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -87783,7 +87783,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="462">
+									msDuration="891">
 									<noteOffs>
 										<msg
 											m="0x82 110 64" />
@@ -87794,10 +87794,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="841.6914"
+							x="840.8909"
 							y="9440"
 							font-size="125.44"
-							font-family="CLicht">‰</text>
+							font-family="CLicht">Œ</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -88225,7 +88225,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="457">
+									msDuration="834">
 									<noteOffs>
 										<msg
 											m="0x82 111 64" />
@@ -88236,10 +88236,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="2459.957"
+							x="2459.156"
 							y="9440"
 							font-size="125.44"
-							font-family="CLicht">‰</text>
+							font-family="CLicht">Œ</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -107645,7 +107645,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="369">
+									msDuration="761">
 									<noteOffs>
 										<msg
 											m="0x82 113 64" />
@@ -107659,7 +107659,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="3233.641"
 							y="11424"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<line
 						class="barline"
@@ -122073,7 +122073,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="271">
+									msDuration="499">
 									<noteOffs>
 										<msg
 											m="0x81 74 64" />
@@ -122085,7 +122085,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="3151.049"
 							y="12672"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -123250,7 +123250,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="256">
+									msDuration="513">
 									<noteOffs>
 										<msg
 											m="0x81 76 64" />
@@ -123262,7 +123262,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="6791.796"
 							y="12672"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -123624,7 +123624,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="183">
+									msDuration="367">
 									<noteOffs>
 										<msg
 											m="0x82 114 64" />
@@ -123635,10 +123635,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="675.2242"
+							x="675.0908"
 							y="13152"
 							font-size="125.44"
-							font-family="CLicht">®</text>
+							font-family="CLicht">≈</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -134498,7 +134498,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="335">
+									msDuration="636">
 									<noteOffs>
 										<msg
 											m="0x81 87 64" />
@@ -134512,7 +134512,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="1055.869"
 							y="14400"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -134993,7 +134993,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="342">
+									msDuration="677">
 									<noteOffs>
 										<msg
 											m="0x81 74 64" />
@@ -135005,7 +135005,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="3160.094"
 							y="14400"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -135604,7 +135604,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="288">
+									msDuration="510">
 									<noteOffs>
 										<msg
 											m="0x81 95 64" />
@@ -135620,7 +135620,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="5063.672"
 							y="14400"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -136377,7 +136377,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="97">
+									msDuration="291">
 									<noteOffs>
 										<msg
 											m="0x81 78 64" />
@@ -136386,10 +136386,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="7186.448"
-							y="14432"
+							x="7186.314"
+							y="14400"
 							font-size="125.44"
-							font-family="CLicht">Ù</text>
+							font-family="CLicht">≈</text>
 					</g>
 					<g
 						class="outputChord"
@@ -149001,7 +149001,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="257">
+									msDuration="565">
 									<noteOffs>
 										<msg
 											m="0x81 85 64" />
@@ -149015,7 +149015,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="768.6658"
 							y="16256"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -150447,7 +150447,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="257">
+									msDuration="514">
 									<noteOffs>
 										<msg
 											m="0x81 76 64" />
@@ -150459,7 +150459,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="5079.136"
 							y="16256"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">‰</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -150791,7 +150791,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:midi>
 							<moments>
 								<moment
-									msDuration="389">
+									msDuration="801">
 									<noteOffs>
 										<msg
 											m="0x81 72 64" />
@@ -150800,10 +150800,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</moments>
 						</score:midi>
 						<text
-							x="6198.041"
+							x="6197.24"
 							y="16256"
 							font-size="125.44"
-							font-family="CLicht">≈</text>
+							font-family="CLicht">Œ</text>
 					</g>
 					<g
 						class="outputChord"
