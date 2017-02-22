@@ -12,82 +12,84 @@
 </head>
 <body style="text-align: center; font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; padding: 0; margin: 0; overflow:hidden">
     <div id="titleOptionsDiv" style="text-align: center; visibility: visible; margin:0;">
-        <p class="header1">
-            Assistant Performer
-        </p>
+        <div style="height:265px">
+            <p class="header1">
+                Assistant Performer
+            </p>
+            <div class="helpText" style="font-size: 12px;">
+                <a id="assistantPerformerOnGitHubLink"
+                   target="_blank"
+                   href="https://github.com/notator/assistant-performer">
+                    open source on GitHub
+                </a><br />
+                <a id="aboutAssistantPerformerLink"
+                   target="_blank"
+                   href="http://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
+                    about the Assistant Performer
+                </a><br />
+            </div>
+            <div id="options" class="options">
+                <div style="font-size: 14px;">
+                    options
+                </div>
+                <!--<div class="helpText">
+                    MIDI devices will only be recognized if they are connected and switched on before loading this page.
+                </div>-->
+                <div id="deviceAndScoreSelectors" style="margin-top: 6px">
+                    <select id="inputDeviceSelect"
+                            class="deviceSelector" onchange="_AP.controls.doControl('inputDeviceSelect')"></select>
+                    <select id="scoreSelect"
+                            class="deviceSelector" style="width: 240px" onchange="_AP.controls.doControl('scoreSelect')">
+                        <option>choose a score</option>
+                        <option>Pianola Music (1967)</option>
+                        <option>Study 1 (2005)</option>
+                        <option>Study 2 (2010-2011)</option>
+                        <option>Study 3 sketch 1 (2012-2014)</option>
+                        <option>Study 3 sketch 1 (pages)</option>
+                        <option>Study 3 sketch 2.1 - with input (2015)</option>
+                        <option>Study 3 sketch 2.2 - less visible (scroll)</option>
+                        <option>Tombeau 1 (scroll)</option>
+                    </select>
+                    <select id="outputDeviceSelect"
+                            class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
+                </div>
+                <div id="aboutLinkDiv" class="helpText" style="display:none; padding-top:3px"></div>
+                <div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundFont is still loading...</div>
+                <div id="waitingForScoreDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the score is loading...</div>
+                <div id="needsMIDIAccessDiv" class="helpText" style="display:none; padding-top:3px">This score can only be played on a browser that supports Web MIDI.</div>
+                <div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
+                    <label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
+                        speed:
+                    </label>
+                    <input type="number" id="globalSpeedInput" value="100"
+                           onblur="_AP.controls.doControl('globalSpeedInput')"
+                           style="margin: 0 0 3px 0; width: 65px; vertical-align: middle;" />
+                    <label id="globalSpeedInputNumberLabel2" for="globalSpeedInput">
+                        % [Greater than 0%] Higher values lead to higher speed.
+                    </label>
+                </div>
+                <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
+                       onclick="_AP.controls.beginRuntime()"
+                       style="display:none;" />
+            </div>
+        </div>
         <div class="helpText">
-            <a id="assistantPerformerOnGitHubLink"
-               style="font-size: 12px;"
-               target="_blank"
-               href="https://github.com/notator/assistant-performer">
-                open source on GitHub
-            </a><br />
-            <a id="aboutAssistantPerformerLink"
-               style="font-size: 12px;"
-               target="_blank"
-               href="http://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
-                about the Assistant Performer
-            </a><br />
             <div class="note">
-                This experimental Web MIDI application is normally tested in the latest versions of Firefox and Chrome on Windows 10.<br />
-                Firefox requires the <a target="_blank" href="http://jazz-soft.net">Jazz</a> plug-in to be installed. Chrome implements Web MIDI natively.<br />
-                To find out which other browsers could be used, go to <a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>. A limited functionality is available
-                if the browser only implements Web <em>Audio</em> (go to <a target="_blank" href="http://caniuse.com/#feat=audio-api">check Web <em>Audio</em> API</a>).<br />
+                This experimental Web MIDI application is normally tested in the latest version of Chrome on Windows 10.<br />
+                I will be testing it again on Firefox, when they have completed their implementation of the Web MIDI API (currently in the pipeline).
+                To find out which other browsers might be tried, go to <a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>.<br />
+                A limited functionality is available if the browser only implements Web <em>Audio</em> (go to <a target="_blank" href="http://caniuse.com/#feat=audio-api">check Web <em>Audio</em> API</a>).<br />
                 <span class="blueHelpText">
                     Note that it is not possible to display or play scores in this application unless a MIDI output device has been selected.<br />
                     Scores and recordings can however be found via the link that appears when a score is selected.<br />
                     Currently, the only scores that can be played on the <a target="_blank" href="https://github.com/notator/residentSf2Synth">Resident Sf2 Synth</a> are the Pianola Music (1967) and Study 1 (2005).
                     All the other scores require hardware or software output devices that are (or depend on) plugins.<br />
-                    On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth">Virtual MIDI Synth</a> can be installed and used in both Firefox and Chrome.<br />
-                    The <em>Microsoft GS Wavetable Synth</em> (part of the Windows operating system) is available in Firefox if Jazz is installed.<br />
+                    On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth">Virtual MIDI Synth</a> can be used.<br />
                 </span>
             </div>
         </div>
-        <div id="options" class="options">
-            <div style="font-size: 14px;">
-                options
-            </div>
-            <!--<div class="helpText">
-                MIDI devices will only be recognized if they are connected and switched on before loading this page.
-            </div>-->
-            <div id="deviceAndScoreSelectors" style="margin-top: 6px">
-                <select id="inputDeviceSelect"
-                        class="deviceSelector" onchange="_AP.controls.doControl('inputDeviceSelect')"></select>
-                <select id="scoreSelect"
-                        class="deviceSelector" style="width: 240px" onchange="_AP.controls.doControl('scoreSelect')">
-                    <option>choose a score</option>
-                    <option>Pianola Music (1967)</option>
-                    <option>Study 1 (2005)</option>
-                    <option>Study 2 (2010-2011)</option>
-                    <option>Study 3 sketch 1 (2012-2014)</option>
-                    <option>Study 3 sketch 1 (pages)</option>
-                    <option>Study 3 sketch 2.1 - with input (2015)</option>
-                    <option>Study 3 sketch 2.2 - less visible (scroll)</option>
-                    <option>Tombeau 1 (scroll)</option>
-                </select>
-                <select id="outputDeviceSelect"
-                        class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
-            </div>
-            <div id="aboutLinkDiv" class="helpText" style="display:none; padding-top:3px"></div>
-            <div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundFont is still loading...</div>
-            <div id="waitingForScoreDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the score is loading...</div>
-            <div id="needsMIDIAccessDiv" class="helpText" style="display:none; padding-top:3px">This score can only be played on a browser that supports Web MIDI.</div>
-            <div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
-                <label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
-                    speed:
-                </label>
-                <input type="number" id="globalSpeedInput" value="100"
-                       onblur="_AP.controls.doControl('globalSpeedInput')"
-                       style="margin: 0 0 3px 0; width: 65px; vertical-align: middle;" />
-                <label id="globalSpeedInputNumberLabel2" for="globalSpeedInput">
-                    % [Greater than 0%] Higher values lead to higher speed.
-                </label>
-            </div>
-            <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
-                   onclick="_AP.controls.beginRuntime()"
-                   style="display:none;" />
-        </div>
     </div>
+
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 0;">
             <g id="performanceButtons" transform="translate(0.5, 0.5)">
