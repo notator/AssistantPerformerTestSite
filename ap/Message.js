@@ -298,11 +298,11 @@ _AP.message = (function ()
         {
             throw "Error: status out of range.";
         }
-        if(data1 < 0 || data1 > 0xFF)
+        if(data1 < 0 || data1 > 0x7F)
         {
             throw "Error: data1 out of range.";
         }
-        if(data2 < 0 || data2 > 0xFF)
+        if(data2 < 0 || data2 > 0x7F)
         {
             throw "Error: data2 out of range.";
         }

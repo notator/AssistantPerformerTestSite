@@ -89,7 +89,7 @@ _AP.midiObject = (function()
     // returns strongly classed Moment objects containing strongly classed Message objects
     MidiChord.prototype._getMoments = function(scoreMidiElem, systemIndex)
     {
-        var i, stronglyClassedMoment, stronglyClassedMoments = [], moments, momentMoments, envMoments, msDuration = 0,
+        var i, moments, momentMoments = [], envsMoments = [], msDuration = 0,
             scoreMidiChild, scoreMidiChildren = scoreMidiElem.children;
 
         function getMsg(bytes)
@@ -112,78 +112,6 @@ _AP.midiObject = (function()
                     break;
             }
             return msg;
-        }
-
-        // adds the momentsToCombine to moments,
-        // if msPositionInScore is equal, either msgs or the envMsgs are moved.
-        function combineMoments(moments, momentsToCombine, msDuration, setMomentEnvMsgsAttribute)
-        {
-            var mi, mci, msgIndex, prevMsPos, momentToCombine, mcMsPos,
-                moment, mMsPos, mMsgs, mcMsgs, momentInsertion, momentInsertions = [];
-
-            if(momentsToCombine === undefined)
-            {
-                return moments;
-            }
-
-            for(mci = 0; mci < momentsToCombine.length; ++mci)
-            {
-                prevMsPos = -1;
-                momentToCombine = momentsToCombine[mci];
-                mcMsPos = momentToCombine.msPositionInChord;
-                for(mi = 0; mi < moments.length; ++mi)
-                {
-                    moment = moments[mi];
-                    mMsPos = moment.msPositionInChord;
-                    mMsgs = moment.msgs;
-                    if(mMsPos === mcMsPos)
-                    {
-                        if(setMomentEnvMsgsAttribute === false)
-                        {
-                            mcMsgs = momentToCombine.msgs;
-                            for(msgIndex = 0; msgIndex < mcMsgs.length; ++msgIndex)
-                            {
-                                mMsgs.push(mcMsgs[msgIndex]);
-                            }
-                        }
-                        else
-                        {
-                            moment.envMsgs = momentToCombine.msgs;
-                        }
-                        break;
-                    }
-                    else if(mcMsPos > prevMsPos && mcMsPos < mMsPos)
-                    {
-                        momentInsertion = {};
-                        momentInsertion.index = mi;
-                        momentInsertion.moment = momentToCombine;
-                        if(setMomentEnvMsgsAttribute === true)
-                        {
-                            momentInsertion.moment.envMsgs = momentInsertion.moment.msgs;
-                        }
-                        momentInsertions.push(momentInsertion);
-                        break;
-                    }
-                    else if(mi === moments.length - 1)
-                    {
-                        momentInsertion = {};
-                        momentInsertion.index = moments.length;
-                        momentInsertion.moment = momentToCombine;
-                        if(setMomentEnvMsgsAttribute === true)
-                        {
-                            momentInsertion.moment.envMsgs = momentInsertion.moment.msgs;
-                        }
-                        momentInsertions.push(momentInsertion);
-                    }
-
-                    prevMsPos = mMsPos;
-                }
-            }
-            for(mi = momentInsertions.length - 1; mi >= 0; --mi)
-            {
-                momentInsertion = momentInsertions[mi];
-                moments.splice(momentInsertion.index, 0, momentInsertion.moment);
-            }
         }
 
         // returns the moments in the momentsElem, with all the msgs
@@ -273,27 +201,11 @@ _AP.midiObject = (function()
             return (lastMomentMoment.msPositionInChord + lastMomentMoment.msDuration);
         }
 
-        function getEnvMoments(envsElem, msDuration)
+        function getEnvsMoments(envsElem, msDuration)
         {
-            var i, envElem, envMoments, status, data1, vts,
-                envsChildren = envsElem.children;
-
-            function getEmptyGridMoments(msDuration)
-            {
-                var mmt, mmts = [], msPos = 0;
-                // Algorithm: a set of moments every SLIDER_MILLISECONDS ms, then add the moments between that are the vertices of the envs.
-                // Most env moments will then be on the 100ms grid.
-                while(msPos < msDuration)
-                {
-                    mmt = {};
-                    mmt.msPositionInChord = msPos;
-                    mmt.msgs = [];
-                    mmts.push(mmt);
-                    msPos += SLIDER_MILLISECONDS;
-                }
-
-                return mmts;
-            }
+            var i, envElem, envsMoments, status, data1, vts,
+                envsChildren = envsElem.children,
+                controlMessages, controlMessagesArray = [];
 
             function getVtsData2ConstD1(envElem, data1)
             {
@@ -352,119 +264,57 @@ _AP.midiObject = (function()
                 return vts;
             }
 
-            function setGridMoments(envMoments, status, vts)
+            // returns an array of objects, each of which has an .msPositionInChord and a single .message property
+            function getControlMessages(status, vts, msDuration)
             {
-                var i, msg, vtsState = {}, oldVtIndex = 0, bytes = [];
+                var gridMessages, vtsMessages, controlMessages;
 
-                // sets vtsState to the state of the vt2s at msPos.
-                // sets vtsState.vtIndex = 0;
-                // sets vtsState.data1Value = vts[0].data1;
-                // sets vtsState.data2Value = vts[0].data2;
-                // sets vtsState.data1IncrPerMillisecond = (vts[1].data1 - vts[0].data1) / vts[vtsState.vtIndex].msDur;
-                // sets vtsState.data2IncrPerMillisecond = (vts[1].data2 - vts[0].data2) / vts[vtsState.vtIndex].msDur;
-                // sets vtsState.currentVtMsPos = 0;
-                // sets vtsState.nextVtMsPos = vts[0].msDur;
-                function nextData(msPos, vts, vtsState)
+                function removeDuplicates(vts)
                 {
-                    while(msPos >= vtsState.nextVtMsPos && vtsState.vtIndex < (vts.length - 2))
+                    var i, uniqueVts = [], prevVt;
+
+                    function areDifferent(vt1, vt2)
                     {
-                        vtsState.vtIndex++;
-                        vtsState.currentVtMsPos = vtsState.nextVtMsPos;
-                        vtsState.nextVtMsPos += vts[vtsState.vtIndex].msDur;
-                        if(vts[vtsState.vtIndex].msDur > 0)
+                        var unequal = true;
+                        // status byte is always equal here
+                        if((vt1.data1 === vt2.data1)
+                        && ((vt1.data2 === undefined && vt2.data2 === undefined) || (vt1.data2 === vt2.data2)))
                         {
-                            vtsState.data1IncrPerMillisecond =
-                                (vts[vtsState.vtIndex + 1].data1 - vts[vtsState.vtIndex].data1) / vts[vtsState.vtIndex].msDur;
-                            if(vts[vtsState.vtIndex].data2 !== undefined)
-                            {
-                                vtsState.data2IncrPerMillisecond =
-                                    (vts[vtsState.vtIndex + 1].data2 - vts[vtsState.vtIndex].data2) / vts[vtsState.vtIndex].msDur;
-                            }
+                            unequal = false;
+                        }
+
+                        return unequal;
+                    }
+
+                    uniqueVts.push(vts[0]);
+                    prevVt = vts[0];
+
+                    for(i = 1; i < vts.length; ++i)
+                    {
+                        if(areDifferent(prevVt, vts[i]))
+                        {
+                            uniqueVts.push(vts[i]);
+                            prevVt = vts[i];
                         }
                         else
                         {
-                            vtsState.data1IncrPerMillisecond = 0;
-                            vtsState.data2IncrPerMillisecond = 0;
+                            prevVt.msDur += vts[i].msDur;
                         }
                     }
-
-                    vtsState.data1Value = Math.floor(vts[vtsState.vtIndex].data1 +
-                            ((msPos - vtsState.currentVtMsPos) * vtsState.data1IncrPerMillisecond));
-                    if(vts[vtsState.vtIndex].data2 === undefined)
-                    {
-                        vtsState.data2Value = undefined;
-                    }
-                    else
-                    {
-                        vtsState.data2Value = Math.floor(vts[vtsState.vtIndex].data2 +
-                                ((msPos - vtsState.currentVtMsPos) * vtsState.data2IncrPerMillisecond));
-                    }
-
-                    return vtsState;
+                    return uniqueVts;
                 }
 
-                bytes.push(status);
-                bytes.push(vts[0].data1);
-                if(vts[0].data2 !== undefined)
+                function getVtsMessages(status, vts)
                 {
-                    bytes.push(vts[0].data2);
-                }
+                    var i, vtsMessages = [], vtsMoment,
+                        msg, msPos = 0, vt, bytes = [];
 
-                msg = getMsg(bytes);
-
-                envMoments[0].msgs.push(msg);
-
-                if(vts.length > 1 && vts[0].msDur > 0)
-                {
-                    vtsState.vtIndex = 0;
-                    vtsState.data1Value = vts[vtsState.vtIndex].data1;
-                    vtsState.data2Value = vts[vtsState.vtIndex].data2;
-                    vtsState.data1IncrPerMillisecond = (vts[1].data1 - vts[0].data1) / vts[vtsState.vtIndex].msDur;
-                    vtsState.data2IncrPerMillisecond = (vts[1].data2 - vts[0].data2) / vts[vtsState.vtIndex].msDur;
-                    vtsState.currentVtMsPos = 0;
-                    vtsState.nextVtMsPos = vts[0].msDur;
-
-                    for(i = 1; i < envMoments.length; ++i)
+                    for(i = 0; i < vts.length; ++i)
                     {
-                        vtsState = nextData(envMoments[i].msPositionInChord, vts, vtsState);
+                        vtsMoment = {};
+                        vtsMoment.msPositionInChord = msPos;
+                        vt = vts[i];
 
-                        if(vtsState.data1Value !== msg[1]
-                        || (vtsState.data2Value !== undefined && msg[2] !== undefined && vtsState.data2Value !== msg[2]
-                        || (vtsState.vtIndex !== oldVtIndex)))
-                        {
-                            // messages will always be written when the vtIndex has changed
-                            oldVtIndex = vtsState.vtIndex;
-
-                            bytes.length = 0;
-                            bytes.push(status);
-                            bytes.push(vtsState.data1Value);
-                            if(vtsState.data2Value !== undefined)
-                            {
-                                bytes.push(vtsState.data2Value);
-                            }
-
-                            msg = getMsg(bytes);
-
-                            envMoments[i].msgs.push(msg);
-                        }
-                    }
-                }
-            }
-
-            function setVtMoments(envMoments, status, vts, msDuration)
-            {
-                var i, localEnvMoments = [], localEnvMoment,
-                    msg, msPos = 0, vt, bytes = [];
-
-                for(i = 0; i < vts.length; ++i)
-                {
-                    localEnvMoment = {};
-                    localEnvMoment.msPositionInChord = msPos;
-                    localEnvMoment.msgs = [];
-                    vt = vts[i];
-
-                    if(Math.floor(msPos % SLIDER_MILLISECONDS) !== 0)
-                    {
                         bytes.length = 0;
                         bytes.push(status);
                         bytes.push(vt.data1);
@@ -472,18 +322,255 @@ _AP.midiObject = (function()
                         {
                             bytes.push(vt.data2);
                         }
-                        msg = getMsg(bytes);
-                        localEnvMoment.msgs.push(msg);
-                        localEnvMoments.push(localEnvMoment);
-                    }
 
-                    msPos += vt.msDur;
+                        msg = getMsg(bytes);
+                        vtsMoment.message = msg;
+                        vtsMessages.push(vtsMoment);
+
+                        msPos += vt.msDur;
+                    }
+                    return vtsMessages;
                 }
 
-                combineMoments(envMoments, localEnvMoments, msDuration, false);
+                function getGridMessages(status, vts, msDuration)
+                {
+                    var i, msg, vtsState = {}, bytes = [], gridMessages;
+
+                    function getEmptyMessageGrid(msDuration)
+                    {
+                        var mmt, mmts = [], msPos = 0;
+
+                        while(msPos < msDuration)
+                        {
+                            mmt = {};
+                            mmt.msPositionInChord = msPos;
+                            // mmt.message is undefined
+                            mmts.push(mmt);
+                            msPos += SLIDER_MILLISECONDS;
+                        }
+
+                        return mmts;
+                    }
+
+                    // returns the vtsState at msPos.
+                    // vtsState.vtIndex -- the index in vts at or before msPos;
+                    // vtsState.gridData1 -- the value to set in a message at msPos;
+                    // vtsState.gridData2 -- the value to set in a message at msPos;
+                    // vtsState.currentVtMsPos -- vts[vtsState.vtIndex].msPos;
+                    // vtsState.nextVtMsPos -- vts[vtsState.vtIndex + 1].msPos;
+                    // vtsState.vtData1; -- vts[vtsState.vtIndex].data1 // required in comparison outside this function
+                    // vtsState.vtData2; -- vts[vtsState.vtIndex].data2 // required in comparison outside this function
+                    function nextData(msPos, vts, vtsState)
+                    {
+                        var data1IncrPerMillisecond = 0, data2IncrPerMillisecond = 0;
+
+                        vtsState.gridData1 = undefined;
+                        vtsState.gridData2 = undefined;
+                        vtsState.vtData1 = undefined;
+                        vtsState.vtData2 = undefined;
+
+                        while( vtsState.vtIndex < (vts.length - 2)
+                        && ((msPos >= vtsState.currentVtMsPos && msPos < vtsState.nextVtMsPos) === false))
+                        {
+                            vtsState.vtIndex++;
+                            vtsState.currentVtMsPos = vtsState.nextVtMsPos;
+                            vtsState.nextVtMsPos += vts[vtsState.vtIndex].msDur;
+                        }
+
+                        if(msPos >= vtsState.currentVtMsPos && msPos < vtsState.nextVtMsPos)
+                        {
+                            vtsState.vtData1 = vts[vtsState.vtIndex].data1;
+                            data1IncrPerMillisecond =
+                                (vts[vtsState.vtIndex + 1].data1 - vts[vtsState.vtIndex].data1) / vts[vtsState.vtIndex].msDur;
+                            vtsState.gridData1 =
+                                Math.floor(vtsState.vtData1 + ((msPos - vtsState.currentVtMsPos) * data1IncrPerMillisecond));
+
+                            if(vts[vtsState.vtIndex].data2 !== undefined)
+                            {
+                                vtsState.vtData2 = vts[vtsState.vtIndex].data2;
+                                data2IncrPerMillisecond =
+                                    (vts[vtsState.vtIndex + 1].data2 - vts[vtsState.vtIndex].data2) / vts[vtsState.vtIndex].msDur;
+                                vtsState.gridData2 =
+                                    Math.floor(vtsState.vtData2 + ((msPos - vtsState.currentVtMsPos) * data2IncrPerMillisecond));
+                            }
+                        }
+
+                        return vtsState;
+                    }
+
+                    function gridIsDifferent(vtsState)
+                    {
+                        var different = true;
+
+                        if(vtsState.gridData1 !== undefined)
+                        {
+                            if(vtsState.gridData2 === undefined)
+                            {
+                                if(vtsState.gridData1 === vtsState.vtData1 )
+                                {
+                                    different = false;
+                                }
+                            }
+                            else if(vtsState.gridData1 === vtsState.vtData1 && vtsState.gridData2 === vtsState.vtData2)
+                            {
+                                different = false;
+                            }
+                        }
+                        return different;
+                    }
+
+                    gridMessages = getEmptyMessageGrid(msDuration);
+
+                    if(gridMessages.length > 1 && vts.length > 1)
+                    {
+                        // messageGrid[0].message is always undefined. The message will be added from vts later...
+                        vtsState.vtIndex = 0;
+                        vtsState.currentVtMsPos = 0;
+                        vtsState.nextVtMsPos = vts[0].msDur;
+
+                        for(i = 1; i < gridMessages.length; ++i)
+                        {
+                            vtsState = nextData(gridMessages[i].msPositionInChord, vts, vtsState);
+
+                            // the vtsState.vtData1 and vtsState.vtData2 values will be inserted later
+                            if(gridIsDifferent(vtsState))
+                            {
+                                bytes.length = 0;
+                                bytes.push(status);
+                                bytes.push(vtsState.gridData1);
+                                if(vtsState.gridData2 !== undefined)
+                                {
+                                    bytes.push(vtsState.gridData2);
+                                }
+
+                                msg = getMsg(bytes);
+
+                                gridMessages[i].message = msg;
+                            }
+                        }
+                    }
+
+                    return gridMessages;
+                }
+
+                function getCombinedMessages(vtsMessages, gridMessages)
+                {
+                    var combinedMessages = [], mgIndex = 0, nGridMessages = gridMessages.length,
+                    i, vtsIndex = 0, nVtsMessages = vtsMessages.length;
+
+                    for(i = 0; i < nVtsMessages; ++i)
+                    {
+                        console.assert(vtsMessages[i].message !== undefined);
+                        // gridMessages messages can be undefined.
+                    }
+
+                    while((mgIndex === nGridMessages && vtsIndex === nVtsMessages) === false)
+                    {
+                        if(vtsIndex === nVtsMessages)
+                        {
+                            while(mgIndex < nGridMessages)
+                            {
+                                if(gridMessages[mgIndex].message !== undefined)
+                                {
+                                    combinedMessages.push(gridMessages[mgIndex]);
+                                }
+                                mgIndex++;
+                            }
+                        }
+                        else if(mgIndex === nGridMessages)
+                        {
+                            while(vtsIndex < nVtsMessages)
+                            {
+                                combinedMessages.push(vtsMessages[vtsIndex++]);
+                            }
+                        }
+                        else
+                        {
+                            combinedMessages.push(vtsMessages[vtsIndex++]);
+                            if(vtsIndex < nVtsMessages)
+                            {
+                                while(mgIndex < nGridMessages && vtsMessages[vtsIndex].msPositionInChord > gridMessages[mgIndex].msPositionInChord)
+                                {
+                                    if(gridMessages[mgIndex].message !== undefined)
+                                    {
+                                        combinedMessages.push(gridMessages[mgIndex]);
+                                    }
+                                    mgIndex++;
+                                }
+                            }
+                        }
+                    }
+
+                    return combinedMessages;
+                }
+
+                vts = removeDuplicates(vts);
+                vtsMessages = getVtsMessages(status, vts);
+                gridMessages = getGridMessages(status, vts, msDuration);
+                controlMessages = getCombinedMessages(vtsMessages, gridMessages);
+
+                return controlMessages;
             }
 
-            envMoments = getEmptyGridMoments(msDuration);
+            // returns an array of Moments, each of which has an .msPositionInChord and .messages property.
+            function getCombinedControlMessages(controlMessagesArray)
+            {
+                var envMoments = [], i, msPos, moment, indices = [],
+                    cma = controlMessagesArray, nControls = controlMessagesArray.length;
+
+                function finished(cma, indices)
+                {
+                    var i, done = true;
+
+                    for(i = 0; i < cma.length; ++i)
+                    {
+                        if(indices[i] < cma[i].length)
+                        {
+                            done = false;
+                            break;
+                        }
+                    }
+                    return done;
+                }
+
+                // returns the smallest msPos pointed at by any of the indices
+                function nextMsPos(cma, indices)
+                {
+                    var i, val, smallestMsPos = Number.MAX_SAFE_INTEGER;
+
+                    for(i = 0; i < indices.length; ++i)
+                    {
+                        if(indices[i] < cma[i].length)
+                        {
+                            val = cma[i][indices[i]].msPositionInChord;
+                            smallestMsPos = (smallestMsPos < val) ? smallestMsPos : val;
+                        }
+                    }
+                    return smallestMsPos;
+                }
+
+                for(i = 0; i < nControls; ++i)
+                {
+                    indices.push(0);
+                }
+
+                while(finished(cma, indices) === false)
+                {
+                    msPos = nextMsPos(cma, indices);
+                    moment = new Moment(msPos);
+                    envMoments.push(moment);
+
+                    for(i = 0; i < nControls; ++i)
+                    {
+                        if(indices[i] < cma[i].length && cma[i][indices[i]].msPositionInChord === msPos)
+                        {
+                            moment.messages.push(cma[i][indices[i]].message);
+                            indices[i]++;
+                        }
+                    }
+                }
+                return envMoments;
+            }
 
             for(i = 0; i < envsChildren.length; ++i)
             {
@@ -496,83 +583,121 @@ _AP.midiObject = (function()
                         case 10: // 0xA Aftertouch
                             data1 = parseInt(envElem.getAttribute("d1"), 10);
                             vts = getVtsData2ConstD1(envElem, data1);
-                            setGridMoments(envMoments, status, vts);
-                            setVtMoments(envMoments, status, vts, msDuration);
                             break;
                         case 11: // 0xB ControlChange
                             data1 = parseInt(envElem.getAttribute("d1"), 10);
                             vts = getVtsData2ConstD1(envElem, data1);
-                            setGridMoments(envMoments, status, vts);
-                            setVtMoments(envMoments, status, vts, msDuration);
                             break;
                         case 13: // 0xD ChannelPressure
                             vts = getVtsData1UndefinedData2(envElem);
-                            setGridMoments(envMoments, status, vts);
-                            setVtMoments(envMoments, status, vts, msDuration);
                             break;
                         case 14: // 0xE PitchWheel
                             vts = getVtsData1AndData2(envElem);
-                            setGridMoments(envMoments, status, vts);
-                            setVtMoments(envMoments, status, vts, msDuration);
                             break;
                         default:
                             break;
                     }
+                    controlMessages = getControlMessages(status, vts, msDuration);
+                    controlMessagesArray.push(controlMessages);
                 }
             }
 
-            return envMoments;
+            envsMoments = getCombinedControlMessages(controlMessagesArray);
+
+            return envsMoments;
         }
 
-        function getCombinedMoments(momentMoments, envsMoments, msDuration)
+        // The momentMoments objects are pseudo moments having the following properties:
+        //     .msDuration
+        //     .msPositionInChord
+        //     .noteOffMsgs
+        //     .noteOnMsgs
+        //     .switchesMsgs
+        // The envsMoments are real Moments having the following set properties:
+        //     .msPositionInChord
+        //     .messages
+        // msDuration is the duration of the MidiChord.
+        // Returns an array of fully constructed Moments
+        // The messages inside each moment are in the following order:
+        //     noteOffs
+        //     switches
+        //     envelope
+        //     noteOns
+        function getCombinedMoments(momentMoments, envsMoments, msDuration, systemIndex)
         {
-            var i, j, combinedMoment, combinedMoments = [],
-                moment, noteOffMsgs, switchesMsgs, envMsgs, noteOnMsgs;
+            var i, j, msPos, msPositions, combinedMoment, combinedMoments = [],
+                mmIndex, emIndex, mMoment, noteOffMsgs, switchesMsgs, envMsgs, noteOnMsgs;
 
-            combineMoments(momentMoments, envsMoments, msDuration, true);
-
-            for(i = 0; i < momentMoments.length; ++i)
+            function getMsPositions(momentMoments, envsMoments)
             {
-                moment = momentMoments[i];
+                var i, msPositions = [];
 
-                combinedMoment = {};
-                combinedMoment.msPositionInChord = moment.msPositionInChord;
-                combinedMoment.msgs = [];
+                for(i = 0; i < momentMoments.length; ++i)
+                {
+                    msPositions.push(momentMoments[i].msPositionInChord);
+                }
+                for(i = 0; i < envsMoments.length; ++i)
+                {
+                    msPos = envsMoments[i].msPositionInChord;
+                    if(msPositions.indexOf(msPos) < 0)
+                    {
+                        msPositions.push(msPos);
+                    }
+                }
+                msPositions.sort(function(a, b) { return a - b; });
+                return msPositions;
+            }
+
+            function compare(x) { return msPos === x.msPositionInChord; }
+
+            msPositions = getMsPositions(momentMoments, envsMoments);
+
+            for(i = 0; i < msPositions.length; ++i)
+            {
+                msPos = msPositions[i]; 
+                combinedMoment = new Moment(msPos, systemIndex);
                 combinedMoments.push(combinedMoment);
 
-                if(moment.noteOffMsgs !== undefined)
+                mmIndex = momentMoments.findIndex(compare);
+                emIndex = envsMoments.findIndex(compare);
+
+                if(mmIndex >= 0)
                 {
-                    noteOffMsgs = moment.noteOffMsgs;
-                    for(j = 0; j < noteOffMsgs.length; ++j)
+                    mMoment = momentMoments[mmIndex];
+                    if(mMoment.noteOffMsgs !== undefined)
                     {
-                        combinedMoment.msgs.push(noteOffMsgs[j]);
+                        noteOffMsgs = mMoment.noteOffMsgs;
+                        for(j = 0; j < noteOffMsgs.length; ++j)
+                        {
+                            combinedMoment.messages.push(noteOffMsgs[j]);
+                        }
+                    }
+
+                    if(mMoment.switchesMsgs !== undefined)
+                    {
+                        switchesMsgs = mMoment.switchesMsgs;
+                        for(j = 0; j < switchesMsgs.length; ++j)
+                        {
+                            combinedMoment.messages.push(switchesMsgs[j]);
+                        }
                     }
                 }
 
-                if(moment.switchesMsgs !== undefined)
+                if(emIndex >= 0)
                 {
-                    switchesMsgs = moment.switchesMsgs;
-                    for(j = 0; j < switchesMsgs.length; ++j)
-                    {
-                        combinedMoment.msgs.push(switchesMsgs[j]);
-                    }
-                }
-
-                if(moment.envMsgs !== undefined)
-                {
-                    envMsgs = moment.envMsgs;
+                    envMsgs = envsMoments[emIndex].messages;
                     for(j = 0; j < envMsgs.length; ++j)
                     {
-                        combinedMoment.msgs.push(envMsgs[j]);
+                        combinedMoment.messages.push(envMsgs[j]);
                     }
                 }
 
-                if(moment.noteOnMsgs !== undefined)
+                if(mmIndex >= 0 && mMoment.noteOnMsgs !== undefined)
                 {
-                    noteOnMsgs = moment.noteOnMsgs;
+                    noteOnMsgs = mMoment.noteOnMsgs;
                     for(j = 0; j < noteOnMsgs.length; ++j)
                     {
-                        combinedMoment.msgs.push(noteOnMsgs[j]);
+                        combinedMoment.messages.push(noteOnMsgs[j]);
                     }
                 }
             }
@@ -592,20 +717,13 @@ _AP.midiObject = (function()
 
             if(scoreMidiChild.nodeName === "envs")
             {
-                envMoments = getEnvMoments(scoreMidiChild, msDuration);
+                envsMoments = getEnvsMoments(scoreMidiChild, msDuration);
             }
         }
 
-        moments = getCombinedMoments(momentMoments, envMoments, msDuration);
+        moments = getCombinedMoments(momentMoments, envsMoments, msDuration, systemIndex);
 
-        for(i = 0; i < moments.length; ++i)
-        {
-            stronglyClassedMoment = new Moment(moments[i].msPositionInChord, systemIndex);
-            stronglyClassedMoment.messages = moments[i].msgs;
-            stronglyClassedMoments.push(stronglyClassedMoment);
-        }
-
-        return stronglyClassedMoments;
+        return moments;
     };
 
     /***** The following functions are defined for both MidiChords and MidiRests *****************/
