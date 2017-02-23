@@ -58,15 +58,6 @@ select.deviceSelector
     margin-right: 8px; 
 }
 
-div.globalSpeedPanel
-{
-    width:520px;
-    padding: 9px 0 6px 0;
-    margin:8px auto 9px auto;    
-    background-color: #FCFCFC;
-    border: 1px solid #008000;
-}
-
 div.options
 {
     font-size: 12px;

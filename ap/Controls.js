@@ -230,7 +230,6 @@ _AP.controls = (function(document, window)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
                 globalElements.titleOptionsDiv.style.visibility = "visible";    
-                globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.needsMIDIAccessDiv.style.display = "none";
                 globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
@@ -244,23 +243,10 @@ _AP.controls = (function(document, window)
 
                     if(residentSynthCanPlayScore(scoreIndex) === true || (residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
                     {
-
                         if(globalElements.waitingForSoundFontDiv.style.display === "none"
                             && scoreIndex > 0 && outputDeviceIndex > 0)
                         {
-                            globalElements.globalSpeedDiv.style.display = "block";
-
-                            if(globalElements.globalSpeedInput.value <= 0)
-                            {
-                                globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
-                                globalElements.startRuntimeButton.style.display = "none";
-                                alert("Error: The speed must be set to a value greater than 0%!");
-                            }
-                            else
-                            {
-                                globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
-                                globalElements.startRuntimeButton.style.display = "initial";
-                            }
+                            globalElements.startRuntimeButton.style.display = "initial";
                         }
                     }
                     else
@@ -736,9 +722,7 @@ _AP.controls = (function(document, window)
             globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
             globalElements.waitingForScoreDiv = document.getElementById("waitingForScoreDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
-            globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.needsMIDIAccessDiv = document.getElementById("needsMIDIAccessDiv");
-            globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
 
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
@@ -1303,8 +1287,7 @@ _AP.controls = (function(document, window)
 
         /**** controls in options panel ***/
         if(controlID === "inputDeviceSelect"
-        || controlID === "outputDeviceSelect"
-        || controlID === "globalSpeedInput")
+        || controlID === "outputDeviceSelect")
         {
             setMainOptionsState("toFront"); // enables only the appropriate controls
         }
@@ -1521,7 +1504,6 @@ _AP.controls = (function(document, window)
         try
         {
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
-            options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
             setMIDIDevices(options);
 
