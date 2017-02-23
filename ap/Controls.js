@@ -744,6 +744,7 @@ _AP.controls = (function(document, window)
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
             globalElements.lowerRuntimeControls = document.getElementById("lowerRuntimeControls");
+            globalElements.runtimeSpeedInput = document.getElementById("runtimeSpeedInput");
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -1362,6 +1363,14 @@ _AP.controls = (function(document, window)
                 scoreHasJustBeenSelected = false;
             }
         }
+
+        if(controlID === "runtimeSpeedInput")
+        {
+            if(player !== undefined)
+            {
+                player.setSpeed(globalElements.runtimeSpeedInput.value / 100);
+            }
+        }
     },
 
     // functions for adjusting the appearance of the score options
@@ -1451,14 +1460,14 @@ _AP.controls = (function(document, window)
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                // setSpeed(options.globalSpeed) should be implemented here as in Sequence (21.02.2017)
+                // setSpeed(globalElements.runtimeSpeedInput.value / 100) should be implemented here as in Sequence (21.02.2017)
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
             else
             {
                 player = sequence; // sequence is a namespace, not a class.
-                player.setSpeed(options.globalSpeed);
+                player.setSpeed(globalElements.runtimeSpeedInput.value / 100);
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
             }
