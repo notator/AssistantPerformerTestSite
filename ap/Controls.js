@@ -32,7 +32,6 @@ _AP.controls = (function(document, window)
     midiAccess,
     score,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
-    svgPagesDiv,
     globalElements = {}, // assistantPerformer.html elements 
     cl = {}, // control layers
 
@@ -237,6 +236,7 @@ _AP.controls = (function(document, window)
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
+                globalElements.lowerRuntimeControls.style.visibility = "hidden";
 
                 if(scoreIndex > 0)
                 {
@@ -273,6 +273,7 @@ _AP.controls = (function(document, window)
                 globalElements.titleOptionsDiv.style.visibility = "hidden";
                 globalElements.svgRuntimeControls.style.visibility = "visible";
                 globalElements.svgPagesFrame.style.visibility = "visible";
+                globalElements.lowerRuntimeControls.style.visibility = "visible";
                 break;
             default:
                 throw "Unknown program state.";
@@ -479,7 +480,7 @@ _AP.controls = (function(document, window)
                 // the running marker is at its correct position:
                 // either at the start marker, or somewhere paused.
                 score.setRunningMarkers();
-                score.moveStartMarkerToTop(svgPagesDiv);
+                score.moveStartMarkerToTop(globalElements.svgPagesFrame);
                 score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
                 player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
@@ -740,8 +741,9 @@ _AP.controls = (function(document, window)
             globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
 
-            globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
+            globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
+            globalElements.lowerRuntimeControls = document.getElementById("lowerRuntimeControls");
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -894,19 +896,13 @@ _AP.controls = (function(document, window)
         // callback passed to score. Called when the running marker moves to a new system.
         function runningMarkerHeightChanged(runningMarkerYCoordinates)
         {
-            var div = svgPagesDiv,
+            var div = globalElements.svgPagesFrame,
             height = Math.round(parseFloat(div.style.height));
 
             if(runningMarkerYCoordinates.bottom > (height + div.scrollTop))
             {
                 div.scrollTop = runningMarkerYCoordinates.top - 10;
             }
-        }
-
-        function setSvgPagesDivHeight()
-        {
-            svgPagesDiv = document.getElementById("svgPagesFrame");
-            svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
         midiAccess = mAccess;
@@ -926,8 +922,6 @@ _AP.controls = (function(document, window)
         }
 
         initScoreSelector(runningMarkerHeightChanged);
-
-        setSvgPagesDivHeight();
 
         getControlLayers(document);
 
@@ -1190,7 +1184,7 @@ _AP.controls = (function(document, window)
 
                 setOptionsInputHandler(scoreInfo.inputHandler);
 
-                svgPagesDiv.scrollTop = 0;
+                globalElements.svgPagesFrame.scrollTop = 0;
                 scoreHasJustBeenSelected = true;
             }
         }
@@ -1364,7 +1358,7 @@ _AP.controls = (function(document, window)
             if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
                 setSvgControlsState('disabled');
-                score.moveStartMarkerToTop(svgPagesDiv);
+                score.moveStartMarkerToTop(globalElements.svgPagesFrame);
                 scoreHasJustBeenSelected = false;
             }
         }
@@ -1535,7 +1529,7 @@ _AP.controls = (function(document, window)
 
             score.refreshDisplay(); // undefined trackIsOnArray
 
-            score.moveStartMarkerToTop(svgPagesDiv);
+            score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
             setSvgControlsState('stopped');
 

@@ -986,7 +986,8 @@ _AP.score = (function (document)
             var
             i, svgPage, embedsWidth, viewBox, pagesFrameWidth,
             svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
-            svgPagesFrameElem = document.getElementById("svgPagesFrame"),
+            svgPagesFrameElem = document.getElementById("svgPagesFrame"), svgPagesFrameElemHeight,
+            lowerRuntimeControlsElem = document.getElementById("lowerRuntimeControls"), lowerRuntimeControlsElemTop,
             svgPageEmbeds = svgPagesFrameElem.getElementsByClassName("svgPage"),
             leftpx, nPages = svgPageEmbeds.length;
 
@@ -1022,9 +1023,15 @@ _AP.score = (function (document)
 
             pagesFrameWidth = embedsWidth + 17; 
             svgPagesFrameElem.style.width = pagesFrameWidth.toString() + "px";
-            svgPagesFrameElem.style.height = (window.innerHeight - parseInt(svgPagesFrameElem.style.top, 10) - 2).toString() + "px";
+            svgPagesFrameElemHeight = (window.innerHeight - parseInt(svgPagesFrameElem.style.top, 10) - 2) - parseInt(lowerRuntimeControlsElem.style.height, 10);
+            svgPagesFrameElem.style.height = svgPagesFrameElemHeight.toString() + "px";
             leftpx = (Math.ceil((window.innerWidth - pagesFrameWidth) / 2)).toString() + "px";
             svgPagesFrameElem.style.left = leftpx;
+
+            lowerRuntimeControlsElemTop = parseInt(svgPagesFrameElem.style.top, 10) + parseInt(svgPagesFrameElem.style.height, 10) + 2;
+            lowerRuntimeControlsElem.style.top = lowerRuntimeControlsElemTop.toString() + "px";
+            lowerRuntimeControlsElem.style.left = svgPagesFrameElem.style.left;
+            lowerRuntimeControlsElem.style.width = svgPagesFrameElem.style.width;
 
             viewBoxScale = viewBox.scale;
             
