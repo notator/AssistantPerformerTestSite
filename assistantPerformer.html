@@ -12,30 +12,33 @@
 </head>
 <body style="text-align: center; font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; padding: 0; margin: 0; overflow:hidden">
     <div id="titleOptionsDiv" style="text-align: center; visibility: visible; margin:0;">
-        <div style="height:265px">
-            <p class="header1">
-                Assistant Performer
-            </p>
-            <div class="helpText" style="font-size: 12px;">
-                <a id="assistantPerformerOnGitHubLink"
-                   target="_blank"
-                   href="https://github.com/notator/assistant-performer">
-                    open source on GitHub
-                </a><br />
-                <a id="aboutAssistantPerformerLink"
-                   target="_blank"
-                   href="http://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
-                    about the Assistant Performer
-                </a><br />
-            </div>
+        <div style="height:265px; font-size:12px; ">
+            <table style="width:766px; margin:10px auto 0 auto; padding:0;">
+                <colgroup>
+                    <col style="width:200px;" />
+                    <col style="width:370px;" />
+                    <col style="width:200px;" />
+                </colgroup>
+                <tr>
+                    <td class="helpText" style="padding:7px 0 0 0; text-align:left">
+                        <a id="aboutAssistantPerformerLink"
+                            target="_blank"
+                            href="http://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
+                            about the Assistant Performer
+                        </a>
+                    </td>
+                    <td style="padding:0; margin:0; font-size:22px;">Assistant Performer</td>
+                    <td class="helpText" style="padding:7px 0 0 0; text-align:right">
+                        <a id="assistantPerformerOnGitHubLink"
+                           target="_blank"
+                           href="https://github.com/notator/assistant-performer">
+                            open source on GitHub
+                        </a>
+                    </td>
+                </tr>
+            </table>
             <div id="options" class="options">
-                <div style="font-size: 14px;">
-                    options
-                </div>
-                <!--<div class="helpText">
-                    MIDI devices will only be recognized if they are connected and switched on before loading this page.
-                </div>-->
-                <div id="deviceAndScoreSelectors" style="margin-top: 6px">
+                <div id="deviceAndScoreSelectors" style="margin: 0">
                     <select id="inputDeviceSelect"
                             class="deviceSelector" onchange="_AP.controls.doControl('inputDeviceSelect')"></select>
                     <select id="scoreSelect"
@@ -53,10 +56,10 @@
                     <select id="outputDeviceSelect"
                             class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
                 </div>
-                <div id="aboutLinkDiv" class="helpText" style="display:none; padding-top:3px"></div>
-                <div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundFont is still loading...</div>
-                <div id="waitingForScoreDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the score is loading...</div>
-                <div id="needsMIDIAccessDiv" class="helpText" style="display:none; padding-top:3px">This score can only be played on a browser that supports Web MIDI.</div>
+                <div id="aboutLinkDiv" class="helpText" style="display:none;"></div>
+                <div id="waitingForSoundFontDiv" class="helpText" style="display:none;">Please wait, the soundFont is still loading...</div>
+                <div id="waitingForScoreDiv" class="helpText" style="display:none;">Please wait, the score is loading...</div>
+                <div id="needsMIDIAccessDiv" class="helpText" style="display:none;">This score can only be played on a browser that supports Web MIDI.</div>
                 <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
                        onclick="_AP.controls.beginRuntime()"
                        style="display:none;" />
@@ -289,7 +292,7 @@
             speed:
         </label>
         <input type="number" id="runtimeSpeedInput" value="100" min="1" max="400"
-                onchange="_AP.controls.doControl('runtimeSpeedInput')"
+               onchange="_AP.controls.doControl('runtimeSpeedInput')"
                style="margin: 3px 0 3px 0; width: 65px; vertical-align: middle;" />
         <label id="performanceSpeedInputNumberLabel2" for="performanceSpeedInput">
             % (range 1..400) Higher values lead to higher speed.

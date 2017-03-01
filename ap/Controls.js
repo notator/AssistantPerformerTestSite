@@ -1005,6 +1005,8 @@ _AP.controls = (function(document, window)
                         scoreInfo.aboutText = "about Tombeau 1";
                         scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
                         break;
+                    default:
+                        break;
                 }
 
                 return scoreInfo;
