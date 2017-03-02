@@ -235,7 +235,6 @@ _AP.controls = (function(document, window)
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
-                globalElements.lowerRuntimeControls.style.visibility = "hidden";
 
                 if(scoreIndex > 0)
                 {
@@ -259,11 +258,15 @@ _AP.controls = (function(document, window)
                 globalElements.titleOptionsDiv.style.visibility = "hidden";
                 globalElements.svgRuntimeControls.style.visibility = "visible";
                 globalElements.svgPagesFrame.style.visibility = "visible";
-                globalElements.lowerRuntimeControls.style.visibility = "visible";
                 break;
             default:
                 throw "Unknown program state.";
         }
+    },
+
+    doSpeedControlLabel2 = function()
+    {
+        doControl('speedControlLabelClick');
     },
 
     setStopped = function()
@@ -306,6 +309,9 @@ _AP.controls = (function(document, window)
         /********* end performance buttons *******************/
 
         tracksControl.setDisabled(false);
+
+        globalElements.speedControlInput.disabled = false;
+        globalElements.speedControlLabel2.addEventListener('click', doSpeedControlLabel2);
     },
 
     // callback called when a performing sequenceRecording is stopped or has played its last message,
@@ -539,6 +545,9 @@ _AP.controls = (function(document, window)
         {
             tracksControl.setDisabled(true);
 
+            globalElements.speedControlInput.disabled = true;
+            globalElements.speedControlLabel2.removeEventListener('click', doSpeedControlLabel2);
+
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
             cl.goDisabled.setAttribute("opacity", SMOKE);
@@ -557,6 +566,9 @@ _AP.controls = (function(document, window)
         function setSettingEnd()
         {
             tracksControl.setDisabled(true);
+
+            globalElements.speedControlInput.disabled = true;
+            globalElements.speedControlLabel2.removeEventListener('click', doSpeedControlLabel2);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -726,9 +738,9 @@ _AP.controls = (function(document, window)
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
 
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
+            globalElements.speedControlInput = document.getElementById("speedControlInput");
+            globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
-            globalElements.lowerRuntimeControls = document.getElementById("lowerRuntimeControls");
-            globalElements.runtimeSpeedInput = document.getElementById("runtimeSpeedInput");
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -925,6 +937,13 @@ _AP.controls = (function(document, window)
         {
             setSvgControlsState('paused');
         }
+    },
+
+    resetSpeed = function()
+    {
+        player.setSpeed(1);
+        globalElements.speedControlInput.value = 50;
+        globalElements.speedControlLabel2.innerHTML = "100%";
     },
 
     // called when the user clicks a control in the GUI
@@ -1264,6 +1283,30 @@ _AP.controls = (function(document, window)
             doControl("scoreSelect");
         }
 
+        function setSpeed()
+        {
+            var speedPercent, speed = globalElements.speedControlInput.value / 50;
+
+            // see: http://stackoverflow.com/questions/846221/logarithmic-slider
+            function logslider(position)
+            {
+                var
+                // the slider has min="0" max="100" (default value="50")
+                minp = 0, maxp = 100,
+                // The result will be between 1/5 and 5
+                minv = Math.log(0.2), maxv = Math.log(5),
+                // the adjustment factor
+                scale = (maxv - minv) / (maxp - minp);
+
+                return Math.exp(minv + scale * (position - minp));
+            }
+
+            speed = logslider(globalElements.speedControlInput.value);
+
+            player.setSpeed(speed);
+            globalElements.speedControlLabel2.innerHTML = Math.ceil(speed * 100) + "%";
+        }
+
         if(controlID === "scoreSelect")
         {
             globalElements.outputDeviceSelect.selectedIndex = 0;
@@ -1349,12 +1392,14 @@ _AP.controls = (function(document, window)
             }
         }
 
-        if(controlID === "runtimeSpeedInput")
+        if(controlID === "speedControlMousemove")
         {
-            if(player !== undefined)
-            {
-                player.setSpeed(globalElements.runtimeSpeedInput.value / 100);
-            }
+            setSpeed();
+        }
+
+        if(controlID === "speedControlLabelClick")
+        {
+            resetSpeed();
         }
     },
 
@@ -1445,14 +1490,14 @@ _AP.controls = (function(document, window)
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                // setSpeed(globalElements.runtimeSpeedInput.value / 100) should be implemented here as in Sequence (21.02.2017)
+                // setSpeed(globalElements.speedControlInput.value / 100) should be implemented here as in Sequence (21.02.2017)
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
             else
             {
                 player = sequence; // sequence is a namespace, not a class.
-                player.setSpeed(globalElements.runtimeSpeedInput.value / 100);
+                resetSpeed(); // calls player.setSpeed()
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
             }
@@ -1503,6 +1548,19 @@ _AP.controls = (function(document, window)
             }
         }
 
+        function setSpeedControl(tracksControlWidth)
+        {
+            var
+            speedControlDiv = document.getElementById("speedControlDiv"),
+            speedControlInput = globalElements.speedControlInput,
+            performanceButtonsLeft = 428,
+            speedControlWidth = parseInt(speedControlInput.style.width, 10),
+            speedControlLeft = tracksControlWidth + ((performanceButtonsLeft - tracksControlWidth - speedControlWidth) / 2);
+            speedControlLeft -= 40; // for "speed" label
+
+            speedControlDiv.style.left = speedControlLeft.toString() + "px";
+        }
+
         try
         {
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
@@ -1514,6 +1572,8 @@ _AP.controls = (function(document, window)
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).
             getTracksAndPlayer(score, options);
+
+            setSpeedControl(tracksControl.width());
 
             if(midiAccess !== null)
             {

@@ -81,8 +81,19 @@
             </div>
         </div>
     </div>
-
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
+        <div id="speedControlDiv"
+             style="position: absolute; top: 0; left: 168px; height:36px; padding-top:6px; font-size:12px">
+            <label id="speedControlLabel1" for="speedControlInput">
+                speed:
+            </label>
+            <input type="range" id="speedControlInput" value="50" min="0" max="100"
+                onmousemove="_AP.controls.doControl('speedControlMousemove')"               
+                style="margin:0; width: 200px; height:10px; vertical-align: middle;" >
+            <label id="speedControlLabel2" for="speedControlInput" >
+                100%
+            </label>
+        </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 0;">
             <g id="performanceButtons" transform="translate(0.5, 0.5)">
                 <rect id="performanceButtonsFrame" x="0" y="0" width="169" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
@@ -286,17 +297,6 @@
                     Browser does not support SVG!
             </object>
         -->
-    </div>
-    <div id="lowerRuntimeControls" class="runtimeDiv" style="width: 1028px; height: 27px; font-size: 12px;">
-        <label id="performanceSpeedInputNumberLabel1" for="performanceSpeedInput">
-            speed:
-        </label>
-        <input type="number" id="runtimeSpeedInput" value="100" min="1" max="400"
-               onchange="_AP.controls.doControl('runtimeSpeedInput')"
-               style="margin: 3px 0 3px 0; width: 65px; vertical-align: middle;" />
-        <label id="performanceSpeedInputNumberLabel2" for="performanceSpeedInput">
-            % (range 1..400) Higher values lead to higher speed.
-        </label>
     </div>
 
     <script src="webMIDI/namespace.js" type="text/javascript"></script>
