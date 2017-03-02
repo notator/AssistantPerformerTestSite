@@ -160,6 +160,7 @@ _AP.track = (function()
         this._currentMidiObjectIndex = index;
         this._currentMidiObject = midiObjects[index];
         this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
+        this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment; 
 
         // Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
         for(i = index + 1; i < nMidiObjects; ++i)
