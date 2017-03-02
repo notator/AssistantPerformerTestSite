@@ -20,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 1 (scroll)</dc:title>
-				<dc:date>Tuesday 21.02.2017, 15:54:35</dc:date>
+				<dc:date>Thursday 02.03.2017, 10:31:14</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -314,7 +314,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 3 sketch 1 (scroll), Tuesday 21.02.2017, 15:54:14</text>
+			font-family="Arial">Study 3 sketch 1 (scroll), Thursday 02.03.2017, 10:31:14</text>
 		<g
 			class="titles">
 			<text
@@ -445,39 +445,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="84" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="83" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="84" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="84" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="83" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="84" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="83" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="84" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="84" />
+										msDur="753" />
 									<vt
 										d1="100"
 										d2="100"
@@ -629,13 +597,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="10">
 									<vt
 										d2="12"
-										msDur="397" />
-								</env>
-								<env
-									s="0xE7">
-									<vt
-										d1="64"
-										d2="64"
 										msDur="397" />
 								</env>
 							</envs>
@@ -1233,19 +1194,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="154" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="154" />
+										msDur="308" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="154" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="155" />
 								</env>
 							</envs>
 						</score:midi>
@@ -1743,11 +1696,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="135" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="136" />
 								</env>
 							</envs>
 						</score:midi>
@@ -1839,19 +1788,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="179" />
+										msDur="359" />
 									<vt
-										d1="11"
-										d2="11"
+										d1="81"
+										d2="81"
 										msDur="180" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="179" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -2432,11 +2373,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="40"
 										d2="40"
-										msDur="242" />
-									<vt
-										d1="40"
-										d2="40"
-										msDur="242" />
+										msDur="484" />
 									<vt
 										d1="64"
 										d2="64"
@@ -2580,19 +2517,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="0"
 										d2="0"
-										msDur="164" />
-									<vt
-										d1="0"
-										d2="0"
-										msDur="164" />
+										msDur="328" />
 									<vt
 										d1="73"
 										d2="73"
-										msDur="164" />
-									<vt
-										d1="73"
-										d2="73"
-										msDur="1" />
+										msDur="165" />
 								</env>
 							</envs>
 						</score:midi>
@@ -3184,19 +3113,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="193" />
+										msDur="387" />
 									<vt
-										d1="127"
-										d2="127"
+										d1="81"
+										d2="81"
 										msDur="194" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="193" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -3689,11 +3610,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="174" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="175" />
 								</env>
 							</envs>
 						</score:midi>
@@ -3780,19 +3697,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="228" />
-									<vt
-										d1="11"
-										d2="11"
-										msDur="227" />
+										msDur="455" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="228" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="229" />
 								</env>
 							</envs>
 						</score:midi>
@@ -4311,31 +4220,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="21" />
 									<vt
 										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="167" />
 								</env>
 								<env
 									s="0xE5">
@@ -4346,15 +4231,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="112" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="113" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
+										msDur="337" />
 									<vt
 										d1="50"
 										d2="50"
@@ -4442,31 +4319,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="27" />
+										msDur="250" />
 									<vt
 										d2="127"
 										msDur="28" />
@@ -4522,15 +4375,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
+										msDur="384" />
 									<vt
 										d1="95"
 										d2="95"
@@ -4613,31 +4458,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
+										msDur="193" />
 									<vt
 										d2="127"
 										msDur="21" />
@@ -4774,31 +4595,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="37" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="37" />
+										msDur="326" />
 									<vt
 										d2="127"
 										msDur="36" />
@@ -4854,15 +4651,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="93" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="92" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="93" />
+										msDur="278" />
 									<vt
 										d1="120"
 										d2="120"
@@ -4962,31 +4751,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="42" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="42" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
+										msDur="371" />
 									<vt
 										d2="127"
 										msDur="42" />
@@ -5042,19 +4807,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="189" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
+										msDur="759" />
 									<vt
 										d1="97"
 										d2="97"
@@ -5128,31 +4881,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
+										msDur="243" />
 									<vt
 										d2="127"
 										msDur="27" />
@@ -5352,31 +5081,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="21" />
 									<vt
 										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="167" />
 								</env>
 								<env
 									s="0xE5">
@@ -5391,15 +5096,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="113" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
+										msDur="337" />
 									<vt
 										d1="95"
 										d2="95"
@@ -5478,31 +5175,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="28" />
-									<vt
-										d2="50"
-										msDur="27" />
+										msDur="250" />
 									<vt
 										d2="127"
 										msDur="28" />
@@ -5562,15 +5235,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
+										msDur="384" />
 									<vt
 										d1="95"
 										d2="95"
@@ -5649,31 +5314,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
-									<vt
-										d2="50"
-										msDur="21" />
-									<vt
-										d2="50"
-										msDur="22" />
+										msDur="193" />
 									<vt
 										d2="127"
 										msDur="21" />
@@ -5804,31 +5445,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="37" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="36" />
-									<vt
-										d2="50"
-										msDur="37" />
+										msDur="326" />
 									<vt
 										d2="127"
 										msDur="36" />
@@ -5884,15 +5501,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="93" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="92" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="93" />
+										msDur="278" />
 									<vt
 										d1="120"
 										d2="120"
@@ -5986,31 +5595,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="42" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="42" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
-									<vt
-										d2="50"
-										msDur="41" />
+										msDur="371" />
 									<vt
 										d2="127"
 										msDur="42" />
@@ -6066,19 +5651,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="189" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
+										msDur="759" />
 									<vt
 										d1="120"
 										d2="120"
@@ -6152,31 +5725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
-									<vt
-										d2="50"
-										msDur="27" />
+										msDur="243" />
 									<vt
 										d2="127"
 										msDur="27" />
@@ -6414,15 +5963,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="112" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="113" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
+										msDur="337" />
 									<vt
 										d1="50"
 										d2="50"
@@ -6514,15 +6055,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
+										msDur="384" />
 									<vt
 										d1="95"
 										d2="95"
@@ -6688,15 +6221,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="119" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="119" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="118" />
+										msDur="356" />
 									<vt
 										d1="120"
 										d2="120"
@@ -6786,19 +6311,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="189" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
+										msDur="759" />
 									<vt
 										d1="97"
 										d2="97"
@@ -6959,15 +6472,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="113" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="112" />
+										msDur="337" />
 									<vt
 										d1="95"
 										d2="95"
@@ -7054,15 +6559,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="128" />
+										msDur="384" />
 									<vt
 										d1="95"
 										d2="95"
@@ -7236,15 +6733,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="119" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="119" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="119" />
+										msDur="357" />
 									<vt
 										d1="120"
 										d2="120"
@@ -7322,19 +6811,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="189" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="190" />
+										msDur="759" />
 									<vt
 										d1="120"
 										d2="120"
@@ -16662,39 +16139,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="66" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="66" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
+										msDur="601" />
 									<vt
 										d1="100"
 										d2="100"
@@ -16825,13 +16270,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="10">
 									<vt
 										d2="12"
-										msDur="317" />
-								</env>
-								<env
-									s="0xE7">
-									<vt
-										d1="64"
-										d2="64"
 										msDur="317" />
 								</env>
 							</envs>
@@ -17350,19 +16788,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="123" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="122" />
+										msDur="245" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="123" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="124" />
 								</env>
 							</envs>
 						</score:midi>
@@ -17797,11 +17227,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="108" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="109" />
 								</env>
 							</envs>
 						</score:midi>
@@ -17872,19 +17298,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="143" />
+										msDur="287" />
 									<vt
-										d1="11"
-										d2="11"
+										d1="81"
+										d2="81"
 										msDur="144" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="143" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -18433,11 +17851,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="40"
 										d2="40"
-										msDur="150" />
-									<vt
-										d1="40"
-										d2="40"
-										msDur="151" />
+										msDur="301" />
 									<vt
 										d1="64"
 										d2="64"
@@ -18560,19 +17974,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="0"
 										d2="0"
-										msDur="102" />
-									<vt
-										d1="0"
-										d2="0"
-										msDur="101" />
+										msDur="203" />
 									<vt
 										d1="73"
 										d2="73"
-										msDur="102" />
-									<vt
-										d1="73"
-										d2="73"
-										msDur="1" />
+										msDur="103" />
 								</env>
 							</envs>
 						</score:midi>
@@ -19090,19 +18496,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="120" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="120" />
+										msDur="240" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="120" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="121" />
 								</env>
 							</envs>
 						</score:midi>
@@ -19537,11 +18935,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="108" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="109" />
 								</env>
 							</envs>
 						</score:midi>
@@ -19612,19 +19006,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="141" />
+										msDur="283" />
 									<vt
-										d1="11"
-										d2="11"
+										d1="81"
+										d2="81"
 										msDur="142" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="141" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -20125,31 +19511,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="15" />
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="119" />
 								</env>
 								<env
 									s="0xE5">
@@ -20160,15 +19522,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="50"
 										d2="50"
@@ -20230,31 +19584,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="178" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -20310,15 +19640,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -20380,31 +19702,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
+										msDur="137" />
 									<vt
 										d2="127"
 										msDur="15" />
@@ -20520,31 +19818,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
+										msDur="232" />
 									<vt
 										d2="127"
 										msDur="26" />
@@ -20600,15 +19874,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
+										msDur="198" />
 									<vt
 										d1="120"
 										d2="120"
@@ -20692,31 +19958,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
+										msDur="265" />
 									<vt
 										d2="127"
 										msDur="29" />
@@ -20772,19 +20014,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="97"
 										d2="97"
@@ -20842,31 +20072,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="173" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -21045,31 +20251,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="15" />
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="119" />
 								</env>
 								<env
 									s="0xE5">
@@ -21084,15 +20266,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="95"
 										d2="95"
@@ -21150,31 +20324,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="178" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -21234,15 +20384,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -21300,31 +20442,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
+										msDur="137" />
 									<vt
 										d2="127"
 										msDur="15" />
@@ -21434,31 +20552,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
+										msDur="232" />
 									<vt
 										d2="127"
 										msDur="26" />
@@ -21514,15 +20608,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
+										msDur="198" />
 									<vt
 										d1="120"
 										d2="120"
@@ -21600,31 +20686,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
+										msDur="265" />
 									<vt
 										d2="127"
 										msDur="29" />
@@ -21680,19 +20742,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="120"
 										d2="120"
@@ -21750,31 +20800,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="173" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -22024,15 +21050,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="50"
 										d2="50"
@@ -22098,15 +21116,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -22230,15 +21240,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="84" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
+										msDur="254" />
 									<vt
 										d1="120"
 										d2="120"
@@ -22312,19 +21314,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="97"
 										d2="97"
@@ -22448,15 +21438,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="95"
 										d2="95"
@@ -22522,15 +21504,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -22662,15 +21636,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="85" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="84" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
+										msDur="254" />
 									<vt
 										d1="120"
 										d2="120"
@@ -22732,19 +21698,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="120"
 										d2="120"
@@ -31155,39 +30109,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="66" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="66" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="67" />
+										msDur="601" />
 									<vt
 										d1="100"
 										d2="100"
@@ -31318,13 +30240,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="10">
 									<vt
 										d2="12"
-										msDur="317" />
-								</env>
-								<env
-									s="0xE7">
-									<vt
-										d1="64"
-										d2="64"
 										msDur="317" />
 								</env>
 							</envs>
@@ -31843,19 +30758,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="123" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="122" />
+										msDur="245" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="123" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="124" />
 								</env>
 							</envs>
 						</score:midi>
@@ -32290,11 +31197,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="108" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="109" />
 								</env>
 							</envs>
 						</score:midi>
@@ -32365,19 +31268,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="143" />
+										msDur="287" />
 									<vt
-										d1="11"
-										d2="11"
+										d1="81"
+										d2="81"
 										msDur="144" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="143" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -32955,11 +31850,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="40"
 										d2="40"
-										msDur="150" />
-									<vt
-										d1="40"
-										d2="40"
-										msDur="151" />
+										msDur="301" />
 									<vt
 										d1="64"
 										d2="64"
@@ -33082,19 +31973,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="0"
 										d2="0"
-										msDur="102" />
-									<vt
-										d1="0"
-										d2="0"
-										msDur="101" />
+										msDur="203" />
 									<vt
 										d1="73"
 										d2="73"
-										msDur="102" />
-									<vt
-										d1="73"
-										d2="73"
-										msDur="1" />
+										msDur="103" />
 								</env>
 							</envs>
 						</score:midi>
@@ -33612,19 +32495,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="120" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="120" />
+										msDur="240" />
 									<vt
 										d1="81"
 										d2="81"
-										msDur="120" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
+										msDur="121" />
 								</env>
 							</envs>
 						</score:midi>
@@ -34059,11 +32934,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="127"
 										d2="127"
-										msDur="108" />
-									<vt
-										d1="127"
-										d2="127"
-										msDur="1" />
+										msDur="109" />
 								</env>
 							</envs>
 						</score:midi>
@@ -34134,19 +33005,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="11"
 										d2="11"
-										msDur="141" />
+										msDur="283" />
 									<vt
-										d1="11"
-										d2="11"
+										d1="81"
+										d2="81"
 										msDur="142" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="141" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="1" />
 								</env>
 							</envs>
 						</score:midi>
@@ -34676,31 +33539,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="15" />
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="119" />
 								</env>
 								<env
 									s="0xE5">
@@ -34711,15 +33550,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="50"
 										d2="50"
@@ -34781,31 +33612,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="178" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -34861,15 +33668,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -34931,31 +33730,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
+										msDur="137" />
 									<vt
 										d2="127"
 										msDur="15" />
@@ -35071,31 +33846,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
+										msDur="232" />
 									<vt
 										d2="127"
 										msDur="26" />
@@ -35151,15 +33902,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
+										msDur="198" />
 									<vt
 										d1="120"
 										d2="120"
@@ -35243,31 +33986,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
+										msDur="265" />
 									<vt
 										d2="127"
 										msDur="29" />
@@ -35323,19 +34042,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="97"
 										d2="97"
@@ -35393,31 +34100,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="173" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -35603,31 +34286,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 										msDur="15" />
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="14" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="1" />
+										msDur="119" />
 								</env>
 								<env
 									s="0xE5">
@@ -35642,15 +34301,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="95"
 										d2="95"
@@ -35708,31 +34359,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="178" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -35792,15 +34419,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -35858,31 +34477,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="16" />
-									<vt
-										d2="50"
-										msDur="15" />
-									<vt
-										d2="50"
-										msDur="15" />
+										msDur="137" />
 									<vt
 										d2="127"
 										msDur="15" />
@@ -35992,31 +34587,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="25" />
-									<vt
-										d2="50"
-										msDur="26" />
-									<vt
-										d2="50"
-										msDur="26" />
+										msDur="232" />
 									<vt
 										d2="127"
 										msDur="26" />
@@ -36072,15 +34643,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="41"
 										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
-									<vt
-										d1="41"
-										d2="41"
-										msDur="66" />
+										msDur="198" />
 									<vt
 										d1="120"
 										d2="120"
@@ -36158,31 +34721,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
-									<vt
-										d2="50"
-										msDur="29" />
-									<vt
-										d2="50"
-										msDur="30" />
+										msDur="265" />
 									<vt
 										d2="127"
 										msDur="29" />
@@ -36238,19 +34777,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="120"
 										d2="120"
@@ -36308,31 +34835,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									d1="11">
 									<vt
 										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="20" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
-									<vt
-										d2="50"
-										msDur="19" />
+										msDur="173" />
 									<vt
 										d2="127"
 										msDur="20" />
@@ -36611,15 +35114,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="50"
 										d2="50"
@@ -36685,15 +35180,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -36817,15 +35304,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="84" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
+										msDur="254" />
 									<vt
 										d1="120"
 										d2="120"
@@ -36899,19 +35378,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="97"
 										d2="97"
@@ -37035,15 +35502,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="79" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="80" />
+										msDur="239" />
 									<vt
 										d1="95"
 										d2="95"
@@ -37109,15 +35568,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="64"
 										d2="64"
-										msDur="92" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
-									<vt
-										d1="64"
-										d2="64"
-										msDur="91" />
+										msDur="274" />
 									<vt
 										d1="95"
 										d2="95"
@@ -37249,15 +35700,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="80"
 										d2="80"
-										msDur="85" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="84" />
-									<vt
-										d1="80"
-										d2="80"
-										msDur="85" />
+										msDur="254" />
 									<vt
 										d1="120"
 										d2="120"
@@ -37319,19 +35762,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									<vt
 										d1="81"
 										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="136" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
-									<vt
-										d1="81"
-										d2="81"
-										msDur="135" />
+										msDur="541" />
 									<vt
 										d1="120"
 										d2="120"
