@@ -22,7 +22,9 @@ _AP.score = (function (document)
     "use strict";
 
     var
-    Markers = _AP.markers,
+    StartMarker = _AP.startMarker.StartMarker,
+    RunningMarker = _AP.runningMarker.RunningMarker,
+    EndMarker = _AP.endMarker.EndMarker,
 
     MidiChord = _AP.midiObject.MidiChord,
     MidiRest = _AP.midiObject.MidiRest,
@@ -229,7 +231,7 @@ _AP.score = (function (document)
             timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
         }
 
-        if(timeObject.msPositionInScore < endMarker.msPositionInScore())
+        if(timeObject.msPositionInScore < endMarker.msPositionInScore)
         {
             startMarker.moveTo(timeObject);
         }
@@ -239,8 +241,8 @@ _AP.score = (function (document)
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
     refreshDisplay = function(trackIsOnArrayArg)
     {
-        var i, system = systems[startMarker.systemIndex()],
-        startMarkerAlignment = startMarker.timeObject().alignment,
+        var i, system = systems[startMarker.systemIndex],
+        startMarkerAlignment = startMarker.alignment,
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
         nOutputTracks = midiChannelPerOutputTrack.length;
 
@@ -498,7 +500,7 @@ _AP.score = (function (document)
                 switch(state)
                 {
                     case 'settingStart':
-                        if(timeObject.msPositionInScore < endMarker.msPositionInScore())
+                        if(timeObject.msPositionInScore < endMarker.msPositionInScore)
                         {
                             startMarker = system.startMarker;
                             hideStartMarkersExcept(startMarker);
@@ -506,7 +508,7 @@ _AP.score = (function (document)
                         }
                         break;
                     case 'settingEnd':
-                        if(startMarker.msPositionInScore() < timeObject.msPositionInScore)
+                        if(startMarker.msPositionInScore < timeObject.msPositionInScore)
                         {
                             endMarker = system.endMarker;
                             hideEndMarkersExcept(endMarker);
@@ -537,8 +539,8 @@ _AP.score = (function (document)
     moveRunningMarkerToStartMarker = function ()
     {
         hideRunningMarkers();
-        runningMarker = systems[startMarker.systemIndex()].runningMarker;
-        runningMarker.moveToStartMarker(startMarker);
+        runningMarker = systems[startMarker.systemIndex].runningMarker;
+        runningMarker.moveTo(startMarker.msPositionInScore);
     },
 
     // Called when the go button is clicked.
@@ -931,9 +933,9 @@ _AP.score = (function (document)
                 markersLayer.appendChild(runningMarkerElem);
                 markersLayer.appendChild(endMarkerElem);
 
-                system.startMarker = new Markers.StartMarker(system, systIndex, startMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.runningMarker = new Markers.RunningMarker(system, systIndex, runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.endMarker = new Markers.EndMarker(system, systIndex, endMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.startMarker = new StartMarker(system, systIndex, startMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
+                system.endMarker = new EndMarker(system, systIndex, endMarkerElem, markersLayer.rect.originY, viewBox.scale);
             }
 
             markersLayer.setAttribute("style", "display:inline");
@@ -1097,12 +1099,12 @@ _AP.score = (function (document)
 
     startMarkerMsPosition = function ()
     {
-        return startMarker.msPositionInScore();
+        return startMarker.msPositionInScore;
     },
 
     endMarkerMsPosition = function ()
     {
-        return endMarker.msPositionInScore();
+        return endMarker.msPositionInScore;
     },
 
     // Called when the start button is clicked in the top options panel,
@@ -1114,11 +1116,11 @@ _AP.score = (function (document)
         var height = Math.round(parseFloat(svgPagesDiv.style.height)),
         scrollTop = svgPagesDiv.scrollTop, startMarkerYCoordinates;
 
-        startMarkerYCoordinates = startMarker.getYCoordinates();
+        startMarkerYCoordinates = startMarker.yCoordinates;
 
         if ((startMarkerYCoordinates.top < scrollTop) || (startMarkerYCoordinates.bottom > (scrollTop + height)))
         {
-            if (startMarker.systemIndex() === 0)
+            if (startMarker.systemIndex === 0)
             {
                 svgPagesDiv.scrollTop = 0;
             }
@@ -1134,22 +1136,22 @@ _AP.score = (function (document)
     // Also does nothing when the end of the score is reached.
     advanceRunningMarker = function(msPosition, systemIndex)
     {
-        if(systemIndex > runningMarker.systemIndex())
+        if(systemIndex > runningMarker.systemIndex)
         {
             // Move runningMarker to msPosition in the next system.
             runningMarker.setVisible(false);
-            if(runningMarker.systemIndex() < endMarker.systemIndex())
+            if(runningMarker.systemIndex < endMarker.systemIndex)
             {
-                runningMarker = systems[runningMarker.systemIndex() + 1].runningMarker;
+                runningMarker = systems[runningMarker.systemIndex + 1].runningMarker;
                 runningMarker.moveTo(msPosition);
                 runningMarker.setVisible(true);
                 // callback for auto scroll
-                runningMarkerHeightChanged(runningMarker.getYCoordinates());
+                runningMarkerHeightChanged(runningMarker.yCoordinates);
             }
         }
         else
         {
-            while(msPosition >= runningMarker.nextMsPosition())
+            while(msPosition >= runningMarker.nextMsPosition)
             {
                 // this function can assume that the runningMarker's currentPosition can simply be incremented
                 runningMarker.incrementPosition();
