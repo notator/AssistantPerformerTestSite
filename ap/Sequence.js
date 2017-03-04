@@ -448,14 +448,13 @@ _AP.sequence = (function(window)
 
         sequenceRecording = recording; // can be undefined or null
 
-        performanceStartTime = performance.now();
         startMarkerMsPosition = startMarkerMsPosInScore;
         endMarkerMsPosition = endMarkerMsPosInScore;
-        startTimeAdjustedForPauses = performanceStartTime;
-
-        outputDevice.reset();
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+
+        outputDevice.reset();
+        outputDevice.sendStartStateMessages(tracks);
 
         pausedMoment = null;
         pauseStartTime = -1;
@@ -463,6 +462,9 @@ _AP.sequence = (function(window)
         previousMomtMsPos = startMarkerMsPosInScore;
         msPositionToReport = -1;
         lastReportedMsPosition = -1;
+
+        performanceStartTime = performance.now();
+        startTimeAdjustedForPauses = performanceStartTime;
 
         run();
     },

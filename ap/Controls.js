@@ -1300,8 +1300,8 @@ _AP.controls = (function(document, window)
                 var
                 // the slider has min="0" max="100" (default value="50")
                 minp = 0, maxp = 100,
-                // The result will be between 1/5 and 5
-                minv = Math.log(0.2), maxv = Math.log(5),
+                // The result will be between 1/10 and 10
+                minv = Math.log(0.1), maxv = Math.log(10),
                 // the adjustment factor
                 scale = (maxv - minv) / (maxp - minp);
 
@@ -1322,7 +1322,7 @@ _AP.controls = (function(document, window)
                 globalElements.speedControlCheckbox.checked = false;
                 globalElements.speedControlCheckbox.disabled = false;
             }
-            globalElements.speedControlLabel2.innerHTML = Math.ceil(speed * 100) + "%";
+            globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
         }
 
         if(controlID === "scoreSelect")
@@ -1529,7 +1529,7 @@ _AP.controls = (function(document, window)
             tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
         }
 
-        function setOutputDeviceResetFunction(outputDevice)
+        function setOutputDeviceFunctions(outputDevice)
         {
             var resetMessages = [];
 
@@ -1558,11 +1558,31 @@ _AP.controls = (function(document, window)
                 }
             }
 
+            function sendStartStateMessages(tracks)
+            {
+                var i, j, nTracks = tracks.length, track, msgs, nMsgs;
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    track = tracks[i];
+                    if(track.isPerforming)
+                    {
+                        msgs = tracks[i].startStateMessages;
+                        nMsgs = msgs.length;
+                        for(j = 0; j < nMsgs; ++j)
+                        {
+                            this.send(msgs[j].data, 0);
+                        }
+                    }
+                }
+            }
+
             getResetMessages();
 
             if(outputDevice !== null)
             {
                 outputDevice.reset = reset;
+                outputDevice.sendStartStateMessages = sendStartStateMessages;
             }
         }
 
@@ -1572,7 +1592,7 @@ _AP.controls = (function(document, window)
             speedControlDiv = document.getElementById("speedControlDiv"),
             speedSlider = globalElements.speedControlInput,
             performanceButtonsLeft = 428,
-            speedSliderWidth = 190, // the length of the slider
+            speedSliderWidth = 180, // the length of the slider
             speedControlDivLeft = tracksControlWidth + ((performanceButtonsLeft - tracksControlWidth - speedSliderWidth) / 2);
             speedControlDivLeft -= 46; // adjust for labels and checkbox
 
@@ -1586,7 +1606,7 @@ _AP.controls = (function(document, window)
 
             setMIDIDevices(options);
 
-            setOutputDeviceResetFunction(options.outputDevice);
+            setOutputDeviceFunctions(options.outputDevice);
 
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).

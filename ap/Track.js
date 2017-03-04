@@ -34,7 +34,6 @@ _AP.track = (function()
 {
     "use strict";
     var
-    MidiChord = _AP.midiObject.MidiChord,
     // An empty track is created.
     Track = function()
     {
@@ -43,9 +42,14 @@ _AP.track = (function()
             return new Track();
         }
 
-        this._currentMidiObject = null; // The MidiChord or MidiRest currently being played by this track.
-        this.currentMoment = null; // the moment which is about to be played by the _currentMidiObject (if it is a MidiChord or MidiRest). 
-        this._currentMidiObjectIndex = -1; // the current index in this track's midiObjects or inputObjects array
+        // The MidiChord or MidiRest currently being played by this track.
+        Object.defineProperty(this, "_currentMidiObject", { value: null, writable: true });
+        // The moment which is about to be played by the _currentMidiObject (if it is a MidiChord or MidiRest).
+        Object.defineProperty(this, "currentMoment", { value: null, writable: true });
+        // The current index in this track's midiObjects or inputObjects array
+        Object.defineProperty(this, "_currentMidiObjectIndex", { value: -1, writable: true });
+        // The messages that should be sent to set up the track's state when a performance starts.
+        Object.defineProperty(this, "startStateMessages", { value: null, writable: true });
     },
 
     publicTrackAPI =
@@ -111,7 +115,110 @@ _AP.track = (function()
     // track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
     Track.prototype.setForOutputSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
     {
-        var i, index, midiObject, midiObjects, midiChord, nMidiObjects;
+        var i, index, midiObject, midiObjects, midiChord, midiRest, nMidiObjects,
+            MidiChord = _AP.midiObject.MidiChord;
+
+        // The returned array can be empty.
+        function getStartStateMessages(that)
+        {
+            var
+            finished = false,
+            i, midiObjects = that.midiObjects, nMidiObjects = midiObjects.length,
+            j, moment, moments, nMoments,
+            k, msgs, nMsgs,
+            msg,
+            AFTERTOUCH = _AP.constants.COMMAND.AFTERTOUCH,
+            CONTROL_CHANGE = _AP.constants.COMMAND.CONTROL_CHANGE,
+            PROGRAM_CHANGE = _AP.constants.COMMAND.PROGRAM_CHANGE,
+            CHANNEL_PRESSURE = _AP.constants.COMMAND.CHANNEL_PRESSURE,
+            PITCH_WHEEL = _AP.constants.COMMAND.PITCH_WHEEL,
+            aftertouchSM, programChangeSM, channelPressureSM, pitchWheelSM,
+            stateMsgs = [], msgIndex,
+            startMsPositionInScore, midiObjectMsPositionInScore;
+
+            function findControlMessage(controlChangeSMs, controlType)
+            {
+                var returnIndex = -1, i, nControlChangeSMs = controlChangeSMs.length;
+                for(i = 0; i < nControlChangeSMs; ++i)
+                {
+                    if(controlChangeSMs[i].data[1] === controlType)
+                    {
+                        returnIndex = i;
+                        break;
+                    }
+                }
+                return returnIndex;                
+            }
+
+            startMsPositionInScore = that.currentMsPosition();
+
+            for(i = 0; i < nMidiObjects && finished === false; ++i)
+            {
+                midiObjectMsPositionInScore = midiObjects[i].msPositionInScore;
+                moments = midiObjects[i].moments;
+                nMoments = moments.length;
+                for(j=0; j < nMoments; ++j)
+                {
+                    moment = moments[j];
+                    if((midiObjectMsPositionInScore + moment.msPositionInChord) >= startMsPositionInScore)
+                    {
+                        finished = true;
+                        break;
+                    }
+                    msgs = moment.messages;
+                    nMsgs = msgs.length;
+                    for(k= 0; k < nMsgs; ++k)
+                    {
+                        msg = msgs[k];
+                        switch(msg.data[0] & 0xF0)
+                        {
+                            case AFTERTOUCH:
+                                aftertouchSM = msg;
+                                break;
+                            case CONTROL_CHANGE:
+                                msgIndex = findControlMessage(stateMsgs, msg.data[1]);
+                                if(msgIndex === -1)
+                                {
+                                    stateMsgs.push(msg);                                    
+                                }
+                                else
+                                {
+                                    stateMsgs[msgIndex] = msg;
+                                }
+                                break;
+                            case PROGRAM_CHANGE:
+                                programChangeSM = msg;
+                                break;
+                            case CHANNEL_PRESSURE:
+                                channelPressureSM = msg;
+                                break;
+                            case PITCH_WHEEL:
+                                pitchWheelSM = msg;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if(aftertouchSM !== undefined)
+            {
+                stateMsgs.push(aftertouchSM);
+            }
+            if(programChangeSM !== undefined)
+            {
+                stateMsgs.push(programChangeSM);
+            }
+            if(channelPressureSM !== undefined)
+            {
+                stateMsgs.push(channelPressureSM);
+            }
+            if(pitchWheelSM !== undefined)
+            {
+                stateMsgs.push(pitchWheelSM);
+            }
+
+            return stateMsgs;
+        }
 
         if(this.midiObjects === undefined)
         {
@@ -152,15 +259,11 @@ _AP.track = (function()
             }
             else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
             {
+                midiRest = midiObjects[i];
                 midiRest.setToStartAtBeginning();
                 break;
             }
         }
-
-        this._currentMidiObjectIndex = index;
-        this._currentMidiObject = midiObjects[index];
-        this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
-        this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment; 
 
         // Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
         for(i = index + 1; i < nMidiObjects; ++i)
@@ -174,6 +277,12 @@ _AP.track = (function()
 
             midiObject.setToStartAtBeginning();
         }
+
+        this._currentMidiObjectIndex = index;
+        this._currentMidiObject = midiObjects[index];
+        this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
+        this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+        this.startStateMessages = getStartStateMessages(this);
     };
 
     // Returns Number.MAX_VALUE at end of track.
