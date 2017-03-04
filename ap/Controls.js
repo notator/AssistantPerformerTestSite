@@ -264,11 +264,6 @@ _AP.controls = (function(document, window)
         }
     },
 
-    doSpeedControlLabel2 = function()
-    {
-        doControl('speedControlLabelClick');
-    },
-
     setStopped = function()
     {
         player.stop();
@@ -311,7 +306,14 @@ _AP.controls = (function(document, window)
         tracksControl.setDisabled(false);
 
         globalElements.speedControlInput.disabled = false;
-        globalElements.speedControlLabel2.addEventListener('click', doSpeedControlLabel2);
+        if(globalElements.speedControlCheckbox.checked === false)
+        {
+            globalElements.speedControlCheckbox.disabled = false;
+        }
+        else
+        {
+            globalElements.speedControlCheckbox.disabled = true;
+        }
     },
 
     // callback called when a performing sequenceRecording is stopped or has played its last message,
@@ -546,7 +548,7 @@ _AP.controls = (function(document, window)
             tracksControl.setDisabled(true);
 
             globalElements.speedControlInput.disabled = true;
-            globalElements.speedControlLabel2.removeEventListener('click', doSpeedControlLabel2);
+            globalElements.speedControlCheckbox.disabled = true;
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -568,7 +570,7 @@ _AP.controls = (function(document, window)
             tracksControl.setDisabled(true);
 
             globalElements.speedControlInput.disabled = true;
-            globalElements.speedControlLabel2.removeEventListener('click', doSpeedControlLabel2);
+            globalElements.speedControlCheckbox.disabled = true;
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -739,6 +741,7 @@ _AP.controls = (function(document, window)
 
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
             globalElements.speedControlInput = document.getElementById("speedControlInput");
+            globalElements.speedControlCheckbox = document.getElementById("speedControlCheckbox");
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
@@ -941,9 +944,13 @@ _AP.controls = (function(document, window)
 
     resetSpeed = function()
     {
-        player.setSpeed(1);
-        globalElements.speedControlInput.value = 50;
-        globalElements.speedControlLabel2.innerHTML = "100%";
+        if(globalElements.speedControlCheckbox.checked === true)
+        {
+            player.setSpeed(1);
+            globalElements.speedControlInput.value = 50;
+            globalElements.speedControlCheckbox.disabled = true;
+            globalElements.speedControlLabel2.innerHTML = "100%";
+        }
     },
 
     // called when the user clicks a control in the GUI
@@ -1285,7 +1292,7 @@ _AP.controls = (function(document, window)
 
         function setSpeed()
         {
-            var speedPercent, speed = globalElements.speedControlInput.value / 50;
+            var speed;
 
             // see: http://stackoverflow.com/questions/846221/logarithmic-slider
             function logslider(position)
@@ -1304,6 +1311,17 @@ _AP.controls = (function(document, window)
             speed = logslider(globalElements.speedControlInput.value);
 
             player.setSpeed(speed);
+
+            if(globalElements.speedControlInput.value === "50")
+            {
+                globalElements.speedControlCheckbox.checked = true;
+                globalElements.speedControlCheckbox.disabled = true;
+            }
+            else
+            {
+                globalElements.speedControlCheckbox.checked = false;
+                globalElements.speedControlCheckbox.disabled = false;
+            }
             globalElements.speedControlLabel2.innerHTML = Math.ceil(speed * 100) + "%";
         }
 
@@ -1397,7 +1415,7 @@ _AP.controls = (function(document, window)
             setSpeed();
         }
 
-        if(controlID === "speedControlLabelClick")
+        if(controlID === "speedControlCheckboxClick")
         {
             resetSpeed();
         }
@@ -1552,13 +1570,14 @@ _AP.controls = (function(document, window)
         {
             var
             speedControlDiv = document.getElementById("speedControlDiv"),
-            speedControlInput = globalElements.speedControlInput,
+            speedSlider = globalElements.speedControlInput,
             performanceButtonsLeft = 428,
-            speedControlWidth = parseInt(speedControlInput.style.width, 10),
-            speedControlLeft = tracksControlWidth + ((performanceButtonsLeft - tracksControlWidth - speedControlWidth) / 2);
-            speedControlLeft -= 40; // for "speed" label
+            speedSliderWidth = 190, // the length of the slider
+            speedControlDivLeft = tracksControlWidth + ((performanceButtonsLeft - tracksControlWidth - speedSliderWidth) / 2);
+            speedControlDivLeft -= 46; // adjust for labels and checkbox
 
-            speedControlDiv.style.left = speedControlLeft.toString() + "px";
+            speedSlider.style.width = speedSliderWidth.toString() + "px";
+            speedControlDiv.style.left = speedControlDivLeft.toString() + "px";
         }
 
         try

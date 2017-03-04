@@ -84,13 +84,16 @@
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
         <div id="speedControlDiv"
              style="position: absolute; top: 0; left: 168px; height:36px; padding-top:6px; font-size:12px">
-            <label id="speedControlLabel1" for="speedControlInput">
+            <label id="speedControlLabel1" for="speedControlInput" style="margin:0; vertical-align: middle;">
                 speed:
             </label>
             <input type="range" id="speedControlInput" value="50" min="0" max="100"
-                onmousemove="_AP.controls.doControl('speedControlMousemove')"               
-                style="margin:0; width: 200px; height:10px; vertical-align: middle;" >
-            <label id="speedControlLabel2" for="speedControlInput" >
+                   onmousemove="_AP.controls.doControl('speedControlMousemove')"
+                   style="margin:0; vertical-align: middle;">
+            <input type="checkbox" id="speedControlCheckbox" checked="checked" disabled="disabled" min="0" max="100"
+                   onclick="_AP.controls.doControl('speedControlCheckboxClick')"
+                   style="margin:0 -3px 0 0; vertical-align: middle;">
+            <label id="speedControlLabel2" for="speedControlInput" style="margin:0; vertical-align: middle;" >
                 100%
             </label>
         </div>
