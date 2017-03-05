@@ -49,7 +49,7 @@ _AP.track = (function()
         // The current index in this track's midiObjects or inputObjects array
         Object.defineProperty(this, "_currentMidiObjectIndex", { value: -1, writable: true });
         // The messages that should be sent to set up the track's state when a performance starts.
-        Object.defineProperty(this, "startStateMessages", { value: null, writable: true });
+        Object.defineProperty(this, "startStateMessages", { value: [], writable: true });
     },
 
     publicTrackAPI =
@@ -118,7 +118,6 @@ _AP.track = (function()
         var i, index, midiObject, midiObjects, midiChord, midiRest, nMidiObjects,
             MidiChord = _AP.midiObject.MidiChord;
 
-        // The returned array can be empty.
         function getStartStateMessages(that)
         {
             var
@@ -133,8 +132,7 @@ _AP.track = (function()
             CHANNEL_PRESSURE = _AP.constants.COMMAND.CHANNEL_PRESSURE,
             PITCH_WHEEL = _AP.constants.COMMAND.PITCH_WHEEL,
             aftertouchSM, programChangeSM, channelPressureSM, pitchWheelSM,
-            stateMsgs = [], msgIndex,
-            startMsPositionInScore, midiObjectMsPositionInScore;
+            stateMsgs = [], msgIndex;
 
             function findControlMessage(controlChangeSMs, controlType)
             {
@@ -150,17 +148,19 @@ _AP.track = (function()
                 return returnIndex;                
             }
 
-            startMsPositionInScore = that.currentMsPosition();
+            if(that.currentMoment === null)
+            {
+                throw "Track.getStartStateMessages(): track.currentMoment cannot be null here!";
+            }
 
             for(i = 0; i < nMidiObjects && finished === false; ++i)
             {
-                midiObjectMsPositionInScore = midiObjects[i].msPositionInScore;
                 moments = midiObjects[i].moments;
                 nMoments = moments.length;
                 for(j=0; j < nMoments; ++j)
                 {
                     moment = moments[j];
-                    if((midiObjectMsPositionInScore + moment.msPositionInChord) >= startMsPositionInScore)
+                    if(moment === that.currentMoment)
                     {
                         finished = true;
                         break;
@@ -282,7 +282,17 @@ _AP.track = (function()
         this._currentMidiObject = midiObjects[index];
         this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
         this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
-        this.startStateMessages = getStartStateMessages(this);
+        // this.currentMoment is the first moment that is going to be played in this track.
+        // (If the performance is set to start inside a rest, this.currentMoment will be at a
+        // position later than the startMarker.)
+        // this.currentMoment will be null if there are no more moments to play in the track.
+        // (i.e. if last midiObject in the track is a rest, and the performance is set to start
+        // after its beginning.  
+        if(this.currentMoment !== null)
+        {
+            // The returned array will be empty when the performance starts at the beginning of the score.
+            this.startStateMessages = getStartStateMessages(this);
+        }
     };
 
     // Returns Number.MAX_VALUE at end of track.
