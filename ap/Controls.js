@@ -306,6 +306,8 @@ _AP.controls = (function(document, window)
         tracksControl.setDisabled(false);
 
         globalElements.speedControlInput.disabled = false;
+        globalElements.disabledSpeedControlDiv.style.display = "none";
+
         if(globalElements.speedControlCheckbox.checked === false)
         {
             globalElements.speedControlCheckbox.disabled = false;
@@ -549,6 +551,7 @@ _AP.controls = (function(document, window)
 
             globalElements.speedControlInput.disabled = true;
             globalElements.speedControlCheckbox.disabled = true;
+            globalElements.disabledSpeedControlDiv.style.display = "block";
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -571,6 +574,7 @@ _AP.controls = (function(document, window)
 
             globalElements.speedControlInput.disabled = true;
             globalElements.speedControlCheckbox.disabled = true;
+            globalElements.disabledSpeedControlDiv.style.display = "block";
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -743,6 +747,8 @@ _AP.controls = (function(document, window)
             globalElements.speedControlInput = document.getElementById("speedControlInput");
             globalElements.speedControlCheckbox = document.getElementById("speedControlCheckbox");
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
+            globalElements.disabledSpeedControlDiv = document.getElementById("disabledSpeedControlDiv");
+
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
@@ -1590,14 +1596,17 @@ _AP.controls = (function(document, window)
         {
             var
             speedControlDiv = document.getElementById("speedControlDiv"),
-            speedSlider = globalElements.speedControlInput,
-            performanceButtonsLeft = 428,
-            speedSliderWidth = 180, // the length of the slider
-            speedControlDivLeft = tracksControlWidth + ((performanceButtonsLeft - tracksControlWidth - speedSliderWidth) / 2);
-            speedControlDivLeft -= 46; // adjust for labels and checkbox
+            disabledSpeedControlDiv = globalElements.disabledSpeedControlDiv;
 
-            speedSlider.style.width = speedSliderWidth.toString() + "px";
-            speedControlDiv.style.left = speedControlDivLeft.toString() + "px";
+            //performanceButtonsLeft = 428;
+
+            // TODO: Centre the speedControlDiv between the tracksControl and the performanceButtons.
+            // If there is not enough space, shift the performance buttons to the right.
+            // (The speedControlDiv has a fixed width.)
+            // Possibly change the internal range of the speed slider to be its width in pixels.
+
+            speedControlDiv.style.left = (tracksControlWidth + 2).toString() + "px";
+            disabledSpeedControlDiv.style.display = "none";
         }
 
         try

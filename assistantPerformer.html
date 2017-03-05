@@ -83,20 +83,27 @@
     </div>
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
         <div id="speedControlDiv"
-             style="position: absolute; top: 0; left: 168px; height:36px; padding-top:6px; font-size:12px">
-            <label id="speedControlLabel1" for="speedControlInput" style="margin:0; vertical-align: middle;">
+             style="position: absolute; top: 0; height:29px; width:285px; margin:0; font-size:12px;
+             border-color:#008000; border-width:1px; border-style:solid; background-color:#F5FFF5;">
+            <label id="speedControlLabel1" for="speedControlInput" style="position:absolute; top:5px; left:4px; margin:0;">
                 speed:
             </label>
             <input type="range" id="speedControlInput" value="50" min="0" max="100"
                    onmousemove="_AP.controls.doControl('speedControlMousemove')"
-                   style="margin:0; vertical-align: middle;">
+                   style="position:absolute; top:4px; left:45px; width:180px; margin:0;">
             <input type="checkbox" id="speedControlCheckbox" checked="checked" disabled="disabled" min="0" max="100"
                    onclick="_AP.controls.doControl('speedControlCheckboxClick')"
-                   style="margin:0 -3px 0 0; vertical-align: middle;">
-            <label id="speedControlLabel2" for="speedControlInput" style="margin:0; vertical-align: middle;" >
+                   style="position:absolute; top:8px; left:229px; margin:0;">
+            <label id="speedControlLabel2" for="speedControlInput" style="position:absolute; top:5px; left:242px; margin:0;">
                 100%
             </label>
+            <div id="disabledSpeedControlDiv" style="position: absolute; top: -1px; left:-145px; width:287px; height:31px; margin:0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="287" height="31" style="position: absolute; top: 0;">
+                    <rect x="0" y="0" width="287" height="31" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
+                </svg>
+            </div>
         </div>
+
         <svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 0;">
             <g id="performanceButtons" transform="translate(0.5, 0.5)">
                 <rect id="performanceButtonsFrame" x="0" y="0" width="169" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
