@@ -1596,17 +1596,29 @@ _AP.controls = (function(document, window)
         {
             var
             speedControlDiv = document.getElementById("speedControlDiv"),
-            disabledSpeedControlDiv = globalElements.disabledSpeedControlDiv;
+            performanceButtonsSVG = document.getElementById("performanceButtonsSVG"),
+            disabledSpeedControlDiv = globalElements.disabledSpeedControlDiv,
+            disabledSpeedControlWidth = 288, // const in html 
+            performanceButtonsSVGLeft = parseInt(performanceButtonsSVG.style.left, 10),
+            margin = (performanceButtonsSVGLeft - tracksControlWidth - disabledSpeedControlWidth) / 2,
+            speedControlDivLeft;
 
-            //performanceButtonsLeft = 428;
-
-            // TODO: Centre the speedControlDiv between the tracksControl and the performanceButtons.
-            // If there is not enough space, shift the performance buttons to the right.
-            // (The speedControlDiv has a fixed width.)
-            // Possibly change the internal range of the speed slider to be its width in pixels.
-
-            speedControlDiv.style.left = (tracksControlWidth + 2).toString() + "px";
+            if(margin > 4)
+            {
+                speedControlDiv.style.left = (tracksControlWidth + margin).toString() + "px";
+            }
+            else
+            {
+                margin = 4;
+                speedControlDivLeft = tracksControlWidth + margin;
+                performanceButtonsSVGLeft = speedControlDivLeft + disabledSpeedControlWidth + margin;
+                speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
+                performanceButtonsSVG.style.left = performanceButtonsSVGLeft.toString(10) + "px";
+            }
             disabledSpeedControlDiv.style.display = "none";
+            
+            // TODO:
+            // Possibly change the internal range of the speed slider to be its width in pixels.   
         }
 
         try
