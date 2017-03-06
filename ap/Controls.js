@@ -1642,6 +1642,8 @@ _AP.controls = (function(document, window)
             margin = Math.round((performanceButtonsSVGLeft - tracksControlWidth - speedControlSmokeDivWidth) / 2),
             speedControlDivLeft;
 
+            margin = (margin < 4) ? 4 : margin;
+
             speedControlDivLeft = tracksControlWidth + margin -1;
             performanceButtonsSVGLeft = speedControlDivLeft + speedControlSmokeDivWidth + margin;
             speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
