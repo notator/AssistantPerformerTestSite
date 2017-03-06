@@ -303,6 +303,9 @@ _AP.controls = (function(document, window)
         // cl.sendStopToEndControlUnselected.setAttribute("opacity", METAL); -- never changes
         cl.sendStopToEndControlSelected.setAttribute("opacity", GLASS);
         cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
+
+        cl.setConductorControlSelected.setAttribute("opacity", GLASS);
+        cl.setConductorControlDisabled.setAttribute("opacity", GLASS);
         /********* end performance buttons *******************/
 
         tracksControl.setDisabled(false);
@@ -424,6 +427,7 @@ _AP.controls = (function(document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
             /********* end performance buttons *******************/
 
             // The tracksControl is only initialised after a specific score is loaded.
@@ -459,6 +463,7 @@ _AP.controls = (function(document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
         }
 
         function setPlaying(isLivePerformance)
@@ -506,6 +511,7 @@ _AP.controls = (function(document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);            
         }
 
         function setCursorAndEventListener(svgControlsState)
@@ -566,6 +572,7 @@ _AP.controls = (function(document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
             setCursorAndEventListener('settingStart');
         }
@@ -589,8 +596,25 @@ _AP.controls = (function(document, window)
 
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
             setCursorAndEventListener('settingEnd');
+        }
+
+        function setConducting()
+        {
+            var isConducting = (cl.setConductorControlSelected.getAttribute('opacity') === METAL);
+
+            if(isConducting)
+            {
+                cl.setConductorControlSelected.setAttribute("opacity", GLASS);
+            }
+            else
+            {
+                cl.setConductorControlSelected.setAttribute("opacity", METAL);
+            }
+
+            setCursorAndEventListener('conducting');
         }
 
         svgControlsState = svgCtlsState;
@@ -619,6 +643,9 @@ _AP.controls = (function(document, window)
                 break;
             case 'settingEnd':
                 setSettingEnd();
+                break;
+            case 'conducting':
+                setConducting();
                 break;
         }
     },
@@ -899,6 +926,9 @@ _AP.controls = (function(document, window)
 
             cl.sendStopToEndControlSelected = document.getElementById("sendStopToEndControlSelected");
             cl.sendStopToEndControlDisabled = document.getElementById("sendStopToEndControlDisabled");
+
+            cl.setConductorControlSelected = document.getElementById("setConductorControlSelected");
+            cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
         }
 
         // callback passed to score. Called when the running marker moves to a new system.
@@ -1282,6 +1312,11 @@ _AP.controls = (function(document, window)
             }
         }
 
+        function setConductorControlClicked()
+        {
+            setSvgControlsState('conducting');
+        }
+
         function waitForSoundFont()
         {
             if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
@@ -1395,6 +1430,9 @@ _AP.controls = (function(document, window)
                     break;
                 case "sendStopToEndControl":
                     sendStopToEndControlClicked();
+                    break;
+                case "setConductorControl":
+                    setConductorControlClicked();
                     break;
                 default:
                     break;

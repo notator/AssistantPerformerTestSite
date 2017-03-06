@@ -104,10 +104,10 @@
             </div>
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" id="performanceButtonsSVG" width="170" height="36" style="position: absolute; left: 428px; top: 0;">
+        <svg xmlns="http://www.w3.org/2000/svg" id="performanceButtonsSVG" width="197" height="36" style="position: absolute; left: 428px; top: 0;">
             <g id="performanceButtons" transform="translate(0.5, 0.5)">
-                <rect id="performanceButtonsFrame" x="0" y="0" width="169" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
-                <rect id="performanceButtonsDisabled" x="0" y="0" width="169" height="30" stroke="white" stroke-width="1" fill="white" opacity="0" />
+                <rect id="performanceButtonsFrame" x="0" y="0" width="196" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+                <rect id="performanceButtonsDisabled" x="0" y="0" width="196" height="30" stroke="white" stroke-width="1" fill="white" opacity="0" />
 
                 <g id="goControl" transform="translate(7,5)"
                    onmouseover="_AP.controls.showOverRect('overGoRect', 'goDisabled')"
@@ -263,6 +263,26 @@
                     </g>
                     <rect id="sendStopToEndControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
 
+                </g>
+
+                <g id="setConductorMode" transform="translate(169,5)"
+                   onmouseover="_AP.controls.showOverRect('overSetConductorRect', 'setConductorControlDisabled')"
+                   onmouseout="_AP.controls.hideOverRect('overSetConductorRect')"
+                   onmousedown="_AP.controls.doControl('setConductorControl')">
+                    <rect id="overSetConductorRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
+                    <g id="setConductorControlUnselected" opacity="1">
+                        <rect id="setConductorRect" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                        <rect id="Rect2" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                        <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5" />
+                        <line id="setConductorButton" x1="10" y1="4" x2="10" y2="16" stroke="#00CE00" stroke-width="3" />
+                    </g>
+                    <g id="setConductorControlSelected" opacity="0">
+                        <rect id="Rect3" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                        <rect id="Rect4" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                        <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white" />
+                        <line id="Line1" x1="11" y1="5" x2="11" y2="17" stroke="#00CE00" stroke-width="3" />
+                    </g>
+                    <rect id="setConductorControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
                 </g>
 
             </g>
