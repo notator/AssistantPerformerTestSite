@@ -51,6 +51,8 @@ _AP.controls = (function(document, window)
 
     RESIDENT_SYNTH_INDEX = 1,
 
+    SPEEDCONTROL_MIDDLE = 90, // range is 0..180
+
     // options set in the top dialog
     options = {},
 
@@ -306,7 +308,7 @@ _AP.controls = (function(document, window)
         tracksControl.setDisabled(false);
 
         globalElements.speedControlInput.disabled = false;
-        globalElements.disabledSpeedControlDiv.style.display = "none";
+        globalElements.speedControlSmokeDiv.style.display = "none";
 
         if(globalElements.speedControlCheckbox.checked === false)
         {
@@ -551,7 +553,7 @@ _AP.controls = (function(document, window)
 
             globalElements.speedControlInput.disabled = true;
             globalElements.speedControlCheckbox.disabled = true;
-            globalElements.disabledSpeedControlDiv.style.display = "block";
+            globalElements.speedControlSmokeDiv.style.display = "block";
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -574,7 +576,7 @@ _AP.controls = (function(document, window)
 
             globalElements.speedControlInput.disabled = true;
             globalElements.speedControlCheckbox.disabled = true;
-            globalElements.disabledSpeedControlDiv.style.display = "block";
+            globalElements.speedControlSmokeDiv.style.display = "block";
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
@@ -747,7 +749,7 @@ _AP.controls = (function(document, window)
             globalElements.speedControlInput = document.getElementById("speedControlInput");
             globalElements.speedControlCheckbox = document.getElementById("speedControlCheckbox");
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
-            globalElements.disabledSpeedControlDiv = document.getElementById("disabledSpeedControlDiv");
+            globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
@@ -953,7 +955,7 @@ _AP.controls = (function(document, window)
         if(globalElements.speedControlCheckbox.checked === true)
         {
             player.setSpeed(1);
-            globalElements.speedControlInput.value = 50;
+            globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
             globalElements.speedControlCheckbox.disabled = true;
             globalElements.speedControlLabel2.innerHTML = "100%";
         }
@@ -1304,10 +1306,10 @@ _AP.controls = (function(document, window)
             function logslider(position)
             {
                 var
-                // the slider has min="0" max="100" (default value="50")
-                minp = 0, maxp = 100,
-                // The result will be between 1/10 and 10
-                minv = Math.log(0.1), maxv = Math.log(10),
+                // the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
+                minp = 0, maxp = 180, // The slider has width 180px
+                // The result will be between 1/10 and 9.99
+                minv = Math.log(0.1), maxv = Math.log(9.99),
                 // the adjustment factor
                 scale = (maxv - minv) / (maxp - minp);
 
@@ -1318,7 +1320,7 @@ _AP.controls = (function(document, window)
 
             player.setSpeed(speed);
 
-            if(globalElements.speedControlInput.value === "50")
+            if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
             {
                 globalElements.speedControlCheckbox.checked = true;
                 globalElements.speedControlCheckbox.disabled = true;
@@ -1597,28 +1599,17 @@ _AP.controls = (function(document, window)
             var
             speedControlDiv = document.getElementById("speedControlDiv"),
             performanceButtonsSVG = document.getElementById("performanceButtonsSVG"),
-            disabledSpeedControlDiv = globalElements.disabledSpeedControlDiv,
-            disabledSpeedControlWidth = 288, // const in html 
+            speedControlSmokeDivWidth = parseInt(globalElements.speedControlSmokeDiv.style.width, 10),
             performanceButtonsSVGLeft = parseInt(performanceButtonsSVG.style.left, 10),
-            margin = (performanceButtonsSVGLeft - tracksControlWidth - disabledSpeedControlWidth) / 2,
+            margin = Math.round((performanceButtonsSVGLeft - tracksControlWidth - speedControlSmokeDivWidth) / 2),
             speedControlDivLeft;
 
-            if(margin > 4)
-            {
-                speedControlDiv.style.left = (tracksControlWidth + margin).toString() + "px";
-            }
-            else
-            {
-                margin = 4;
-                speedControlDivLeft = tracksControlWidth + margin;
-                performanceButtonsSVGLeft = speedControlDivLeft + disabledSpeedControlWidth + margin;
-                speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
-                performanceButtonsSVG.style.left = performanceButtonsSVGLeft.toString(10) + "px";
-            }
-            disabledSpeedControlDiv.style.display = "none";
-            
-            // TODO:
-            // Possibly change the internal range of the speed slider to be its width in pixels.   
+            speedControlDivLeft = tracksControlWidth + margin -1;
+            performanceButtonsSVGLeft = speedControlDivLeft + speedControlSmokeDivWidth + margin;
+            speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
+            performanceButtonsSVG.style.left = performanceButtonsSVGLeft.toString(10) + "px";
+
+            globalElements.speedControlSmokeDiv.style.display = "none";   
         }
 
         try
