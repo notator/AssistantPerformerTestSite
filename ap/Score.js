@@ -1081,6 +1081,11 @@ _AP.score = (function (document)
         svgPageClicked(e, 'settingStart');
     },
 
+    dragRunningMarker = function(e)
+    {
+
+    },
+
     sendStartMarkerToStart = function ()
     {
         startMarker = systems[0].startMarker;
@@ -1761,6 +1766,7 @@ _AP.score = (function (document)
         // functions called when setting the start or end marker
         this.setStartMarkerClick = setStartMarkerClick;
         this.setEndMarkerClick = setEndMarkerClick;
+        this.dragRunningMarker = dragRunningMarker;
 
         // functions called when clicking the sendStartMarkerToStart of senEndMarkerToEnd buttons
         this.sendStartMarkerToStart = sendStartMarkerToStart;

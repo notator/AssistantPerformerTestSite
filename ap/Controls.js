@@ -31,7 +31,7 @@ _AP.controls = (function(document, window)
 
     midiAccess,
     score,
-    svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
+    svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd', conducting.
     globalElements = {}, // assistantPerformer.html elements 
     cl = {}, // control layers
 
@@ -266,6 +266,53 @@ _AP.controls = (function(document, window)
         }
     },
 
+    setCursorAndEventListener = function(svgControlsState)
+    {
+        var i,
+            s = score;
+
+        if(s.markersLayers !== undefined)
+        {
+            switch(svgControlsState)
+            {
+                case 'settingStart':
+                    for(i = 0; i < s.markersLayers.length; ++i)
+                    {
+                        s.markersLayers[i].addEventListener('click', s.setStartMarkerClick, false);
+                        s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
+                    }
+                    break;
+                case 'settingEnd':
+                    for(i = 0; i < s.markersLayers.length; ++i)
+                    {
+                        s.markersLayers[i].addEventListener('click', s.setEndMarkerClick, false);
+                        s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
+                    }
+                    break;
+                case 'conducting':
+                    for(i = 0; i < s.markersLayers.length; ++i)
+                    {
+                        s.markersLayers[i].addEventListener('mousemove', s.dragRunningMarker, false);
+                        s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/pushRight.cur'), move";
+                    }
+                    break;
+                default:
+                    for(i = 0; i < s.markersLayers.length; ++i)
+                    {
+                        // According to
+                        // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
+                        // "Calling removeEventListener() with arguments which do not identify any currently 
+                        //  registered EventListener on the EventTarget has no effect."
+                        s.markersLayers[i].removeEventListener('click', s.setStartMarkerClick, false);
+                        s.markersLayers[i].removeEventListener('click', s.setEndMarkerClick, false);
+                        s.markersLayers[i].removeEventListener('mousemove', s.dragRunningMarker, false);
+                        s.markersLayers[i].style.cursor = 'auto';
+                    }
+                    break;
+            }
+        }
+    },
+
     setStopped = function()
     {
         player.stop();
@@ -275,6 +322,10 @@ _AP.controls = (function(document, window)
         options.outputDevice.reset();
 
         setMainOptionsState("toBack");
+
+        setCursorAndEventListener('stopped');
+
+        svgControlsState = 'stopped';
 
         cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
 
@@ -312,15 +363,6 @@ _AP.controls = (function(document, window)
 
         globalElements.speedControlInput.disabled = false;
         globalElements.speedControlSmokeDiv.style.display = "none";
-
-        if(globalElements.speedControlCheckbox.checked === false)
-        {
-            globalElements.speedControlCheckbox.disabled = false;
-        }
-        else
-        {
-            globalElements.speedControlCheckbox.disabled = true;
-        }
     },
 
     // callback called when a performing sequenceRecording is stopped or has played its last message,
@@ -514,45 +556,6 @@ _AP.controls = (function(document, window)
             cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);            
         }
 
-        function setCursorAndEventListener(svgControlsState)
-        {
-            var i,
-                s = score;
-
-            if(s.markersLayers !== undefined)
-            {
-                switch(svgControlsState)
-                {
-                    case 'settingStart':
-                        for(i = 0; i < s.markersLayers.length; ++i)
-                        {
-                            s.markersLayers[i].addEventListener('click', s.setStartMarkerClick, false);
-                            s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
-                        }
-                        break;
-                    case 'settingEnd':
-                        for(i = 0; i < s.markersLayers.length; ++i)
-                        {
-                            s.markersLayers[i].addEventListener('click', s.setEndMarkerClick, false);
-                            s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
-                        }
-                        break;
-                    default:
-                        for(i = 0; i < s.markersLayers.length; ++i)
-                        {
-                            // According to
-                            // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
-                            // "Calling removeEventListener() with arguments which do not identify any currently 
-                            //  registered EventListener on the EventTarget has no effect."
-                            s.markersLayers[i].removeEventListener('click', s.setStartMarkerClick, false);
-                            s.markersLayers[i].removeEventListener('click', s.setEndMarkerClick, false);
-                            s.markersLayers[i].style.cursor = 'auto';
-                        }
-                        break;
-                }
-            }
-        }
-
         function setSettingStart()
         {
             tracksControl.setDisabled(true);
@@ -607,14 +610,30 @@ _AP.controls = (function(document, window)
 
             if(isConducting)
             {
-                cl.setConductorControlSelected.setAttribute("opacity", GLASS);
+                setStopped();
             }
             else
             {
-                cl.setConductorControlSelected.setAttribute("opacity", METAL);
-            }
+                tracksControl.setDisabled(true);
 
-            setCursorAndEventListener('conducting');
+                globalElements.speedControlInput.disabled = true;
+                globalElements.speedControlCheckbox.disabled = true;
+                globalElements.speedControlSmokeDiv.style.display = "block";
+
+                // begin performance buttons
+                cl.goDisabled.setAttribute("opacity", SMOKE);
+                cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+                cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+                cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+                cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+                cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+                cl.setConductorControlSelected.setAttribute("opacity", METAL);
+                // end performance buttons
+
+                cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+
+                setCursorAndEventListener('conducting');
+            }  
         }
 
         svgControlsState = svgCtlsState;
