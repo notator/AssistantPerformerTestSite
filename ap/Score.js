@@ -557,6 +557,11 @@ _AP.score = (function (document)
         showRunningMarker();
     },
 
+    conduct = function(e)
+    {
+
+    },
+
     // Constructs empty systems for all the pages.
     // Each page has a frame and the correct number of empty systems.
     // Each system has a startMarker, a runningMarker and an endMarker, but these are left
@@ -575,12 +580,15 @@ _AP.score = (function (document)
 
         function resetContent(isLivePerformanceArg)
         {
+            var conductingLayerDiv = document.getElementById("conductingLayerDiv");
+
             isLivePerformance = isLivePerformanceArg;
             markersLayers.length = 0;
             systemElems.length = 0;
             systems.length = 0;
             midiChannelPerOutputTrack.length = 0;
             trackIsOnArray.length = 0;
+            conductingLayerDiv.removeEventListener('mousemove', conduct, false);
         }
 
         function getSVGElem(svgPage)
@@ -981,7 +989,7 @@ _AP.score = (function (document)
             }
         }
 
-        // Sets the global viewBox object and the sizes and positions of the objects on page 2 (the div that is originally invisible)
+        // Sets the global viewBox object and the sizes and positions of the objects on the svgPagesFrame)
         // Returns the viewBox in the final page of the score.
         function setGraphics()
         {
@@ -1034,6 +1042,31 @@ _AP.score = (function (document)
             return viewBox;
         }
 
+        function setConductingLayer()
+        {
+            var
+            svgPagesFrame = document.getElementById("svgPagesFrame"),
+            conductingLayerDiv = document.getElementById("conductingLayerDiv"),
+            conductingLayerSVG = document.getElementById("conductingLayerSVG"),
+            rect = document.getElementById("conductingLayerRect"),
+            width = parseInt(svgPagesFrame.style.width, 10),
+            height = parseInt(svgPagesFrame.style.height, 10);
+
+            conductingLayerDiv.style.top = svgPagesFrame.style.top;
+            conductingLayerDiv.style.left = svgPagesFrame.style.left;
+            conductingLayerDiv.style.width = svgPagesFrame.style.width;
+            conductingLayerDiv.style.height = svgPagesFrame.style.height;
+
+            conductingLayerSVG.setAttribute("width", width);
+            conductingLayerSVG.setAttribute("height", height);
+
+            rect.setAttribute("width", width);
+            rect.setAttribute("height", height);
+
+            conductingLayerDiv.addEventListener('mousemove', conduct, false);
+            conductingLayerDiv.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+        }
+
         /*************** end of getEmptySystems function definitions *****************************/
 
         resetContent(isLivePerformanceArg);
@@ -1068,6 +1101,9 @@ _AP.score = (function (document)
             pageHeight = parseInt(svgElem.getAttribute('height'), 10);
             runningViewBoxOriginY += pageHeight;
         }
+
+        setConductingLayer();
+
         initializeTrackIsOnArray(systems[0]);
     },
 
@@ -1079,11 +1115,6 @@ _AP.score = (function (document)
     setStartMarkerClick = function (e)
     {
         svgPageClicked(e, 'settingStart');
-    },
-
-    dragRunningMarker = function(e)
-    {
-
     },
 
     sendStartMarkerToStart = function ()
@@ -1766,7 +1797,6 @@ _AP.score = (function (document)
         // functions called when setting the start or end marker
         this.setStartMarkerClick = setStartMarkerClick;
         this.setEndMarkerClick = setEndMarkerClick;
-        this.dragRunningMarker = dragRunningMarker;
 
         // functions called when clicking the sendStartMarkerToStart of senEndMarkerToEnd buttons
         this.sendStartMarkerToStart = sendStartMarkerToStart;

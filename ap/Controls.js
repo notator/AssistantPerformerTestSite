@@ -290,24 +290,20 @@ _AP.controls = (function(document, window)
                     }
                     break;
                 case 'conducting':
-                    for(i = 0; i < s.markersLayers.length; ++i)
-                    {
-                        s.markersLayers[i].addEventListener('mousemove', s.dragRunningMarker, false);
-                        s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/pushRight.cur'), move";
-                    }
+                    globalElements.conductingLayer.style.visibility = "visible";
                     break;
                 default:
+                    // According to
+                    // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
+                    // "Calling removeEventListener() with arguments which do not identify any currently 
+                    //  registered EventListener on the EventTarget has no effect."
                     for(i = 0; i < s.markersLayers.length; ++i)
                     {
-                        // According to
-                        // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
-                        // "Calling removeEventListener() with arguments which do not identify any currently 
-                        //  registered EventListener on the EventTarget has no effect."
                         s.markersLayers[i].removeEventListener('click', s.setStartMarkerClick, false);
                         s.markersLayers[i].removeEventListener('click', s.setEndMarkerClick, false);
-                        s.markersLayers[i].removeEventListener('mousemove', s.dragRunningMarker, false);
                         s.markersLayers[i].style.cursor = 'auto';
                     }
+                    globalElements.conductingLayer.style.visibility = "hidden";
                     break;
             }
         }
@@ -797,6 +793,7 @@ _AP.controls = (function(document, window)
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
+            globalElements.conductingLayer = document.getElementById("conductingLayerDiv");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
