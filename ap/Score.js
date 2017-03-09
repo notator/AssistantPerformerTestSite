@@ -25,6 +25,7 @@ _AP.score = (function (document)
     StartMarker = _AP.startMarker.StartMarker,
     RunningMarker = _AP.runningMarker.RunningMarker,
     EndMarker = _AP.endMarker.EndMarker,
+    TimePointer = _AP.timePointer.TimePointer,
 
     MidiChord = _AP.midiObject.MidiChord,
     MidiRest = _AP.midiObject.MidiRest,
@@ -57,10 +58,13 @@ _AP.score = (function (document)
     // This value is changed when the start runtime button is clicked.
     // It is used when setting the positions of the start and end markers.
     isLivePerformance = false,
+    // This value is toggled on or off by the conducting performance button.
+    isConducting = false,
 
     startMarker,
     runningMarker,
     endMarker,
+    timePointer,
     runningMarkerHeightChanged, // callback, called when runningMarker changes systems
 
     finalBarlineInScore,
@@ -343,10 +347,11 @@ _AP.score = (function (document)
     // this function is called only when state is 'settingStart' or 'settingEnd'.
     svgPageClicked = function (e, state)
     {
-        var frame = e.target,
+        var target = e.target,
             cursorX = e.pageX,
-            cursorY = e.pageY + frame.originY,
+            cursorY = e.pageY,
             systemIndex, system,
+            pageIndex,
             timeObjectsArray, timeObject, trackIndex, nOutputTracks = midiChannelPerOutputTrack.length;
 
         // cursorX and cursorY now use the <body> element as their frame of reference.
@@ -354,35 +359,68 @@ _AP.score = (function (document)
         // systems is a single global array (inside this namespace)of all systems.
         // This is important when identifying systems, and when performing.
 
-        // Returns the system having stafflines closest to cursorY.
-        function findSystemIndex(cursorY)
+        // returns the index of the page that has been clicked
+        function findPageIndex(target)
         {
-            var i, topLimit, bottomLimit, systemIndex1;
+            var i, pageIndex = 0, rect;
+
+            for(i = 0; i < markersLayers.length; ++i)
+            {
+                rect = markersLayers[i].childNodes[0];
+                if(rect.nodeName !== 'rect')
+                {
+                    throw "error";
+                }
+                if(rect === target)
+                {
+                    pageIndex = i;
+                    break;
+                }
+            }
+
+            return pageIndex;
+        }
+
+        // Returns the system having stafflines closest to cursorY on the target page.
+        function findSystemIndex(cursorY, pageIndex)
+        {
+            var i, topLimit, bottomLimit, system, systemIndex;
 
             if (systems.length === 1)
             {
-                systemIndex1 = 0;
+                systemIndex = 0;
             }
             else
             {
                 topLimit = -1;
                 for (i = 0; i < systems.length - 1; ++i)
                 {
-                    bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
-                    if (cursorY >= topLimit && cursorY < bottomLimit)
+                    system = systems[i];
+                    if(system.pageIndex === pageIndex)
                     {
-                        systemIndex1 = i;
-                        break;
+                        bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
+                        if(cursorY >= topLimit && cursorY < bottomLimit)
+                        {
+                            systemIndex = i;
+                            break;
+                        }
+                        topLimit = bottomLimit;
                     }
-                    topLimit = bottomLimit;
                 }
 
-                if (systemIndex1 === undefined)
+                if(systemIndex === undefined)
                 {
-                    systemIndex1 = systems.length - 1; // last system
+                    for(i = 0; i < systems.length; ++i)
+                    {
+                        system = systems[i];
+                        if(system.pageIndex === pageIndex)
+                        {
+                            systemIndex = i; // last system on page
+                        }
+                    }                    
                 }
             }
-            return systemIndex1;
+            return systemIndex;
         }
 
         // Returns the index of the visible staff having stafflines closest to cursorY
@@ -474,8 +512,8 @@ _AP.score = (function (document)
             return trackIndex;
         }
 
-
-        systemIndex = findSystemIndex(cursorY);
+        pageIndex = findPageIndex(target);
+        systemIndex = findSystemIndex(cursorY, pageIndex);
         if (systemIndex !== undefined)
         {
             system = systems[systemIndex];
@@ -533,6 +571,10 @@ _AP.score = (function (document)
         for (i = 0; i < nSystems; ++i)
         {
             systems[i].runningMarker.setVisible(false);
+            if(isConducting)
+            {
+                systems[i].timePointer.setVisible(false);
+            }
         }
     },
 
@@ -557,6 +599,29 @@ _AP.score = (function (document)
         showRunningMarker();
     },
 
+    // Called when the start conducting button is clicked on or off.
+    setConducting = function(boolean)
+    {
+        var sysIndex, nSystems = systems.length, system;
+
+        isConducting = boolean;
+
+        if(isConducting)
+        {
+            setRunningMarkers();
+
+            for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
+            {
+                system = systems[sysIndex];
+                system.timePointer.init(system.runningMarker);
+                if(runningMarker === system.runningMarker)
+                {
+                    system.timePointer.setVisible(true);
+                }
+            }
+        }    
+    },
+
     conduct = function(e)
     {
 
@@ -574,13 +639,13 @@ _AP.score = (function (document)
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptySystems = function (isLivePerformanceArg)
     {
-        var system, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY,
+        var system, svgPageEmbeds, viewBox, nPages,
             svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-            i, j, markersLayer, pageHeight, pageSystems;
+            i, j, markersLayer, pageSystems;
 
         function resetContent(isLivePerformanceArg)
         {
-            var conductingLayerDiv = document.getElementById("conductingLayerDiv");
+            var conductingLayer = document.getElementById("conductingLayer");
 
             isLivePerformance = isLivePerformanceArg;
             markersLayers.length = 0;
@@ -588,7 +653,7 @@ _AP.score = (function (document)
             systems.length = 0;
             midiChannelPerOutputTrack.length = 0;
             trackIsOnArray.length = 0;
-            conductingLayerDiv.removeEventListener('mousemove', conduct, false);
+            conductingLayer.removeEventListener('mousemove', conduct, false);
         }
 
         function getSVGElem(svgPage)
@@ -607,7 +672,7 @@ _AP.score = (function (document)
             return svgElem;
         }
 
-        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemElem)
+        function getEmptySystem(viewBoxScale, systemElem)
         {
             var i, j,
                 systemDy, staffDy,
@@ -647,7 +712,7 @@ _AP.score = (function (document)
                     lineElem = staffLinesElemChildren[i];
                     svgStafflines.push(lineElem);
                     stafflineY = parseFloat(lineElem.getAttribute('y1')) + dy;
-                    stafflineYs.push((stafflineY / viewBoxScale) + viewBoxOriginY);
+                    stafflineYs.push((stafflineY / viewBoxScale));
                     left = parseFloat(lineElem.getAttribute('x1'));
                     left /= viewBoxScale;
                     right = parseFloat(lineElem.getAttribute('x2'));
@@ -884,87 +949,85 @@ _AP.score = (function (document)
         }
 
         // Creates a new "g" element at the top level of the svg page.
-        // The element contains the transparent, clickable rect and the start-, running- and
-        // end-markers for each system on the page.
-        function createMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, pageSystems)
+        // The element contains a transparent, clickable rect.
+        // The markers and timePointer are added to the markersLayer later.
+        function createMarkersLayer(svgElem)
         {
-            var i, markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+            var viewBox = svgElem.viewBox.baseVal,
+                markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
                 rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-
-            function createMarkers(markersLayer, viewBox, system, systIndex)
-            {
-                var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                    runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                    endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                    startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-                    startMarkerCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
-                    runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-                    endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-                    endMarkerRect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-
-                startMarkerLine.setAttribute("x1", "0");
-                startMarkerLine.setAttribute("y1", "0");
-                startMarkerLine.setAttribute("x2", "0");
-                startMarkerLine.setAttribute("y2", "0");
-                startMarkerLine.setAttribute("style", "stroke-width:1px");
-
-                startMarkerCircle.setAttribute("cx", "0");
-                startMarkerCircle.setAttribute("cy", "0");
-                startMarkerCircle.setAttribute("r", "0");
-                startMarkerCircle.setAttribute("style", "stroke-width:1px");
-
-                runningMarkerLine.setAttribute("x1", "0");
-                runningMarkerLine.setAttribute("y1", "0");
-                runningMarkerLine.setAttribute("x2", "0");
-                runningMarkerLine.setAttribute("y2", "0");
-                runningMarkerLine.setAttribute("style", "stroke-width:1px");
-
-                endMarkerLine.setAttribute("x1", "0");
-                endMarkerLine.setAttribute("y1", "0");
-                endMarkerLine.setAttribute("x2", "0");                               
-                endMarkerLine.setAttribute("y2", "0");
-                endMarkerLine.setAttribute("style", "stroke-width:1px");
-
-                endMarkerRect.setAttribute("x", "0");
-                endMarkerRect.setAttribute("y", "0");
-                endMarkerRect.setAttribute("width", "0");
-                endMarkerRect.setAttribute("height", "0");
-                endMarkerRect.setAttribute("style", "stroke-width:1px");
-
-                startMarkerElem.appendChild(startMarkerLine);
-                startMarkerElem.appendChild(startMarkerCircle);
-                runningMarkerElem.appendChild(runningMarkerLine);
-                endMarkerElem.appendChild(endMarkerLine);
-                endMarkerElem.appendChild(endMarkerRect);
-
-                markersLayer.appendChild(startMarkerElem);
-                markersLayer.appendChild(runningMarkerElem);
-                markersLayer.appendChild(endMarkerElem);
-
-                system.startMarker = new StartMarker(system, systIndex, startMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
-                system.endMarker = new EndMarker(system, systIndex, endMarkerElem, markersLayer.rect.originY, viewBox.scale);
-            }
 
             markersLayer.setAttribute("style", "display:inline");
 
-            rect.setAttribute("x", viewBox.x.toString());
-            rect.setAttribute("y", viewBox.y.toString());
-            rect.setAttribute("width", viewBox.width.toString());
-            rect.setAttribute("height", viewBox.height.toString());
+            rect.setAttribute("x", viewBox.x.toString(10));
+            rect.setAttribute("y", viewBox.y.toString(10));
+            rect.setAttribute("width", viewBox.width.toString(10));
+            rect.setAttribute("height", viewBox.height.toString(10));
             rect.setAttribute("style", "stroke:none; fill:#ffffff; fill-opacity:0");
-            rect.originY = runningViewBoxOriginY;
             markersLayer.appendChild(rect);
-            markersLayer.rect = rect;
-
-            for(i = 0; i < pageSystems.length; i++)
-            {
-                createMarkers(markersLayer, viewBox, pageSystems[i], i);
-            }
 
             svgElem.appendChild(markersLayer);
 
             return markersLayer;
+        }
+
+        // Appends the markers and timePointers to the markerslayer.
+        function createMarkers(markersLayer, viewBoxScale, system, systIndex)
+        {
+            var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+                runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+                endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+                startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+                startMarkerCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
+                runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+                endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+                endMarkerRect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+
+            startMarkerLine.setAttribute("x1", "0");
+            startMarkerLine.setAttribute("y1", "0");
+            startMarkerLine.setAttribute("x2", "0");
+            startMarkerLine.setAttribute("y2", "0");
+            startMarkerLine.setAttribute("style", "stroke-width:1px");
+
+            startMarkerCircle.setAttribute("cx", "0");
+            startMarkerCircle.setAttribute("cy", "0");
+            startMarkerCircle.setAttribute("r", "0");
+            startMarkerCircle.setAttribute("style", "stroke-width:1px");
+
+            runningMarkerLine.setAttribute("x1", "0");
+            runningMarkerLine.setAttribute("y1", "0");
+            runningMarkerLine.setAttribute("x2", "0");
+            runningMarkerLine.setAttribute("y2", "0");
+            runningMarkerLine.setAttribute("style", "stroke-width:1px");
+
+            endMarkerLine.setAttribute("x1", "0");
+            endMarkerLine.setAttribute("y1", "0");
+            endMarkerLine.setAttribute("x2", "0");                               
+            endMarkerLine.setAttribute("y2", "0");
+            endMarkerLine.setAttribute("style", "stroke-width:1px");
+
+            endMarkerRect.setAttribute("x", "0");
+            endMarkerRect.setAttribute("y", "0");
+            endMarkerRect.setAttribute("width", "0");
+            endMarkerRect.setAttribute("height", "0");
+            endMarkerRect.setAttribute("style", "stroke-width:1px");
+
+            startMarkerElem.appendChild(startMarkerLine);
+            startMarkerElem.appendChild(startMarkerCircle);
+            runningMarkerElem.appendChild(runningMarkerLine);
+            endMarkerElem.appendChild(endMarkerLine);
+            endMarkerElem.appendChild(endMarkerRect);
+
+            markersLayer.appendChild(startMarkerElem);
+            markersLayer.appendChild(runningMarkerElem);
+            markersLayer.appendChild(endMarkerElem);
+
+            system.startMarker = new StartMarker(system, systIndex, startMarkerElem, viewBoxScale);
+            system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
+            system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
+            system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, viewBoxScale);
+
+            markersLayer.appendChild(system.timePointer.graphicElem);
         }
 
         function initializeTrackIsOnArray(system)
@@ -1046,25 +1109,14 @@ _AP.score = (function (document)
         {
             var
             svgPagesFrame = document.getElementById("svgPagesFrame"),
-            conductingLayerDiv = document.getElementById("conductingLayerDiv"),
-            conductingLayerSVG = document.getElementById("conductingLayerSVG"),
-            rect = document.getElementById("conductingLayerRect"),
-            width = parseInt(svgPagesFrame.style.width, 10),
-            height = parseInt(svgPagesFrame.style.height, 10);
+            conductingLayer = document.getElementById("conductingLayer");
 
-            conductingLayerDiv.style.top = svgPagesFrame.style.top;
-            conductingLayerDiv.style.left = svgPagesFrame.style.left;
-            conductingLayerDiv.style.width = svgPagesFrame.style.width;
-            conductingLayerDiv.style.height = svgPagesFrame.style.height;
-
-            conductingLayerSVG.setAttribute("width", width);
-            conductingLayerSVG.setAttribute("height", height);
-
-            rect.setAttribute("width", width);
-            rect.setAttribute("height", height);
-
-            conductingLayerDiv.addEventListener('mousemove', conduct, false);
-            conductingLayerDiv.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+            conductingLayer.style.top = svgPagesFrame.style.top;
+            conductingLayer.style.left = svgPagesFrame.style.left;
+            conductingLayer.style.width = svgPagesFrame.style.width;
+            conductingLayer.style.height = svgPagesFrame.style.height;
+            conductingLayer.addEventListener('mousemove', conduct, false);
+            conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
         }
 
         /*************** end of getEmptySystems function definitions *****************************/
@@ -1076,7 +1128,6 @@ _AP.score = (function (document)
         svgPageEmbeds = document.getElementsByClassName("svgPage");
 
         nPages = svgPageEmbeds.length;
-        runningViewBoxOriginY = 0; // absolute coordinates
         for(i = 0; i < nPages; ++i)
         {
             svgPage = svgPageEmbeds[i].contentDocument;
@@ -1084,22 +1135,22 @@ _AP.score = (function (document)
             pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
             pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
+            markersLayer = createMarkersLayer(svgElem);
+            markersLayers.push(markersLayer);
+
             pageSystems = [];
             for(j = 0; j < pageSystemElems.length; ++j)
             {
                 systemElem = pageSystemElems[j];
                 systemElems.push(systemElem);
 
-                system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemElem);
+                system = getEmptySystem(viewBox.scale, systemElem);
+                system.pageIndex = i;
                 systems.push(system); // systems is global inside this namespace
                 pageSystems.push(system);
+
+                createMarkers(markersLayer, viewBox.scale, system, j);
             }
-
-            markersLayer = createMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, pageSystems);
-            markersLayers.push(markersLayer);
-
-            pageHeight = parseInt(svgElem.getAttribute('height'), 10);
-            runningViewBoxOriginY += pageHeight;
         }
 
         setConductingLayer();
@@ -1176,11 +1227,21 @@ _AP.score = (function (document)
         {
             // Move runningMarker to msPosition in the next system.
             runningMarker.setVisible(false);
+            if(isConducting)
+            {
+                timePointer.setVisible(false);
+            }
             if(runningMarker.systemIndex < endMarker.systemIndex)
             {
                 runningMarker = systems[runningMarker.systemIndex + 1].runningMarker;
                 runningMarker.moveTo(msPosition);
                 runningMarker.setVisible(true);
+                if(isConducting)
+                {
+                    timePointer = systems[runningMarker.systemIndex + 1].timePointer;
+                    timePointer.moveToRunningMarker();
+                    timePointer.setVisible(true);
+                }
                 // callback for auto scroll
                 runningMarkerHeightChanged(runningMarker.yCoordinates);
             }
@@ -1635,6 +1696,7 @@ _AP.score = (function (document)
                 system.startMarker.setVisible(false);
                 system.runningMarker.setVisible(false);
                 system.endMarker.setVisible(false);
+                system.timePointer.setVisible(false);
 
                 system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
                 for(j = 0; j < system.staves.length; ++j)
@@ -1822,6 +1884,8 @@ _AP.score = (function (document)
         this.advanceRunningMarker = advanceRunningMarker;
         this.hideRunningMarkers = hideRunningMarkers;
         this.moveRunningMarkerToStartMarker = moveRunningMarkerToStartMarker;
+
+        this.setConducting = setConducting;
 
         // markersLayers contains one markersLayer per page of the score.
         // Each markersLayer contains the assistant performer's markers

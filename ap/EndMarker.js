@@ -25,14 +25,14 @@ _AP.endMarker = (function()
     var
     // The svgEndMarkerGroup is an svg group with id='endMarker'.
     // It contains an svg line and an svg rect element.
-    EndMarker = function (system, systIndex, svgEndMarkerGroup, vbOriginY, vbScale)
+    EndMarker = function (system, systIndex, svgEndMarkerGroup, vbScale)
     {
         if(!(this instanceof EndMarker))
         {
-            return new EndMarker(system, systIndex, svgEndMarkerGroup, vbOriginY, vbScale);
+            return new EndMarker(system, systIndex, svgEndMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgEndMarkerGroup, vbOriginY, vbScale);
+        this._setAttributes(this, system, systIndex, svgEndMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -45,12 +45,12 @@ _AP.endMarker = (function()
         EndMarker: EndMarker
     };
 
-    EndMarker.prototype._setAttributes = function(that, system, systIndex, svgEndMarkerGroup, vbOriginY, vbScale)
+    EndMarker.prototype._setAttributes = function(that, system, systIndex, svgEndMarkerGroup, vbScale)
     {
         var p;
 
         // returns an object having rect, line, halfRectWidth and viewBoxScale attributes;
-        function getParams(system, svgEndMarkerGroup, vbOriginY, vbScale)
+        function getParams(system, svgEndMarkerGroup, vbScale)
         {
             var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
                 RECT_WIDTH_AND_HEIGHT = 8, // user html pixels
@@ -79,8 +79,8 @@ _AP.endMarker = (function()
 
             params.viewBoxScale = vbScale;
 
-            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
-            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
+            top = (system.markersTop - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom + EXTRA_TOP_AND_BOTTOM).toString();
 
             rectX = (vbScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString(10);
             rectY = (top - (vbScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString(10);
@@ -109,7 +109,7 @@ _AP.endMarker = (function()
 
         Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
 
-        p = getParams(system, svgEndMarkerGroup, vbOriginY, vbScale);
+        p = getParams(system, svgEndMarkerGroup, vbScale);
         Object.defineProperty(that, "rect", { value: p.rect, writable: false });
         Object.defineProperty(that, "halfRectWidth", { value: p.halfRectWidth, writable: false });
         Object.defineProperty(that, "line", { value: p.line, writable: false });

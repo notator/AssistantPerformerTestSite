@@ -25,14 +25,14 @@ _AP.startMarker = (function()
     var 
     // The svgStartMarkerGroup is an svg group with class='startMarker'.
     // It contains an svg line and an svg circle element.
-    StartMarker = function(system, systIndex, svgStartMarkerGroup, vbOriginY, vbScale)
+    StartMarker = function(system, systIndex, svgStartMarkerGroup, vbScale)
     {
         if(!(this instanceof StartMarker))
         {
-            return new StartMarker(system, systIndex, svgStartMarkerGroup, vbOriginY, vbScale);
+            return new StartMarker(system, systIndex, svgStartMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgStartMarkerGroup, vbOriginY, vbScale);
+        this._setAttributes(this, system, systIndex, svgStartMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -46,11 +46,11 @@ _AP.startMarker = (function()
     };
 
     // private function (used only in constructor)
-    StartMarker.prototype._setAttributes = function(that, system, systIndex, svgStartMarkerGroup, vbOriginY, vbScale)
+    StartMarker.prototype._setAttributes = function(that, system, systIndex, svgStartMarkerGroup, vbScale)
     {
         var p;
         // returns an object having circle, line, viewBoxScale and yCoordinates attributes;
-        function getParams(system, svgStartMarkerGroup, vbOriginY, vbScale)
+        function getParams(system, svgStartMarkerGroup, vbScale)
         {
             var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
                 CIRCLE_RADIUS = 5, // user html pixels
@@ -78,8 +78,8 @@ _AP.startMarker = (function()
 
             params.viewBoxScale = vbScale;
 
-            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
-            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
+            top = (system.markersTop - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom + EXTRA_TOP_AND_BOTTOM).toString();
 
             params.line.setAttribute('x1', '0');
             params.line.setAttribute('y1', top);
@@ -95,15 +95,15 @@ _AP.startMarker = (function()
             params.circle.style.fill = GREEN;
 
             params.yCoordinates = {};
-            params.yCoordinates.top = Math.round(parseFloat(top) / vbScale) + vbOriginY;
-            params.yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + vbOriginY;
+            params.yCoordinates.top = Math.round(parseFloat(top) / vbScale);
+            params.yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale);
 
             return params;
         }
 
         Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
 
-        p = getParams(system, svgStartMarkerGroup, vbOriginY, vbScale);
+        p = getParams(system, svgStartMarkerGroup, vbScale);
         Object.defineProperty(that, "circle", { value: p.circle, writable: false });
         Object.defineProperty(that, "line", { value: p.line, writable: false });
         Object.defineProperty(that, "viewBoxScale", { value: p.viewBoxScale, writable: false });

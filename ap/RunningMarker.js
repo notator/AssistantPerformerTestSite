@@ -25,14 +25,14 @@ _AP.runningMarker = (function()
     var
     // The argument is an svg group with id='runningMarker'.
     // The group contains a single svg line.
-    RunningMarker = function (system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale)
+    RunningMarker = function (system, systIndex, svgRunningMarkerGroup, vbScale)
     {
         if (!(this instanceof RunningMarker))
         {
-            return new RunningMarker(system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale);
+            return new RunningMarker(system, systIndex, svgRunningMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale);
+        this._setAttributes(this, system, systIndex, svgRunningMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -45,12 +45,12 @@ _AP.runningMarker = (function()
         RunningMarker: RunningMarker
     };
 
-    RunningMarker.prototype._setAttributes = function(that, system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale)
+    RunningMarker.prototype._setAttributes = function(that, system, systIndex, svgRunningMarkerGroup, vbScale)
     {
         var p;
 
         // returns an object having line, viewBoxScale and yCoordinates attributes;
-        function getParams(system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale)
+        function getParams(system, systIndex, svgRunningMarkerGroup, vbScale)
         {
             var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
                 top, bottom, color = '#999999', params = {};
@@ -73,8 +73,8 @@ _AP.runningMarker = (function()
 
             params.viewBoxScale = vbScale;
 
-            top = (system.markersTop - vbOriginY - EXTRA_TOP_AND_BOTTOM).toString();
-            bottom = (system.markersBottom - vbOriginY + EXTRA_TOP_AND_BOTTOM).toString();
+            top = (system.markersTop - EXTRA_TOP_AND_BOTTOM).toString();
+            bottom = (system.markersBottom + EXTRA_TOP_AND_BOTTOM).toString();
 
             params.line.setAttribute('x1', '0');
             params.line.setAttribute('y1', top);
@@ -85,15 +85,15 @@ _AP.runningMarker = (function()
             params.line.style.stroke = color;
 
             params.yCoordinates = {};
-            params.yCoordinates.top = Math.round(parseFloat(top) / vbScale) + vbOriginY;
-            params.yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale) + vbOriginY;
+            params.yCoordinates.top = Math.round(parseFloat(top) / vbScale);
+            params.yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale);
 
             return params;
         }
 
         Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
 
-        p = getParams(system, systIndex, svgRunningMarkerGroup, vbOriginY, vbScale);
+        p = getParams(system, systIndex, svgRunningMarkerGroup, vbScale);
         Object.defineProperty(that, "line", { value: p.line, writable: false });
         Object.defineProperty(that, "viewBoxScale", { value: p.viewBoxScale, writable: false });
         Object.defineProperty(that, "yCoordinates", { value: p.yCoordinates, writable: false });

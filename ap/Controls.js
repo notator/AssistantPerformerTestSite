@@ -607,6 +607,7 @@ _AP.controls = (function(document, window)
             if(isConducting)
             {
                 setStopped();
+                score.setConducting(false);
             }
             else
             {
@@ -629,6 +630,8 @@ _AP.controls = (function(document, window)
                 cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
                 setCursorAndEventListener('conducting');
+
+                score.setConducting(true);
             }  
         }
 
@@ -793,7 +796,7 @@ _AP.controls = (function(document, window)
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
-            globalElements.conductingLayer = document.getElementById("conductingLayerDiv");
+            globalElements.conductingLayer = document.getElementById("conductingLayer");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
