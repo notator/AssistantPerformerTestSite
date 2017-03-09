@@ -974,49 +974,74 @@ _AP.score = (function (document)
         // Appends the markers and timePointers to the markerslayer.
         function createMarkers(markersLayer, viewBoxScale, system, systIndex)
         {
-            var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-                startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-                startMarkerCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
-                runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+            var startMarkerElem, runningMarkerElem, endMarkerElem;
+
+            function newStartMarkerElem()
+            {
+                var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+                    startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+                    startMarkerDisk = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+
+                startMarkerLine.setAttribute("x1", "0");
+                startMarkerLine.setAttribute("y1", "0");
+                startMarkerLine.setAttribute("x2", "0");
+                startMarkerLine.setAttribute("y2", "0");
+                startMarkerLine.setAttribute("style", "stroke-width:1px");
+
+                startMarkerDisk.setAttribute("cx", "0");
+                startMarkerDisk.setAttribute("cy", "0");
+                startMarkerDisk.setAttribute("r", "0");
+                startMarkerDisk.setAttribute("style", "stroke-width:1px");
+
+                startMarkerElem.appendChild(startMarkerLine);
+                startMarkerElem.appendChild(startMarkerDisk);
+
+                return startMarkerElem;
+            }
+
+            function newRunningMarkerElem()
+            {
+                var runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+                runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+
+                runningMarkerLine.setAttribute("x1", "0");
+                runningMarkerLine.setAttribute("y1", "0");
+                runningMarkerLine.setAttribute("x2", "0");
+                runningMarkerLine.setAttribute("y2", "0");
+                runningMarkerLine.setAttribute("style", "stroke-width:1px");
+
+                runningMarkerElem.appendChild(runningMarkerLine);
+
+                return runningMarkerElem;
+            }
+
+            function newEndMarkerElem()
+            {
+                var endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
                 endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
                 endMarkerRect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-            startMarkerLine.setAttribute("x1", "0");
-            startMarkerLine.setAttribute("y1", "0");
-            startMarkerLine.setAttribute("x2", "0");
-            startMarkerLine.setAttribute("y2", "0");
-            startMarkerLine.setAttribute("style", "stroke-width:1px");
+                endMarkerLine.setAttribute("x1", "0");
+                endMarkerLine.setAttribute("y1", "0");
+                endMarkerLine.setAttribute("x2", "0");
+                endMarkerLine.setAttribute("y2", "0");
+                endMarkerLine.setAttribute("style", "stroke-width:1px");
 
-            startMarkerCircle.setAttribute("cx", "0");
-            startMarkerCircle.setAttribute("cy", "0");
-            startMarkerCircle.setAttribute("r", "0");
-            startMarkerCircle.setAttribute("style", "stroke-width:1px");
+                endMarkerRect.setAttribute("x", "0");
+                endMarkerRect.setAttribute("y", "0");
+                endMarkerRect.setAttribute("width", "0");
+                endMarkerRect.setAttribute("height", "0");
+                endMarkerRect.setAttribute("style", "stroke-width:1px");
 
-            runningMarkerLine.setAttribute("x1", "0");
-            runningMarkerLine.setAttribute("y1", "0");
-            runningMarkerLine.setAttribute("x2", "0");
-            runningMarkerLine.setAttribute("y2", "0");
-            runningMarkerLine.setAttribute("style", "stroke-width:1px");
+                endMarkerElem.appendChild(endMarkerLine);
+                endMarkerElem.appendChild(endMarkerRect);
 
-            endMarkerLine.setAttribute("x1", "0");
-            endMarkerLine.setAttribute("y1", "0");
-            endMarkerLine.setAttribute("x2", "0");                               
-            endMarkerLine.setAttribute("y2", "0");
-            endMarkerLine.setAttribute("style", "stroke-width:1px");
+                return endMarkerElem;
+            }
 
-            endMarkerRect.setAttribute("x", "0");
-            endMarkerRect.setAttribute("y", "0");
-            endMarkerRect.setAttribute("width", "0");
-            endMarkerRect.setAttribute("height", "0");
-            endMarkerRect.setAttribute("style", "stroke-width:1px");
-
-            startMarkerElem.appendChild(startMarkerLine);
-            startMarkerElem.appendChild(startMarkerCircle);
-            runningMarkerElem.appendChild(runningMarkerLine);
-            endMarkerElem.appendChild(endMarkerLine);
-            endMarkerElem.appendChild(endMarkerRect);
+            startMarkerElem = newStartMarkerElem();
+            runningMarkerElem = newRunningMarkerElem();
+            endMarkerElem = newEndMarkerElem();
 
             markersLayer.appendChild(startMarkerElem);
             markersLayer.appendChild(runningMarkerElem);
