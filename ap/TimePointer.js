@@ -18,19 +18,19 @@ _AP.timePointer = (function()
     "use strict";
 
     var
-    TimePointer = function (originY, viewBoxScale)
+    TimePointer = function (time, originY, viewBoxScale)
     {
         if (!(this instanceof TimePointer))
         {
             return new TimePointer(originY, viewBoxScale);
         }
 
+        Object.defineProperty(this, "time", { value: time, writable: false });
         Object.defineProperty(this, "graphicElem", { value: this._graphicElem(this, viewBoxScale), writable: false });
         Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
         // will be set to the system's runningMarker
         Object.defineProperty(this, "runningMarker", { value: null, writable: true });
-        Object.defineProperty(this, "msPositionInScore", { value: 0, writable: true });
 
         // private constant
         Object.defineProperty(this, "_originYinViewBox", { value: originY * viewBoxScale, writable: false });
@@ -117,7 +117,7 @@ _AP.timePointer = (function()
         localAlignment = alignment * this.viewBoxScale;
  
         this.graphicElem.setAttribute('transform', 'translate(' + localAlignment + ',' + this._originYinViewBox + ')');
-        this.msPositionInScore = leftMsPos + (duration * scale);
+        this.time.msPositionInScore = leftMsPos + (duration * scale);
     };
 
     TimePointer.prototype.moveToRunningMarker = function()
@@ -125,7 +125,7 @@ _AP.timePointer = (function()
         var timeObject = this.runningMarker.timeObjects[this.runningMarker.positionIndex];
 
         this.graphicElem.setAttribute('transform', 'translate(' + (timeObject.alignment * this.viewBoxScale) + ',' + this._originYinViewBox + ')');
-        this.msPositionInScore = timeObject.msPositionInScore;
+        this.time.msPositionInScore = timeObject.msPositionInScore;
     };
 
     TimePointer.prototype.setVisible = function(setToVisible)
@@ -138,11 +138,6 @@ _AP.timePointer = (function()
         {
             this.graphicElem.setAttribute('opacity', '0');
         }
-    };
-
-    TimePointer.prototype.now = function()
-    {
-        return this.msPositionInScore;
     };
 
     return publicAPI;

@@ -231,7 +231,7 @@ _AP.controls = (function(document, window)
         switch(mainOptionsState)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
-                globalElements.titleOptionsDiv.style.visibility = "visible";    
+                globalElements.titleOptionsDiv.style.visibility = "visible";
                 globalElements.needsMIDIAccessDiv.style.display = "none";
                 globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
@@ -367,7 +367,7 @@ _AP.controls = (function(document, window)
     {
         var
         scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
-        
+
         // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
         // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
         function setTimestampsRelativeToSequenceRecording(sequenceRecording)
@@ -549,7 +549,7 @@ _AP.controls = (function(document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);            
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
         }
 
         function setSettingStart()
@@ -602,12 +602,13 @@ _AP.controls = (function(document, window)
 
         function setConducting()
         {
-            var isConducting = (cl.setConductorControlSelected.getAttribute('opacity') === METAL);
+            options.isConducting = (cl.setConductorControlSelected.getAttribute('opacity') === METAL);
 
-            if(isConducting)
+            if(options.isConducting)
             {
                 setStopped();
                 score.setConducting(false);
+                options.isConducting = false;
             }
             else
             {
@@ -630,9 +631,7 @@ _AP.controls = (function(document, window)
                 cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
                 setCursorAndEventListener('conducting');
-
-                score.setConducting(true);
-            }  
+            }
         }
 
         svgControlsState = svgCtlsState;
@@ -1010,6 +1009,29 @@ _AP.controls = (function(document, window)
         }
     },
 
+    // Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
+    // Called again with options.isConducting===true if the conduct performance button is toggled on.
+    initializePlayer = function(score, options)
+    {
+        var time, tracksData = score.getTracksData();
+
+        if(options.livePerformance)
+        {
+            player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
+            // setSpeed(globalElements.speedControlInput.value / 100) should be implemented here as in Sequence (21.02.2017)
+            player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+            player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+        }
+        else
+        {
+            player = sequence; // sequence is a namespace, not a class.
+            resetSpeed(); // calls player.setSpeed()
+            player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+            time = (options.isConducting) ? score.getTime() : performance; // time is an object that has a now() function. 
+            player.init(time, options.outputDevice, reportEndOfPerformance, reportMsPos);
+        }
+    },
+
     // called when the user clicks a control in the GUI
     doControl = function(controlID)
     {
@@ -1107,7 +1129,7 @@ _AP.controls = (function(document, window)
                 pathData.basePath = components[0] + "page ";
 
                 // the second search argument is a regular expression for a single ')' character.
-                if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0) 
+                if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0)
                 {
                     alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
                 }
@@ -1129,7 +1151,7 @@ _AP.controls = (function(document, window)
                 if(scoreInfo.aboutURL !== undefined)
                 {
                     linkDivElem.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
-                    linkDivElem.style.display = "block"; 
+                    linkDivElem.style.display = "block";
                 }
             }
 
@@ -1334,6 +1356,9 @@ _AP.controls = (function(document, window)
         function setConductorControlClicked()
         {
             setSvgControlsState('conducting');
+            score.setConducting(true);
+            options.isConducting = true;
+            initializePlayer(score, options);
         }
 
         function waitForSoundFont()
@@ -1401,7 +1426,7 @@ _AP.controls = (function(document, window)
                 {
                     globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
                 }
-                
+
                 setScore(globalElements.scoreSelect.selectedIndex);
             }
             else
@@ -1552,38 +1577,23 @@ _AP.controls = (function(document, window)
             }
         }
 
-        function getTracksAndPlayer(score, options)
+        function getTracks(score, options)
         {
             var tracksData;
-
             if(scoreHasJustBeenSelected)
             {
                 // everything except the timeObjects (which have to take account of speed)
                 score.getEmptySystems(options.livePerformance);
             }
 
-            // tracksData will contain the following defined attributes:
+            score.setTracksData();
+            // tracksData contains the following attributes:
             //        inputTracks[]
             //        outputTracks[]
             //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
             //            inputKeyRange.bottomKey
             //            inputKeyRange.topKey
             tracksData = score.getTracksData();
-
-            if(options.livePerformance)
-            {
-                player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                // setSpeed(globalElements.speedControlInput.value / 100) should be implemented here as in Sequence (21.02.2017)
-                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-                player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
-            }
-            else
-            {
-                player = sequence; // sequence is a namespace, not a class.
-                resetSpeed(); // calls player.setSpeed()
-                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-                player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
-            }
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // It calls the score.refreshDisplay(isLivePerformance, trackIsOnArray) function as a callback when one
@@ -1674,6 +1684,7 @@ _AP.controls = (function(document, window)
         try
         {
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
+            options.isConducting = false;
 
             setMIDIDevices(options);
 
@@ -1681,7 +1692,10 @@ _AP.controls = (function(document, window)
 
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).
-            getTracksAndPlayer(score, options);
+            getTracks(score, options);
+
+            // can be called again for conducted performance
+            initializePlayer(score, options);
 
             setSpeedControl(tracksControl.width());
 

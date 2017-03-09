@@ -26,6 +26,7 @@ _AP.score = (function (document)
     RunningMarker = _AP.runningMarker.RunningMarker,
     EndMarker = _AP.endMarker.EndMarker,
     TimePointer = _AP.timePointer.TimePointer,
+    Time = _AP.time.Time,
 
     MidiChord = _AP.midiObject.MidiChord,
     MidiRest = _AP.midiObject.MidiRest,
@@ -42,6 +43,7 @@ _AP.score = (function (document)
 
     midiChannelPerOutputTrack = [], // only output tracks
 
+    tracksData = {},
     // This array is initialized to all tracks on (=true) when the score is loaded,
     // and reset when the tracksControl calls refreshDisplay().
     trackIsOnArray = [], // all tracks, including input tracks
@@ -65,9 +67,15 @@ _AP.score = (function (document)
     runningMarker,
     endMarker,
     timePointer,
+    time, // an object, common to all timePointers, having a now() function.
     runningMarkerHeightChanged, // callback, called when runningMarker changes systems
 
     finalBarlineInScore,
+
+    getTime = function()
+    {
+        return time;
+    },
 
     // Pushes the values in the trackIsOnArray into the argument (which is an empty array).
     // The returnArray will be garbage collected when it is finished with.
@@ -568,6 +576,9 @@ _AP.score = (function (document)
     hideRunningMarkers = function ()
     {
         var i, nSystems = systems.length;
+
+        timePointer = undefined;
+
         for (i = 0; i < nSystems; ++i)
         {
             systems[i].runningMarker.setVisible(false);
@@ -617,9 +628,14 @@ _AP.score = (function (document)
                 if(runningMarker === system.runningMarker)
                 {
                     system.timePointer.setVisible(true);
+                    timePointer = system.timePointer;
                 }
             }
-        }    
+        }
+        else
+        {
+            timePointer = undefined;
+        }
     },
 
     conduct = function(e)
@@ -972,7 +988,7 @@ _AP.score = (function (document)
         }
 
         // Appends the markers and timePointers to the markerslayer.
-        function createMarkers(markersLayer, viewBoxScale, system, systIndex)
+        function createMarkers(time, markersLayer, viewBoxScale, system, systIndex)
         {
             var startMarkerElem, runningMarkerElem, endMarkerElem;
 
@@ -1050,7 +1066,7 @@ _AP.score = (function (document)
             system.startMarker = new StartMarker(system, systIndex, startMarkerElem, viewBoxScale);
             system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
             system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
-            system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, viewBoxScale);
+            system.timePointer = new TimePointer(time, system.runningMarker.yCoordinates.top, viewBoxScale);
 
             markersLayer.appendChild(system.timePointer.graphicElem);
         }
@@ -1148,6 +1164,8 @@ _AP.score = (function (document)
 
         resetContent(isLivePerformanceArg);
 
+        time = new Time(); // global
+
         viewBox = setGraphics();
 
         svgPageEmbeds = document.getElementsByClassName("svgPage");
@@ -1174,7 +1192,7 @@ _AP.score = (function (document)
                 systems.push(system); // systems is global inside this namespace
                 pageSystems.push(system);
 
-                createMarkers(markersLayer, viewBox.scale, system, j);
+                createMarkers(time, markersLayer, viewBox.scale, system, j);
             }
         }
 
@@ -1255,6 +1273,7 @@ _AP.score = (function (document)
             if(isConducting)
             {
                 timePointer.setVisible(false);
+                timePointer = undefined;
             }
             if(runningMarker.systemIndex < endMarker.systemIndex)
             {
@@ -1281,18 +1300,17 @@ _AP.score = (function (document)
         }
     },
 
-
-    // Returns a tracksData object having the following defined attributes:
+    // tracksData has the following defined attributes:
     //        inputTracks[] - an array of tracks containing inputChords
     //        outputTracks[] - an array of tracks containing midiChords and midiRests
     //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     //            inputKeyRange.bottomKey
     //            inputKeyRange.topKey
-    getTracksData = function()
+    setTracksData = function()
     {
         // systems->staves->voices->timeObjects
         var
-        tracksData = {}, inputTracks = [], outputTracks = [],
+        inputTracks = [], outputTracks = [],
         outputTrackIndex = 0, inputTrackIndex = 0, inputTrack, outputTrack,
         timeObjectIndex, nTimeObjects, timeObject,
         voiceIndex, nVoices, voice,
@@ -1864,7 +1882,10 @@ _AP.score = (function (document)
         {
             tracksData.inputKeyRange = getInputKeyRange(inputTracks);            
         }
+    },
 
+    getTracksData = function()
+    {
         return tracksData;
     },
 
@@ -1911,6 +1932,7 @@ _AP.score = (function (document)
         this.moveRunningMarkerToStartMarker = moveRunningMarkerToStartMarker;
 
         this.setConducting = setConducting;
+        this.getTime = getTime;
 
         // markersLayers contains one markersLayer per page of the score.
         // Each markersLayer contains the assistant performer's markers
@@ -1920,12 +1942,13 @@ _AP.score = (function (document)
 
         this.getEmptySystems = getEmptySystems;
 
-        // Returns a tracksData object having the following defined attributes:
+        // tracksData is an object having the following defined attributes:
         //        inputTracks[] - an array of tracks containing inputChords
         //        outputTracks[] - an array of tracks containing outputChords and outputRests
         //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
         //            inputKeyRange.bottomKey
         //            inputKeyRange.topKey
+        this.setTracksData = setTracksData;
         this.getTracksData = getTracksData;
 
         // The TracksControl controls the display, and should be the only module to call this function.
