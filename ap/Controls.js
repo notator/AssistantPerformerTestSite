@@ -600,10 +600,8 @@ _AP.controls = (function(document, window)
             setCursorAndEventListener('settingEnd');
         }
 
-        function setConducting()
+        function toggleConducting()
         {
-            options.isConducting = (cl.setConductorControlSelected.getAttribute('opacity') === METAL);
-
             if(options.isConducting)
             {
                 setStopped();
@@ -631,7 +629,10 @@ _AP.controls = (function(document, window)
                 cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
                 setCursorAndEventListener('conducting');
+
+                options.isConducting = true;
             }
+
         }
 
         svgControlsState = svgCtlsState;
@@ -661,8 +662,8 @@ _AP.controls = (function(document, window)
             case 'settingEnd':
                 setSettingEnd();
                 break;
-            case 'conducting':
-                setConducting();
+            case 'conducting':                 
+                toggleConducting();
                 break;
         }
     },
@@ -1009,27 +1010,44 @@ _AP.controls = (function(document, window)
         }
     },
 
+    // see: http://stackoverflow.com/questions/846221/logarithmic-slider
+    // Returns the speed from the (logarithmic) speed slider control.
+    speedSliderValue = function (position)
+    {
+        var
+        // the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
+        minp = 0, maxp = 180, // The slider has width 180px
+        // The result will be between 1/10 and 9.99, the middle value is 1.
+        minv = Math.log(0.1), maxv = Math.log(9.99),
+        // the adjustment factor
+        scale = (maxv - minv) / (maxp - minp);
+
+        return Math.exp(minv + scale * (position - minp));
+    },
+
     // Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
     // Called again with options.isConducting===true if the conduct performance button is toggled on.
-    initializePlayer = function(score, options)
+    initializeSequencePlayer = function(score, options)
     {
-        var time, tracksData = score.getTracksData();
+        var time, speed, tracksData = score.getTracksData();
 
-        if(options.livePerformance)
+        player = sequence; // sequence is a namespace, not a class.
+        player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+        if(options.isConducting)
         {
-            player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-            // setSpeed(globalElements.speedControlInput.value / 100) should be implemented here as in Sequence (21.02.2017)
-            player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-            player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+            time = score.getTime(); // use time.now()
+            // time.speed is the ratio between the distance travelled by the conductor's cursor
+            // and the msPositionInScore (=time.now()).
+            time.speed = speedSliderValue(globalElements.speedControlInput.value);
+            player.setSpeed(1); // constant in conducted performances
         }
         else
         {
-            player = sequence; // sequence is a namespace, not a class.
-            resetSpeed(); // calls player.setSpeed()
-            player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-            time = (options.isConducting) ? score.getTime() : performance; // time is an object that has a now() function. 
-            player.init(time, options.outputDevice, reportEndOfPerformance, reportMsPos);
-        }
+            time = performance; // use performance.now()
+            speed = speedSliderValue(globalElements.speedControlInput.value);
+            player.setSpeed(speed);
+        }        
+        player.init(time, options.outputDevice, reportEndOfPerformance, reportMsPos);
     },
 
     // called when the user clicks a control in the GUI
@@ -1355,10 +1373,22 @@ _AP.controls = (function(document, window)
 
         function setConductorControlClicked()
         {
-            setSvgControlsState('conducting');
-            score.setConducting(true);
-            options.isConducting = true;
-            initializePlayer(score, options);
+            // The conductor control is disabled if this is a live performance.
+            if(cl.setConductorControlDisabled.getAttribute("opacity") === GLASS)
+            {
+                // the button is enabled 
+                if(svgControlsState === 'stopped')
+                {
+                    setSvgControlsState('conducting'); // sets options.isConducting = true;
+                    score.setConducting(true);
+                }
+                else if(svgControlsState === 'conducting')
+                {
+                    setSvgControlsState('stopped'); // sets options.isConducting = false;
+                    score.setConducting(false);
+                }
+                initializeSequencePlayer(score, options);
+            }
         }
 
         function waitForSoundFont()
@@ -1375,41 +1405,6 @@ _AP.controls = (function(document, window)
                 globalElements.outputDeviceSelect.disabled = false;
             }
             doControl("scoreSelect");
-        }
-
-        function setSpeed()
-        {
-            var speed;
-
-            // see: http://stackoverflow.com/questions/846221/logarithmic-slider
-            function logslider(position)
-            {
-                var
-                // the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
-                minp = 0, maxp = 180, // The slider has width 180px
-                // The result will be between 1/10 and 9.99
-                minv = Math.log(0.1), maxv = Math.log(9.99),
-                // the adjustment factor
-                scale = (maxv - minv) / (maxp - minp);
-
-                return Math.exp(minv + scale * (position - minp));
-            }
-
-            speed = logslider(globalElements.speedControlInput.value);
-
-            player.setSpeed(speed);
-
-            if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
-            {
-                globalElements.speedControlCheckbox.checked = true;
-                globalElements.speedControlCheckbox.disabled = true;
-            }
-            else
-            {
-                globalElements.speedControlCheckbox.checked = false;
-                globalElements.speedControlCheckbox.disabled = false;
-            }
-            globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
         }
 
         if(controlID === "scoreSelect")
@@ -1502,7 +1497,20 @@ _AP.controls = (function(document, window)
 
         if(controlID === "speedControlMousemove")
         {
-            setSpeed();
+            var speed = speedSliderValue(globalElements.speedControlInput.value);
+            player.setSpeed(speed);
+
+            if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
+            {
+                globalElements.speedControlCheckbox.checked = true;
+                globalElements.speedControlCheckbox.disabled = true;
+            }
+            else
+            {
+                globalElements.speedControlCheckbox.checked = false;
+                globalElements.speedControlCheckbox.disabled = false;
+            }
+            globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
         }
 
         if(controlID === "speedControlCheckboxClick")
@@ -1536,6 +1544,8 @@ _AP.controls = (function(document, window)
     // It does not require a MIDI input.
     beginRuntime = function()
     {
+        var tracksData;
+
         function setMIDIDevices(options)
         {
             var i,
@@ -1577,7 +1587,9 @@ _AP.controls = (function(document, window)
             }
         }
 
-        function getTracks(score, options)
+        // tracksData is set up inside score (where it can be retrieved
+        // again later) and returned by this function.
+        function getTracksData(score, options)
         {
             var tracksData;
             if(scoreHasJustBeenSelected)
@@ -1686,18 +1698,40 @@ _AP.controls = (function(document, window)
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
             options.isConducting = false;
 
+            if(options.livePerformance)
+            {
+                //disable conductor button
+                cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
+            }
+            else
+            {
+                cl.setConductorControlDisabled.setAttribute("opacity", GLASS);                
+            }
+
             setMIDIDevices(options);
 
             setOutputDeviceFunctions(options.outputDevice);
 
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).
-            getTracks(score, options);
+            tracksData = getTracksData(score, options);
 
-            // can be called again for conducted performance
-            initializePlayer(score, options);
+            if(options.livePerformance)
+            {
+                player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
+                player.setSpeed(speedSliderValue(globalElements.speedControlInput.value));
+                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+                player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+            }
+            else
+            {
+                // can be called again for conducted performance
+                initializeSequencePlayer(score, options);
+            }
 
             setSpeedControl(tracksControl.width());
+
+            resetSpeed(); // calls player.setSpeed(1) (100%)
 
             if(midiAccess !== null)
             {
