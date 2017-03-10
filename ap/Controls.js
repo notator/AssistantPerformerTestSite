@@ -313,6 +313,12 @@ _AP.controls = (function(document, window)
     {
         player.stop();
 
+        if(options.isConducting === true && options.livePerformance === false)
+        {
+            options.isConducting = false;
+            initializeSequencePlayer(score, options);
+        }
+
         score.moveRunningMarkerToStartMarker();
 
         options.outputDevice.reset();
