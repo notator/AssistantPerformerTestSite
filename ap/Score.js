@@ -1150,12 +1150,15 @@ _AP.score = (function (document)
         {
             var
             svgPagesFrame = document.getElementById("svgPagesFrame"),
-            conductingLayer = document.getElementById("conductingLayer");
+            conductingLayer = document.getElementById("conductingLayer"),
+            pfLeft = parseInt(svgPagesFrame.style.left, 10),
+            pfWidth = parseInt(svgPagesFrame.style.width, 10);
 
             conductingLayer.style.top = svgPagesFrame.style.top;
-            conductingLayer.style.left = svgPagesFrame.style.left;
-            conductingLayer.style.width = svgPagesFrame.style.width;
+            conductingLayer.style.left = "0";
+            conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
             conductingLayer.style.height = svgPagesFrame.style.height;
+
             conductingLayer.addEventListener('mousemove', conduct, false);
             conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
         }
