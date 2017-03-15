@@ -18,23 +18,27 @@ _AP.timePointer = (function()
     "use strict";
 
     var
-    TimePointer = function (time, originY, viewBoxScale)
+    TimePointer = function (originY, viewBoxScale, advanceRunningMarker)
     {
         if (!(this instanceof TimePointer))
         {
-            return new TimePointer(originY, viewBoxScale);
+            return new TimePointer(originY, viewBoxScale, advanceRunningMarker);
         }
 
-        Object.defineProperty(this, "time", { value: time, writable: false });
-        Object.defineProperty(this, "graphicElem", { value: this._graphicElem(this, viewBoxScale), writable: false });
-        Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
+        /*** public interface*/
+        Object.defineProperty(this, "graphicElement", { value: this._graphicElem(this, viewBoxScale), writable: false });
+        Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true });
 
-        // will be set to the system's runningMarker
-        Object.defineProperty(this, "runningMarker", { value: null, writable: true });
-
-        // private constant
+        /*** private interface */
         Object.defineProperty(this, "_originYinViewBox", { value: originY * viewBoxScale, writable: false });
+        Object.defineProperty(this, "_viewBoxScale", { value: viewBoxScale, writable: false });
+        // The score.advanceRunningMarker(msPosition, systemIndex) function
+        Object.defineProperty(this, "_advanceRunningMarker", { value: advanceRunningMarker, writable: false });
 
+        // Will be set to the system's runningMarker
+        Object.defineProperty(this, "_runningMarker", { value: undefined, writable: true });
+        // Will be set to a stand-in for the final barline at the end of the system
+        Object.defineProperty(this, "_endOfSystemTimeObject", { value: undefined, writable: true });
         return this;
     },
 
@@ -46,7 +50,7 @@ _AP.timePointer = (function()
 
     TimePointer.prototype._graphicElem = function(that, viewBoxScale)
     {
-        var pointerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+        var graphicElement = document.createElementNS("http://www.w3.org/2000/svg", "g"),
         hLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
         topDiagLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
         bottomDiagLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
@@ -82,62 +86,95 @@ _AP.timePointer = (function()
         vLine.setAttribute("stroke", "#5555FF");
         vLine.setAttribute("stroke-width", (1 * viewBoxScale).toString(10));
 
-        pointerElem.appendChild(hLine);
-        pointerElem.appendChild(topDiagLine);
-        pointerElem.appendChild(bottomDiagLine);
-        pointerElem.appendChild(vLine);
+        graphicElement.appendChild(hLine);
+        graphicElement.appendChild(topDiagLine);
+        graphicElement.appendChild(bottomDiagLine);
+        graphicElement.appendChild(vLine);
 
-        return pointerElem;
+        return graphicElement;
     };
 
-    TimePointer.prototype.init = function(runningMarker)
+    TimePointer.prototype.init = function(runningMarker, endOfSystemTimeObject)
     {
-        this.runningMarker = runningMarker;
-        this.moveToRunningMarker();
+        var currentTimeObject;
+
+        this._runningMarker = runningMarker;
+        this._endOfSystemTimeObject = endOfSystemTimeObject;
+
+        currentTimeObject = runningMarker.timeObjects[runningMarker.positionIndex];
+        this.graphicElement.setAttribute('transform', 'translate(' + (currentTimeObject.alignment * this._viewBoxScale) + ',' + this._originYinViewBox + ')');
+        this.msPositionInScore = currentTimeObject.msPositionInScore;        
     };
 
-    // moves the graphicElem, and sets this.msPositionInScore
-    // to an alignment between two runningMarker positions.
-    TimePointer.prototype.moveTo = function(alignment)
+    TimePointer.prototype.advance = function(msIncrement)
     {
-        var rmIndex = this.runningMarker.positionIndex,
-        leftTimeObject = this.runningMarker.timeObjects[rmIndex],
-        rightTimeObject = this.runningMarker.timeObjects[rmIndex + 1],
-        leftMsPos = leftTimeObject.msPositionInScore,
-        rightMsPos = rightTimeObject.msPositionInScore,
-        duration = rightMsPos - leftMsPos, 
-        scale = (alignment - leftTimeObject.aligment) / duration,
-        localAlignment;
+        var 
+        leftTimeObject, rightTimeObject,
+        leftMsPos, rightMsPos, leftAlignment, rightAlignment,
+        msOffset, pixelsPerMs, localAlignment,
+        systemIndex = this._runningMarker.systemIndex,
+        moveToNextSystem = false;
 
-        if(alignment < leftTimeObject.aligment)
+        this.msPositionInScore += msIncrement;
+
+        leftTimeObject = this._runningMarker.currentTimeObject(); 
+        rightTimeObject = this._runningMarker.nextTimeObject();
+        if(rightTimeObject === undefined)
         {
-            throw "alignment must be >= leftTimeObject.aligment";
+            rightTimeObject = this._endOfSystemTimeObject;
         }
 
-        localAlignment = alignment * this.viewBoxScale;
- 
-        this.graphicElem.setAttribute('transform', 'translate(' + localAlignment + ',' + this._originYinViewBox + ')');
-        this.time.msPositionInScore = leftMsPos + (duration * scale);
-    };
+        while(rightTimeObject.msPositionInScore < this.msPositionInScore)
+        {
+            if(rightTimeObject === this._endOfSystemTimeObject)
+            {
+                // move to next system
+                moveToNextSystem = true;
+                systemIndex++;
+                this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
+                break;
+            }
 
-    TimePointer.prototype.moveToRunningMarker = function()
-    {
-        var timeObject = this.runningMarker.timeObjects[this.runningMarker.positionIndex];
+            this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
 
-        this.graphicElem.setAttribute('transform', 'translate(' + (timeObject.alignment * this.viewBoxScale) + ',' + this._originYinViewBox + ')');
-        this.time.msPositionInScore = timeObject.msPositionInScore;
+            leftTimeObject = this._runningMarker.currentTimeObject();
+            rightTimeObject = this._runningMarker.nextTimeObject();
+            if(rightTimeObject === undefined)
+            {
+                rightTimeObject = this._endOfSystemTimeObject;
+            }
+        }
+
+        if(moveToNextSystem === false)
+        {
+            leftMsPos = leftTimeObject.msPositionInScore;
+            leftAlignment = leftTimeObject.alignment;
+            rightMsPos = rightTimeObject.msPositionInScore;
+            rightAlignment = rightTimeObject.alignment;
+
+            msOffset = this.msPositionInScore - leftMsPos;
+
+            pixelsPerMs = (rightAlignment - leftAlignment) / (rightMsPos - leftMsPos);
+            localAlignment = (leftAlignment + (msOffset * pixelsPerMs)) * this._viewBoxScale;
+            this.graphicElement.setAttribute('transform', 'translate(' + localAlignment + ',' + this._originYinViewBox + ')');
+        }
     };
 
     TimePointer.prototype.setVisible = function(setToVisible)
     {
         if(setToVisible)
         {
-            this.graphicElem.setAttribute('opacity', '1');
+            this.graphicElement.setAttribute('opacity', '1');
         }
         else
         {
-            this.graphicElem.setAttribute('opacity', '0');
+            this.graphicElement.setAttribute('opacity', '0');
         }
+    };
+
+    TimePointer.prototype.now = function()
+    {
+        return this.msPositionInScore;
     };
 
     return publicAPI;

@@ -291,8 +291,10 @@ _AP.controls = (function(document, window)
                     break;
                 case 'conducting':
                     globalElements.conductingLayer.style.visibility = "visible";
+                    globalElements.conductingLayer.addEventListener('mousemove', s.conduct, false);
+                    globalElements.conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
                     break;
-                default:
+                case 'stopped':
                     // According to
                     // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
                     // "Calling removeEventListener() with arguments which do not identify any currently 
@@ -304,7 +306,11 @@ _AP.controls = (function(document, window)
                         s.markersLayers[i].style.cursor = 'auto';
                     }
                     globalElements.conductingLayer.style.visibility = "hidden";
+                    globalElements.conductingLayer.removeEventListener('mousemove', s.conduct, false);
+                    globalElements.conductingLayer.style.cursor = 'auto';
                     break;
+                default:
+                    throw "Unknown state!";
             }
         }
     },
@@ -316,7 +322,7 @@ _AP.controls = (function(document, window)
         if(options.isConducting === true && options.livePerformance === false)
         {
             options.isConducting = false;
-            initializeSequencePlayer(score, options);
+            initializePlayer(score, options);
         }
 
         score.moveRunningMarkerToStartMarker();
@@ -475,6 +481,8 @@ _AP.controls = (function(document, window)
             /********* end performance buttons *******************/
 
             // The tracksControl is only initialised after a specific score is loaded.
+
+            setCursorAndEventListener('stopped');
         }
 
         // setStopped is outer function
@@ -636,14 +644,13 @@ _AP.controls = (function(document, window)
 
                 setCursorAndEventListener('conducting');
 
+                score.setConducting(true);
                 options.isConducting = true;
             }
 
         }
 
         svgControlsState = svgCtlsState;
-
-        setCursorAndEventListener('default');
 
         switch(svgControlsState)
         {
@@ -1033,27 +1040,25 @@ _AP.controls = (function(document, window)
 
     // Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
     // Called again with options.isConducting===true if the conduct performance button is toggled on.
-    initializeSequencePlayer = function(score, options)
+    initializePlayer = function(score, options)
     {
-        var time, speed, tracksData = score.getTracksData();
+        var timer, speed, tracksData = score.getTracksData();
 
         player = sequence; // sequence is a namespace, not a class.
         player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+        speed = speedSliderValue(globalElements.speedControlInput.value);
+
         if(options.isConducting)
         {
-            time = score.getTime(); // use time.now()
-            // time.speed is the ratio between the distance travelled by the conductor's cursor
-            // and the msPositionInScore (=time.now()).
-            time.speed = speedSliderValue(globalElements.speedControlInput.value);
+            timer = score.getConductor(speed); // use conductor.now()
             player.setSpeed(1); // constant in conducted performances
         }
         else
         {
-            time = performance; // use performance.now()
-            speed = speedSliderValue(globalElements.speedControlInput.value);
+            timer = performance; // use performance.now()           
             player.setSpeed(speed);
         }        
-        player.init(time, options.outputDevice, reportEndOfPerformance, reportMsPos);
+        player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
     },
 
     // called when the user clicks a control in the GUI
@@ -1385,15 +1390,13 @@ _AP.controls = (function(document, window)
                 // the button is enabled 
                 if(svgControlsState === 'stopped')
                 {
-                    setSvgControlsState('conducting'); // sets options.isConducting = true;
-                    score.setConducting(true);
+                    setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(true);
                 }
                 else if(svgControlsState === 'conducting')
                 {
-                    setSvgControlsState('stopped'); // sets options.isConducting = false;
-                    score.setConducting(false);
+                    setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(false);
                 }
-                initializeSequencePlayer(score, options);
+                initializePlayer(score, options);
             }
         }
 
@@ -1732,7 +1735,7 @@ _AP.controls = (function(document, window)
             else
             {
                 // can be called again for conducted performance
-                initializeSequencePlayer(score, options);
+                initializePlayer(score, options);
             }
 
             setSpeedControl(tracksControl.width());

@@ -236,6 +236,28 @@ _AP.runningMarker = (function()
         this.moveLineToAlignment(this.timeObjects[this.positionIndex].alignment);
     };
 
+    RunningMarker.prototype.currentTimeObject = function()
+    {
+        var currentTimeObject;
+
+        if(this.positionIndex < this.timeObjects.length)
+        {
+            currentTimeObject = this.timeObjects[this.positionIndex];
+        }
+        return currentTimeObject;
+    };
+
+    RunningMarker.prototype.nextTimeObject = function()
+    {
+        var currentTimeObject;
+
+        if((this.positionIndex + 1) < this.timeObjects.length)
+        {
+            currentTimeObject = this.timeObjects[this.positionIndex + 1];
+        }
+        return currentTimeObject;
+    };
+
     return publicAPI;
 
 } ());

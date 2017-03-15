@@ -32,7 +32,7 @@ _AP.sequence = (function(window)
     "use strict";
     var
     outputDevice,
-    time, // performance or score.time
+    timer, // performance or conductor (use performance.now() or conductor.now())
     tracks,
 
     previousTimestamp = null, // nextMoment()
@@ -52,13 +52,13 @@ _AP.sequence = (function(window)
     msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
     systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
 
-    // (time.now() - performanceStartTime) is the real time elapsed since the start of the performance.
+    // (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
     performanceStartTime = -1,  // set in play(), used by stop(), run()
-    // (time.now() - startTimeAdjustedForPauses) is the current performance duration excluding the durations of pauses.
+    // (timer.now() - startTimeAdjustedForPauses) is the current performance duration excluding the durations of pauses.
     startTimeAdjustedForPauses = -1, // performanceStartTime minus the durations of pauses. Used in nextMoment()
-    pauseStartTime = -1, // the time.now() time at which the performance was paused.
+    pauseStartTime = -1, // the timer.now() time at which the performance was paused.
 
-    speed = 1, // speed can be set at performance time using setSpeed(speed)
+    speed = 1, // in non-conducted performances, speed can be set at performance time using setSpeed(speed)
 
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
@@ -74,14 +74,14 @@ _AP.sequence = (function(window)
             case "stopped":
                 stopped = true;
                 paused = false;
-                pauseStartTime = time.now();
+                pauseStartTime = timer.now();
                 pausedMoment = currentMoment;
                 currentMoment = null;
                 break;
             case "paused":
                 stopped = false;
                 paused = true;
-                pauseStartTime = time.now();
+                pauseStartTime = timer.now();
                 pausedMoment = currentMoment;
                 currentMoment = null;
                 break;
@@ -132,7 +132,7 @@ _AP.sequence = (function(window)
         if(!isStopped())
         {
             setState("stopped");
-            performanceMsDuration = Math.ceil(time.now() - performanceStartTime);
+            performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
             outputDevice.reset();
             reportEndOfPerformance(sequenceRecording, performanceMsDuration);
         }
@@ -151,7 +151,7 @@ _AP.sequence = (function(window)
 
         function stopAfterDelay()
         {
-            var performanceMsDuration = Math.ceil(time.now() - performanceStartTime);
+            var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
             setState("stopped");
             reportEndOfPerformance(sequenceRecording, performanceMsDuration);
         }
@@ -263,7 +263,7 @@ _AP.sequence = (function(window)
     {
         var
         PREQUEUE = 0, // Setting this to 20ms leads to dropouts. But does this need to be set to something larger than 0? See above.
-        now = time.now(),
+        now = timer.now(),
         delay;
 
         // moment.timestamps are always absolute DOMHRT values here.
@@ -343,7 +343,7 @@ _AP.sequence = (function(window)
         }
 
         currentMoment = pausedMoment; // the last moment whose messages were sent.
-        pauseMsDuration = time.now() - pauseStartTime;
+        pauseMsDuration = timer.now() - pauseStartTime;
 
         setState("running"); // sets pausedMoment to null.
 
@@ -356,7 +356,7 @@ _AP.sequence = (function(window)
         {
             return;
         }
-        currentMoment.timestamp = time.now();
+        currentMoment.timestamp = timer.now();
         tick();
     },
 
@@ -396,7 +396,7 @@ _AP.sequence = (function(window)
     {
         if(timerArg === undefined || timerArg === null)
         {
-            throw "The time must be defined.";
+            throw "The timer must be defined.";
         }
 
         if(outputDeviceArg === undefined || outputDeviceArg === null)
@@ -410,7 +410,7 @@ _AP.sequence = (function(window)
             throw "Error: both the position reporting callbacks must be defined.";
         }
 
-        time = timerArg; // performance or score.timePointer
+        timer = timerArg; // performance or score.timePointer
         tracks = this.outputTracks;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
@@ -470,7 +470,7 @@ _AP.sequence = (function(window)
         msPositionToReport = -1;
         lastReportedMsPosition = -1;
 
-        performanceStartTime = time.now();
+        performanceStartTime = timer.now();
         startTimeAdjustedForPauses = performanceStartTime;
 
         run();

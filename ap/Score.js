@@ -26,7 +26,7 @@ _AP.score = (function (document)
     RunningMarker = _AP.runningMarker.RunningMarker,
     EndMarker = _AP.endMarker.EndMarker,
     TimePointer = _AP.timePointer.TimePointer,
-    Time = _AP.time.Time,
+    Conductor = _AP.conductor.Conductor,
 
     MidiChord = _AP.midiObject.MidiChord,
     MidiRest = _AP.midiObject.MidiRest,
@@ -66,15 +66,15 @@ _AP.score = (function (document)
     startMarker,
     runningMarker,
     endMarker,
-    timePointer,
-    time, // an object, common to all timePointers, having a now() function.
+    conductor, // an object that has a now() function).
     runningMarkerHeightChanged, // callback, called when runningMarker changes systems
 
     finalBarlineInScore,
 
-    getTime = function()
+    getConductor = function(speed)
     {
-        return time;
+        conductor.setSpeed(speed);
+        return conductor;
     },
 
     // Pushes the values in the trackIsOnArray into the argument (which is an empty array).
@@ -91,13 +91,13 @@ _AP.score = (function (document)
         }
     },
 
-    hideStartMarkersExcept = function (startMarker)
+    hideStartMarkersExcept = function(startMarker)
     {
         var i, sMarker;
-        for (i = 0; i < systems.length; ++i)
+        for(i = 0; i < systems.length; ++i)
         {
             sMarker = systems[i].startMarker;
-            if (sMarker === startMarker)
+            if(sMarker === startMarker)
             {
                 sMarker.setVisible(true);
             }
@@ -108,13 +108,13 @@ _AP.score = (function (document)
         }
     },
 
-    hideEndMarkersExcept = function (endMarker)
+    hideEndMarkersExcept = function(endMarker)
     {
         var i, eMarker;
-        for (i = 0; i < systems.length; ++i)
+        for(i = 0; i < systems.length; ++i)
         {
             eMarker = systems[i].endMarker;
-            if (eMarker === endMarker)
+            if(eMarker === endMarker)
             {
                 eMarker.setVisible(true);
             }
@@ -125,14 +125,14 @@ _AP.score = (function (document)
         }
     },
 
-    getTimeObjectsArray = function (system)
+    getTimeObjectsArray = function(system)
     {
         var i, nStaves = system.staves.length, j, voice, nVoices, timeObjects, timeObjectsArray = [];
 
-        for (i = 0; i < nStaves; ++i)
+        for(i = 0; i < nStaves; ++i)
         {
             nVoices = system.staves[i].voices.length;
-            for (j = 0; j < nVoices; ++j)
+            for(j = 0; j < nVoices; ++j)
             {
                 voice = system.staves[i].voices[j];
                 timeObjects = voice.timeObjects;
@@ -217,7 +217,7 @@ _AP.score = (function (document)
         }
         return returnTimeObject;
     },
-     
+
     findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex)
     {
         var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignment, trackIndex);
@@ -310,7 +310,7 @@ _AP.score = (function (document)
                             for(g = 0; g < voiceGraphicElements.length; ++g)
                             {
                                 voiceGraphicElement = voiceGraphicElements[g];
-                                voiceGraphicElement.style.opacity = opacity;                                    
+                                voiceGraphicElement.style.opacity = opacity;
                             }
                         }
 
@@ -353,7 +353,7 @@ _AP.score = (function (document)
     },
 
     // this function is called only when state is 'settingStart' or 'settingEnd'.
-    svgPageClicked = function (e, state)
+    svgPageClicked = function(e, state)
     {
         var target = e.target,
             cursorX = e.pageX,
@@ -394,14 +394,14 @@ _AP.score = (function (document)
         {
             var i, topLimit, bottomLimit, system, systemIndex;
 
-            if (systems.length === 1)
+            if(systems.length === 1)
             {
                 systemIndex = 0;
             }
             else
             {
                 topLimit = -1;
-                for (i = 0; i < systems.length - 1; ++i)
+                for(i = 0; i < systems.length - 1; ++i)
                 {
                     system = systems[i];
                     if(system.pageIndex === pageIndex)
@@ -425,7 +425,7 @@ _AP.score = (function (document)
                         {
                             systemIndex = i; // last system on page
                         }
-                    }                    
+                    }
                 }
             }
             return systemIndex;
@@ -442,7 +442,7 @@ _AP.score = (function (document)
             for(i = 0; i < nStaves; ++i)
             {
                 staff = staves[i];
-                if(staff.topLineY !== undefined ) 
+                if(staff.topLineY !== undefined)
                 {
                     // the staff has stafflines (i.e. is visible)
                     visibleStaffIndices.push(i);
@@ -481,7 +481,7 @@ _AP.score = (function (document)
         function findVoiceIndex(cursorY, voices)
         {
             var index, nVoices = voices.length, midY;
-            if (nVoices === 1)
+            if(nVoices === 1)
             {
                 index = 0;
             }
@@ -522,7 +522,7 @@ _AP.score = (function (document)
 
         pageIndex = findPageIndex(target);
         systemIndex = findSystemIndex(cursorY, pageIndex);
-        if (systemIndex !== undefined)
+        if(systemIndex !== undefined)
         {
             system = systems[systemIndex];
 
@@ -568,18 +568,16 @@ _AP.score = (function (document)
         }
     },
 
-    showRunningMarker = function ()
+    showRunningMarker = function()
     {
         runningMarker.setVisible(true);
     },
 
-    hideRunningMarkers = function ()
+    hideRunningMarkers = function()
     {
         var i, nSystems = systems.length;
 
-        timePointer = undefined;
-
-        for (i = 0; i < nSystems; ++i)
+        for(i = 0; i < nSystems; ++i)
         {
             systems[i].runningMarker.setVisible(false);
             if(isConducting)
@@ -589,7 +587,7 @@ _AP.score = (function (document)
         }
     },
 
-    moveRunningMarkerToStartMarker = function ()
+    moveRunningMarkerToStartMarker = function()
     {
         hideRunningMarkers();
         runningMarker = systems[startMarker.systemIndex].runningMarker;
@@ -597,11 +595,11 @@ _AP.score = (function (document)
     },
 
     // Called when the go button is clicked.
-    setRunningMarkers = function ()
+    setRunningMarkers = function()
     {
         var sysIndex, nSystems = systems.length, system;
 
-        for (sysIndex = 0; sysIndex < nSystems; ++sysIndex)
+        for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
         {
             system = systems[sysIndex];
             system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
@@ -613,7 +611,18 @@ _AP.score = (function (document)
     // Called when the start conducting button is clicked on or off.
     setConducting = function(boolean)
     {
-        var sysIndex, nSystems = systems.length, system;
+        var sysIndex, nSystems = systems.length, system, timePointers = [], endOfSystemTimeObject;
+
+        function getEndOfSystemTimeObject(system)
+        {
+            var
+            finalIndex = system.staves[0].voices[0].timeObjects.length - 1,
+            endOfSystemTimeObject;
+        
+            endOfSystemTimeObject = system.staves[0].voices[0].timeObjects[finalIndex];
+
+            return endOfSystemTimeObject;
+        }
 
         isConducting = boolean;
 
@@ -624,23 +633,24 @@ _AP.score = (function (document)
             for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
             {
                 system = systems[sysIndex];
-                system.timePointer.init(system.runningMarker);
-                if(runningMarker === system.runningMarker)
-                {
-                    system.timePointer.setVisible(true);
-                    timePointer = system.timePointer;
-                }
+
+                endOfSystemTimeObject = getEndOfSystemTimeObject(system);
+                system.timePointer.init(system.runningMarker, endOfSystemTimeObject);
+
+                timePointers.push(system.timePointer);
             }
+
+            conductor.setTimePointer(timePointers[0]);  // (timePointer, runningMarker)
         }
         else
         {
-            timePointer = undefined;
+            conductor.setTimePointer(undefined);
         }
     },
 
     conduct = function(e)
     {
-
+        conductor.conduct(e);
     },
 
     // Constructs empty systems for all the pages.
@@ -661,15 +671,12 @@ _AP.score = (function (document)
 
         function resetContent(isLivePerformanceArg)
         {
-            var conductingLayer = document.getElementById("conductingLayer");
-
             isLivePerformance = isLivePerformanceArg;
             markersLayers.length = 0;
             systemElems.length = 0;
             systems.length = 0;
             midiChannelPerOutputTrack.length = 0;
             trackIsOnArray.length = 0;
-            conductingLayer.removeEventListener('mousemove', conduct, false);
         }
 
         function getSVGElem(svgPage)
@@ -988,7 +995,7 @@ _AP.score = (function (document)
         }
 
         // Appends the markers and timePointers to the markerslayer.
-        function createMarkers(time, markersLayer, viewBoxScale, system, systIndex)
+        function createMarkers(conductor, markersLayer, viewBoxScale, system, systIndex)
         {
             var startMarkerElem, runningMarkerElem, endMarkerElem;
 
@@ -1066,9 +1073,11 @@ _AP.score = (function (document)
             system.startMarker = new StartMarker(system, systIndex, startMarkerElem, viewBoxScale);
             system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
             system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
-            system.timePointer = new TimePointer(time, system.runningMarker.yCoordinates.top, viewBoxScale);
 
-            markersLayer.appendChild(system.timePointer.graphicElem);
+
+            system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, viewBoxScale, advanceRunningMarker);
+
+            markersLayer.appendChild(system.timePointer.graphicElement);
         }
 
         function initializeTrackIsOnArray(system)
@@ -1158,16 +1167,13 @@ _AP.score = (function (document)
             conductingLayer.style.left = "0";
             conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
             conductingLayer.style.height = svgPagesFrame.style.height;
-
-            conductingLayer.addEventListener('mousemove', conduct, false);
-            conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
         }
 
         /*************** end of getEmptySystems function definitions *****************************/
 
         resetContent(isLivePerformanceArg);
 
-        time = new Time(); // global
+        conductor = new Conductor(); // global
 
         viewBox = setGraphics();
 
@@ -1195,11 +1201,11 @@ _AP.score = (function (document)
                 systems.push(system); // systems is global inside this namespace
                 pageSystems.push(system);
 
-                createMarkers(time, markersLayer, viewBox.scale, system, j);
+                createMarkers(conductor, markersLayer, viewBox.scale, system, j);
             }
         }
 
-        setConductingLayer();
+        setConductingLayer(); // just sets its dimensions
 
         initializeTrackIsOnArray(systems[0]);
     },
@@ -1265,29 +1271,26 @@ _AP.score = (function (document)
     },
 
     // Advances the running marker to msPosition (in any channel)
-    // if msPosition is >= that object's msPosition. Otherwise does nothing.
-    // Also does nothing when the end of the score is reached.
+    // if msPosition is >= that object's msPosition.
+    // If isConducting is true, and the runningMarker is moved to
+    // the next system, the timePointer is also moved to the next system.
+    // Does nothing when the end of the score is reached.
     advanceRunningMarker = function(msPosition, systemIndex)
     {
         if(systemIndex > runningMarker.systemIndex)
         {
-            // Move runningMarker to msPosition in the next system.
-            runningMarker.setVisible(false);
-            if(isConducting)
-            {
-                timePointer.setVisible(false);
-                timePointer = undefined;
-            }
+            systemIndex = runningMarker.systemIndex + 1; // just to be sure!
+
+            // Move runningMarker and timePointer to msPosition in the next system.
+            runningMarker.setVisible(false)
             if(runningMarker.systemIndex < endMarker.systemIndex)
             {
-                runningMarker = systems[runningMarker.systemIndex + 1].runningMarker;
+                runningMarker = systems[systemIndex].runningMarker;
                 runningMarker.moveTo(msPosition);
                 runningMarker.setVisible(true);
                 if(isConducting)
                 {
-                    timePointer = systems[runningMarker.systemIndex + 1].timePointer;
-                    timePointer.moveToRunningMarker();
-                    timePointer.setVisible(true);
+                    conductor.setTimePointer(systems[systemIndex].timePointer);
                 }
                 // callback for auto scroll
                 runningMarkerHeightChanged(runningMarker.yCoordinates);
@@ -1935,7 +1938,8 @@ _AP.score = (function (document)
         this.moveRunningMarkerToStartMarker = moveRunningMarkerToStartMarker;
 
         this.setConducting = setConducting;
-        this.getTime = getTime;
+        this.getConductor = getConductor;
+        this.conduct = conduct;
 
         // markersLayers contains one markersLayer per page of the score.
         // Each markersLayer contains the assistant performer's markers
