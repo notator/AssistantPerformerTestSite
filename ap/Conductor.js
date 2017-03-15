@@ -20,16 +20,17 @@ _AP.conductor = (function()
 
     var
 
-    Conductor = function (speed)
+    Conductor = function(startPlayingFunction)
     {
         if(!(this instanceof Conductor))
         {
-            return new Conductor(speed);
+            return new Conductor(startPlayingFunction);
         }
 
         /*** The prototype functions are the public interface.*/
 
         /*** private interface */
+        Object.defineProperty(this, "_startPlaying", { value: startPlayingFunction, writable: false });
         // The _speed is the value of the speed control when the set conducting button is clicked.
         // It is the ratio between the total distance travelled by the conductor's cursor and the elapsed time
         // (according to msPositionInScore) since the beginning of the performance.
@@ -59,6 +60,7 @@ _AP.conductor = (function()
         {
             this._prevX = e.clientX;
             this._prevY = e.clientY;
+            this._startPlaying(false);
         }
         else
         {

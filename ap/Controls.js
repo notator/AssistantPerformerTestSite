@@ -460,6 +460,57 @@ _AP.controls = (function(document, window)
         score.advanceRunningMarker(msPositionInScore, systemIndex);
     },
 
+    startPlaying = function(isLivePerformance)
+    {
+        var sequenceRecording, trackIsOnArray = [];
+
+        deleteSaveMIDIFileButton();
+
+        if(isLivePerformance === false && player.isPaused())
+        {
+            player.resume();
+        }
+        else if(player.isStopped())
+        {
+            sequenceRecording = new SequenceRecording(player.outputTracks.length);
+
+            // the running marker is at its correct position:
+            // either at the start marker, or somewhere paused.
+            score.setRunningMarkers();
+            score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+            score.getReadOnlyTrackIsOnArray(trackIsOnArray);
+
+            player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
+        }
+
+        if(options.isConducting === false)
+        {
+            if(isLivePerformance === true)
+            {
+                cl.goDisabled.setAttribute("opacity", SMOKE);
+            }
+            else
+            {
+                cl.goDisabled.setAttribute("opacity", GLASS);
+            }
+            cl.pauseUnselected.setAttribute("opacity", METAL);
+            cl.pauseSelected.setAttribute("opacity", GLASS);
+
+            tracksControl.setDisabled(true);
+
+            cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+
+            cl.stopControlSelected.setAttribute("opacity", GLASS);
+            cl.stopControlDisabled.setAttribute("opacity", GLASS);
+
+            cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+            cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
+        }
+    },
+
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     setSvgControlsState = function(svgCtlsState)
     {
@@ -507,54 +558,6 @@ _AP.controls = (function(document, window)
 
             cl.pauseSelected.setAttribute("opacity", METAL);
             cl.goDisabled.setAttribute("opacity", GLASS);
-
-            cl.stopControlSelected.setAttribute("opacity", GLASS);
-            cl.stopControlDisabled.setAttribute("opacity", GLASS);
-
-            cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-            cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-            cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-            cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-            cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-        }
-
-        function setPlaying(isLivePerformance)
-        {
-            var sequenceRecording, trackIsOnArray = [];
-
-            deleteSaveMIDIFileButton();
-
-            if(isLivePerformance === false && player.isPaused())
-            {
-                player.resume();
-            }
-            else if(player.isStopped())
-            {
-                sequenceRecording = new SequenceRecording(player.outputTracks.length);
-
-                // the running marker is at its correct position:
-                // either at the start marker, or somewhere paused.
-                score.setRunningMarkers();
-                score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-                score.getReadOnlyTrackIsOnArray(trackIsOnArray);
-
-                player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
-            }
-
-            if(isLivePerformance === true)
-            {
-                cl.goDisabled.setAttribute("opacity", SMOKE);
-            }
-            else
-            {
-                cl.goDisabled.setAttribute("opacity", GLASS);
-            }
-            cl.pauseUnselected.setAttribute("opacity", METAL);
-            cl.pauseSelected.setAttribute("opacity", GLASS);
-
-            tracksControl.setDisabled(true);
-
-            cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
             cl.stopControlSelected.setAttribute("opacity", GLASS);
             cl.stopControlDisabled.setAttribute("opacity", GLASS);
@@ -646,6 +649,8 @@ _AP.controls = (function(document, window)
 
                 score.setConducting(true);
                 options.isConducting = true;
+
+                initializePlayer(score, options);
             }
 
         }
@@ -667,7 +672,7 @@ _AP.controls = (function(document, window)
                 }
                 break;
             case 'playing':
-                setPlaying(options.livePerformance);
+                startPlaying(options.livePerformance);
                 break;
             case 'settingStart':
                 setSettingStart();
@@ -1396,7 +1401,6 @@ _AP.controls = (function(document, window)
                 {
                     setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(false);
                 }
-                initializePlayer(score, options);
             }
         }
 
@@ -1604,7 +1608,7 @@ _AP.controls = (function(document, window)
             if(scoreHasJustBeenSelected)
             {
                 // everything except the timeObjects (which have to take account of speed)
-                score.getEmptySystems(options.livePerformance);
+                score.getEmptySystems(options.livePerformance, startPlaying); // startPlaying is a callback for the conductor);
             }
 
             score.setTracksData();

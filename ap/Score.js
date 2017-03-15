@@ -663,7 +663,7 @@ _AP.score = (function (document)
     // The score's trackIsOnArray is initialized to all tracks on (=true).
     // If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-    getEmptySystems = function (isLivePerformanceArg)
+    getEmptySystems = function (isLivePerformanceArg, startPlayingFunction)
     {
         var system, svgPageEmbeds, viewBox, nPages,
             svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
@@ -1173,7 +1173,7 @@ _AP.score = (function (document)
 
         resetContent(isLivePerformanceArg);
 
-        conductor = new Conductor(); // global
+        conductor = new Conductor(startPlayingFunction);
 
         viewBox = setGraphics();
 
