@@ -1282,7 +1282,7 @@ _AP.score = (function (document)
             systemIndex = runningMarker.systemIndex + 1; // just to be sure!
 
             // Move runningMarker and timePointer to msPosition in the next system.
-            runningMarker.setVisible(false)
+            runningMarker.setVisible(false);
             if(runningMarker.systemIndex < endMarker.systemIndex)
             {
                 runningMarker = systems[systemIndex].runningMarker;
