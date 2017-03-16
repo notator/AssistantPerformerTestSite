@@ -638,9 +638,12 @@ _AP.score = (function (document)
                 system.timePointer.init(system.runningMarker, endOfSystemTimeObject);
 
                 timePointers.push(system.timePointer);
-            }
 
-            conductor.setTimePointer(timePointers[0]);  // (timePointer, runningMarker)
+                if(sysIndex === startMarker.systemIndex)
+                {
+                    conductor.setTimePointer(system.timePointer);
+                }
+            }
         }
         else
         {
