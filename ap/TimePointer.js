@@ -35,6 +35,8 @@ _AP.timePointer = (function()
         // The score.advanceRunningMarker(msPosition, systemIndex) function
         Object.defineProperty(this, "_advanceRunningMarker", { value: advanceRunningMarker, writable: false });
 
+        // Will be set to the system's startMarker
+        Object.defineProperty(this, "_startMarker", { value: undefined, writable: true });
         // Will be set to the system's runningMarker
         Object.defineProperty(this, "_runningMarker", { value: undefined, writable: true });
         // Will be set to a stand-in for the final barline at the end of the system
@@ -94,10 +96,11 @@ _AP.timePointer = (function()
         return graphicElement;
     };
 
-    TimePointer.prototype.init = function(runningMarker, endOfSystemTimeObject)
+    TimePointer.prototype.init = function(startMarker, runningMarker, endOfSystemTimeObject)
     {
         var currentTimeObject;
 
+        this._startMarker = startMarker;
         this._runningMarker = runningMarker;
         this._endOfSystemTimeObject = endOfSystemTimeObject;
 
@@ -127,11 +130,9 @@ _AP.timePointer = (function()
         while(rightTimeObject.msPositionInScore < this.msPositionInScore)
         {
             if(rightTimeObject === this._endOfSystemTimeObject)
-            {
+            {               
                 // move to next system
                 moveToNextSystem = true;
-                systemIndex++;
-                this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
                 break;
             }
 
@@ -145,19 +146,30 @@ _AP.timePointer = (function()
             }
         }
 
+        leftMsPos = leftTimeObject.msPositionInScore;
+        leftAlignment = leftTimeObject.alignment;
+        rightMsPos = rightTimeObject.msPositionInScore;
+        rightAlignment = rightTimeObject.alignment;
+
         if(moveToNextSystem === false)
         {
-            leftMsPos = leftTimeObject.msPositionInScore;
-            leftAlignment = leftTimeObject.alignment;
-            rightMsPos = rightTimeObject.msPositionInScore;
-            rightAlignment = rightTimeObject.alignment;
-
             msOffset = this.msPositionInScore - leftMsPos;
-
             pixelsPerMs = (rightAlignment - leftAlignment) / (rightMsPos - leftMsPos);
-            localAlignment = (leftAlignment + (msOffset * pixelsPerMs)) * this._viewBoxScale;
-            this.graphicElement.setAttribute('transform', 'translate(' + localAlignment + ',' + this._originYinViewBox + ')');
+            localAlignment = (leftAlignment + (msOffset * pixelsPerMs));
+            this.setVisible(true);
         }
+        else
+        {
+            this._runningMarker.setVisible(false);
+            this._runningMarker.moveTo(this._startMarker.msPositionInScore);
+            localAlignment = this._startMarker.alignment;
+            this.setVisible(false);
+
+            systemIndex++;
+            this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
+
+        }
+        this.graphicElement.setAttribute('transform', 'translate(' + localAlignment * this._viewBoxScale + ',' + this._originYinViewBox + ')');
     };
 
     TimePointer.prototype.setVisible = function(setToVisible)

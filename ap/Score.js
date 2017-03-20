@@ -568,11 +568,6 @@ _AP.score = (function (document)
         }
     },
 
-    showRunningMarker = function()
-    {
-        runningMarker.setVisible(true);
-    },
-
     hideRunningMarkers = function()
     {
         var i, nSystems = systems.length;
@@ -587,14 +582,17 @@ _AP.score = (function (document)
         }
     },
 
-    moveRunningMarkerToStartMarker = function()
+    moveRunningMarkersToStartMarkers = function()
     {
-        hideRunningMarkers();
-        runningMarker = systems[startMarker.systemIndex].runningMarker;
-        runningMarker.moveTo(startMarker.msPositionInScore);
+        var i, nSystems = systems.length;
+
+        for(i = 0; i < nSystems; ++i)
+        {
+            systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
+        }
     },
 
-    // Called when the go button is clicked.
+    // Called when the go button or the startConducting button is clicked.
     setRunningMarkers = function()
     {
         var sysIndex, nSystems = systems.length, system;
@@ -604,8 +602,10 @@ _AP.score = (function (document)
             system = systems[sysIndex];
             system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
         }
-        moveRunningMarkerToStartMarker();
-        showRunningMarker();
+        hideRunningMarkers();
+        moveRunningMarkersToStartMarkers();
+        runningMarker = systems[startMarker.systemIndex].runningMarker;
+        runningMarker.setVisible(true);
     },
 
     // Called when the start conducting button is clicked on or off.
@@ -624,18 +624,17 @@ _AP.score = (function (document)
             return endOfSystemTimeObject;
         }
 
-        isConducting = boolean;
+        setRunningMarkers();
 
+        isConducting = boolean; // score.isConducting!
         if(isConducting)
         {
-            setRunningMarkers();
-
             for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
             {
                 system = systems[sysIndex];
 
                 endOfSystemTimeObject = getEndOfSystemTimeObject(system);
-                system.timePointer.init(system.runningMarker, endOfSystemTimeObject);
+                system.timePointer.init(system.startMarker, system.runningMarker, endOfSystemTimeObject);
 
                 timePointers.push(system.timePointer);
 
@@ -1076,7 +1075,6 @@ _AP.score = (function (document)
             system.startMarker = new StartMarker(system, systIndex, startMarkerElem, viewBoxScale);
             system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
             system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
-
 
             system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, viewBoxScale, advanceRunningMarker);
 
@@ -1759,12 +1757,15 @@ _AP.score = (function (document)
                         break;
                     }
                 }
+
+                system.runningMarker.moveTo(system.startMarker.msPositionInScore); // system.startMarker is system.runningMarker.startMarker 
             }
 
             startMarker = systems[0].startMarker;
             startMarker.setVisible(true);
 
-            moveRunningMarkerToStartMarker(); // is only visible when playing...
+            runningMarker = systems[0].runningMarker;
+            // runningMarker (and maybe timePointer) will be set visible later.
 
             endMarker = systems[systems.length - 1].endMarker;
             endMarker.moveTo(finalBarlineInScore);
@@ -1938,7 +1939,7 @@ _AP.score = (function (document)
         // if the msPosition argument is >= that object's msPosition. Otherwise does nothing.
         this.advanceRunningMarker = advanceRunningMarker;
         this.hideRunningMarkers = hideRunningMarkers;
-        this.moveRunningMarkerToStartMarker = moveRunningMarkerToStartMarker;
+        this.moveRunningMarkersToStartMarkers = moveRunningMarkersToStartMarkers;
 
         this.setConducting = setConducting;
         this.getConductor = getConductor;

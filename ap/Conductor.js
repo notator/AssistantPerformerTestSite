@@ -91,6 +91,7 @@ _AP.conductor = (function()
         }
         this._timePointer = timePointer;
         this._timePointer.setVisible(true);
+        this._prevX = -1;
     };
 
     Conductor.prototype.now = function()

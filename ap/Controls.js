@@ -321,11 +321,13 @@ _AP.controls = (function(document, window)
 
         if(options.isConducting === true && options.livePerformance === false)
         {
+            //score.moveStartMarkerToTop(globalElements.svgPagesFrame);
             options.isConducting = false;
             initializePlayer(score, options);
         }
 
-        score.moveRunningMarkerToStartMarker();
+        score.hideRunningMarkers();
+        score.moveRunningMarkersToStartMarkers();
 
         options.outputDevice.reset();
 
@@ -648,9 +650,11 @@ _AP.controls = (function(document, window)
                 setCursorAndEventListener('conducting');
 
                 score.setConducting(true);
+                score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+
                 options.isConducting = true;
 
-                initializePlayer(score, options);
+                initializePlayer(score, options);               
             }
 
         }
@@ -1352,7 +1356,8 @@ _AP.controls = (function(document, window)
             else if(svgControlsState === 'settingStart')
             {
                 setSvgControlsState('stopped');
-                score.moveRunningMarkerToStartMarker();
+                score.hideRunningMarkers();
+                score.moveRunningMarkersToStartMarkers();
             }
         }
 
@@ -1374,7 +1379,8 @@ _AP.controls = (function(document, window)
             {
                 toggleBack(cl.sendStartToBeginningControlSelected);
                 score.sendStartMarkerToStart();
-                score.moveRunningMarkerToStartMarker();
+                score.hideRunningMarkers();
+                score.moveRunningMarkersToStartMarkers();
             }
         }
 
