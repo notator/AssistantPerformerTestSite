@@ -874,7 +874,8 @@ _AP.score = (function (document)
 
             function getSystemMarkerLimits(system, systemElem, systemDY)
             {
-                var i, sysElemChildren, leftToRightElem, topToBottomElem;
+                var i, sysElemChildren, leftToRightElem, topToBottomElem,
+                    minPixelsAbove = -20 * viewBoxScale, markersTopDY;
                 
                 sysElemChildren = systemElem.children;
                 for(i = 0; i < sysElemChildren.length; ++i)
@@ -882,7 +883,8 @@ _AP.score = (function (document)
                     if(sysElemChildren[i].nodeName === "score:leftToRight")
                     {
                         leftToRightElem = sysElemChildren[i];
-                        system.markersTop = systemDY + parseInt(leftToRightElem.getAttribute("systemTop"), 10);
+                        markersTopDY = (minPixelsAbove < systemDY) ? minPixelsAbove : systemDY;
+                        system.markersTop = markersTopDY + parseInt(leftToRightElem.getAttribute("systemTop"), 10);
                         system.markersBottom = systemDY + parseInt(leftToRightElem.getAttribute("systemBottom"), 10);
                         break;
                     }
@@ -999,7 +1001,7 @@ _AP.score = (function (document)
         // Appends the markers and timePointers to the markerslayer.
         function createMarkers(conductor, markersLayer, viewBoxScale, system, systIndex)
         {
-            var startMarkerElem, runningMarkerElem, endMarkerElem;
+            var startMarkerElem, runningMarkerElem, endMarkerElem, runningMarkerHeight;
 
             function newStartMarkerElem()
             {
@@ -1076,7 +1078,9 @@ _AP.score = (function (document)
             system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
             system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
 
-            system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, viewBoxScale, advanceRunningMarker);
+            runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
+
+            system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, runningMarkerHeight, viewBoxScale, advanceRunningMarker);
 
             markersLayer.appendChild(system.timePointer.graphicElement);
         }

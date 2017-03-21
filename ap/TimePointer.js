@@ -18,7 +18,7 @@ _AP.timePointer = (function()
     "use strict";
 
     var
-    TimePointer = function (originY, viewBoxScale, advanceRunningMarker)
+    TimePointer = function (originY, height, viewBoxScale, advanceRunningMarker)
     {
         if (!(this instanceof TimePointer))
         {
@@ -26,7 +26,7 @@ _AP.timePointer = (function()
         }
 
         /*** public interface*/
-        Object.defineProperty(this, "graphicElement", { value: this._graphicElem(this, viewBoxScale), writable: false });
+        Object.defineProperty(this, "graphicElement", { value: this._graphicElem(this, height, viewBoxScale), writable: false });
         Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true });
 
         /*** private interface */
@@ -50,7 +50,7 @@ _AP.timePointer = (function()
         TimePointer: TimePointer
     };
 
-    TimePointer.prototype._graphicElem = function(that, viewBoxScale)
+    TimePointer.prototype._graphicElem = function(that, height, viewBoxScale)
     {
         var graphicElement = document.createElementNS("http://www.w3.org/2000/svg", "g"),
         hLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
@@ -59,32 +59,32 @@ _AP.timePointer = (function()
         vLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
         hLine.setAttribute("x1", (-13.9 * viewBoxScale).toString(10));
-        hLine.setAttribute("y1", (-10 * viewBoxScale).toString(10));
+        hLine.setAttribute("y1", (10 * viewBoxScale).toString(10));
         hLine.setAttribute("x2", (-1.7 * viewBoxScale).toString(10));
-        hLine.setAttribute("y2", (-10 * viewBoxScale).toString(10));
+        hLine.setAttribute("y2", (10 * viewBoxScale).toString(10));
         hLine.setAttribute("stroke", "#5555FF");
         hLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
 
         topDiagLine.setAttribute("x1", (-1.6 * viewBoxScale).toString(10));
-        topDiagLine.setAttribute("y1", (-10 * viewBoxScale).toString(10));
+        topDiagLine.setAttribute("y1", (10 * viewBoxScale).toString(10));
         topDiagLine.setAttribute("x2", (-5.4 * viewBoxScale).toString(10));
-        topDiagLine.setAttribute("y2", (-14 * viewBoxScale).toString(10));
+        topDiagLine.setAttribute("y2", (6 * viewBoxScale).toString(10));
         topDiagLine.setAttribute("stroke", "#5555FF");
         topDiagLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
         topDiagLine.setAttribute("stroke-linecap", "square");
 
         bottomDiagLine.setAttribute("x1", (-1.6 * viewBoxScale).toString(10));
-        bottomDiagLine.setAttribute("y1", (-10 * viewBoxScale).toString(10));
+        bottomDiagLine.setAttribute("y1", (10 * viewBoxScale).toString(10));
         bottomDiagLine.setAttribute("x2", (-5.4 * viewBoxScale).toString(10));
-        bottomDiagLine.setAttribute("y2", (-6 * viewBoxScale).toString(10));
+        bottomDiagLine.setAttribute("y2", (14 * viewBoxScale).toString(10));
         bottomDiagLine.setAttribute("stroke", "#5555FF");
         bottomDiagLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
         bottomDiagLine.setAttribute("stroke-linecap", "square");
 
         vLine.setAttribute("x1", "0");
-        vLine.setAttribute("y1", (-20 * viewBoxScale).toString(10));
+        vLine.setAttribute("y1", "0");
         vLine.setAttribute("x2", "0");
-        vLine.setAttribute("y2", "0");
+        vLine.setAttribute("y2", (height * viewBoxScale).toString(10));
         vLine.setAttribute("stroke", "#5555FF");
         vLine.setAttribute("stroke-width", (1 * viewBoxScale).toString(10));
 
