@@ -266,6 +266,23 @@ _AP.controls = (function(document, window)
         }
     },
 
+    setConductorControlClicked = function()
+    {
+        // The conductor control is disabled if this is a live performance.
+        if(cl.setConductorControlDisabled.getAttribute("opacity") === GLASS)
+        {
+            // the button is enabled 
+            if(svgControlsState === 'stopped')
+            {
+                setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(true);
+            }
+            else if(svgControlsState === 'conducting')
+            {
+                setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(false);
+            }
+        }
+    },
+
     setCursorAndEventListener = function(svgControlsState)
     {
         var i,
@@ -292,6 +309,7 @@ _AP.controls = (function(document, window)
                 case 'conducting':
                     globalElements.conductingLayer.style.visibility = "visible";
                     globalElements.conductingLayer.addEventListener('mousemove', s.conduct, false);
+                    globalElements.conductingLayer.addEventListener('click', setConductorControlClicked, false);
                     globalElements.conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
                     break;
                 case 'stopped':
@@ -307,6 +325,7 @@ _AP.controls = (function(document, window)
                     }
                     globalElements.conductingLayer.style.visibility = "hidden";
                     globalElements.conductingLayer.removeEventListener('mousemove', s.conduct, false);
+                    globalElements.conductingLayer.removeEventListener('click', setConductorControlClicked, false);
                     globalElements.conductingLayer.style.cursor = 'auto';
                     break;
                 default:
@@ -1390,23 +1409,6 @@ _AP.controls = (function(document, window)
             {
                 toggleBack(cl.sendStopToEndControlSelected);
                 score.sendEndMarkerToEnd();
-            }
-        }
-
-        function setConductorControlClicked()
-        {
-            // The conductor control is disabled if this is a live performance.
-            if(cl.setConductorControlDisabled.getAttribute("opacity") === GLASS)
-            {
-                // the button is enabled 
-                if(svgControlsState === 'stopped')
-                {
-                    setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(true);
-                }
-                else if(svgControlsState === 'conducting')
-                {
-                    setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(false);
-                }
             }
         }
 
