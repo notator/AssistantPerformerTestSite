@@ -109,6 +109,23 @@ _AP.timePointer = (function()
         this.msPositionInScore = currentTimeObject.msPositionInScore;        
     };
 
+    TimePointer.prototype.msPerPx = function()
+    {
+        var
+        ms, px,
+        leftTimeObject = this._runningMarker.currentTimeObject(),
+        rightTimeObject = this._runningMarker.nextTimeObject();
+
+        if(rightTimeObject === undefined)
+        {
+            rightTimeObject = this._endOfSystemTimeObject;
+        }
+        ms = rightTimeObject.msPositionInScore - leftTimeObject.msPositionInScore;
+        px = rightTimeObject.alignment - leftTimeObject.alignment;
+
+        return (ms / px);
+    };
+
     TimePointer.prototype.advance = function(msIncrement)
     {
         var 

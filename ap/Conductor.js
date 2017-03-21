@@ -53,7 +53,6 @@ _AP.conductor = (function()
     {
         var
         pixelDistance, milliseconds,
-        constFactor = 5, // 100px * 5 = 500ms (with this._speed = 1.0)
         dx, dy;
 
         if(this._prevX < 0)
@@ -72,7 +71,7 @@ _AP.conductor = (function()
 
             pixelDistance = Math.sqrt((dx * dx) + (dy * dy));
 
-            milliseconds = pixelDistance * constFactor * this._speed;
+            milliseconds = pixelDistance * this._timePointer.msPerPx() * this._speed;
 
             this._timePointer.advance(milliseconds);
         }
