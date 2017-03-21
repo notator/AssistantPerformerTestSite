@@ -31,6 +31,9 @@ _AP.sequence = (function(window)
 {
     "use strict";
     var
+    Moment = _AP.moment.Moment,
+    Conductor = _AP.conductor.Conductor,
+
     outputDevice,
     timer, // performance or conductor (use performance.now() or conductor.now())
     tracks,
@@ -38,8 +41,8 @@ _AP.sequence = (function(window)
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
     currentMoment = null, // nextMoment(), resume(), tick()
-    startMarkerMsPosition,
     endMarkerMsPosition,
+    endOfConductedPerformance,
 
     // used by setState()
     pausedMoment = null, // set by pause(), used by resume()
@@ -188,11 +191,27 @@ _AP.sequence = (function(window)
         }
         else if(track === null)
         {
-            // The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
-            setState("stopped");
-            // Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-            delay = (endMarkerMsPosition - previousMomtMsPos) / speed;
-            window.setTimeout(stopAfterDelay, delay);
+            if(timer instanceof Conductor)
+            {
+                if(endOfConductedPerformance === false)
+                {
+                    nextMomt = new Moment(0, 0);  // dummy moment
+                    trackNextMomtMsPos = endMarkerMsPosition;
+                    endOfConductedPerformance = true;
+                }
+                else
+                {
+                    stopAfterDelay();
+                }
+            }
+            else // using performance.now()
+            {
+                // The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
+                setState("stopped");
+                // Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
+                delay = (endMarkerMsPosition - previousMomtMsPos) / speed;
+                window.setTimeout(stopAfterDelay, delay);
+            }
         }
         else
         {
@@ -455,7 +474,6 @@ _AP.sequence = (function(window)
 
         sequenceRecording = recording; // can be undefined or null
 
-        startMarkerMsPosition = startMarkerMsPosInScore;
         endMarkerMsPosition = endMarkerMsPosInScore;
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
@@ -469,6 +487,7 @@ _AP.sequence = (function(window)
         previousMomtMsPos = startMarkerMsPosInScore;
         msPositionToReport = -1;
         lastReportedMsPosition = -1;
+        endOfConductedPerformance = false;
 
         performanceStartTime = timer.now();
         startTimeAdjustedForPauses = performanceStartTime;
