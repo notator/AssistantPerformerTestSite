@@ -208,7 +208,7 @@ _AP.runningMarker = (function()
     {
         var positionIndex = 0, timeObjects = this.timeObjects;
 
-        while(timeObjects[positionIndex].msPositionInScore !== msPosInScore)
+        while(timeObjects[positionIndex].msPositionInScore < msPosInScore)
         {
             positionIndex++;
         }
