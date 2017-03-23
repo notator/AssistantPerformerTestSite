@@ -721,35 +721,25 @@ _AP.controls = (function(document, window)
         is.options.length = 0; // important when called by midiAccess.onstatechange 
 
         option = document.createElement("option");
-        /**************************************/
-        // to re-enable MIDI input devices,
-        // 1. un-comment the content of the function setOptionsInputHandler()
-        // 2. un-comment lines 731-749 here below
-        // 3. delete the following three lines 
-        option.text = "MIDI input is temporarily disabled";
-        is.add(option, null);
-        globalElements.inputDeviceSelect.disabled = true;
-        /**************************************/
-        //if(midiAccess !== null)
-        //{
-        //    option.text = "choose a MIDI input device";
-        //    is.add(option, null);
-        //    midiAccess.inputs.forEach(function(port)
-        //    {
-        //        //console.log('input id:', port.id, ' input name:', port.name);
-        //        option = document.createElement("option");
-        //        option.inputDevice = port;
-        //        option.text = port.name;
-        //        is.add(option, null);
-        //    });
-        //}
-        //else
-        //{
-        //    option.text = "browser does not support Web MIDI";
-        //    is.add(option, null);
-        //    globalElements.inputDeviceSelect.disabled = true;
-        //}
-        /**************************************/
+        if(midiAccess !== null)
+        {
+            option.text = "choose a MIDI input device";
+            is.add(option, null);
+            midiAccess.inputs.forEach(function(port)
+            {
+                //console.log('input id:', port.id, ' input name:', port.name);
+                option = document.createElement("option");
+                option.inputDevice = port;
+                option.text = port.name;
+                is.add(option, null);
+            });
+        }
+        else
+        {
+            option.text = "browser does not support Web MIDI";
+            is.add(option, null);
+            globalElements.inputDeviceSelect.disabled = true;
+        }
     },
 
     // sets the options in the output device selector
@@ -1310,31 +1300,31 @@ _AP.controls = (function(document, window)
 
             function setOptionsInputHandler(scoreInfoInputHandler)
             {
-                //if(scoreInfoInputHandler === "none")
-                //{
-                //    if(globalElements.inputDeviceSelect.disabled === false)
-                //    {
-                //        globalElements.inputDeviceSelect.selectedIndex = 0;
-                //        globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
-                //        globalElements.inputDeviceSelect.disabled = true;
-                //        options.inputHandler = undefined;
-                //    }
-                //}
-                //else
-                //{
-                //    // globalElements.inputDeviceSelect.selectedIndex is not changed here
-                //    globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
-                //    globalElements.inputDeviceSelect.disabled = false;
+                if(scoreInfoInputHandler === "none")
+                {
+                    if(globalElements.inputDeviceSelect.disabled === false)
+                    {
+                        globalElements.inputDeviceSelect.selectedIndex = 0;
+                        globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
+                        globalElements.inputDeviceSelect.disabled = true;
+                        options.inputHandler = undefined;
+                    }
+                }
+                else
+                {
+                    // globalElements.inputDeviceSelect.selectedIndex is not changed here
+                    globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
+                    globalElements.inputDeviceSelect.disabled = false;
 
-                //    if(scoreInfoInputHandler === "keyboard1")
-                //    {
-                //        options.inputHandler = _AP.keyboard1;
-                //    }
-                //    else
-                //    {
-                //        console.assert(false, "Error: unknown scoreInfo.inputType");
-                //    }
-                //}
+                    if(scoreInfoInputHandler === "keyboard1")
+                    {
+                        options.inputHandler = _AP.keyboard1;
+                    }
+                    else
+                    {
+                        console.assert(false, "Error: unknown scoreInfo.inputType");
+                    }
+                }
             }
 
             scoreInfo = getScoreInfo(scoreIndex);
