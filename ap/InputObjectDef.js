@@ -5,9 +5,10 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/InputChordDef.js
+ *  ap/InputObjectDef.js
  *  Public interface contains:
- *     InputChordDef(inputNotesNode) // Chord definition constructor. Reads the XML in the inputNotesNode. 
+ *     InputChordDef(inputNotesNode) // constructor. Reads the XML in the inputNotesNode.
+ *     InputRestDef(msDuration) // constructor
  * 
  *  An InputChordDef contains the raw inputChordDef information read directly from the XML.
  *  It is converted later to an InputChord.
@@ -63,7 +64,7 @@
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 /*global _AP: true,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
-_AP.namespace('_AP.inputChordDef');
+_AP.namespace('_AP.inputObjectDef');
 
 _AP.inputObjectDef = (function ()
 {
