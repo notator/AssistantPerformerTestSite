@@ -22,7 +22,10 @@ _AP.runningMarker = (function()
 {
     "use strict";
 
-    var
+	var
+    InputChordDef = _AP.inputObjectDef.InputChordDef,
+	InputRestDef = _AP.inputObjectDef.InputRestDef,
+
     // The argument is an svg group with id='runningMarker'.
     // The group contains a single svg line.
     RunningMarker = function (system, systIndex, svgRunningMarkerGroup, vbScale)
@@ -176,9 +179,13 @@ _AP.runningMarker = (function()
 
         this.timeObjects = [];
         timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
-        while(timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChord)
-        {
-            this.timeObjects.push(timeObject);
+		while (timeObject instanceof MidiChord || timeObject instanceof MidiRest
+			|| timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+		{
+			if (!(timeObject instanceof InputRestDef))
+			{
+			    this.timeObjects.push(timeObject);
+			}
             timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
         }
     };
@@ -206,15 +213,23 @@ _AP.runningMarker = (function()
     // msPositionInScore must be in the current system
     RunningMarker.prototype.moveTo = function(msPosInScore)
     {
-        var positionIndex = 0, timeObjects = this.timeObjects;
+        var positionIndex = 0, timeObjects = this.timeObjects, timeObject;
 
-        while(timeObjects[positionIndex].msPositionInScore < msPosInScore)
+        while(positionIndex < (timeObjects.length - 1) && timeObjects[positionIndex].msPositionInScore < msPosInScore)
         {
             positionIndex++;
         }
 
-        this.moveLineToAlignment(timeObjects[positionIndex].alignment);
-        this.nextMsPosition = timeObjects[positionIndex + 1].msPositionInScore; // may be system's end msPosition
+		timeObject = timeObjects[positionIndex]; 
+		this.moveLineToAlignment(timeObject.alignment);
+		if (positionIndex === (timeObjects.length - 1))
+		{
+			this.nextMsPosition = timeObject.msPositionInScore + timeObject.msDurationInScore;
+		}
+		else
+		{
+			this.nextMsPosition = timeObjects[positionIndex + 1].msPositionInScore; // may be system's end msPosition
+		}
         this.positionIndex = positionIndex;
     };
 
