@@ -1638,7 +1638,9 @@ _AP.controls = (function(document, window)
             // score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
             // Repainting includes using the correct staff colours, but the score may also update the position of
             // its start marker (which always starts on a chord) if a track is turned off.
-            tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+
+			return tracksData;
         }
 
         function setOutputDeviceFunctions(outputDevice)
@@ -1718,8 +1720,8 @@ _AP.controls = (function(document, window)
             globalElements.speedControlSmokeDiv.style.display = "none";   
         }
 
-        try
-        {
+        //try
+        //{
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
             options.isConducting = false;
 
@@ -1744,7 +1746,7 @@ _AP.controls = (function(document, window)
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                player.setSpeed(speedSliderValue(globalElements.speedControlInput.value));
+                //player.setSpeed(speedSliderValue(globalElements.speedControlInput.value));
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
@@ -1773,11 +1775,11 @@ _AP.controls = (function(document, window)
             {
                 goControlClicked();
             }
-        }
-        catch(e)
-        {
-            window.alert(e);
-        }
+        //}
+        //catch(e)
+        //{
+        //    window.alert(e);
+        //}
     },
 
     publicAPI =
