@@ -13,9 +13,6 @@
  *  performance while it is running.
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document */
-
 _AP.namespace('_AP.runningMarker');
 
 _AP.runningMarker = (function()
@@ -115,7 +112,8 @@ _AP.runningMarker = (function()
         var
         MidiChord = _AP.midiObject.MidiChord,
         MidiRest = _AP.midiObject.MidiRest,
-        InputChord = _AP.inputChord.InputChord,
+        InputChordDef = _AP.inputObjectDef.InputChordDef,
+        InputRestDef = _AP.inputObjectDef.InputRestDef,
         timeObject;
 
         function findFollowingTimeObject(system, msPositionInScore, isLivePerformance, trackIsOnArray)
@@ -179,8 +177,7 @@ _AP.runningMarker = (function()
 
         this.timeObjects = [];
         timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
-		while (timeObject instanceof MidiChord || timeObject instanceof MidiRest
-			|| timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+		while (timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
 		{
 			if (!(timeObject instanceof InputRestDef))
 			{

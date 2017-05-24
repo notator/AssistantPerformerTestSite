@@ -1,7 +1,4 @@
 
-/*jslint white, bitwise*/
-/*global WebMIDI, _AP,  window,  document, performance, postMessage, addEventListener */
-
 var
 trackIndex,
 channelIndex,
@@ -16,10 +13,10 @@ momentIndex,
 currentMoment,
 nMoments,
 
-// runtime variables
-pressureOption,
-pitchWheelOption,
-modWheelOption,
+/* runtime variables */
+//pressureOption,
+//pitchWheelOption,
+//modWheelOption,
 stopChord,
 stopNow,
 fadeLength,
@@ -29,7 +26,7 @@ sharedVelocity,
 overrideVelocity,
 speedFactor,
 
-pitchWheelDeviation,
+//pitchWheelDeviation,
 
 /****************************************/
 // Aug. 2015
@@ -68,7 +65,7 @@ eventHandler = function(e)
 		sharedVelocity = 0;
 		overrideVelocity = 0;
 		speedFactor = 1;
-		pitchWheelDeviation = 2; // 2 semitones up, and 2 semitones down
+		//pitchWheelDeviation = 2; // 2 semitones up, and 2 semitones down
 	}
 
 	/****************************************/

@@ -25,10 +25,6 @@
 *        setSpeedFactor(factor) 
 */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
-
 _AP.namespace('_AP.seq');
 
 _AP.seq = (function()
@@ -69,7 +65,7 @@ _AP.seq = (function()
 						trkMoment = {};
 						if(moment.systemIndex !== undefined)
 						{
-							trkMoment.systemIndex = moment.systemIndex;
+						    trkMoment.systemIndex = moment.systemIndex;
 						}
 						// all moments have an msPositionInChord attribute (even in midiRests)
 						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;

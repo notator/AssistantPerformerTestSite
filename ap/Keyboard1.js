@@ -45,9 +45,6 @@
 * 
 */
 
-/*jslint white, bitwise*/
-/*global WebMIDI, _AP,  window,  document, performance */
-
 _AP.namespace('_AP.keyboard1');
 
 _AP.keyboard1 = (function()
@@ -58,7 +55,7 @@ _AP.keyboard1 = (function()
 	inputDevice,
 	outputDevice,
 
-	//speed = 1, // speed could be settable at performance time, using setSpeed(speed), but this currently does nothing
+	speed = 1, // speed could be settable at performance time, using setSpeed(speed), but this currently does nothing
 
 	currentInstantIndex, // initialized to 0 when playing starts. Is the index in the following array (used while performing).
 	instants = [],
@@ -109,7 +106,7 @@ _AP.keyboard1 = (function()
 
 	setSpeed = function (speedToSet)
 	{
-		//speed = speedToSet;
+		speed = speedToSet;
 	},
 
 	setState = function(state)
@@ -564,7 +561,7 @@ _AP.keyboard1 = (function()
     	{
     		var sysIndex, systemIndex = 0, sysMsPositions = systemMsPositions, nSystems = sysMsPositions.length;
 
-    		for(sysIndex = nSystems - 1; sysIndex >= 0 ; --sysIndex)
+    		for(sysIndex = nSystems - 1; sysIndex >= 0; --sysIndex)
     		{
     			if(sysMsPositions[sysIndex] <= msPosition)
     			{
