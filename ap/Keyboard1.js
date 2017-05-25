@@ -55,8 +55,6 @@ _AP.keyboard1 = (function()
 	inputDevice,
 	outputDevice,
 
-	speed = 1, // speed could be settable at performance time, using setSpeed(speed), but this currently does nothing
-
 	currentInstantIndex, // initialized to 0 when playing starts. Is the index in the following array (used while performing).
 	instants = [],
 	indexPlayed, // set to currentInstantIndex when instants[currentInstantIndex] is played.
@@ -103,11 +101,6 @@ _AP.keyboard1 = (function()
 	},
 
 	handleMIDIInputEventForwardDeclaration,
-
-	setSpeed = function (speedToSet)
-	{
-		speed = speedToSet;
-	},
 
 	setState = function(state)
 	{
@@ -1609,9 +1602,7 @@ _AP.keyboard1 = (function()
 		isStopped: isStopped,
 		isRunning: isRunning,
 
-		handleMIDIInputEvent: handleMIDIInputEvent,
-
-		setSpeed: setSpeed
+		handleMIDIInputEvent: handleMIDIInputEvent
 	};
 	// end var
 

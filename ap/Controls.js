@@ -1045,7 +1045,10 @@ _AP.controls = (function(document, window)
     {
         if(globalElements.speedControlCheckbox.checked === true)
         {
-            player.setSpeed(1);
+            if (player.setSpeed !== undefined)
+            {
+                player.setSpeed(1);
+            }
             globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
             globalElements.speedControlCheckbox.disabled = true;
             globalElements.speedControlLabel2.innerHTML = "100%";
@@ -1080,12 +1083,18 @@ _AP.controls = (function(document, window)
         if(options.isConducting)
         {
             timer = score.getConductor(speed); // use conductor.now()
-            player.setSpeed(1); // constant in conducted performances
+            if (player.setSpeed !== undefined)
+            {
+                player.setSpeed(1); // constant in conducted performances
+            }
         }
         else
         {
             timer = performance; // use performance.now()           
-            player.setSpeed(speed);
+            if (player.setSpeed !== undefined)
+            {
+                player.setSpeed(speed);
+            }
         }        
         player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
     },
@@ -1520,7 +1529,10 @@ _AP.controls = (function(document, window)
         if(controlID === "speedControlMousemove")
         {
             var speed = speedSliderValue(globalElements.speedControlInput.value);
-            player.setSpeed(speed);
+            if (player.setSpeed !== undefined)
+            {
+                player.setSpeed(speed);
+            }
 
             if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
             {
@@ -1743,7 +1755,6 @@ _AP.controls = (function(document, window)
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                //player.setSpeed(speedSliderValue(globalElements.speedControlInput.value));
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
@@ -1755,7 +1766,7 @@ _AP.controls = (function(document, window)
 
             setSpeedControl(tracksControl.width());
 
-            resetSpeed(); // calls player.setSpeed(1) (100%)
+            resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
 
             if(midiAccess !== null)
             {
