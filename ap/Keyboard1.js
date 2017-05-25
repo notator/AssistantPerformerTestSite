@@ -253,7 +253,8 @@ _AP.keyboard1 = (function()
 				resetTrack(msg.silentTrkMessages);
 				break;
 			case "workerCompleted":
-				// TrackWorkers send this message to say that they have no more trks to send.
+			    // TrackWorkers send this message to say that they have no more trks to send.
+                // There is also a boolean msg.letSound field, but this is currently ignored.
 				workerHasCompleted(msg.trackIndex);
 				break;
 			default:
@@ -1477,7 +1478,7 @@ _AP.keyboard1 = (function()
 						{
 							worker = new window.Worker("ap/TrackWorker.js");
 							worker.addEventListener("message", handleTrackMessage);
-							worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
+							worker.postMessage({ action: "init", trackIndex: i });
 							// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
 							// and back to true when the worker says that it has completed its last trk.
 							worker.hasCompleted = true; // used to find out if the performance has completed.

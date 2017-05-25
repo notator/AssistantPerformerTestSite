@@ -1350,7 +1350,7 @@ _AP.score = (function (document)
             function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
             {
                 var noteObjectElems, noteObjectClass,
-                    timeObjects = [], noteObjectAlignment,
+                    timeObjects = [], noteObjectAlignment, msDuration,
                     timeObject, i, j, noteObjectElem, noteObjectChildren,
                     scoreMidiElem;
 
@@ -1359,7 +1359,8 @@ _AP.score = (function (document)
                 {
                     noteObjectElem = noteObjectElems[i];
                     noteObjectClass = noteObjectElem.getAttribute('class');
-                                               
+                    noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
+                                                                   
                     if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
                     {
                         noteObjectChildren = noteObjectElem.children;
@@ -1384,22 +1385,22 @@ _AP.score = (function (document)
                             throw "Error: The score contains chords having zero duration!";
                         }
 
-                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
                         timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-
                         timeObjects.push(timeObject);
                     }
                     else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
                     {
+                        msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
                         if(noteObjectClass === 'inputChord')
                         {
-                            timeObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);
+                            timeObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack, msDuration);
                         }
-                        else
+                        else if(noteObjectClass === 'inputRest')
                         {
-                            timeObject = new InputRestDef(timeObject.msDurationInScore);
+                            timeObject = new InputRestDef(msDuration);
                         }
 
+                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
                         timeObjects.push(timeObject);
                     }
                 }
@@ -1831,8 +1832,6 @@ _AP.score = (function (document)
 
         getVoiceObjects();
 
-        setMarkers(systems, isLivePerformance);
-
         setTrackAttributes(outputTracks, inputTracks, systems[0].staves);
 
         nStaves = systems[0].staves.length;
@@ -1871,7 +1870,7 @@ _AP.score = (function (document)
                             timeObject = voice.timeObjects[timeObjectIndex];
                             if(timeObject instanceof InputChordDef)
                             {
-                                inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
+                                inputChord = new InputChord(timeObject, outputTracks, sysIndex); // the outputTracks should already be complete here
                                 inputTrack.inputObjects.push(inputChord);
                             }
                             // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
@@ -1884,6 +1883,8 @@ _AP.score = (function (document)
 
         tracksData.inputTracks = inputTracks;
         tracksData.outputTracks = outputTracks;
+
+        setMarkers(systems, isLivePerformance);
 
         //    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
         //        inputKeyRange.bottomKey

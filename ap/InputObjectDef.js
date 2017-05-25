@@ -69,17 +69,16 @@ _AP.inputObjectDef = (function ()
     var
     TrkOptions = _AP.trkOptions.TrkOptions,
 
-    InputChordDef = function(inputChordNode, midiChannelPerOutputTrack)
+    InputChordDef = function(inputChordNode, midiChannelPerOutputTrack, msDurationInScore)
     {
         var i, chordChildElems, outputTrackPerMidiChannel;
 
         if (!(this instanceof InputChordDef))
         {
-            return new InputChordDef(inputChordNode, midiChannelPerOutputTrack);
+            return new InputChordDef(inputChordNode, midiChannelPerOutputTrack, msDurationInScore);
         }
 
-        Object.defineProperty(this, "msDurationInScore", { value: parseInt(inputChordNode.getAttribute('score:msDuration'), 10), writable: false });
-        Object.defineProperty(this, "alignment", { value: parseFloat(inputChordNode.getAttribute('score:alignment'), 10), writable: false });
+        Object.defineProperty(this, "msDurationInScore", { value: msDurationInScore, writable: false });
 
         outputTrackPerMidiChannel = this.getOutputTrackPerMidiChannel(midiChannelPerOutputTrack);
 

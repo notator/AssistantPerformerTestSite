@@ -20,8 +20,6 @@ _AP.runningMarker = (function()
     "use strict";
 
 	var
-    InputChordDef = _AP.inputObjectDef.InputChordDef,
-	InputRestDef = _AP.inputObjectDef.InputRestDef,
 
     // The argument is an svg group with id='runningMarker'.
     // The group contains a single svg line.
@@ -179,10 +177,7 @@ _AP.runningMarker = (function()
         timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
 		while (timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
 		{
-			if (!(timeObject instanceof InputRestDef))
-			{
-			    this.timeObjects.push(timeObject);
-			}
+			this.timeObjects.push(timeObject);
             timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
         }
     };

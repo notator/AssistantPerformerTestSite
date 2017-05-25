@@ -1,7 +1,6 @@
 
 var
 trackIndex,
-channelIndex,
 
 allTrks,
 trkIndex,
@@ -37,14 +36,12 @@ eventHandler = function(e)
 	var msg = e.data;
 
 	// Keyboard1 sends:
-	// worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
+	// worker.postMessage({ action: "init", trackIndex: i });
 	function init(msg)
 	{
 		console.assert(msg.trackIndex !== undefined && msg.trackIndex >= 0 && msg.trackIndex < 16);
-		console.assert(msg.channelIndex !== undefined && msg.channelIndex >= 0 && msg.channelIndex < 16);
 
 		trackIndex = msg.trackIndex;
-		channelIndex = msg.channelIndex;
 
 		allTrks = [];
 		trkIndex = -1;
@@ -335,7 +332,7 @@ eventHandler = function(e)
 
 					if(trkIndex === (allTrks.length - 1))
 					{
-						postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex, letSound: letSound });
+						postMessage({ action: "workerCompleted", trackIndex: trackIndex, letSound: letSound });
 					}
 				}
 
