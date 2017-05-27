@@ -1,7 +1,6 @@
 
 var
 trackIndex,
-channelIndex,
 
 allTrks,
 trkIndex,
@@ -20,7 +19,6 @@ nMoments,
 stopChord,
 stopNow,
 fadeLength,
-letSound,
 velocityFactor,
 sharedVelocity,
 overrideVelocity,
@@ -37,14 +35,12 @@ eventHandler = function (e)
     var msg = e.data;
 
     // Keyboard1 sends:
-    // worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
+    // worker.postMessage({ action: "init", trackIndex: i });
     function init(msg)
     {
         console.assert(msg.trackIndex !== undefined && msg.trackIndex >= 0 && msg.trackIndex < 16);
-        console.assert(msg.channelIndex !== undefined && msg.channelIndex >= 0 && msg.channelIndex < 16);
 
         trackIndex = msg.trackIndex;
-        channelIndex = msg.channelIndex;
 
         allTrks = [];
         trkIndex = -1;
@@ -60,7 +56,6 @@ eventHandler = function (e)
         stopChord = false;
         stopNow = false;
         fadeLength = -1;
-        letSound = false;
         velocityFactor = 1;
         sharedVelocity = 0;
         overrideVelocity = 0;
@@ -70,7 +65,7 @@ eventHandler = function (e)
 
     /****************************************/
     // Seq constructor sends:
-    // worker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+    // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
     // Set a new trk object's attributes to msPosition, moments and options,
     // then add it to the allTrks array maintaining the allTrks array in order of msPosition.
     // The options attribute is always a defined object, but it need not have any attributes.
@@ -191,15 +186,9 @@ eventHandler = function (e)
             {
                 case "holdLast":
                     removeFinalNoteOffMessages(moments);
-                    letSound = true;
                     break;
                 case "holdAll":
                     removeAllNoteOffMessages(moments);
-                    letSound = true;
-                    break;
-                case "holdAllStop":
-                    removeAllNoteOffMessages(moments);
-                    letSound = false;
                     break;
                 default:
                     console.assert(false, "TrackWorker.pushTrk(): illegal option -- " + options.pedal);
@@ -250,7 +239,7 @@ eventHandler = function (e)
     }
 
     // Seq.prototype.start calls:
-    // worker.postMessage({ action: "start", velocity: performedVelocity });
+    // postMessage({ action: "start", velocity: performedVelocity });
     // Note that NoteOffs call this function with velocity set to 0,
     // and that in this case trk speed and velocity options are ignored.
     function start(msg)
@@ -329,19 +318,19 @@ eventHandler = function (e)
                     return delay;
                 }
 
-                function trkCompleted(letSound)
+                function trkCompleted()
                 {
                     stopCurrentTrack();
 
                     if(trkIndex === (allTrks.length - 1))
                     {
-                        postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex, letSound: letSound });
+                        postMessage({ action: "workerCompleted", trackIndex: trackIndex });
                     }
                 }
 
                 if(currentMoment === null || stopNow === true)
                 {
-                    trkCompleted(letSound);
+                    trkCompleted();
                     return;
                 }
 
@@ -351,7 +340,7 @@ eventHandler = function (e)
                 {
                     if(stopNow === true)
                     {
-                        trkCompleted(letSound);
+                        trkCompleted();
                         return;
                     }
                     if(currentMoment.messages.length > 0) // rest moments can be empty
@@ -363,7 +352,7 @@ eventHandler = function (e)
 
                     if(currentMoment === null || stopNow === true)
                     {
-                        trkCompleted(letSound);
+                        trkCompleted();
                         return;
                     }
 
@@ -471,7 +460,8 @@ eventHandler = function (e)
 
     /****************************************/
     /* case "stop": */
-    // Aug. 2015
+    // message posted by Keyboard1
+    // postMessage({ "action": "stop" });
     function stop()
     {
         var noteOffOption;
@@ -510,26 +500,31 @@ eventHandler = function (e)
     switch(msg.action)
     {
         // called by Keyboard1 to initialize this worker (set up global variables etc.)
+        // postMessage({ action: "init", trackIndex: i });
         case "init":
             init(msg);
             break;
 
-            // called by Seq when loading this worker with trks
+        // called by Seq when loading this worker with trks
+            // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
         case "pushTrk":
             pushTrk(msg);
             break;
 
-            // called by Seq to start a trk playing.
+        // called by Seq to start a trk playing.
+            // postMessage({ action: "start", velocity: performedVelocity });
         case "start":
             start(msg);
             break;
 
-            // called by Keyboard1 to stop a playing trk.
+        // called by Keyboard1 to stop a playing trk.
+        // postMessage({ "action": "stop" });
         case "stop":
             stop();
             break;
 
-            // called by Keyboard1 to change the speed at which the trk plays.
+        // called by Keyboard1 to change the speed at which the trk plays.
+        // postMessage({action: "changeSpeed", speedFactor: speedFactor});
         case "changeSpeed":
             speedFactor = currentTrk.options.speed * msg.speedFactor;
             break;

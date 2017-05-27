@@ -232,7 +232,9 @@ _AP.keyboard1 = (function()
 
 		switch(msg.action)
 		{
-			case "midiMessage":
+		    case "midiMessage":
+		        // postMessage({ action: "midiMessage", midiMessage: uint8Array });
+                //
 				// Note that Jazz 1.2 does not support timestamps. It always sends messages immediately.
 				//if(msg.midiMessage.length === 2)
 				//{
@@ -249,12 +251,13 @@ _AP.keyboard1 = (function()
 				sendMIDIMessage(msg.midiMessage);
 				break;
 			case "trkStopped":
-				// TrackWorkers send this message when the trk they are sending is stopped prematurely.
+			    // TrackWorkers send this message when the trk they are sending is stopped prematurely.
+			    // postMessage({ action: "trkStopped", silentTrkMessages: silentTrkMessages })
 				resetTrack(msg.silentTrkMessages);
 				break;
 			case "workerCompleted":
 			    // TrackWorkers send this message to say that they have no more trks to send.
-                // There is also a boolean msg.letSound field, but this is currently ignored.
+			    // postMessage({ action: "workerCompleted", trackIndex: trackIndex });
 				workerHasCompleted(msg.trackIndex);
 				break;
 			default:
@@ -1478,7 +1481,7 @@ _AP.keyboard1 = (function()
 						{
 							worker = new window.Worker("ap/TrackWorker.js");
 							worker.addEventListener("message", handleTrackMessage);
-							worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
+							worker.postMessage({ action: "init", trackIndex: i });
 							// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
 							// and back to true when the worker says that it has completed its last trk.
 							worker.hasCompleted = true; // used to find out if the performance has completed.
