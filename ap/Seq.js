@@ -51,7 +51,7 @@ _AP.seq = (function()
 		//  trkOptions
 		function setAndGetWorkers(seqPositionInScore, trks, trackWorkers)
 		{
-			var i, nTrks = trks.length, trkDef, trkWorker, workers = [], msPosition, moments, options;
+			var i, nTrks = trks.length, trkDef, trkWorker, workers = [], moments, options;
 
 			function getMoments(trkMidiObjects)
 			{
@@ -96,7 +96,6 @@ _AP.seq = (function()
 			{
 				trkDef = trks[i]; 
 
-				msPosition = seqPositionInScore + trkDef.msOffset;
 				moments = getMoments(trkDef.midiObjects);
 				options = trkDef.trkOptions;
 
@@ -104,14 +103,14 @@ _AP.seq = (function()
 				//     pedal
 				//     velocity (and minVelocity) -- both or neither is defined
 				//     speed
-				//     noteOff
+				//     trkOff
 				console.assert(options !== undefined, "Error: trkDef.trkOptions must be a valid object here.");
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
 				if(trkWorker !== null)
 				{
-					trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+				    trkWorker.postMessage({ action: "pushTrk", msPosition: seqPositionInScore, moments: moments, options: options });
 					trkWorker.hasCompleted = false;
 				}
 

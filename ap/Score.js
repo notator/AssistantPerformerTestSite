@@ -147,13 +147,13 @@ _AP.score = (function (document)
         var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
             nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
 
-        function hasPerformingTrack(inputChord, trackIsOnArray)
+        function hasPerformingTrack(inputChordDef, trackIsOnArray)
         {
             var i, outputTrackFound = false, outputTrackIndices;
 
-            console.assert(inputChord !== undefined, "inputChord must be defined.");
+            console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
-            outputTrackIndices = inputChord.referencedOutputTrackIndices();
+            outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
             for(i = 0; i < outputTrackIndices.length; ++i)
             {
                 if(trackIsOnArray[outputTrackIndices[i]])
@@ -185,7 +185,7 @@ _AP.score = (function (document)
                         timeObject = timeObjects[j];
                         if((findInput === false)  // timeObject contains a midiRest or midiChord
                         || (findInput && // find an inputChord
-                           (timeObject.inputChord !== undefined && hasPerformingTrack(timeObject.inputChord, trackIsOnArray))))
+                           (timeObject instanceof InputChordDef && hasPerformingTrack(timeObject, trackIsOnArray))))
                         {
                             if(alignment === timeObject.alignment)
                             {
@@ -1575,18 +1575,21 @@ _AP.score = (function (document)
                         for(systemIndex = 0; systemIndex < nSystems; ++systemIndex)
                         {
                             timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
-                            nTimeObjects = timeObjects.length;
-                            for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
+                            if(timeObjects !== undefined)
                             {
-                                timeObject = timeObjects[tIndex];
-
-                                if(timeObject instanceof MidiChord || timeObject instanceof MidiRest ||
-                                    timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+                                nTimeObjects = timeObjects.length;
+                                for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                                 {
-                                    Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
-                                }
+                                    timeObject = timeObjects[tIndex];
 
-                                msPosition += timeObject.msDurationInScore;
+                                    if(timeObject instanceof MidiChord || timeObject instanceof MidiRest ||
+                                        timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+                                    {
+                                        Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
+                                    }
+
+                                    msPosition += timeObject.msDurationInScore;
+                                }
                             }
                         }
                         msPosition = 0;
@@ -1640,7 +1643,7 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            if(voice.timeObjects[0].alignment === undefined)
+                            if(voice.timeObjects !== undefined && voice.timeObjects[0].alignment === undefined)
                             {
                                 voice.timeObjects[0].alignment = firstAlignment;
                             }
@@ -1676,8 +1679,11 @@ _AP.score = (function (document)
                         staff = staves[i];
                         for(j = 0; j < staff.voices.length; ++j)
                         {
-                            firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
-                            minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+                            if(staff.voices[j].timeObjects !== undefined)
+                            {
+                                firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
+                                minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+                            }
                         }
                     }
                     return minMsPos;
@@ -1698,22 +1704,25 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            timeObject = {}; // the final barline in the voice (used when changing speed)
-                            Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
-                            Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
-                            Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
-                            if(systemIndex < nSystems - 1)
+                            if(voice.timeObjects !== undefined)
                             {
-                                Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
-                            }
-                            else
-                            {
-                                lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1]; 
-                                endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
-                                Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
-                            }
+                                timeObject = {}; // the final barline in the voice (used when changing speed)
+                                Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
+                                Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
+                                Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
+                                if(systemIndex < nSystems - 1)
+                                {
+                                    Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
+                                }
+                                else
+                                {
+                                    lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1];
+                                    endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
+                                    Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
+                                }
 
-                            voice.timeObjects.push(timeObject);
+                                voice.timeObjects.push(timeObject);
+                            }
                         }
                     }
                 }
@@ -1850,10 +1859,10 @@ _AP.score = (function (document)
                 nVoices = staff.voices.length;
                 for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                 {
-                    voice = staff.voices[voiceIndex];
-                    nTimeObjects = voice.timeObjects.length;
+                    voice = staff.voices[voiceIndex]; 
                     if(voice.isOutput === true)
                     {
+                        nTimeObjects = voice.timeObjects.length;
                         outputTrack = outputTracks[outputTrackIndex];
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {

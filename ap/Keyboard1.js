@@ -596,8 +596,11 @@ _AP.keyboard1 = (function()
 
     						if(instant.noteOns === undefined)
     						{
-    							currentInstantIndex++;
-    							report(instants[currentInstantIndex].msPosition);
+    						    currentInstantIndex++;
+    						    if(currentInstantIndex < instants.length)
+    						    {
+    						        report(instants[currentInstantIndex].msPosition);
+    						    }
     						}
     						advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
     					}
@@ -675,7 +678,7 @@ _AP.keyboard1 = (function()
 				Message = _AP.message.Message;
 
 			// argument is in range 0..127
-			// returned value is in range currentTrk.options.minVolume..currentTrk.options.maxVolume.
+			// returned value is in range currentTrk.options.minVolume.currentTrk.options.maxVolume.
 			function getVolumeValue(value, minVolume, maxVolume)
 			{
 				var range = maxVolume - minVolume,
@@ -923,6 +926,53 @@ _AP.keyboard1 = (function()
 			return sysMsPositions;
 		}
 
+		function moveMidiRestMomentsToPrecedingMidiChords(outputTracks)
+		{
+		    var i, j, midiObjects, nMidiObjects, midiObject, mChord, restMoment, nOTracks=outputTracks.length;
+
+            // Returns a single moment containing all the messages in all the moments in the midiRest
+		    function getRestMoment(midiRest)
+		    {
+		        var i, rval, nMoments;
+
+		        if(midiRest.moments !== undefined && midiRest.moments.length > 0)
+		        {
+		            rval = midiRest.moments[0];
+		            nMoments = midiRest.moments.length;
+		            for(i = 1; i < nMoments; ++i )
+		            {
+		                rval.messages.concat(midiRest.moments[i].messages);
+		            }
+		        }
+		        return rval;
+		    }
+
+		    for(i = 0; i < nOTracks; ++i )
+		    {
+		        midiObjects = outputTracks[i].midiObjects;
+		        nMidiObjects = midiObjects.length;
+		        mChord = undefined;
+		        for(j = 0; j < nMidiObjects; ++j)
+		        {
+		            midiObject = midiObjects[j];
+
+		            if(midiObject.isMidiChord())
+		            {
+		                mChord = midiObject;
+		            }
+		            else
+		            {
+		                restMoment = getRestMoment(midiObject);
+		                if(restMoment !== undefined && restMoment.messages.length > 0 && mChord !== undefined && mChord.moments !== undefined)
+		                {
+		                    restMoment.msPositionInChord = mChord.msDurationInScore;
+		                    mChord.moments.push(restMoment);
+		                }   
+		            }
+		        }
+		    }
+		}
+
 		console.assert((inputDeviceArg !== undefined && inputDeviceArg !== null), "The midi input device must be defined.");
 		console.assert((outputDeviceArg !== undefined && outputDeviceArg !== null), "The midi output device must be defined.");
 		console.assert((tracksData !== undefined && tracksData !== null), "The tracksData must be defined.");
@@ -942,6 +992,8 @@ _AP.keyboard1 = (function()
 		reportMsPositionInScore = reportMsPosCallback;
 
 		systemMsPositions = getSystemMsPositions(tracksData.outputTracks);
+
+		moveMidiRestMomentsToPrecedingMidiChords(outputTracks);
 
 		initChannelResetMessages(outputTracks.length);
 

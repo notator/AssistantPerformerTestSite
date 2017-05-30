@@ -213,14 +213,14 @@ eventHandler = function (e)
 
     function stopCurrentTrack()
     {
-        var messages, i, nMessages, message, data0, silentTrkMessages = [];
+        var messages, i, nMessages, message, data0, silentTrkMessages = [], mIndex = momentIndex - 1;
 
         // send all remaining messages that are not noteOns with velocity > 0
-        if(momentIndex < moments.length)
+        if(mIndex >= 0)
         {
-            while(momentIndex < moments.length)
+            while(mIndex < moments.length)
             {
-                messages = moments[momentIndex].messages;
+                messages = moments[mIndex].messages;
                 nMessages = messages.length;
                 for(i = 0; i < nMessages; ++i)
                 {
@@ -231,7 +231,7 @@ eventHandler = function (e)
                         silentTrkMessages.push(message.data);
                     }
                 }
-                momentIndex++;
+                mIndex++;
             }
             postMessage({ action: "trkStopped", silentTrkMessages: silentTrkMessages });
         }
@@ -473,14 +473,14 @@ eventHandler = function (e)
 
         if(currentTrk && currentTrk.options)
         {
-            noteOffOption = currentTrk.options.noteOff;
+            noteOffOption = currentTrk.options.trkOff;
 
             if(noteOffOption !== undefined)
             {
                 switch(noteOffOption)
                 {
                     case "stopChord":
-                        stopChord = true; // stop playing the trk at the following midiChord or midiRest.
+                        stopChord = true; // stop playing the trk at the currently playing midiChord or midiRest.
                         break;
                     case "stopNow":
                         stopNow = true; // stop immediately, without playing the remainder of the current midiChord or midiRest.
