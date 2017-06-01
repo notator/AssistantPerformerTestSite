@@ -481,7 +481,8 @@ _AP.controls = (function(document, window)
 
     startPlaying = function(isLivePerformance)
     {
-        var sequenceRecording, trackIsOnArray = [];
+        var startMarkerMsPosition, endMarkerMsPosition, baseSpeed,
+        sequenceRecording, trackIsOnArray = [];
 
         deleteSaveMIDIFileButton();
 
@@ -499,7 +500,11 @@ _AP.controls = (function(document, window)
             score.moveStartMarkerToTop(globalElements.svgPagesFrame);
             score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-            player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
+            startMarkerMsPosition = score.startMarkerMsPosition();
+            endMarkerMsPosition = score.endMarkerMsPosition();
+            baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+
+            player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
         }
 
         if(options.isConducting === false)
@@ -1043,16 +1048,15 @@ _AP.controls = (function(document, window)
 
     resetSpeed = function()
     {
-        if(globalElements.speedControlCheckbox.checked === true)
+        if (player.setSpeed !== undefined)
         {
-            if (player.setSpeed !== undefined)
-            {
-                player.setSpeed(1);
-            }
-            globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
-            globalElements.speedControlCheckbox.disabled = true;
-            globalElements.speedControlLabel2.innerHTML = "100%";
+            // Keyboard1 does nothing here if the trackWorkers have not yet been initialised.
+            player.setSpeed(1);
         }
+        globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
+        globalElements.speedControlCheckbox.checked = false;
+        globalElements.speedControlCheckbox.disabled = true;
+        globalElements.speedControlLabel2.innerHTML = "100%";
     },
 
     // see: http://stackoverflow.com/questions/846221/logarithmic-slider

@@ -443,7 +443,7 @@ _AP.sequence = (function(window)
     // recording is a Sequence to which timestamped moments are added as they are performed.
     // Can be undefined or null. If used, it should be an empty Sequence having the same number
     // of tracks as this (calling) sequence.
-    play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
+    play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
     {
         // Sets each (output) track's isPerforming attribute.
         // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
@@ -469,6 +469,7 @@ _AP.sequence = (function(window)
             }
         }
 
+        speed = baseSpeed;
         sequenceRecording = recording; // can be undefined or null
 
         endMarkerMsPosition = endMarkerMsPosInScore;

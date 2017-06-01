@@ -22,7 +22,9 @@ fadeLength,
 velocityFactor,
 sharedVelocity,
 overrideVelocity,
+baseSpeed,
 speedFactor,
+speed,
 
 //pitchWheelDeviation,
 
@@ -35,12 +37,13 @@ eventHandler = function (e)
     var msg = e.data;
 
     // Keyboard1 sends:
-    // worker.postMessage({ action: "init", trackIndex: i });
+    // postMessage({ action: "init", trackIndex: i, baseSpeed: baseSpeed });
     function init(msg)
     {
         console.assert(msg.trackIndex !== undefined && msg.trackIndex >= 0 && msg.trackIndex < 16);
 
         trackIndex = msg.trackIndex;
+        baseSpeed = msg.baseSpeed;
 
         allTrks = [];
         trkIndex = -1;
@@ -60,6 +63,8 @@ eventHandler = function (e)
         sharedVelocity = 0;
         overrideVelocity = 0;
         speedFactor = 1;
+
+        speed = speedFactor * baseSpeed;
         //pitchWheelDeviation = 2; // 2 semitones up, and 2 semitones down
     }
 
@@ -312,7 +317,7 @@ eventHandler = function (e)
                 function getDelay(moment)
                 {
                     var
-					delay = (moment.msPositionInSeq - currentTrk.previousMsPosInSeq) / speedFactor;
+					delay = (moment.msPositionInSeq - currentTrk.previousMsPosInSeq) / speed;
                     currentTrk.previousMsPosInSeq = moment.msPositionInSeq;
 
                     return delay;
@@ -452,6 +457,7 @@ eventHandler = function (e)
                 }
 
                 speedFactor = currentTrk.options.speed;
+                speed = speedFactor * baseSpeed;
             }
 
             _start();
@@ -500,7 +506,7 @@ eventHandler = function (e)
     switch(msg.action)
     {
         // called by Keyboard1 to initialize this worker (set up global variables etc.)
-        // postMessage({ action: "init", trackIndex: i });
+        // postMessage({ action: "init", trackIndex: i, baseSpeed: baseSpeed });
         case "init":
             init(msg);
             break;
@@ -523,10 +529,20 @@ eventHandler = function (e)
             stop();
             break;
 
-        // called by Keyboard1 to change the speed at which the trk plays.
-        // postMessage({action: "changeSpeed", speedFactor: speedFactor});
-        case "changeSpeed":
+        // Called by Keyboard1 (using the global speed control) to set the base speed at which the trk plays.
+        // The base speed is also set by the "init" action above.
+        // postMessage({"action": "setBaseSpeed", "baseSpeed": baseSpeed });
+        case "setBaseSpeed":
+            baseSpeed = msg.baseSpeed;
+            speed = speedFactor * baseSpeed; 
+            break;
+
+        // called by a Keyboard1 live controller (e.g. pitchWheel) to change the speed at which the trk plays.
+        // The relative speed also depends on currentTrk.options.speed, which may be set in the score. 
+        // postMessage({"action": "setRelativeSpeed", speedFactor: speedFactor});
+        case "setRelativeSpeed":
             speedFactor = currentTrk.options.speed * msg.speedFactor;
+            speed = speedFactor * baseSpeed;
             break;
     }
 };

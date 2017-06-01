@@ -102,6 +102,19 @@ _AP.keyboard1 = (function()
 
 	handleMIDIInputEventForwardDeclaration,
 
+    // Keyboard1 does nothing here if the trackWorkers have not yet been initialised.
+    // Note that the live controller option for speed (e.g. using the pitchWheel)
+    // controls the speed _relative_ to the baseSpeed that is provided by the global speed control,
+    // using a different "action". 
+    setSpeed = function(baseSpeed)
+    {
+        var i, nWorkers = trackWorkers.length;
+        for(i = 0; i < nWorkers; i++)
+        {
+            trackWorkers[i].postMessage({ "action": "setBaseSpeed", "baseSpeed": baseSpeed });
+        }
+    },
+
 	setState = function(state)
 	{
 		switch(state)
@@ -233,7 +246,7 @@ _AP.keyboard1 = (function()
 		switch(msg.action)
 		{
 		    case "midiMessage":
-		        // postMessage({ action: "midiMessage", midiMessage: uint8Array });
+		        // postMessage({ "action": "midiMessage", "midiMessage": uint8Array });
                 //
 				// Note that Jazz 1.2 does not support timestamps. It always sends messages immediately.
 				//if(msg.midiMessage.length === 2)
@@ -252,12 +265,12 @@ _AP.keyboard1 = (function()
 				break;
 			case "trkStopped":
 			    // TrackWorkers send this message when the trk they are sending is stopped prematurely.
-			    // postMessage({ action: "trkStopped", silentTrkMessages: silentTrkMessages })
+			    // postMessage({ "action": "trkStopped", "silentTrkMessages": silentTrkMessages })
 				resetTrack(msg.silentTrkMessages);
 				break;
 			case "workerCompleted":
 			    // TrackWorkers send this message to say that they have no more trks to send.
-			    // postMessage({ action: "workerCompleted", trackIndex: trackIndex });
+			    // postMessage({ "action": "workerCompleted", "trackIndex": trackIndex });
 				workerHasCompleted(msg.trackIndex);
 				break;
 			default:
@@ -815,7 +828,7 @@ _AP.keyboard1 = (function()
     			value -= 64; // if value was 64, speedfactor is 1.
     			speedFactor = Math.pow(factor, value);
     			// nothing more to do! speedFactor is used in tick() to calculate delays.
-    			trackWorkers[trackIndex].postMessage({action: "changeSpeed", speedFactor: speedFactor});
+    			trackWorkers[trackIndex].postMessage({"action": "setRelativeSpeed", "speedFactor": speedFactor});
     		}
 
     		function doOption(trackIndex, pitchWheelOption)
@@ -1006,7 +1019,7 @@ _AP.keyboard1 = (function()
 	// track will be played or not. This array is read only.
 	// recording is a Sequence to which timestamped instants are added as they are performed.
 	// It should be an empty Sequence having the same number of output tracks as the score.
-	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
+	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
 	{
 	    function sendTrackStartStateMessages(outputDevice, outputTracks, trackIsOnArray, startMarkerMsPosInScore)
 		{
@@ -1029,7 +1042,7 @@ _AP.keyboard1 = (function()
 		    }
 		}
 
-		function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
+	    function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed)
 		{
 		    // The continuous controllers do nothing by default.
 		    function resetInputControllerOptions(nTracks)
@@ -1528,11 +1541,11 @@ _AP.keyboard1 = (function()
 			// The Seq constructor posts pushTrk messages to the appropriate trackWorkers.
 			// The seqs are being constructed in order of msPosition, so the trackWorkers' trks
 			// are also in order of msPosition.
-			function setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks)
+			function setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks, baseSpeed)
 			{
 				var i, instantIndex, nInstants = instants.length, instant, nNoteOns, nNoteOffs, noteOn, noteOff;
 
-				function initTrackWorkers(trackWorkers, outputTracks)
+				function initTrackWorkers(trackWorkers, outputTracks, baseSpeed)
 				{
 					var i, worker;
 
@@ -1544,7 +1557,7 @@ _AP.keyboard1 = (function()
 						{
 							worker = new window.Worker("ap/TrackWorker.js");
 							worker.addEventListener("message", handleTrackMessage);
-							worker.postMessage({ action: "init", trackIndex: i });
+							worker.postMessage({"action": "init", "trackIndex": i, "baseSpeed": baseSpeed});
 							// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
 							// and back to true when the worker says that it has completed its last trk.
 							worker.hasCompleted = true; // used to find out if the performance has completed.
@@ -1566,7 +1579,7 @@ _AP.keyboard1 = (function()
 					}
 				}
 
-				initTrackWorkers(trackWorkers, outputTracks);
+				initTrackWorkers(trackWorkers, outputTracks, baseSpeed);
 
 				for(instantIndex = 0; instantIndex < nInstants; ++instantIndex)
 				{
@@ -1642,7 +1655,7 @@ _AP.keyboard1 = (function()
 
 			setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
-			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks);
+			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks, baseSpeed);
 
 			setKeyInstantIndices(keyInstantIndices, instants);
 
@@ -1654,7 +1667,7 @@ _AP.keyboard1 = (function()
 
 		sendTrackStartStateMessages(outputDevice, outputTracks, trackIsOnArray, startMarkerMsPosInScore);
 
-		initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed);
 
 		performanceStartTime = performance.now();
 		setState("running");
@@ -1662,7 +1675,9 @@ _AP.keyboard1 = (function()
 
 	publicAPI =
 	{
-		init: init,
+	    init: init,
+
+        setSpeed: setSpeed,
 
 		play: play,  
 		stop: stop,
