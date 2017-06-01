@@ -1008,41 +1008,52 @@ _AP.keyboard1 = (function()
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
-		function doAllControllersOff(outputDevice, nTracks)
+	    function sendTrackStartStateMessages(outputDevice, outputTracks, trackIsOnArray, startMarkerMsPosInScore)
 		{
-			var trackIndex;
+		    var i, j, nTracks = outputTracks.length, track, msgs, nMsgs;
 
-			for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
-			{
-				outputDevice.send(allControllersOffMessages[trackIndex], performance.now());
-			}
-		}
-
-		// The continuous controllers do nothing by default.
-		function resetContinuousControllerOptions(nTracks)
-		{
-			var trackIndex, pressureOption, pitchWheelOption, modWheelOption;
-
-			trackPressureOptions.length = 0;
-			trackPitchWheelOptions.length = 0;
-			trackModWheelOptions.length = 0;
-
-			for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-			{
-				pressureOption = {};
-				pressureOption.control = 'disabled';
-				trackPressureOptions.push(pressureOption);
-				pitchWheelOption = {};
-				pitchWheelOption.control = 'disabled';
-				trackPitchWheelOptions.push(pitchWheelOption);
-				modWheelOption = {};
-				modWheelOption.control = 'disabled';
-				trackModWheelOptions.push(modWheelOption);
-			}
+		    for(i = 0; i < nTracks; ++i)
+		    {
+		        if(trackIsOnArray[i])
+		        {
+		            track = outputTracks[i];
+		            outputDevice.send(allControllersOffMessages[i], performance.now());
+		            track.setStartStateMessages(startMarkerMsPosInScore);
+		            msgs = track.startStateMessages;
+		            nMsgs = msgs.length;
+		            for(j = 0; j < nMsgs; ++j)
+		            {
+		                outputDevice.send(msgs[j].data, performance.now());
+		            }
+		        }
+		    }
 		}
 
 		function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
+		    // The continuous controllers do nothing by default.
+		    function resetInputControllerOptions(nTracks)
+		    {
+		        var trackIndex, pressureOption, pitchWheelOption, modWheelOption;
+
+		        trackPressureOptions.length = 0;
+		        trackPitchWheelOptions.length = 0;
+		        trackModWheelOptions.length = 0;
+
+		        for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+		        {
+		            pressureOption = {};
+		            pressureOption.control = 'disabled';
+		            trackPressureOptions.push(pressureOption);
+		            pitchWheelOption = {};
+		            pitchWheelOption.control = 'disabled';
+		            trackPitchWheelOptions.push(pitchWheelOption);
+		            modWheelOption = {};
+		            modWheelOption.control = 'disabled';
+		            trackModWheelOptions.push(modWheelOption);
+		        }
+		    }
+
 			// Sets instants to contain an array of objects having noteOns and noteOffs array attributes (the arrays are undefined if empty).
 			// The instants are ordered by msPosition, and contain an instant for the endMarkerMsPosInScore. (If there are no noteOffs at
 			// endMarkerMsPosInScore, an empty instant is added.)
@@ -1347,7 +1358,7 @@ _AP.keyboard1 = (function()
 					// if a trkOption is undefined, use the previousChordTrkOption (which may be undefined)
 					function getChordTrackOptions(trkOptions, previousChordTrkOptions)
 					{
-						// pedal -- possible values: "undefined", "holdAll", "holdLast"
+					    // pedal -- possible values: "undefined", "holdAll", "holdLast"
 						// velocity -- possible values: "undefined", "scaled", "shared", "overridden"  
 						// minVelocity -- an integer in range [1..127]. Defined if velocity is defined.
 						// speed --  the value by which to divide output durations in the trk. (A float value greater than 0. Higher values mean higher speed.)  
@@ -1627,6 +1638,8 @@ _AP.keyboard1 = (function()
 				}
 			}
 
+			resetInputControllerOptions(trackIsOnArray.length - inputTracks.length);
+
 			setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks);
@@ -1639,9 +1652,7 @@ _AP.keyboard1 = (function()
 
 		sequenceRecording = recording;
 
-		doAllControllersOff(outputDevice, outputTracks.length);
-
-		resetContinuousControllerOptions(outputTracks.length);
+		sendTrackStartStateMessages(outputDevice, outputTracks, trackIsOnArray, startMarkerMsPosInScore);
 
 		initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
