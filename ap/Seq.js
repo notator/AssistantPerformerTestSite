@@ -67,7 +67,8 @@ _AP.seq = (function()
 						{
 						    trkMoment.systemIndex = moment.systemIndex;
 						}
-						// all moments have an msPositionInChord attribute (even in midiRests)
+					    // all moments have an msPositionInChord attribute (even in midiRests)
+						trkMoment.isFirstMomentInMidiObject = (moment.msPositionInChord === 0);
 						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
 						trkMoment.messages = moment.messages; // a clone of the messages is made when the trkMoment is transferred to the webWorker.
 						trkMoments.push(trkMoment);

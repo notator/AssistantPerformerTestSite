@@ -256,7 +256,7 @@ eventHandler = function (e)
                 if(momentIndex < moments.length && stopNow === false)
                 {
                     nextMomt = moments[momentIndex++];
-                    if(stopChord || nextMomt === undefined)
+                    if(nextMomt.isFirstMomentInMidiObject && stopChord === true)
                     {
                         nextMomt = null; // stop at this chord or rest
                     }
