@@ -469,7 +469,9 @@ _AP.sequence = (function(window)
             }
         }
 
-        speed = baseSpeed;
+        // In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)
+        // In normal Sequence or Keyboard1 performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
+        speed = baseSpeed; 
         sequenceRecording = recording; // can be undefined or null
 
         endMarkerMsPosition = endMarkerMsPosInScore;

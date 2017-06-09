@@ -502,7 +502,14 @@ _AP.controls = (function(document, window)
 
             startMarkerMsPosition = score.startMarkerMsPosition();
             endMarkerMsPosition = score.endMarkerMsPosition();
-            baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+            if(options.isConducting === true)
+            {
+                baseSpeed = 1;
+            }
+            else // isLivePerformance == true or false (player is Keyboard1 or normal Sequence)
+            {
+                baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+            }
 
             player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
         }
