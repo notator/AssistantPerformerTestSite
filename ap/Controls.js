@@ -1083,29 +1083,25 @@ _AP.controls = (function(document, window)
 
     // Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
     // Called again with options.isConducting===true if the conduct performance button is toggled on.
+    // If this is a live-conducted performance, sets the now() function to be the conductor's now().
+    // Otherwise performance.now() is used (for normal and Keyboard1 performances).
+    // Note that the performance's basic speed is always 1 for conducted performances, but that it can change
+    // (live) during other performances (normal Sequence and Keyboard1).
     initializePlayer = function(score, options)
     {
         var timer, speed, tracksData = score.getTracksData();
 
         player = sequence; // sequence is a namespace, not a class.
         player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-        speed = speedSliderValue(globalElements.speedControlInput.value);
 
         if(options.isConducting)
         {
+            speed = speedSliderValue(globalElements.speedControlInput.value);
             timer = score.getConductor(speed); // use conductor.now()
-            if (player.setSpeed !== undefined)
-            {
-                player.setSpeed(1); // constant in conducted performances
-            }
         }
         else
         {
             timer = performance; // use performance.now()           
-            if (player.setSpeed !== undefined)
-            {
-                player.setSpeed(speed);
-            }
         }        
         player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
     },
