@@ -433,13 +433,14 @@ eventHandler = function (e)
 
             if(msg.velocity > 0)
             {
-                if(currentTrk.options.velocity)
+                if(currentTrk.options.velocity !== undefined)  // if undefined do nothing
                 {
                     velocityFactor = 1;
                     sharedVelocity = 0;
                     overrideVelocity = 0;
                     performedVelocity = msg.velocity;
-                    minVelocity = currentTrk.options.minVelocity; // is defined if options.velocity is defined
+                    minVelocity = currentTrk.options.minVelocity;
+                    console.assert(minVelocity !== undefined); // must be defined if options.velocity is defined
                     switch(currentTrk.options.velocity)
                     {
                         case "scaled":
@@ -456,7 +457,11 @@ eventHandler = function (e)
                     }
                 }
 
-                speedFactor = currentTrk.options.speed;
+                speedFactor = 1;
+                if(currentTrk.options.speed !== undefined)
+                {
+                    speedFactor = currentTrk.options.speed;
+                }
                 speed = speedFactor * baseSpeed;
             }
 
@@ -512,13 +517,13 @@ eventHandler = function (e)
             break;
 
         // called by Seq when loading this worker with trks
-            // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+        // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
         case "pushTrk":
             pushTrk(msg);
             break;
 
         // called by Seq to start a trk playing.
-            // postMessage({ action: "start", velocity: performedVelocity });
+        // postMessage({ action: "start", velocity: performedVelocity });
         case "start":
             start(msg);
             break;
