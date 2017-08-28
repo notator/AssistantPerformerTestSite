@@ -59,10 +59,8 @@ _AP.controls = (function(document, window)
     deleteSaveLink = function()
     {
         let
-        downloadLinkDiv = document.getElementById("downloadLinkDiv"), 
         saveLink = document.getElementById("saveLink");
-
-        if(downloadLinkDiv !== null && saveLink !== null)
+        if(saveLink !== null)
         {
             // Need a small delay for the revokeObjectURL to work properly.
             window.setTimeout(function()
