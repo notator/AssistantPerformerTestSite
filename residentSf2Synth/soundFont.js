@@ -148,7 +148,7 @@ WebMIDI.soundFont = (function()
         scale,
         freqVibLFO,
         keyIndex,
-        keyChannels;
+        keyLayers;
 
     	// begin ji
     	function volModParamValue(param)
@@ -190,26 +190,32 @@ WebMIDI.soundFont = (function()
     	for(keyIndex = generator.keyRange.lo; keyIndex <= generator.keyRange.hi; ++keyIndex)
     	{
     	    // ji - August 2017
-    	    // The terms presetZone, layer and channel:
-            // The sfspec uses the term "presetZone", and says that "layer" is an obsolete term for the same thing.
+    	    // The terms presetZone, layer and keylayer:
+    	    // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
+    	    // The sfspec also says that "layer" is an obsolete term for a "presetZone".
     	    // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
     	    // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
-    	    // setting of -500, the second a pan setting of +500. I am therefore assuming that the Grand Piano
-    	    // preset has two channels (i.e. is stereo) that corresond to the two "presetZones".
-    	    // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of channels
-            // per preset (and preset key) is actually unlimted.
-    	    keyChannels = preset[keyIndex];
-    	    if(keyChannels === undefined)
+    	    // setting of -500, the second a pan setting of +500.
+    	    // I therefore assume that a "presetZone" is a preset-level "channel", that is sent at the same time
+            // as other "presetZones" in the same preset, so as to create a fuller sound.
+    	    // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
+    	    // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
+    	    // There will always be a single MIDI output channel, whose pan position is realised by combining the
+    	    // channel's current pan value with the pan values of the key's "keyLayers".
+    	    // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
+            // is also unlimted.
+    	    keyLayers = preset[keyIndex];
+    	    if(keyLayers === undefined)
     	    {
-    	        keyChannels = [];
-    	        preset[keyIndex] = keyChannels;
+    	        keyLayers = [];
+    	        preset[keyIndex] = keyLayers;
     	    }
 
-    	    // the first channel for this key is always at keyChannels[0], i.e. preset[keyIndex][0].
+    	    // the first channel for this key is always at keyLayers[0], i.e. preset[keyIndex][0].
     	    sampleId = getModGenAmount(generator, 'sampleID', 0);
     	    sampleHeader = parser.sampleHeader[sampleId];
 
-    	    keyChannels.push({
+    	    keyLayers.push({
     	        'sample': parser.sample[sampleId],
     	        'sampleRate': sampleHeader.sampleRate,
     	        'basePlaybackRate': Math.pow(
