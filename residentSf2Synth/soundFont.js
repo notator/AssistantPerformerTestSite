@@ -233,7 +233,7 @@ WebMIDI.soundFont = (function()
 
     	        'volDelay': volModParamValue(generator, 'delayVolEnv', -12000),
     	        'volAttack': volModParamValue(generator, 'attackVolEnv', -12000),
-    	        'volHold': getModGenAmount(generator, 'holdVolEnv', -12000),
+    	        'volHold': volModParamValue(generator, 'holdVolEnv', -12000),
     	        'volDecay': volModParamValue(generator, 'decayVolEnv', -12000),
     	        'volSustain': range0to1(generator, 'sustainVolEnv', 0), // see spec
     	        'volRelease': volModParamValue(generator, 'releaseVolEnv', -12000),
