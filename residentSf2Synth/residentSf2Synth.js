@@ -424,7 +424,7 @@ WebMIDI.residentSf2Synth = (function(window)
 		keyLayers,
 		note,
         midi = {},
-		panpot = channelPanpot[channel] - 64,
+		pan = channelPanpot[channel] - 64,
 		bankIndexStr, instrStr, channelStr;
 
 	    // *Setting* the pitchBendSensitivity should be done by
@@ -471,12 +471,12 @@ WebMIDI.residentSf2Synth = (function(window)
 			return;
 		}
 
-		panpot /= panpot < 0 ? 64 : 63;
+		pan /= pan < 0 ? 64 : 63;
 
 		midi.channel = channel;
 		midi.key = key;
 		midi.velocity = velocity;
-		midi.panpot = panpot;
+		midi.pan = pan;
 		midi.volume = channelVolume[channel] / 127;
 		midi.pitchBend = channelPitchBend[channel] - 8192;
 		midi.pitchBendSensitivity = getPitchBendSensitivity(channel);
@@ -535,9 +535,9 @@ WebMIDI.residentSf2Synth = (function(window)
 		channelVolume[channel] = volume;
 	};
 
-	ResidentSf2Synth.prototype.panpotChange = function(channel, panpot)
+	ResidentSf2Synth.prototype.panpotChange = function(channel, pan)
 	{
-		channelPanpot[channel] = panpot;
+		channelPanpot[channel] = pan;
 	};
 
 	ResidentSf2Synth.prototype.pitchBend = function(channel, lowerByte, higherByte)

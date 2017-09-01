@@ -116,70 +116,53 @@ WebMIDI.soundFont = (function()
 		};
 	},
 
-	getModGenAmount = function(generator, enumeratorType, defaultValue)
-	{
-	    if(defaultValue === undefined)
-	    {
-	        throw "The default value must be defined.";
-		}
-
-		return generator[enumeratorType] ? generator[enumeratorType].amount : defaultValue;
-	},
-
     createKeyInfo = function(parser, generator, preset)
     {
     	var
         sampleId,
         sampleHeader,
-        volDelay, // added by ji
-        volAttack,
-        volHold, // added by ji
-        volDecay,
-        volSustain,
-        volRelease,
-        modDelay, // added by ji
-        modAttack,
-        modHold, // added by ji
-        modDecay,
-        modSustain,
-        modRelease,
-        loop, // added by ji
+        loopMode,
+        panAmount,
         tune,
         scale,
         freqVibLFO,
         keyIndex,
         keyLayers;
 
-    	// begin ji
-    	function volModParamValue(param)
+    	function getModGenAmount(generator, enumeratorType, defaultValue)
     	{
-    	    let rVal = (param === 0) ? 0 : Math.pow(2, param / 1200);
+    	    if(defaultValue === undefined)
+    	    {
+    	        throw "The default value must be defined.";
+    	    }
+
+    	    return generator[enumeratorType] ? generator[enumeratorType].amount : defaultValue;
+    	}
+
+    	function volModParamValue(generator, enumeratorType, defaultValue)
+    	{
+    	    let rVal = getModGenAmount(generator, enumeratorType, defaultValue);
+            
+    	    rVal = (rVal === 0) ? 0 : Math.pow(2, rVal / 1200);
+
     	    return rVal;
     	}
-    	// end ji
+
+    	function range0to1(generator, enumeratorType, defaultValue)
+    	{
+    	    let rVal = getModGenAmount(generator, enumeratorType, defaultValue);
+
+    	    return (rVal > 1000 ? 1 : (rVal <= 0 ? 0 : rVal / 1000));
+    	}
 
     	if(generator.keyRange === undefined || generator.sampleID === undefined)
     	{
     	    return;
     	}
 
-    	// See sf2 spec §8.1.3 for the default values set here.
-    	volDelay = getModGenAmount(generator, 'delayVolEnv', -12000);	// added by ji
-    	volAttack = getModGenAmount(generator, 'attackVolEnv', -12000);
-    	volHold = getModGenAmount(generator, 'holdVolEnv', -12000);	// added by ji
-    	volDecay = getModGenAmount(generator, 'decayVolEnv', -12000);
-    	volSustain = getModGenAmount(generator, 'sustainVolEnv', 0);
-    	volRelease = getModGenAmount(generator, 'releaseVolEnv', -12000);
-
-    	modDelay = getModGenAmount(generator, 'delayModEnv', -12000);	// added by ji
-    	modAttack = getModGenAmount(generator, 'attackModEnv', -12000);
-    	modHold = getModGenAmount(generator, 'holdModEnv', -12000);	// added by ji
-    	modDecay = getModGenAmount(generator, 'decayModEnv', -12000);
-    	modSustain = getModGenAmount(generator, 'sustainModEnv', 0);
-    	modRelease = getModGenAmount(generator, 'releaseModEnv', -12000);
-
-    	loop = getModGenAmount(generator, 'sampleModes', 0);	// added by ji ( is in Arachno Grand Piano)
-
+    	// See sf2 spec §8.1.3 for the default values set in this function.
+    	loopMode = getModGenAmount(generator, 'sampleModes', 0);
+        panAmount = getModGenAmount(generator, 'pan', 0),
     	tune = (
             getModGenAmount(generator, 'coarseTune', 0) +
             getModGenAmount(generator, 'fineTune', 0) / 100
@@ -196,12 +179,12 @@ WebMIDI.soundFont = (function()
     	    // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
     	    // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
     	    // setting of -500, the second a pan setting of +500.
-    	    // I therefore assume that a "presetZone" is a preset-level "channel", that is sent at the same time
+    	    // I am therefore assuming that a "presetZone" is a preset-level "channel", that is sent at the same time
             // as other "presetZones" in the same preset, so as to create a fuller sound.
     	    // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
     	    // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
     	    // There will always be a single MIDI output channel, whose pan position is realised by combining the
-    	    // channel's current pan value with the pan values of the key's "keyLayers".
+    	    // channel's current pan value with the pan values of the key's (note's) "keyLayers".
     	    // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
             // is also unlimted.
     	    keyLayers = preset[keyIndex];
@@ -226,7 +209,7 @@ WebMIDI.soundFont = (function()
                     tune + (sampleHeader.pitchCorrection / 100)
                     ) * scale
                 ),
-    	        'modEnvToPitch': getModGenAmount(generator, 'modEnvToPitch', 0) / 100,
+    	        'modEnvToPitch': volModParamValue(generator, 'modEnvToPitch', -12000) / 100,
     	        'scaleTuning': scale,
     	        'start':
                     getModGenAmount(generator, 'startAddrsCoarseOffset', 0) * 32768 +
@@ -234,7 +217,7 @@ WebMIDI.soundFont = (function()
     	        'end':
                     getModGenAmount(generator, 'endAddrsCoarseOffset', 0) * 32768 +
                     getModGenAmount(generator, 'endAddrsOffset', 0),
-    	        'doLoop': (loop === 1 || loop === 3), // ji
+    	        'doLoop': (loopMode === 1 || loopMode === 3), // ji
     	        'loopStart': (
                     //(sampleHeader.startLoop - sampleHeader.start) +
                     (sampleHeader.startLoop) +
@@ -248,36 +231,36 @@ WebMIDI.soundFont = (function()
                     getModGenAmount(generator, 'endloopAddrsOffset', 0)
                     ),
 
-    	        'volDelay': volModParamValue(volDelay),
-    	        'volAttack': volModParamValue(volAttack),
-    	        'volHold': volModParamValue(volHold),
-    	        'volDecay': volModParamValue(volDecay),
-    	        'volSustain': volSustain / 1000,
-    	        'volRelease': volModParamValue(volRelease),
+    	        'volDelay': volModParamValue(generator, 'delayVolEnv', -12000),
+    	        'volAttack': volModParamValue(generator, 'attackVolEnv', -12000),
+    	        'volHold': getModGenAmount(generator, 'holdVolEnv', -12000),
+    	        'volDecay': volModParamValue(generator, 'decayVolEnv', -12000),
+    	        'volSustain': range0to1(generator, 'sustainVolEnv', 0), // see spec
+    	        'volRelease': volModParamValue(generator, 'releaseVolEnv', -12000),
 
-    	        'modDelay': volModParamValue(modDelay),
-    	        'modAttack': volModParamValue(modAttack),
-    	        'modHold': volModParamValue(modHold),
-    	        'modDecay': volModParamValue(modDecay),
-    	        'modSustain': modSustain / 1000,
-    	        'modRelease': volModParamValue(modRelease),
+    	        'modDelay': volModParamValue(generator, 'delayModEnv', -12000),
+    	        'modAttack': volModParamValue(generator, 'attackModEnv', -12000),
+    	        'modHold': volModParamValue(generator, 'holdModEnv', -12000),
+    	        'modDecay': volModParamValue(generator, 'decayModEnv', -12000),
+    	        'modSustain': range0to1(generator, 'sustainModEnv', 0), // see spec
+    	        'modRelease': volModParamValue(generator, 'releaseModEnv', -12000),
 
     	        'initialFilterFc': getModGenAmount(generator, 'initialFilterFc', 13500),
-    	        'modEnvToFilterFc': getModGenAmount(generator, 'modEnvToFilterFc', 0),
-    	        'initialFilterQ': getModGenAmount(generator, 'initialFilterQ', 0),
+    	        'modEnvToFilterFc': getModGenAmount(generator, 'modEnvToFilterFc', 0) / 100,
+    	        'initialFilterQ': getModGenAmount(generator, 'initialFilterQ', 0) / 100,
     	        'freqVibLFO': freqVibLFO ? Math.pow(2, freqVibLFO / 1200) * 8.176 : undefined,
 
     	        // the following were not set by gree
-    	        'modLfoToPitch': getModGenAmount(generator, 'modLfoToPitch', 0),
-    	        'vibLfoToPitch': getModGenAmount(generator, 'vibLfoToPitch', 0),
-    	        'modLfoToFilterFc': getModGenAmount(generator, 'modLfoToFilterFc', 0),
-    	        'modLfoToVolume': getModGenAmount(generator, 'modLfoToVolume', 0),
-    	        'chorusEffectsSend': getModGenAmount(generator, 'chorusEffectsSend', 0), // in Arachno Grand Piano
-    	        'reverbEffectsSend': getModGenAmount(generator, 'reverbEffectsSend', 0), // in Arachno Grand Piano
-    	        'pan': getModGenAmount(generator, 'pan', 0), // in Arachno Grand Piano
-    	        'delayModLFO': getModGenAmount(generator, 'delayModLFO', -12000), // in Arachno Grand Piano
+    	        'modLfoToPitch': volModParamValue(generator, 'modLfoToPitch', -12000) / 100,
+    	        'vibLfoToPitch': volModParamValue(generator, 'vibLfoToPitch', -12000) / 100,
+    	        'modLfoToFilterFc': getModGenAmount(generator, 'modLfoToFilterFc', 0) / 100,
+    	        'modLfoToVolume': getModGenAmount(generator, 'modLfoToVolume', 0) / 100,   	        
+    	        'chorusEffectsSend': range0to1(generator, 'chorusEffectsSend', 0) / 100,
+    	        'reverbEffectsSend': range0to1(generator, 'reverbEffectsSend', 0) / 100,
+    	        'pan' : (panAmount + 500) / 1000,
+    	        'delayModLFO': volModParamValue(generator, 'delayModLFO', -12000), // in Arachno Grand Piano
     	        'freqModLFO': getModGenAmount(generator, 'freqModLFO', 0),
-    	        'delayVibLFO': getModGenAmount(generator, 'delayVibLFO', -12000), // in Arachno Grand Piano
+    	        'delayVibLFO': volModParamValue(generator, 'delayVibLFO', -12000), // in Arachno Grand Piano
     	        'keynumToModEnvHold': getModGenAmount(generator, 'keynumToModEnvHold', 0),
     	        'keynumToModEnvDecay': getModGenAmount(generator, 'keynumToModEnvDecay', 0),
     	        'keynumToVolEnvHold': getModGenAmount(generator, 'keynumToVolEnvHold', 0),

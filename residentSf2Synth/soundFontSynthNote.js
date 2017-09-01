@@ -9,11 +9,8 @@
 *
 * The WebMIDI.soundFontSynthNote namespace containing the following constructor:
 *
-*        SoundFontSynthNote(ctx, gainMaster, keyLayers)
-* 
+*        SoundFontSynthNote(ctx, gainMaster, keyLayers) 
 */
-
-/*global WebMIDI */
 
 WebMIDI.namespace('WebMIDI.soundFontSynthNote');
 
@@ -31,7 +28,7 @@ WebMIDI.soundFontSynthNote = (function()
 		this.channel = midi.channel;
 		this.key = midi.key;
 		this.velocity = midi.velocity;
-		this.panpot = midi.panpot;
+		this.pan = midi.pan;
 		this.volume = midi.volume;
 		this.pitchBend = midi.pitchBend;
 		this.pitchBendSensitivity = midi.pitchBendSensitivity;
@@ -49,9 +46,7 @@ WebMIDI.soundFontSynthNote = (function()
 		this.audioBuffer = null;
 		this.bufferSource = null;
 		this.panner = null;
-		this.gainOutput = null;
-
-		//console.log(keyLayers[0].modAttack, keyLayers[0].modDecay, keyLayers[0].modSustain, keyLayers[0].modRelease);	
+		this.gainOutput = null;	
 	},
 
 	API =
@@ -61,24 +56,58 @@ WebMIDI.soundFontSynthNote = (function()
 
 	SoundFontSynthNote.prototype.noteOn = function()
 	{
+	    // KeyLayers are "subChannels" associated with a particular key in this preset,
+	    // i.e. they are "subChannels" associated with this particular Note.
+	    // All the keyLayers have been read correctly (as far as I know) from the SoundFont file,
+	    // but this file ignores all but the first (keyLayers[0]).
+	    // (The Arachno SoundFont's preset 0 -- Grand Piano -- has two layers, in which
+	    // keyLayer[0].pan is always -500 and keylayer[1].pan is always 500.)
+	    // This version of soundFontSynthNote.js:
+	    //    1) ignores all but the first keyLayer, and
+	    //    2) ignores the first keyLayer's *pan* attribute.
+	    //    3) plays the layer at the position set by the value of *this.pan* (see midi.pan above).
+	    // TODO 1: Implement the playing of stereo samples, using stereo Web Audio buffers.
+	    // 
+	    // Each keyLayer has an entry for every soundFont "generator" in the spec, except those
+	    // whose value has been used to calculate the values of the other "generator"s and should
+	    // no longer be needed.
+	    // If a soundFont "generator" was not present in the soundFont, it will have its default
+	    // value in the keyLayer.
+	    //
+	    // The following "generator"s are present in the Arachno Grand Piano preset, and are
+	    // the same for every key in the preset, but are not used by this file:
+	    //    chorusEffectsSend (soundfile amount: 50, value here: 0.05)
+	    //    reverbEffectsSend (soundfile amount: 200, value here: 0.20)
+	    //    pan (layer 0 (left) soundfile amount: -500, value here: 0 -- completely left
+	    //         layer 1 (right)soundfile amount: 500,  value here: 1 -- completely right)
+	    //    delayModLFO (soundfile amount: -7973, value here: 0.01)
+	    //    delayVibLFO (soundfile amount: -7973, value here: 0.01)
+	    // TODO 2: Implement the playing of *all* the soundFont "generator"s, especially these five.
+	    // N.B. the returned value of such unused generators is probably correct, but should be checked
+	    // in soundFont.js. The position of the decimal point should be specially carefully checked.
+
 	    var
 		buffer, channelData, bufferSource, filter, panner,
 		output, outputGain, baseFreq, peekFreq, sustainFreq,
 		ctx = this.ctx,
 		keyLayers = this.keyLayers,
 		sample = this.buffer,
-
 		now = this.ctx.currentTime,
-
+        // The following keylayers[0] attributes are the *durations* of their respective envelope phases in seconds:
+        //   volDelay, volAttack, volHold, volDelay, volRelease,
+        //   modDelay, modAttack, modHold, modDelay, modRelease,
+        // The volSustain and modSustain attributes are *factors* in the range [1.00 .. 0.00] (inclusive).
+        // In general, all keyLayer attributes have directly usable values here in this file.
+        // The conversions from the integer amounts in the soundFont have been done earlier.
         volDelay = now + keyLayers[0].volDelay,
 		volAttack = volDelay + keyLayers[0].volAttack,
         volHold = volAttack + keyLayers[0].volHold,
-        volDecay = volHold + keyLayers[0].volDecay,
+        volDecay = volHold + (keyLayers[0].volDecay * keyLayers[0].volSustain), // see spec! ji
 
         modDelay = now + keyLayers[0].modDelay,
-		modAttack = volDelay + keyLayers[0].modAttack,
-        modHold = volAttack + keyLayers[0].modHold,
-        modDecay = volHold + keyLayers[0].modDecay,
+		modAttack = modDelay + keyLayers[0].modAttack,
+        modHold = modAttack + keyLayers[0].modHold,
+        modDecay = modHold + (keyLayers[0].modDecay * keyLayers[0].modSustain), // see spec! ji
 
         volLevel = this.volume * Math.pow((this.velocity / 127), 2), // ji 21.08.2017
 
@@ -127,43 +156,29 @@ WebMIDI.soundFontSynthNote = (function()
 		filter = this.filter;
 		filter.type = 'lowpass';
 
-		// panpot
+		// pan
 		panner.panningModel = 'HRTF';
 		panner.setPosition(
-		  Math.sin(this.panpot * Math.PI / 2),
+		  Math.sin(this.pan * Math.PI / 2),
 		  0,
-		  Math.cos(this.panpot * Math.PI / 2)
+		  Math.cos(this.pan * Math.PI / 2)
 		);
 
 		//---------------------------------------------------------------------------
 		// Attack, Decay, Sustain
 		//---------------------------------------------------------------------------
+
 		outputGain.setValueAtTime(0, now);
-
-	    // begin original gree
-		//outputGain.linearRampToValueAtTime(this.volume * (this.velocity / 127), volAttack);
-		//outputGain.linearRampToValueAtTime(this.volume * (1 - keyLayers[0].volSustain), volDecay);
-	    // end original gree
-
-        /*****
-	    // begin ji changes August 2017
-        // volLevel is a new variable, defined in the vars above.
-		outputGain.linearRampToValueAtTime(volLevel, volAttack);
-	    // For the following line see https://github.com/notator/WebMIDISynthHost/issues/29
-	    // Thanks @timjrd !
-	    // ji -- the keyLayers[0].volSustain attribute is a level parameter, not like the other
-	    // keyLayers[0].vol... attributes (which are time values).
-		outputGain.linearRampToValueAtTime(volLevel * (1 - keyLayers[0].volSustain), volDecay);
-        // end ji changes August 2017
-        *****/
-
-		outputGain.linearRampToValueAtTime(0, volDelay);
+		if(volDelay > now)
+		{
+		    outputGain.linearRampToValueAtTime(0, volDelay);
+		}
 		outputGain.linearRampToValueAtTime(volLevel, volAttack);
 	    outputGain.linearRampToValueAtTime(volLevel, volHold);
 	    outputGain.linearRampToValueAtTime(volLevel * (1 - keyLayers[0].volSustain), volDecay);
 
 		// begin ji changes November 2015.
-		// The following original line was a (deliberate, forgotten?) bug that threw an out-of-range
+		// The following original line was a (deliberate, forgotten?) gree bug that threw an out-of-range
 		// exception when keyLayers[0]['initialFilterQ'] > 0:
 		//     filter.Q.setValueAtTime(keyLayers[0]['initialFilterQ'] * Math.pow(10, 200), now);
 		// The following line seems to work, but is it realy correct?
@@ -172,9 +187,15 @@ WebMIDI.soundFontSynthNote = (function()
 
 		baseFreq = amountToFreq(keyLayers[0].initialFilterFc);
 		peekFreq = amountToFreq(keyLayers[0].initialFilterFc + keyLayers[0].modEnvToFilterFc);
-		sustainFreq = baseFreq + (peekFreq - baseFreq) * (1 - keyLayers[0].modSustain);
+		sustainFreq = baseFreq + ((peekFreq - baseFreq) * (1 - keyLayers[0].modSustain));
+
 		filter.frequency.setValueAtTime(baseFreq, now);
+		if(modDelay > now)
+		{
+		    filter.frequency.linearRampToValueAtTime(baseFreq, modDelay);
+		}
 		filter.frequency.linearRampToValueAtTime(peekFreq, modAttack);
+		filter.frequency.linearRampToValueAtTime(peekFreq, modHold);
 		filter.frequency.linearRampToValueAtTime(sustainFreq, modDecay);
 
 		// connect
@@ -195,23 +216,10 @@ WebMIDI.soundFontSynthNote = (function()
 		bufferSource = this.bufferSource,
 		output = this.gainOutput,
 		now = this.ctx.currentTime,
-
-		// begin gree
-		//   volEndTime = now + keyLayers.volRelease,
-		//   modEndTime = now + keyLayers.modRelease;
-		// end gree
-
-		// begin ji
-		// keyLayers[0].volRelease is 3.08 in preset 0 (grand piano) in the Arachno font.   
-		// It cannot be the case that a piano note only stops 3.08 seconds after a
-		// noteOff arrives.
-        // The following line limits the value to 0.05 seconds.
-        // This is a temporary kludge, pending the proper solution to the problem...
-        volRelease = (keyLayers[0].volRelease > 0.05) ? 0.05 : keyLayers[0].volRelease,
-        modRelease = (keyLayers[0].modRelease > 0.05) ? 0.05 : keyLayers[0].modRelease,
+        volRelease = keyLayers[0].volRelease,
+        modRelease = keyLayers[0].modRelease,
 		volEndTime = now + volRelease,
 		modEndTime = now + modRelease;
-		// end ji
 
 		if(!this.audioBuffer)
 		{
@@ -229,7 +237,6 @@ WebMIDI.soundFontSynthNote = (function()
 		// end original gree
 
 		// begin ji
-	    // latest changes:
 	    // 1. use setTargetAtTime() instead of linearRampToValueAtTime(0, volEndTime). (Suggested by Timothée Jourde on GitHub).
 	    // 2. call cancelScheduledValues(...) _after_ setting the envelopes, not before.
 		output.gain.setTargetAtTime(0, now, volRelease);
@@ -252,7 +259,7 @@ WebMIDI.soundFontSynthNote = (function()
 		  			note.gainOutput.disconnect(0);
 		  		};
 			}(this)),
-		  keyLayers[0].volRelease * 1000
+		  keyLayers[0].volRelease
 		);
 	};
 
@@ -265,7 +272,7 @@ WebMIDI.soundFontSynthNote = (function()
 		keyLayers = this.keyLayers,
 		modAttack = start + keyLayers[0].modAttack,
 		modDecay = modAttack + keyLayers[0].modDecay,
-		peekPitch = computed * Math.pow(Math.pow(2, 1 / 12), this.modEnvToPitch * this.keyLayers[0].scaleTuning);
+		peekPitch = computed * Math.pow(Math.pow(2, 1 / 12), this.modEnvToPitch * keyLayers[0].scaleTuning);
 
 		playbackRate.cancelScheduledValues(0);
 		playbackRate.setValueAtTime(computed, start);
