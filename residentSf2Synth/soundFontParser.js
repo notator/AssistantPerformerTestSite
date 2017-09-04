@@ -414,7 +414,8 @@ WebMIDI.soundFontParser = (function()
 		var code, key, output = [],
 		data = this.input,
 		ip = chunk.offset,
-		size = chunk.offset + chunk.size;
+		size = chunk.offset + chunk.size,
+		generatorTable = SoundFontParser.prototype.GeneratorEnumeratorTable;
 
 		while(ip < size)
 		{
@@ -438,7 +439,7 @@ WebMIDI.soundFontParser = (function()
 		    // sfModDestOper or sfGenOper
             // and the following 2-byte value (modAmount or genAmount)
 			code = data[ip++] | (data[ip++] << 8);
-			key = SoundFontParser.GeneratorEnumeratorTable[code];
+			key = generatorTable[code].name;
 			if(key === undefined)
 			{
 			    // ji comment August 2017
@@ -700,64 +701,64 @@ WebMIDI.soundFontParser = (function()
 		};
 	};
 
-	SoundFontParser.GeneratorEnumeratorTable = [
-	  'startAddrsOffset',
-	  'endAddrsOffset',
-	  'startloopAddrsOffset',
-	  'endloopAddrsOffset',
-	  'startAddrsCoarseOffset',
-	  'modLfoToPitch',
-	  'vibLfoToPitch',
-	  'modEnvToPitch',
-	  'initialFilterFc',
-	  'initialFilterQ',
-	  'modLfoToFilterFc',
-	  'modEnvToFilterFc',
-	  'endAddrsCoarseOffset',
-	  'modLfoToVolume',
+	SoundFontParser.prototype.GeneratorEnumeratorTable = [
+	  { 'name':'startAddrsOffset', 'default': 0},
+	  { 'name':'endAddrsOffset', 'default': 0},
+	  { 'name':'startloopAddrsOffset', 'default': 0},
+	  { 'name':'endloopAddrsOffset', 'default': 0},
+	  { 'name':'startAddrsCoarseOffset', 'default': 0},
+	  { 'name':'modLfoToPitch', 'default': 0},
+	  { 'name':'vibLfoToPitch', 'default': 0},
+	  { 'name':'modEnvToPitch', 'default': 0},
+	  { 'name':'initialFilterFc', 'default': 13500},
+	  { 'name':'initialFilterQ', 'default': 0},
+	  { 'name':'modLfoToFilterFc', 'default': 0},
+	  { 'name':'modEnvToFilterFc', 'default': 0},
+	  { 'name':'endAddrsCoarseOffset', 'default': 0},
+	  { 'name':'modLfoToVolume', 'default': 0},
 	  , // 14
-	  'chorusEffectsSend',
-	  'reverbEffectsSend',
-	  'pan',
+	  { 'name':'chorusEffectsSend', 'default': 0},
+	  { 'name':'reverbEffectsSend', 'default': 0},
+	  { 'name':'pan', 'default': 0},
 	  , , , // 18,19,20
-	  'delayModLFO',
-	  'freqModLFO',
-	  'delayVibLFO',
-	  'freqVibLFO',
-	  'delayModEnv',
-	  'attackModEnv',
-	  'holdModEnv',
-	  'decayModEnv',
-	  'sustainModEnv',
-	  'releaseModEnv',
-	  'keynumToModEnvHold',
-	  'keynumToModEnvDecay',
-	  'delayVolEnv',
-	  'attackVolEnv',
-	  'holdVolEnv',
-	  'decayVolEnv',
-	  'sustainVolEnv',
-	  'releaseVolEnv',
-	  'keynumToVolEnvHold',
-	  'keynumToVolEnvDecay',
-	  'instrument',
+	  { 'name':'delayModLFO', 'default': -12000},
+	  { 'name':'freqModLFO', 'default': 0},
+	  { 'name':'delayVibLFO', 'default': -12000},
+	  { 'name':'freqVibLFO', 'default': 0},
+	  { 'name': 'delayModEnv', 'default': -12000 },
+	  { 'name': 'attackModEnv', 'default': -12000 },
+	  { 'name': 'holdModEnv', 'default': -12000 },
+	  { 'name': 'decayModEnv', 'default': -12000 },
+	  { 'name':'sustainModEnv', 'default': 0},
+	  { 'name': 'releaseModEnv', 'default': -12000 },
+	  { 'name':'keynumToModEnvHold', 'default': 0},
+	  { 'name':'keynumToModEnvDecay', 'default': 0},
+	  { 'name': 'delayVolEnv', 'default': -12000 },
+	  { 'name': 'attackVolEnv', 'default': -12000 },
+	  { 'name': 'holdVolEnv', 'default': -12000 },
+	  { 'name': 'decayVolEnv', 'default': -12000 },
+	  { 'name':'sustainVolEnv', 'default': 0},
+	  { 'name': 'releaseVolEnv', 'default': -12000 },
+	  { 'name':'keynumToVolEnvHold', 'default': 0},
+	  { 'name':'keynumToVolEnvDecay', 'default': 0},
+	  { 'name':'instrument', 'default': 0},
 	  , // 42
-	  'keyRange',
-	  'velRange',
-	  'startloopAddrsCoarseOffset',
-	  'keynum',
-	  'velocity',
-	  'initialAttenuation',
+	  { 'name':'keyRange', 'default': 0},
+	  { 'name':'velRange', 'default': 0},
+	  { 'name':'startloopAddrsCoarseOffset', 'default': 0},
+	  { 'name':'keynum', 'default': -1},
+	  { 'name':'velocity', 'default': -1},
+	  { 'name':'initialAttenuation', 'default': 0},
 	  , // 49
-	  'endloopAddrsCoarseOffset',
-	  'coarseTune',
-	  'fineTune',
-	  'sampleID',
-	  'sampleModes',
+	  { 'name':'endloopAddrsCoarseOffset', 'default': 0},
+	  { 'name':'coarseTune', 'default': 0},
+	  { 'name':'fineTune', 'default': 0},
+	  { 'name':'sampleID', 'default': 0},
+	  { 'name':'sampleModes', 'default': 0},
 	  , // 55
-	  'scaleTuning',
-	  'exclusiveClass',
-	  'overridingRootKey'
+	  { 'name':'scaleTuning', 'default': 100},
+	  { 'name':'exclusiveClass', 'default': 0},
+	  { 'name':'overridingRootKey', 'default': -1}
 	];
 
 	return API;
