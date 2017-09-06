@@ -27,251 +27,280 @@ WebMIDI.soundFont = (function()
 
 	createBagModGen_ = function(indexStart, indexEnd, zoneModGen)
 	{
-		var modgenInfo = [],
+	    var modgenInfo = [],
 			modgen = {
-				unknown: [],
-				keyRange: {
-					hi: 127,
-					lo: 0
-				}},
+			    unknown: [],
+			    keyRange: {
+			        hi: 127,
+			        lo: 0
+			    }
+			},
 			info,
 			i;
 
-		for(i = indexStart; i < indexEnd; ++i)
-		{
-			info = zoneModGen[i];
-			modgenInfo.push(info);
+	    for(i = indexStart; i < indexEnd; ++i)
+	    {
+	        info = zoneModGen[i];
+	        modgenInfo.push(info);
 
-			if(info.type === 'unknown')
-			{
-				modgen.unknown.push(info.value);
-			} else
-			{
-				modgen[info.type] = info.value;
-			}
-		}
+	        if(info.type === 'unknown')
+	        {
+	            modgen.unknown.push(info.value);
+	        } else
+	        {
+	            modgen[info.type] = info.value;
+	        }
+	    }
 
-		return {
-			modgen: modgen,
-			modgenInfo: modgenInfo
-		};
+	    return {
+	        modgen: modgen,
+	        modgenInfo: modgenInfo
+	    };
 	},
 
 	getPresetModulator_ = function(parser, zone, index)
 	{
-		var modgen = createBagModGen_(
+	    var modgen = createBagModGen_(
 		  zone[index].presetModulatorIndex,
 		  zone[index + 1] ? zone[index + 1].presetModulatorIndex : parser.presetZoneModulator.length,
 		  parser.presetZoneModulator
 		);
 
-		return {
-			modulator: modgen.modgen,
-			modulatorInfo: modgen.modgenInfo
-		};
+	    return {
+	        modulator: modgen.modgen,
+	        modulatorInfo: modgen.modgenInfo
+	    };
 	},
-	
+
 	getPresetGenerator_ = function(parser, zone, index)
 	{
-		var modgen = parser.createBagModGen_(
+	    var modgen = parser.createBagModGen_(
 		  zone,
 		  zone[index].presetGeneratorIndex,
 		  zone[index + 1] ? zone[index + 1].presetGeneratorIndex : parser.presetZoneGenerator.length,
 		  parser.presetZoneGenerator
 		);
 
-		return {
-			generator: modgen.modgen,
-			generatorInfo: modgen.modgenInfo
-		};
+	    return {
+	        generator: modgen.modgen,
+	        generatorInfo: modgen.modgenInfo
+	    };
 	},
 
 	createInstrumentModulator_ = function(parser, zone, index)
 	{
-		var modgen = parser.createBagModGen_(
+	    var modgen = parser.createBagModGen_(
 		  zone,
 		  zone[index].presetModulatorIndex,
 		  zone[index + 1] ? zone[index + 1].instrumentModulatorIndex : parser.instrumentZoneModulator.length,
 		  parser.instrumentZoneModulator
 		);
 
-		return {
-			modulator: modgen.modgen,
-			modulatorInfo: modgen.modgenInfo
-		};
+	    return {
+	        modulator: modgen.modgen,
+	        modulatorInfo: modgen.modgenInfo
+	    };
 	},
 
 	createInstrumentGenerator_ = function(parser, zone, index)
 	{
-		var modgen = parser.createBagModGen_(
+	    var modgen = parser.createBagModGen_(
 		  zone,
 		  zone[index].instrumentGeneratorIndex,
 		  zone[index + 1] ? zone[index + 1].instrumentGeneratorIndex : parser.instrumentZoneGenerator.length,
 		  parser.instrumentZoneGenerator
 		);
 
-		return {
-			generator: modgen.modgen,
-			generatorInfo: modgen.modgenInfo
-		};
+	    return {
+	        generator: modgen.modgen,
+	        generatorInfo: modgen.modgenInfo
+	    };
 	},
 
-    createKeyInfo = function(parser, generator, preset)
+    // Creates a keyLayer for each key in the generator's keyRange, and adds it to the key's keyLayers array in the preset.
+    // Each key's keyLayers array is at preset[keyIndex], and contains an array of keyLayer objects.
+    // This function creates an attribute for each generator in each keyLayer. The attribute values are the raw integer values
+    // that are either found in the soundFont or are default values. The attribute names are the official names of the
+    // generators in the sf2spec (see §8.1.2 and §8.1.3).
+    // When this function has returned, the following function (setPresetValues) converts these "amounts" to (possibly
+    // floating point) values that can subsequently be used more conveniently (in soundFontSynthNote.js).
+    getPresetAmounts = function(generatorTable, generator, preset)
     {
-    	var
-        sampleId,
-        sampleHeader,
-        loopMode,
-        panAmount,
-        tune,
-        scale,
-        freqVibLFO,
-        keyIndex,
-        keyLayers;
+        // The terms presetZone, layer and keylayer:
+        // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
+        // The sfspec also says that "layer" is an obsolete term for a "presetZone".
+        // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
+        // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
+        // setting of -500, the second a pan setting of +500.
+        // I am therefore assuming that a "presetZone" is a preset-level "channel", that is sent at the same time
+        // as other "presetZones" in the same preset, so as to create a fuller sound.
+        // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
+        // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
+        // There will always be a single MIDI output channel, whose pan position is realised by combining the
+        // channel's current pan value with the pan values of the key's (note's) "keyLayers".
+        // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
+        // is also unlimted.
 
-    	function getModGenAmount(generator, enumeratorType, defaultValue)
-    	{
-    	    if(defaultValue === undefined)
-    	    {
-    	        throw "The default value must be defined.";
-    	    }
+        let keyIndex = 0, keyLayer, keyLayers;
 
-    	    return generator[enumeratorType] ? generator[enumeratorType].amount : defaultValue;
-    	}
+        function getKeyLayer(generatorTable, generator)
+        {
+            let genIndex = 0, nGens = generatorTable.length, gen, amount, keyLayer = {};
 
-    	function volModParamValue(generator, enumeratorType, defaultValue)
-    	{
-    	    let rVal = getModGenAmount(generator, enumeratorType, defaultValue);
+            for(genIndex = 0; genIndex < nGens; ++genIndex)
+            {
+                gen = generatorTable[genIndex];
+                if(gen !== undefined)
+                {
+                    amount = generator[gen.name] ? generator[gen.name].amount : gen.default;
+                    keyLayer[gen.name] = amount;
+                }
+            }
+            return keyLayer;
+        }
+
+        if(generator.keyRange === undefined || generator.sampleID === undefined)
+        {
+            throw "invalid soundFont";
+        }
+
+        for(keyIndex = generator.keyRange.lo; keyIndex <= generator.keyRange.hi; ++keyIndex)
+        {
+            keyLayers = preset[keyIndex];
+            if(keyLayers === undefined)
+            {
+                keyLayers = [];
+                preset[keyIndex] = keyLayers;
+            }
+
+            keyLayer = getKeyLayer(generatorTable, generator);
+            keyLayers.push(keyLayer);
+        }
+    },
+
+    // This function converts the (integer) values created by the previous function to (possibly floating-point)values
+    // that will be more convenient to use subsequently.
+    // It also combines some of the original attributes into new attributes (whicj I call pseudoGenerators in this code).
+    // Newly created attributes are, if meaningful given names that are the original names concatenated with their unit
+    // of measurement (delayModLFO_sec, chorusEffectsSend_percent etc.).
+    // Attributes that have been consumed, and are no longer needed, are deleted.
+    setPresetValues = function (parser, preset)
+    {
+        let keyIndex, keyLayers, layerIndex, nLayers, keyLayer,
+            generatorTable = parser.GeneratorEnumeratorTable, nGenerators = generatorTable.length,
+            genIndex = 0, gen, genName;
+
+        // PseudoGenerators are attributes of the keyLayer that are calculated
+        // from the generators in the soundFont (that already exist in the keyLayer).
+        // When they have been used, redundant generators are deleted.
+        function setPseudoGenerators(parser, keyIndex, keyLayer)
+        {
+            let kl = keyLayer,
+                sampleHeader = parser.sampleHeader[kl.sampleID],
+                tune = kl.coarseTune + kl.fineTune / 100, // semitones              
+                rootKey = (kl.overridingRootKey === -1) ? sampleHeader.originalPitch : kl.overridingRootKey,
+                scale = kl.scaleTuning / 100;
+
+            kl.sample = parser.sample[kl.sampleID];
+            kl.sampleRate = sampleHeader.sampleRate;
+            kl.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scale);
+            kl.start = (kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset;
+            kl.end = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
+            kl.doLoop = (kl.loop === 1 || kl.loop === 3);
+            if(kl.doLoop === true)
+            {
+                kl.loopStart = sampleHeader.startLoop + (kl.startloopAddrsCoarseOffset * 32768) + kl.startloopAddrsOffset;
+                kl.loopEnd = sampleHeader.endLoop + (kl.endloopAddrsCoarseOffset * 32768) + kl.endloopAddrsOffset;
+            }
+            kl.velocityMax = kl.velRange & 0xFF;
+            kl.velocityMin = (kl.velRange & 0xFF00) / 32767;
+
+            delete kl.sampleID;
+            delete kl.coarseTune; // semitones
+            delete kl.fineTune; // cents
+            delete kl.startAddrsCoarseOffset;
+            delete kl.startAddrsOffset;
+            delete kl.endAddrsCoarseOffset;
+            delete kl.endAddrsOffset;
+            delete kl.startloopAddrsCoarseOffset;
+            delete kl.startloopAddrsOffset;
+            delete kl.endloopAddrsCoarseOffset;
+            delete kl.endloopAddrsOffset;
+
+            delete kl.instrument;
+            delete kl.keyRange;
+            delete kl.velRange;
+            delete kl.scaleTuning;
+        }
             
-    	    rVal = (rVal === 0) ? 0 : Math.pow(2, rVal / 1200);
+        for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
+        {
+            keyLayers = preset[keyIndex];
+            nLayers = keyLayers.length;
+            for(layerIndex = 0; layerIndex < nLayers; ++layerIndex)
+            {
+                keyLayer = keyLayers[layerIndex];
+                setPseudoGenerators(parser, keyIndex, keyLayer);
+                for(genIndex = 0; genIndex < nGenerators; ++genIndex)
+                {
+                    gen = generatorTable[genIndex];
+                    if(gen !== undefined)
+                    {
+                        genName = gen.name;
+                        if(keyLayer[genName] !== undefined)
+                        {
+                            switch(gen.conv)
+                            {
+                                case 'volModSec': // (original unit: timecent) delayVolEnv, delayModEnv etc.
+                                    keyLayer[genName + '_sec'] = (keyLayer[genName] === 0) ? 0 : Math.pow(2, keyLayer[genName] / 1200);
+                                    break;
+                                case 'keyVolModSec': // (original unit: timecents/key) delayVolEnv, delayModEnv etc.
+                                    keyLayer[genName] *= keyIndex; // ?
+                                    keyLayer[genName + '_sec'] = (keyLayer[genName] === 0) ? 0 : Math.pow(2, keyLayer[genName] / 1200);
+                                    break;
+                                case 'centToSemitone': // (original unit: 'cent' or 'cent fs') modLfoToPitch etc .
+                                    keyLayer[genName + '_semitones'] = keyLayer[genName] / 100;
+                                    break;
+                                case 'cent': // (original unit: cent) modLfoToFilterFc etc.
+                                    // no conversion
+                                    keyLayer[genName + '_cents'] = keyLayer[genName];
+                                    break;
+                                case 'bitFlags': // sampleModes
+                                    // no conversion
+                                    keyLayer[genName + '_bitFlags'] = keyLayer[genName];
+                                    break;
+                                case 'cBtoDB': // (original unit: centibels) initialFilterQ etc.
+                                    keyLayer[genName + '_dB'] = keyLayer[genName] / 10;
+                                    break;
+                                case 'thouToPercent': // (original unit: 0.1%) chorusEffectsSend etc.
+                                    keyLayer[genName + '_percent'] = keyLayer[genName] / 10;                                   
+                                    break;
+                                case 'panPos': // pan (see sfspec)
+                                    keyLayer[genName + '_pos'] = (keyLayer[genName] + 500) / 1000;
+                                    // keyLayer.pan_pos is now a number in range [0..1] corresponding to the left-right pan position.
+                                    break;
+                                case 'byte':
+                                    if(keyLayer[genName] >= 0 && keyLayer[genName] <= 127)
+                                    {
+                                        keyLayer[genName + '_byte'] = keyLayer[genName];                                        
+                                    }
+                                    break;
+                                case 'exclusiveClass':
+                                    // do nothing
+                                    keyLayer[genName + '_ID'] = keyLayer[genName];
+                                    break;
+                                default:
+                                    // generators that have units other than the above should already have been deleted
+                                    throw "Unknown unit conversion.";
+                                    break;
+                            }
 
-    	    return rVal;
-    	}
-
-    	function range0to1(generator, enumeratorType, defaultValue)
-    	{
-    	    let rVal = getModGenAmount(generator, enumeratorType, defaultValue);
-
-    	    return (rVal > 1000 ? 1 : (rVal <= 0 ? 0 : rVal / 1000));
-    	}
-
-    	if(generator.keyRange === undefined || generator.sampleID === undefined)
-    	{
-    	    return;
-    	}
-
-    	// See sf2 spec §8.1.3 for the default values set in this function.
-    	loopMode = getModGenAmount(generator, 'sampleModes', 0);
-        panAmount = getModGenAmount(generator, 'pan', 0),
-    	tune = (
-            getModGenAmount(generator, 'coarseTune', 0) +
-            getModGenAmount(generator, 'fineTune', 0) / 100
-        );
-    	scale = getModGenAmount(generator, 'scaleTuning', 100) / 100;
-    	freqVibLFO = getModGenAmount(generator, 'freqVibLFO', 0);
-
-    	for(keyIndex = generator.keyRange.lo; keyIndex <= generator.keyRange.hi; ++keyIndex)
-    	{
-    	    // ji - August 2017
-    	    // The terms presetZone, layer and keylayer:
-    	    // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
-    	    // The sfspec also says that "layer" is an obsolete term for a "presetZone".
-    	    // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
-    	    // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
-    	    // setting of -500, the second a pan setting of +500.
-    	    // I am therefore assuming that a "presetZone" is a preset-level "channel", that is sent at the same time
-            // as other "presetZones" in the same preset, so as to create a fuller sound.
-    	    // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
-    	    // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
-    	    // There will always be a single MIDI output channel, whose pan position is realised by combining the
-    	    // channel's current pan value with the pan values of the key's (note's) "keyLayers".
-    	    // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
-            // is also unlimted.
-    	    keyLayers = preset[keyIndex];
-    	    if(keyLayers === undefined)
-    	    {
-    	        keyLayers = [];
-    	        preset[keyIndex] = keyLayers;
-    	    }
-
-    	    // the first channel for this key is always at keyLayers[0], i.e. preset[keyIndex][0].
-    	    sampleId = getModGenAmount(generator, 'sampleID', 0);
-    	    sampleHeader = parser.sampleHeader[sampleId];
-
-    	    keyLayers.push({
-    	        'sample': parser.sample[sampleId],
-    	        'sampleRate': sampleHeader.sampleRate,
-    	        'basePlaybackRate': Math.pow(
-                    Math.pow(2, 1 / 12),
-                    (
-                    keyIndex -
-                    getModGenAmount(generator, 'overridingRootKey', sampleHeader.originalPitch) +
-                    tune + (sampleHeader.pitchCorrection / 100)
-                    ) * scale
-                ),
-    	        'modEnvToPitch': volModParamValue(generator, 'modEnvToPitch', -12000) / 100,
-    	        'scaleTuning': scale,
-    	        'start':
-                    getModGenAmount(generator, 'startAddrsCoarseOffset', 0) * 32768 +
-                    getModGenAmount(generator, 'startAddrsOffset', 0),
-    	        'end':
-                    getModGenAmount(generator, 'endAddrsCoarseOffset', 0) * 32768 +
-                    getModGenAmount(generator, 'endAddrsOffset', 0),
-    	        'doLoop': (loopMode === 1 || loopMode === 3), // ji
-    	        'loopStart': (
-                    //(sampleHeader.startLoop - sampleHeader.start) +
-                    (sampleHeader.startLoop) +
-                    getModGenAmount(generator, 'startloopAddrsCoarseOffset', 0) * 32768 +
-                    getModGenAmount(generator, 'startloopAddrsOffset', 0)
-                    ),
-    	        'loopEnd': (
-                    //(sampleHeader.endLoop - sampleHeader.start) +
-                    (sampleHeader.endLoop) +
-                    getModGenAmount(generator, 'endloopAddrsCoarseOffset', 0) * 32768 +
-                    getModGenAmount(generator, 'endloopAddrsOffset', 0)
-                    ),
-
-    	        'volDelay': volModParamValue(generator, 'delayVolEnv', -12000),
-    	        'volAttack': volModParamValue(generator, 'attackVolEnv', -12000),
-    	        'volHold': volModParamValue(generator, 'holdVolEnv', -12000),
-    	        'volDecay': volModParamValue(generator, 'decayVolEnv', -12000),
-    	        'volSustain': range0to1(generator, 'sustainVolEnv', 0), // see spec
-    	        'volRelease': volModParamValue(generator, 'releaseVolEnv', -12000),
-
-    	        'modDelay': volModParamValue(generator, 'delayModEnv', -12000),
-    	        'modAttack': volModParamValue(generator, 'attackModEnv', -12000),
-    	        'modHold': volModParamValue(generator, 'holdModEnv', -12000),
-    	        'modDecay': volModParamValue(generator, 'decayModEnv', -12000),
-    	        'modSustain': range0to1(generator, 'sustainModEnv', 0), // see spec
-    	        'modRelease': volModParamValue(generator, 'releaseModEnv', -12000),
-
-    	        'initialFilterFc': getModGenAmount(generator, 'initialFilterFc', 13500),
-    	        'modEnvToFilterFc': getModGenAmount(generator, 'modEnvToFilterFc', 0) / 100,
-    	        'initialFilterQ': getModGenAmount(generator, 'initialFilterQ', 0) / 100,
-    	        'freqVibLFO': freqVibLFO ? Math.pow(2, freqVibLFO / 1200) * 8.176 : undefined,
-
-    	        // the following were not set by gree
-    	        'modLfoToPitch': volModParamValue(generator, 'modLfoToPitch', -12000) / 100,
-    	        'vibLfoToPitch': volModParamValue(generator, 'vibLfoToPitch', -12000) / 100,
-    	        'modLfoToFilterFc': getModGenAmount(generator, 'modLfoToFilterFc', 0) / 100,
-    	        'modLfoToVolume': getModGenAmount(generator, 'modLfoToVolume', 0) / 100,   	        
-    	        'chorusEffectsSend': range0to1(generator, 'chorusEffectsSend', 0) / 100,
-    	        'reverbEffectsSend': range0to1(generator, 'reverbEffectsSend', 0) / 100,
-    	        'pan' : (panAmount + 500) / 1000,
-    	        'delayModLFO': volModParamValue(generator, 'delayModLFO', -12000), // in Arachno Grand Piano
-    	        'freqModLFO': getModGenAmount(generator, 'freqModLFO', 0),
-    	        'delayVibLFO': volModParamValue(generator, 'delayVibLFO', -12000), // in Arachno Grand Piano
-    	        'keynumToModEnvHold': getModGenAmount(generator, 'keynumToModEnvHold', 0),
-    	        'keynumToModEnvDecay': getModGenAmount(generator, 'keynumToModEnvDecay', 0),
-    	        'keynumToVolEnvHold': getModGenAmount(generator, 'keynumToVolEnvHold', 0),
-    	        'keynumToVolEnvDecay': getModGenAmount(generator, 'keynumToVolEnvDecay', 0),
-    	        'velRange': generator['velRange'], // undefined, or an object like generator.keyRange having lo and hi values
-    	        'keynum': getModGenAmount(generator, 'keynum', -1),
-    	        'velocity': getModGenAmount(generator, 'velocity', -1),
-    	        'initialAttenuation': getModGenAmount(generator, 'initialAttenuation', 0),
-    	        'exclusiveClass': getModGenAmount(generator, 'exclusiveClass', 0)
-    	    }); // end push
-    	}
+                            delete keyLayer[genName];
+                        }
+                    }
+                }
+            }
+        }
     },
 
 	// Parses the Uin8Array to create this soundFont's banks.
@@ -536,9 +565,10 @@ WebMIDI.soundFont = (function()
 					instr = instrument[j];
 					for(k = 0; k < instr.info.length; ++k)
 					{
-						createKeyInfo(parser, instr.info[k].generator, bank[patchIndex]);
+					    getPresetAmounts(parser.GeneratorEnumeratorTable, instr.info[k].generator, bank[patchIndex]);
 					}
 				}
+				setPresetValues(parser, bank[patchIndex]);
 			}
 
 			return banks;
