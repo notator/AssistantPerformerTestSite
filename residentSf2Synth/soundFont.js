@@ -254,9 +254,12 @@ WebMIDI.soundFont = (function()
                                 case 'volModSec': // (original unit: timecent) delayVolEnv, delayModEnv etc.
                                     keyLayer[genName + '_sec'] = (keyLayer[genName] === 0) ? 0 : Math.pow(2, keyLayer[genName] / 1200);
                                     break;
-                                case 'keyVolModSec': // (original unit: timecents/key) delayVolEnv, delayModEnv etc.
-                                    keyLayer[genName] *= keyIndex; // ?
-                                    keyLayer[genName + '_sec'] = (keyLayer[genName] === 0) ? 0 : Math.pow(2, keyLayer[genName] / 1200);
+                                case 'keynumToFactor': // (original unit: timecents/keyNumber) keynumToModEnvHold, keynumToModEnvDecay etc.
+                                    // ji Sept 2017: This formula was found by guesswork, so it needs verifying.
+                                    // It does, however, satisfy the descriptions of the keynumTo... amounts in the spec.
+                                    // Simply multiply the corresponding duration by this factor to get the final value.
+                                    // The default amount in the soundFont file is 0, which gives a default factor 1 here.
+                                    keyLayer[genName + '_factor'] = Math.pow(2, ((60 - keyIndex) * keyLayer[genName]) / 1200);
                                     break;
                                 case 'centToSemitone': // (original unit: 'cent' or 'cent fs') modLfoToPitch etc .
                                     keyLayer[genName + '_semitones'] = keyLayer[genName] / 100;

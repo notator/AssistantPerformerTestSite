@@ -740,16 +740,16 @@ WebMIDI.soundFontParser = (function()
 	  { 'name': 'decayModEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
 	  { 'name': 'sustainModEnv', 'default': 0, 'conv': 'thouToPercent' },  // original unit: -0.1%
 	  { 'name': 'releaseModEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
-	  { 'name': 'keynumToModEnvHold', 'default': 0, 'conv': 'keyVolModSec' }, // original unit: timecents/key
-	  { 'name': 'keynumToModEnvDecay', 'default': 0, 'conv': 'keyVolModSec' }, // original unit: timecents/key
+	  { 'name': 'keynumToModEnvHold', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
+	  { 'name': 'keynumToModEnvDecay', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumer
 	  { 'name': 'delayVolEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
 	  { 'name': 'attackVolEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
 	  { 'name': 'holdVolEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
 	  { 'name': 'decayVolEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
 	  { 'name': 'sustainVolEnv', 'default': 0, 'conv': 'cBtoDB' },  // original unit: centibels attenuation
 	  { 'name': 'releaseVolEnv', 'default': -12000, 'conv': 'volModSec' },  // original unit: timecent
-	  { 'name': 'keynumToVolEnvHold', 'default': 0, 'conv': 'keyVolModSec' }, // original unit: timecents/key
-	  { 'name': 'keynumToVolEnvDecay', 'default': 0, 'conv': 'keyVolModSec' }, // original unit: timecents/key
+	  { 'name': 'keynumToVolEnvHold', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
+	  { 'name': 'keynumToVolEnvDecay', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
 	  { 'name': 'instrument', 'default': 0 }, // (deleted before conv conversion)
 	  , // 42
 	  { 'name': 'keyRange', 'default': 127 }, // (deleted before conv conversion) 
