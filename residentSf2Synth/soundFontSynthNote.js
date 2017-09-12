@@ -34,15 +34,14 @@ WebMIDI.soundFontSynthNote = (function()
 		this.pitchBendSensitivity = midi.pitchBendSensitivity;
 
 		this.buffer = keyLayers[0].sample;
+		//this.sampleRate = keyLayers[0].sampleRate;
 		this.playbackRate = keyLayers[0].basePlaybackRate;
-		this.sampleRate = keyLayers[0].sampleRate;
-		this.modEnvToPitch = keyLayers[0].modEnvToPitch;
+		this.modEnvToPitch_scaled = keyLayers[0].modEnvToPitch_scaled;
 
 		// state
 		this.startTime = ctx.currentTime;
-		this.computedPlaybackRate = this.playbackRate;
 
-		// audio node
+	    // audio node
 		this.audioBuffer = null;
 		this.bufferSource = null;
 		this.panner = null;
@@ -86,47 +85,81 @@ WebMIDI.soundFontSynthNote = (function()
 	    // N.B. the returned value of such unused generators is probably correct, but should be checked
 	    // in soundFont.js. The position of the decimal point should be specially carefully checked.
 
-	    var
+	    let
 		buffer, channelData, bufferSource, filter, panner,
 		output, outputGain, baseFreq, peekFreq, sustainFreq,
 		ctx = this.ctx,
 		keyLayers = this.keyLayers,
 		sample = this.buffer,
 		now = this.ctx.currentTime,
-        // The following keylayers[0] attributes are the *durations* of their respective envelope phases in seconds:
-        //   volDelay, volAttack, volHold, volDelay, volRelease,
-        //   modDelay, modAttack, modHold, modDelay, modRelease,
-        // The volSustain and modSustain attributes are *factors* in the range [1.00 .. 0.00] (inclusive).
-        // In general, all keyLayer attributes have directly usable values here in this file.
-        // The conversions from the integer amounts in the soundFont have been done earlier.
-        volDelay = now + keyLayers[0].volDelay,
-		volAttack = volDelay + keyLayers[0].volAttack,
-        volHold = volAttack + keyLayers[0].volHold,
-        volDecay = volHold + (keyLayers[0].volDecay * keyLayers[0].volSustain), // see spec! ji
+        doLoop = (keyLayers[0].loopFlags === 1 || keyLayers[0].loopFlags === 3),
+        // All keyLayer attributes should have directly usable values here in this (runtime) file.
+        // The conversions from the integer amounts in the soundFont have been done earlier (at load time).
+        volDelayEndtime = now + keyLayers[0].volDelayDuration_sec,
+		volAttackEndtime = volDelayEndtime + keyLayers[0].volAttackDuration_sec,
+        volHoldEndtime = volAttackEndtime + keyLayers[0].volHoldDuration_sec,
+        volDecayEndtime = volHoldEndtime + keyLayers[0].volDecayDuration_sec,
 
-        modDelay = now + keyLayers[0].modDelay,
-		modAttack = modDelay + keyLayers[0].modAttack,
-        modHold = modAttack + keyLayers[0].modHold,
-        modDecay = modHold + (keyLayers[0].modDecay * keyLayers[0].modSustain), // see spec! ji
+        modDelayEndtime = now + keyLayers[0].modDelayDuration_sec,
+		modAttackEndtime = modDelayEndtime + keyLayers[0].modAttackDuration_sec,
+        modHoldEndtime = modAttackEndtime + keyLayers[0].modHoldDuration_sec,
+        modDecayEndtime = modHoldEndtime + keyLayers[0].modDecayDuration_sec,
 
         volLevel = this.volume * Math.pow((this.velocity / 127), 2), // ji 21.08.2017
 
 		loopStart = 0,
 		loopEnd = 0,
-		startTime = keyLayers[0].start / this.sampleRate;
+		startTime = keyLayers[0].startTime; // keyLayers[0].startTime is keyLayers[0].startAddressOffset / keyLayers[0].sampleRate;
 
-		function amountToFreq(val)
+		function updatePitchbend(that)
 		{
-			return Math.pow(2, (val - 6900) / 1200) * 440;
+		    let
+            playbackRate = that.playbackRate,
+            pitchBendSensitivity = that.pitchBendSensitivity,
+            pitchBend = that.pitchbend,
+            keyLayer = that.keyLayers[0];
+
+		    // ji: I've modified the gree code for this function,
+		    // but I don't really understand precisely what it is supposed to do...
+		    // Why does the playback rate change over time??
+            // Another case of oddly named attributes??
+		    function schedulePlaybackRate(that)
+		    {
+		        let
+                playbackRate = that.bufferSource.playbackRate,
+                computed = that.computedPlaybackRate,
+                start = that.startTime,
+                keyLayer = that.keyLayers[0],
+                modAttackEndtime = start + keyLayer.modDelayDuration_sec + keyLayer.modAttackDuration_sec,
+                modDecayEndtime = modAttackEndtime + keyLayer.modDecayDuration_sec,
+
+                // modEnvToPitch_scaled has been created from modEnvToPitch and scaleTuning earlier.
+                peekPitch = computed * Math.pow(Math.pow(2, 1 / 12), that.modEnvToPitch_scaled);
+
+		        playbackRate.cancelScheduledValues(0);
+		        playbackRate.setValueAtTime(computed, start);
+		        playbackRate.linearRampToValueAtTime(peekPitch, modAttackEndtime);
+		        playbackRate.linearRampToValueAtTime(peekPitch, modHoldEndtime);
+		        // this line is especially opaque...
+                // gree:
+		        //     playbackRate.linearRampToValueAtTime(computed + (peekPitch - computed) * (1 - keyLayer.sustainModEnv), modDecayEndtime);
+		        // ji:
+		        playbackRate.linearRampToValueAtTime(computed, modDecayEndtime);
+		    }
+
+		    that.computedPlaybackRate = playbackRate * Math.pow(Math.pow(2, 1 / 12),
+                (pitchBendSensitivity * (that.pitchBend / (that.pitchBend < 0 ? 8192 : 8191))) * keyLayer.scaleTuning_factor);
+
+		    schedulePlaybackRate(that);
 		}
 
-		if(keyLayers[0].doLoop === true)
+		if(doLoop === true)
 		{
-			loopStart = keyLayers[0].loopStart / this.sampleRate;
-			loopEnd = keyLayers[0].loopEnd / this.sampleRate;
+		    loopStart = keyLayers[0].loopStart_sec; // = loopStart_samplePos / sampleRate;
+		    loopEnd = keyLayers[0].loopEnd_sec; // loopEnd_samplePos / sampleRate;
 		}
-		sample = sample.subarray(0, sample.length + keyLayers[0].end);
-		this.audioBuffer = ctx.createBuffer(1, sample.length, this.sampleRate);
+		sample = sample.subarray(0, sample.length + keyLayers[0].endAddressOffset);
+		this.audioBuffer = ctx.createBuffer(1, sample.length, keyLayers[0].sampleRate);
 		buffer = this.audioBuffer;
 		channelData = buffer.getChannelData(0);
 		channelData.set(sample);
@@ -135,14 +168,12 @@ WebMIDI.soundFontSynthNote = (function()
 		this.bufferSource = ctx.createBufferSource();
 		bufferSource = this.bufferSource;
 		bufferSource.buffer = buffer;
-		/* ji begin changes December 2015 */
-		// This line was originally:
+		// The original gree code here was:
 		//    bufferSource.loop = (this.channel !== 9);
-		bufferSource.loop = (this.channel !== 9) && (keyLayers[0].doLoop === true);
-		/* ji end changes December 2015 */
+		bufferSource.loop = (this.channel !== 9 && doLoop ); // if there are any channel 9 instruments that loop, delete that condition!
 		bufferSource.loopStart = loopStart;
 		bufferSource.loopEnd = loopEnd;
-		this.updatePitchBend(this.pitchBend);
+		updatePitchbend(this);
 
 		// audio node
 		this.panner = ctx.createPanner();
@@ -169,34 +200,36 @@ WebMIDI.soundFontSynthNote = (function()
 		//---------------------------------------------------------------------------
 
 		outputGain.setValueAtTime(0, now);
-		if(volDelay > now)
+		if(volDelayEndtime > now)
 		{
-		    outputGain.linearRampToValueAtTime(0, volDelay);
+		    outputGain.linearRampToValueAtTime(0, volDelayEndtime);
 		}
-		outputGain.linearRampToValueAtTime(volLevel, volAttack);
-	    outputGain.linearRampToValueAtTime(volLevel, volHold);
-	    outputGain.linearRampToValueAtTime(volLevel * (1 - keyLayers[0].volSustain), volDecay);
+		outputGain.linearRampToValueAtTime(volLevel, volAttackEndtime);
+	    outputGain.linearRampToValueAtTime(volLevel, volHoldEndtime);
+	    outputGain.linearRampToValueAtTime((volLevel * keyLayers[0].volSustainLevel_factor), volDecayEndtime);
 
-		// begin ji changes November 2015.
-		// The following original line was a (deliberate, forgotten?) gree bug that threw an out-of-range
+		// ji: The following original gree line was a (deliberate, forgotten?) gree bug that threw an out-of-range
 		// exception when keyLayers[0]['initialFilterQ'] > 0:
 		//     filter.Q.setValueAtTime(keyLayers[0]['initialFilterQ'] * Math.pow(10, 200), now);
-		// The following line seems to work, but is it realy correct?
-		filter.Q.setValueAtTime(keyLayers[0].initialFilterQ, now);
-		// end ji ji changes November 2015
+        //
+	    // https://www.w3.org/TR/webaudio/#the-biquadfilternode-interface
+	    // says that the Q value is a resonance frequency in decibels.
+	    // But is this what the soundFont spec is defining?
+	    // The following line seems to work, but is it really correct?
+		filter.Q.setValueAtTime(keyLayers[0].initialFilterQ_dB, now);
 
-		baseFreq = amountToFreq(keyLayers[0].initialFilterFc);
-		peekFreq = amountToFreq(keyLayers[0].initialFilterFc + keyLayers[0].modEnvToFilterFc);
-		sustainFreq = baseFreq + ((peekFreq - baseFreq) * (1 - keyLayers[0].modSustain));
+		baseFreq = keyLayers[0].initialFilterFc_Hz;
+		peekFreq = keyLayers[0].initialFilterFc_Hz + keyLayers[0].modEnvToFilterFc_Hz;
+		sustainFreq = baseFreq + ((peekFreq - baseFreq) * (1 - keyLayers[0].sustainModEnv_factor));
 
 		filter.frequency.setValueAtTime(baseFreq, now);
-		if(modDelay > now)
+		if(modDelayEndtime > now)
 		{
-		    filter.frequency.linearRampToValueAtTime(baseFreq, modDelay);
+		    filter.frequency.linearRampToValueAtTime(baseFreq, modDelayEndtime);
 		}
-		filter.frequency.linearRampToValueAtTime(peekFreq, modAttack);
-		filter.frequency.linearRampToValueAtTime(peekFreq, modHold);
-		filter.frequency.linearRampToValueAtTime(sustainFreq, modDecay);
+		filter.frequency.linearRampToValueAtTime(peekFreq, modAttackEndtime);
+		filter.frequency.linearRampToValueAtTime(peekFreq, modHoldEndtime);
+		filter.frequency.linearRampToValueAtTime(sustainFreq, modDecayEndtime);
 
 		// connect
 		bufferSource.connect(filter);
@@ -216,8 +249,8 @@ WebMIDI.soundFontSynthNote = (function()
 		bufferSource = this.bufferSource,
 		output = this.gainOutput,
 		now = this.ctx.currentTime,
-        volRelease = keyLayers[0].volRelease,
-        modRelease = keyLayers[0].modRelease,
+        volRelease = keyLayers[0].volReleaseDuration_sec,
+        modRelease = keyLayers[0].modReleaseDuration_sec,
 		volEndTime = now + volRelease,
 		modEndTime = now + modRelease;
 
@@ -230,19 +263,19 @@ WebMIDI.soundFontSynthNote = (function()
 		// Release
 		//---------------------------------------------------------------------------
 		// begin original gree
-		//output.gain.cancelScheduledValues(0);
-		//output.gain.linearRampToValueAtTime(0, volEndTime);
-		//bufferSource.playbackRate.cancelScheduledValues(0);
-		//bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
+		output.gain.cancelScheduledValues(0);
+		output.gain.linearRampToValueAtTime(0, volEndTime);
+		bufferSource.playbackRate.cancelScheduledValues(0);
+		bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
 		// end original gree
 
 		// begin ji
 	    // 1. use setTargetAtTime() instead of linearRampToValueAtTime(0, volEndTime). (Suggested by Timothée Jourde on GitHub).
 	    // 2. call cancelScheduledValues(...) _after_ setting the envelopes, not before.
-		output.gain.setTargetAtTime(0, now, volRelease);
-		output.gain.cancelScheduledValues(volEndTime);
-		bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
-		bufferSource.playbackRate.cancelScheduledValues(modEndTime);
+		//output.gain.setTargetAtTime(0, now, volRelease);
+		//output.gain.cancelScheduledValues(volEndTime);
+		//bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
+		//bufferSource.playbackRate.cancelScheduledValues(modEndTime);
 		// end ji
 
 		bufferSource.loop = false;
@@ -258,39 +291,7 @@ WebMIDI.soundFontSynthNote = (function()
 		  			note.panner.disconnect(0);
 		  			note.gainOutput.disconnect(0);
 		  		};
-			}(this)),
-		  keyLayers[0].volRelease
-		);
-	};
-
-	SoundFontSynthNote.prototype.schedulePlaybackRate = function()
-	{
-		var
-		playbackRate = this.bufferSource.playbackRate,
-		computed = this.computedPlaybackRate,
-		start = this.startTime,
-		keyLayers = this.keyLayers,
-		modAttack = start + keyLayers[0].modAttack,
-		modDecay = modAttack + keyLayers[0].modDecay,
-		peekPitch = computed * Math.pow(Math.pow(2, 1 / 12), this.modEnvToPitch * keyLayers[0].scaleTuning);
-
-		playbackRate.cancelScheduledValues(0);
-		playbackRate.setValueAtTime(computed, start);
-		playbackRate.linearRampToValueAtTime(peekPitch, modAttack);
-		playbackRate.linearRampToValueAtTime(computed + (peekPitch - computed) * (1 - keyLayers[0].modSustain), modDecay);
-	};
-
-	SoundFontSynthNote.prototype.updatePitchBend = function(pitchBend)
-	{
-		this.computedPlaybackRate = this.playbackRate * Math.pow(
-		  Math.pow(2, 1 / 12),
-		  (
-			this.pitchBendSensitivity * (
-			  pitchBend / (pitchBend < 0 ? 8192 : 8191)
-			)
-		  ) * this.keyLayers[0].scaleTuning
-		);
-		this.schedulePlaybackRate();
+			}(this)), volRelease + 0.1);
 	};
 
 	return API;

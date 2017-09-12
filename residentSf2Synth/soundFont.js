@@ -126,7 +126,7 @@ WebMIDI.soundFont = (function()
     // floating point) values that can subsequently be used more conveniently (in soundFontSynthNote.js).
     getPresetAmounts = function(generatorTable, generator, preset)
     {
-        // The terms presetZone, layer and keylayer:
+        // The terms presetZone, layer and keyLayer:
         // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
         // The sfspec also says that "layer" is an obsolete term for a "presetZone".
         // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
@@ -179,16 +179,16 @@ WebMIDI.soundFont = (function()
     },
 
     // This function converts the (integer) values created by the previous function to (possibly floating-point)values
-    // that will be more convenient to use subsequently.
-    // It also combines some of the original attributes into new attributes (whicj I call pseudoGenerators in this code).
+    // that will be more convenient to use at runtime.
+    // It also combines some of the original attributes into new attributes (which I call pseudoGenerators in this code).
     // Newly created attributes are, if meaningful given names that are the original names concatenated with their unit
     // of measurement (delayModLFO_sec, chorusEffectsSend_percent etc.).
     // Attributes that have been consumed, and are no longer needed, are deleted.
     setPresetValues = function (parser, preset)
     {
-        let keyIndex, keyLayers, layerIndex, nLayers, keyLayer,
+        let keyIndex, keyLayers, layerIndex, nLayers, keyLayer, amount,
             generatorTable = parser.GeneratorEnumeratorTable, nGenerators = generatorTable.length,
-            genIndex = 0, gen, genName;
+            genIndex = 0, gen, genName, newGenName;
 
         // PseudoGenerators are attributes of the keyLayer that are calculated
         // from the generators in the soundFont (that already exist in the keyLayer).
@@ -199,21 +199,26 @@ WebMIDI.soundFont = (function()
                 sampleHeader = parser.sampleHeader[kl.sampleID],
                 tune = kl.coarseTune + kl.fineTune / 100, // semitones              
                 rootKey = (kl.overridingRootKey === -1) ? sampleHeader.originalPitch : kl.overridingRootKey,
-                scale = kl.scaleTuning / 100;
+                scaleTuning = kl.scaleTuning / 100;
 
             kl.sample = parser.sample[kl.sampleID];
             kl.sampleRate = sampleHeader.sampleRate;
-            kl.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scale);
-            kl.start = (kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset;
-            kl.end = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
-            kl.doLoop = (kl.loop === 1 || kl.loop === 3);
-            if(kl.doLoop === true)
-            {
-                kl.loopStart = sampleHeader.startLoop + (kl.startloopAddrsCoarseOffset * 32768) + kl.startloopAddrsOffset;
-                kl.loopEnd = sampleHeader.endLoop + (kl.endloopAddrsCoarseOffset * 32768) + kl.endloopAddrsOffset;
-            }
+            kl.startTime_sec = ((kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset) / kl.sampleRate;
+            kl.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scaleTuning);
+
+            kl.endAddressOffset = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
+
             kl.velocityMax = kl.velRange & 0xFF;
             kl.velocityMin = (kl.velRange & 0xFF00) / 32767;
+
+            kl.modEnvToPitch_scaled = kl.modEnvToPitch * scaleTuning;
+
+            kl.loopFlags = kl.sampleModes & 3;
+            if(kl.loopFlags === 1 || kl.loopFlags === 3)
+            {
+                kl.loopStart_sec = (sampleHeader.startLoop + (kl.startloopAddrsCoarseOffset * 32768) + kl.startloopAddrsOffset) / kl.sampleRate;
+                kl.loopEnd_sec = (sampleHeader.endLoop + (kl.endloopAddrsCoarseOffset * 32768) + kl.endloopAddrsOffset) / kl.sampleRate;
+            }
 
             delete kl.sampleID;
             delete kl.coarseTune; // semitones
@@ -230,7 +235,10 @@ WebMIDI.soundFont = (function()
             delete kl.instrument;
             delete kl.keyRange;
             delete kl.velRange;
-            delete kl.scaleTuning;
+            delete kl.modEnvToPitch;
+            delete kl.sampleModes;
+            // kl.scaleTuning is required in SchedulePlaybackRate()
+            // kl.sampleRate is required for creating AudioBuffer.
         }
             
         for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
@@ -249,59 +257,124 @@ WebMIDI.soundFont = (function()
                         genName = gen.name;
                         if(keyLayer[genName] !== undefined)
                         {
+                            amount = keyLayer[genName];
+                            delete keyLayer[genName];
+
                             switch(gen.conv)
                             {
-                                case 'volModSec': // (original unit: timecent) delayVolEnv, delayModEnv etc.
-                                    keyLayer[genName + '_sec'] = (keyLayer[genName] === 0) ? 0 : Math.pow(2, keyLayer[genName] / 1200);
+                                case 'timecentToSec': // (original unit: timecent) delayVolEnv, delayModEnv etc.
+                                    switch(genName)
+                                    {
+                                        case 'delayModEnv':
+                                            newGenName = 'modDelayDuration_sec';
+                                            break;
+                                        case 'attackModEnv':
+                                            newGenName = 'modAttackDuration_sec';
+                                            break;
+                                        case 'holdModEnv':
+                                            newGenName = 'modHoldDuration_sec';
+                                            break;
+                                        case 'decayModEnv':
+                                            newGenName = 'decayModEnv_sec';  // see below in this function
+                                            break;
+                                        case 'releaseModEnv':
+                                            newGenName = 'modReleaseDuration_sec';
+                                            break;
+                                        case 'delayVolEnv':
+                                            newGenName = 'volDelayDuration_sec';
+                                            break;
+                                        case 'attackVolEnv':
+                                            newGenName = 'volAttackDuration_sec';
+                                            break;
+                                        case 'holdVolEnv':
+                                            newGenName = 'volHoldDuration_sec';
+                                            break;
+                                        case 'decayVolEnv':
+                                            newGenName = 'decayVolEnv_sec';  // see below in this function
+                                            break;
+                                        case 'releaseVolEnv':
+                                            newGenName = 'volReleaseDuration_sec';
+                                            break;
+                                        case 'delayModLFO':
+                                            newGenName = 'modLFODelayDuration_sec';
+                                            break;
+                                        case 'delayVibLFO':
+                                            newGenName = 'vibLFODelayDuration_sec'
+                                            break;
+                                        default:
+                                            throw "Wrong generator for this conversion.";
+                                            break;
+                                    }
+                                    keyLayer[newGenName] = (amount === 0) ? 0 : Math.pow(2, amount / 1200);
                                     break;
                                 case 'keynumToFactor': // (original unit: timecents/keyNumber) keynumToModEnvHold, keynumToModEnvDecay etc.
-                                    // ji Sept 2017: This formula was found by guesswork, so it needs verifying.
+                                    // ji Sept 2017: This formula needs verifying.
                                     // It does, however, satisfy the descriptions of the keynumTo... amounts in the spec.
                                     // Simply multiply the corresponding duration by this factor to get the final value.
                                     // The default amount in the soundFont file is 0, which gives a default factor 1 here.
-                                    keyLayer[genName + '_factor'] = Math.pow(2, ((60 - keyIndex) * keyLayer[genName]) / 1200);
+                                    keyLayer[genName + '_factor'] = Math.pow(2, ((60 - keyIndex) * amount) / 1200);
                                     break;
-                                case 'centToSemitone': // (original unit: 'cent' or 'cent fs') modLfoToPitch etc .
-                                    keyLayer[genName + '_semitones'] = keyLayer[genName] / 100;
+                                case 'div100': // original is int in range [0..100] (e.g. scaleTuning)
+                                    keyLayer[genName + '_factor'] = amount / 100;
                                     break;
-                                case 'cent': // (original unit: cent) modLfoToFilterFc etc.
-                                    // no conversion
-                                    keyLayer[genName + '_cents'] = keyLayer[genName];
+                                case 'div1000': // (original unit: 0.1%) chorusEffectsSend etc.
+                                    keyLayer[genName + '_factor'] = amount / 1000;
                                     break;
-                                case 'bitFlags': // sampleModes
-                                    // no conversion
-                                    keyLayer[genName + '_bitFlags'] = keyLayer[genName];
+                                case 'centsToSemitones':
+                                    keyLayer[genName + '_semitones'] = amount / 100;
+                                    break;
+                                case 'centsToHz':
+                                    // *************** formula needs checking/correcting
+                                    keyLayer[genName + '_Hz'] = amount / 100;
+                                    break;
+                                case 'centFsToSemitone': // (original unit: centFs) modLfoToPitch etc .
+                                    // *************** formula needs checking/correcting
+                                    keyLayer[genName + '_semitones'] = amount / 100;
+                                    break;
+                                case 'centFsToHz': // (original unit: centFs) modLfoToFilterFc etc.
+                                    // *************** this is the gree formula. Needs checking/correcting                                    
+                                    keyLayer[genName + '_Hz'] = Math.pow(2, (amount - 6900) / 1200) * 440;
                                     break;
                                 case 'cBtoDB': // (original unit: centibels) initialFilterQ etc.
-                                    keyLayer[genName + '_dB'] = keyLayer[genName] / 10;
-                                    break;
-                                case 'thouToPercent': // (original unit: 0.1%) chorusEffectsSend etc.
-                                    keyLayer[genName + '_percent'] = keyLayer[genName] / 10;                                   
+                                    keyLayer[genName + '_dB'] = amount / 10;
                                     break;
                                 case 'panPos': // pan (see sfspec)
-                                    keyLayer[genName + '_pos'] = (keyLayer[genName] + 500) / 1000;
+                                    keyLayer[genName + '_pos'] = (amount + 500) / 1000;
                                     // keyLayer.pan_pos is now a number in range [0..1] corresponding to the left-right pan position.
                                     break;
                                 case 'byte':
-                                    if(keyLayer[genName] >= 0 && keyLayer[genName] <= 127)
+                                    if(amount >= 0 && amount <= 127)
                                     {
-                                        keyLayer[genName + '_byte'] = keyLayer[genName];                                        
+                                        keyLayer[genName + '_byte'] = amount;                                        
                                     }
                                     break;
                                 case 'exclusiveClass':
                                     // do nothing
-                                    keyLayer[genName + '_ID'] = keyLayer[genName];
+                                    keyLayer[genName + '_ID'] = amount;
                                     break;
                                 default:
                                     // generators that have units other than the above should already have been deleted
                                     throw "Unknown unit conversion.";
                                     break;
                             }
-
-                            delete keyLayer[genName];
                         }
                     }
                 }
+
+                keyLayer['modHoldDuration_sec'] *= keyLayer['keynumToModEnvHold_factor'];
+                delete keyLayer['keynumToModEnvHold_factor'];
+                keyLayer['modDecayDuration_sec'] = keyLayer['decayModEnv_sec'] * keyLayer['keynumToModEnvDecay_factor'] * keyLayer['sustainModEnv_factor']; // see spec!                
+                delete keyLayer['decayModEnv_sec'];
+                delete keyLayer['keynumToModEnvDecay_factor'];
+                //delete keyLayer['sustainModEnv_factor'];
+
+                keyLayer['volHoldDuration_sec'] *= keyLayer['keynumToVolEnvHold_factor'];
+                delete keyLayer['keynumToVolEnvHold_factor'];
+                keyLayer['volDecayDuration_sec'] = keyLayer['decayVolEnv_sec'] * keyLayer['keynumToVolEnvDecay_factor'] * keyLayer['sustainVolEnv_dB'] / 100; // see spec!
+                keyLayer['volSustainLevel_factor'] = (100 - keyLayer['sustainVolEnv_dB']) / 100;
+                delete keyLayer['decayVolEnv_sec'];
+                delete keyLayer['keynumToVolEnvDecay_factor'];
+                delete keyLayer['sustainVolEnv_dB'];
             }
         }
     },
