@@ -34,8 +34,6 @@ WebMIDI.soundFontSynthNote = (function()
 		this.pitchBendSensitivity = midi.pitchBendSensitivity;
 
 		this.buffer = keyLayers[0].sample;
-		//this.sampleRate = keyLayers[0].sampleRate;
-		this.playbackRate = keyLayers[0].basePlaybackRate;
 		this.modEnvToPitch_scaled = keyLayers[0].modEnvToPitch_scaled;
 
 		// state
@@ -111,48 +109,6 @@ WebMIDI.soundFontSynthNote = (function()
 		loopEnd = 0,
 		startTime = keyLayers[0].startTime; // keyLayers[0].startTime is keyLayers[0].startAddressOffset / keyLayers[0].sampleRate;
 
-		function updatePitchbend(that)
-		{
-		    let
-            playbackRate = that.playbackRate,
-            pitchBendSensitivity = that.pitchBendSensitivity,
-            pitchBend = that.pitchbend,
-            keyLayer = that.keyLayers[0];
-
-		    // ji: I've modified the gree code for this function,
-		    // but I don't really understand precisely what it is supposed to do...
-		    // Why does the playback rate change over time??
-            // Another case of oddly named attributes??
-		    function schedulePlaybackRate(that)
-		    {
-		        let
-                playbackRate = that.bufferSource.playbackRate,
-                computed = that.computedPlaybackRate,
-                start = that.startTime,
-                keyLayer = that.keyLayers[0],
-                modAttackEndtime = start + keyLayer.modDelayDuration_sec + keyLayer.modAttackDuration_sec,
-                modDecayEndtime = modAttackEndtime + keyLayer.modDecayDuration_sec,
-
-                // modEnvToPitch_scaled has been created from modEnvToPitch and scaleTuning earlier.
-                peekPitch = computed * Math.pow(Math.pow(2, 1 / 12), that.modEnvToPitch_scaled);
-
-		        playbackRate.cancelScheduledValues(0);
-		        playbackRate.setValueAtTime(computed, start);
-		        playbackRate.linearRampToValueAtTime(peekPitch, modAttackEndtime);
-		        playbackRate.linearRampToValueAtTime(peekPitch, modHoldEndtime);
-		        // this line is especially opaque...
-                // gree:
-		        //     playbackRate.linearRampToValueAtTime(computed + (peekPitch - computed) * (1 - keyLayer.sustainModEnv), modDecayEndtime);
-		        // ji:
-		        playbackRate.linearRampToValueAtTime(computed, modDecayEndtime);
-		    }
-
-		    that.computedPlaybackRate = playbackRate * Math.pow(Math.pow(2, 1 / 12),
-                (pitchBendSensitivity * (that.pitchBend / (that.pitchBend < 0 ? 8192 : 8191))) * keyLayer.scaleTuning_factor);
-
-		    schedulePlaybackRate(that);
-		}
-
 		if(doLoop === true)
 		{
 		    loopStart = keyLayers[0].loopStart_sec; // = loopStart_samplePos / sampleRate;
@@ -173,7 +129,7 @@ WebMIDI.soundFontSynthNote = (function()
 		bufferSource.loop = (this.channel !== 9 && doLoop ); // if there are any channel 9 instruments that loop, delete that condition!
 		bufferSource.loopStart = loopStart;
 		bufferSource.loopEnd = loopEnd;
-		updatePitchbend(this);
+		this.updatePitchbend(this.pitchBend);
 
 		// audio node
 		this.panner = ctx.createPanner();
@@ -240,7 +196,6 @@ WebMIDI.soundFontSynthNote = (function()
 		// fire
 		bufferSource.start(0, startTime);
 	};
-
     // current ji noteOff function
 	SoundFontSynthNote.prototype.noteOff = function()
 	{
@@ -289,9 +244,32 @@ WebMIDI.soundFontSynthNote = (function()
 		  		{
 		  			note.bufferSource.disconnect(0);
 		  			note.panner.disconnect(0);
+		  			note.filter.disconnect(0);
 		  			note.gainOutput.disconnect(0);
 		  		};
 			}(this)), volRelease + 0.1);
+	};
+
+    // This function can be called by a note while it is playing.
+    // The pitchBend argument is a 14-bit int value (in range [-8192..+8191]). 
+	SoundFontSynthNote.prototype.updatePitchbend = function(pitchBend)
+	{
+	    let
+        playbackRate = this.bufferSource.playbackRate,
+        start = this.startTime,
+        keyLayer = this.keyLayers[0],
+        modAttackEndtime = start + keyLayer.modDelayDuration_sec + keyLayer.modAttackDuration_sec,
+        computedPlaybackRate = keyLayer.basePlaybackRate * Math.pow(Math.pow(2, 1 / 12),
+            (this.pitchBendSensitivity * (pitchBend / (pitchBend < 0 ? 8192 : 8191))) * keyLayer.scaleTuning_factor);
+
+	    if(pitchBend < -8192 || pitchBend > 8191)
+	    {
+	        throw "Illegal pitchBend value.";
+	    }
+
+	    this.pitchBend = pitchBend;
+
+	    playbackRate.setValueAtTime(computedPlaybackRate, modAttackEndtime);
 	};
 
 	return API;
