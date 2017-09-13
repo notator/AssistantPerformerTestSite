@@ -299,7 +299,7 @@ WebMIDI.soundFont = (function()
                                             newGenName = 'modLFODelayDuration_sec';
                                             break;
                                         case 'delayVibLFO':
-                                            newGenName = 'vibLFODelayDuration_sec'
+                                            newGenName = 'vibLFODelayDuration_sec';
                                             break;
                                         default:
                                             throw "Wrong generator for this conversion.";

@@ -34,7 +34,6 @@ WebMIDI.soundFontSynthNote = (function()
 		this.pitchBendSensitivity = midi.pitchBendSensitivity;
 
 		this.buffer = keyLayers[0].sample;
-		this.modEnvToPitch_scaled = keyLayers[0].modEnvToPitch_scaled;
 
 		// state
 		this.startTime = ctx.currentTime;
