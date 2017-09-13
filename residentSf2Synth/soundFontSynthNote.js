@@ -33,10 +33,9 @@ WebMIDI.soundFontSynthNote = (function()
 		this.pitchBend = midi.pitchBend;
 		this.pitchBendSensitivity = midi.pitchBendSensitivity;
 
-		this.buffer = keyLayers[0].sample;
-
-		// state
-		this.startTime = ctx.currentTime;
+		this.buffer = keyLayers[0].sample; // TODO: Implement the playing of stereo samples, using stereo Web Audio buffers.
+ 
+		this.startTime = null;
 
 	    // audio node
 		this.audioBuffer = null;
@@ -84,7 +83,7 @@ WebMIDI.soundFontSynthNote = (function()
 
 	    let
 		buffer, channelData, bufferSource, filter, panner,
-		output, outputGain, baseFreq, peekFreq, sustainFreq,
+		output, outputGain,
 		ctx = this.ctx,
 		keyLayers = this.keyLayers,
 		sample = this.buffer,
@@ -106,7 +105,9 @@ WebMIDI.soundFontSynthNote = (function()
 
 		loopStart = 0,
 		loopEnd = 0,
-		startTime = keyLayers[0].startTime; // keyLayers[0].startTime is keyLayers[0].startAddressOffset / keyLayers[0].sampleRate;
+		bufferStartTime = keyLayers[0].bufferStartTime_sec; // keyLayers[0].bufferStartTime_sec is keyLayers[0].startAddressOffset / keyLayers[0].sampleRate;
+
+		this.startTime = this.ctx.currentTime;;
 
 		if(doLoop === true)
 		{
@@ -128,7 +129,7 @@ WebMIDI.soundFontSynthNote = (function()
 		bufferSource.loop = (this.channel !== 9 && doLoop ); // if there are any channel 9 instruments that loop, delete that condition!
 		bufferSource.loopStart = loopStart;
 		bufferSource.loopEnd = loopEnd;
-		this.updatePitchbend(this.pitchBend);
+		this.updatePitchBend(this.pitchBend);
 
 		// audio node
 		this.panner = ctx.createPanner();
@@ -168,23 +169,24 @@ WebMIDI.soundFontSynthNote = (function()
 		//     filter.Q.setValueAtTime(keyLayers[0]['initialFilterQ'] * Math.pow(10, 200), now);
         //
 	    // https://www.w3.org/TR/webaudio/#the-biquadfilternode-interface
-	    // says that the Q value is a resonance frequency in decibels.
+	    // says that Q:
+	    //    Controls how peaked the response will be at the cutoff frequency.
+	    //    A large value makes the response more peaked.
+	    //    Please note that for this filter type, this value is not a traditional Q,
+	    //    but is a resonance value in decibels.
 	    // But is this what the soundFont spec is defining?
-	    // The following line seems to work, but is it really correct?
+	    // The following line seems to work, but is its conversion from the soundFont amount really correct?
 		filter.Q.setValueAtTime(keyLayers[0].initialFilterQ_dB, now);
 
-		baseFreq = keyLayers[0].initialFilterFc_Hz;
-		peekFreq = keyLayers[0].initialFilterFc_Hz + keyLayers[0].modEnvToFilterFc_Hz;
-		sustainFreq = baseFreq + ((peekFreq - baseFreq) * (1 - keyLayers[0].sustainModEnv_factor));
-
-		filter.frequency.setValueAtTime(baseFreq, now);
+        // I think gree meant 'peak' where they wrote 'peek'. Took me a while to work out what they meant!
+		filter.frequency.setValueAtTime(keyLayers[0].filterBaseFreq_Hz, now);
 		if(modDelayEndtime > now)
 		{
-		    filter.frequency.linearRampToValueAtTime(baseFreq, modDelayEndtime);
+		    filter.frequency.linearRampToValueAtTime(keyLayers[0].filterBaseFreq_Hz, modDelayEndtime);
 		}
-		filter.frequency.linearRampToValueAtTime(peekFreq, modAttackEndtime);
-		filter.frequency.linearRampToValueAtTime(peekFreq, modHoldEndtime);
-		filter.frequency.linearRampToValueAtTime(sustainFreq, modDecayEndtime);
+		filter.frequency.linearRampToValueAtTime(keyLayers[0].filterPeakFreq_Hz, modAttackEndtime);
+		filter.frequency.linearRampToValueAtTime(keyLayers[0].filterPeakFreq_Hz, modHoldEndtime);
+		filter.frequency.linearRampToValueAtTime(keyLayers[0].filterSustainFreq_Hz, modDecayEndtime);
 
 		// connect
 		bufferSource.connect(filter);
@@ -193,7 +195,7 @@ WebMIDI.soundFontSynthNote = (function()
 		output.connect(this.gainMaster);
 
 		// fire
-		bufferSource.start(0, startTime);
+		bufferSource.start(0, bufferStartTime);
 	};
     // current ji noteOff function
 	SoundFontSynthNote.prototype.noteOff = function()
@@ -251,7 +253,7 @@ WebMIDI.soundFontSynthNote = (function()
 
     // This function can be called by a note while it is playing.
     // The pitchBend argument is a 14-bit int value (in range [-8192..+8191]). 
-	SoundFontSynthNote.prototype.updatePitchbend = function(pitchBend)
+	SoundFontSynthNote.prototype.updatePitchBend = function(pitchBend)
 	{
 	    let
         playbackRate = this.bufferSource.playbackRate,
@@ -267,6 +269,7 @@ WebMIDI.soundFontSynthNote = (function()
 	    }
 
 	    this.pitchBend = pitchBend;
+	    this.computedPlaybackRate = computedPlaybackRate;
 
 	    playbackRate.setValueAtTime(computedPlaybackRate, modAttackEndtime);
 	};

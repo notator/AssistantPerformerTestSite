@@ -193,7 +193,7 @@ WebMIDI.soundFont = (function()
         // PseudoGenerators are attributes of the keyLayer that are calculated
         // from the generators in the soundFont (that already exist in the keyLayer).
         // When they have been used, redundant generators are deleted.
-        function setPseudoGenerators(parser, keyIndex, keyLayer)
+        function setPseudoGenerators1(parser, keyIndex, keyLayer)
         {
             let kl = keyLayer,
                 sampleHeader = parser.sampleHeader[kl.sampleID],
@@ -203,7 +203,7 @@ WebMIDI.soundFont = (function()
 
             kl.sample = parser.sample[kl.sampleID];
             kl.sampleRate = sampleHeader.sampleRate;
-            kl.startTime_sec = ((kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset) / kl.sampleRate;
+            kl.bufferStartTime_sec = ((kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset) / kl.sampleRate;
             kl.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scaleTuning);
 
             kl.endAddressOffset = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
@@ -240,6 +240,34 @@ WebMIDI.soundFont = (function()
             // kl.scaleTuning is required in SchedulePlaybackRate()
             // kl.sampleRate is required for creating AudioBuffer.
         }
+
+        function setPseudoGenerators2(keyLayer)
+        {
+            let baseFreq = keyLayer.initialFilterFc_Hz, peakFreq = baseFreq + keyLayer.modEnvToFilterFc_Hz;
+
+            keyLayer.modHoldDuration_sec *= keyLayer.keynumToModEnvHold_factor;
+            delete keyLayer.keynumToModEnvHold_factor;
+
+            keyLayer.modDecayDuration_sec = keyLayer.decayModEnv_sec * keyLayer.keynumToModEnvDecay_factor * keyLayer.sustainModEnv_factor; // see spec!                
+            delete keyLayer.decayModEnv_sec;
+            delete keyLayer.keynumToModEnvDecay_factor;
+
+            keyLayer.filterBaseFreq_Hz = baseFreq;
+            keyLayer.filterPeakFreq_Hz = peakFreq;
+            keyLayer.filterSustainFreq_Hz = baseFreq + ((peakFreq - baseFreq) * (1 - keyLayer.sustainModEnv_factor));
+            delete keyLayer.initialFilterFc_Hz;
+            delete keyLayer.modEnvToFilterFc_Hz;
+            delete keyLayer.sustainModEnv_factor;
+
+            keyLayer.volHoldDuration_sec *= keyLayer.keynumToVolEnvHold_factor;
+            delete keyLayer.keynumToVolEnvHold_factor;
+
+            keyLayer.volDecayDuration_sec = keyLayer.decayVolEnv_sec * keyLayer.keynumToVolEnvDecay_factor * keyLayer.sustainVolEnv_dB / 100; // see spec!
+            keyLayer.volSustainLevel_factor = (100 - keyLayer.sustainVolEnv_dB) / 100;
+            delete keyLayer.decayVolEnv_sec;
+            delete keyLayer.keynumToVolEnvDecay_factor;
+            delete keyLayer.sustainVolEnv_dB;
+        }
             
         for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
         {
@@ -248,7 +276,7 @@ WebMIDI.soundFont = (function()
             for(layerIndex = 0; layerIndex < nLayers; ++layerIndex)
             {
                 keyLayer = keyLayers[layerIndex];
-                setPseudoGenerators(parser, keyIndex, keyLayer);
+                setPseudoGenerators1(parser, keyIndex, keyLayer);
                 for(genIndex = 0; genIndex < nGenerators; ++genIndex)
                 {
                     gen = generatorTable[genIndex];
@@ -361,20 +389,7 @@ WebMIDI.soundFont = (function()
                     }
                 }
 
-                keyLayer['modHoldDuration_sec'] *= keyLayer['keynumToModEnvHold_factor'];
-                delete keyLayer['keynumToModEnvHold_factor'];
-                keyLayer['modDecayDuration_sec'] = keyLayer['decayModEnv_sec'] * keyLayer['keynumToModEnvDecay_factor'] * keyLayer['sustainModEnv_factor']; // see spec!                
-                delete keyLayer['decayModEnv_sec'];
-                delete keyLayer['keynumToModEnvDecay_factor'];
-                //delete keyLayer['sustainModEnv_factor'];
-
-                keyLayer['volHoldDuration_sec'] *= keyLayer['keynumToVolEnvHold_factor'];
-                delete keyLayer['keynumToVolEnvHold_factor'];
-                keyLayer['volDecayDuration_sec'] = keyLayer['decayVolEnv_sec'] * keyLayer['keynumToVolEnvDecay_factor'] * keyLayer['sustainVolEnv_dB'] / 100; // see spec!
-                keyLayer['volSustainLevel_factor'] = (100 - keyLayer['sustainVolEnv_dB']) / 100;
-                delete keyLayer['decayVolEnv_sec'];
-                delete keyLayer['keynumToVolEnvDecay_factor'];
-                delete keyLayer['sustainVolEnv_dB'];
+                setPseudoGenerators2(keyLayer);
             }
         }
     },
