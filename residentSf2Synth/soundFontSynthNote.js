@@ -107,7 +107,7 @@ WebMIDI.soundFontSynthNote = (function()
 		loopEnd = 0,
 		bufferStartTime = keyLayers[0].bufferStartTime_sec; // keyLayers[0].bufferStartTime_sec is keyLayers[0].startAddressOffset / keyLayers[0].sampleRate;
 
-		this.startTime = this.ctx.currentTime;;
+		this.startTime = this.ctx.currentTime;
 
 		if(doLoop === true)
 		{
@@ -129,7 +129,7 @@ WebMIDI.soundFontSynthNote = (function()
 		bufferSource.loop = (this.channel !== 9 && doLoop ); // if there are any channel 9 instruments that loop, delete that condition!
 		bufferSource.loopStart = loopStart;
 		bufferSource.loopEnd = loopEnd;
-		this.updatePitchBend(this.pitchBend);
+		this.updatePlaybackRate(this.pitchBend);
 
 		// audio node
 		this.panner = ctx.createPanner();
@@ -164,10 +164,6 @@ WebMIDI.soundFontSynthNote = (function()
 	    outputGain.linearRampToValueAtTime(volLevel, volHoldEndtime);
 	    outputGain.linearRampToValueAtTime((volLevel * keyLayers[0].volSustainLevel_factor), volDecayEndtime);
 
-		// ji: The following original gree line was a (deliberate, forgotten?) gree bug that threw an out-of-range
-		// exception when keyLayers[0]['initialFilterQ'] > 0:
-		//     filter.Q.setValueAtTime(keyLayers[0]['initialFilterQ'] * Math.pow(10, 200), now);
-        //
 	    // https://www.w3.org/TR/webaudio/#the-biquadfilternode-interface
 	    // says that Q:
 	    //    Controls how peaked the response will be at the cutoff frequency.
@@ -200,15 +196,10 @@ WebMIDI.soundFontSynthNote = (function()
     // current ji noteOff function
 	SoundFontSynthNote.prototype.noteOff = function()
 	{
-	    var
-		keyLayers = this.keyLayers,
-		bufferSource = this.bufferSource,
+	    let
 		output = this.gainOutput,
-		now = this.ctx.currentTime,
-        volRelease = keyLayers[0].volReleaseDuration_sec,
-        modRelease = keyLayers[0].modReleaseDuration_sec,
-		volEndTime = now + volRelease,
-		modEndTime = now + modRelease;
+        volReleaseDuration_sec = this.keyLayers[0].volReleaseDuration_sec,
+		volEndTime = this.ctx.currentTime + volReleaseDuration_sec;
 
 		if(!this.audioBuffer)
 		{
@@ -218,24 +209,10 @@ WebMIDI.soundFontSynthNote = (function()
 		//---------------------------------------------------------------------------
 		// Release
 		//---------------------------------------------------------------------------
-		// begin original gree
 		output.gain.cancelScheduledValues(0);
 		output.gain.linearRampToValueAtTime(0, volEndTime);
-		bufferSource.playbackRate.cancelScheduledValues(0);
-		bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
-		// end original gree
 
-		// begin ji
-	    // 1. use setTargetAtTime() instead of linearRampToValueAtTime(0, volEndTime). (Suggested by Timothée Jourde on GitHub).
-	    // 2. call cancelScheduledValues(...) _after_ setting the envelopes, not before.
-		//output.gain.setTargetAtTime(0, now, volRelease);
-		//output.gain.cancelScheduledValues(volEndTime);
-		//bufferSource.playbackRate.linearRampToValueAtTime(this.computedPlaybackRate, modEndTime);
-		//bufferSource.playbackRate.cancelScheduledValues(modEndTime);
-		// end ji
-
-		bufferSource.loop = false;
-		bufferSource.stop(volEndTime);
+		this.bufferSource.stop(volEndTime);
 
 		// disconnect
 		setTimeout(
@@ -248,30 +225,25 @@ WebMIDI.soundFontSynthNote = (function()
 		  			note.filter.disconnect(0);
 		  			note.gainOutput.disconnect(0);
 		  		};
-			}(this)), volRelease + 0.1);
+		  }(this)), volReleaseDuration_sec + 0.1);
 	};
 
     // This function can be called by a note while it is playing.
     // The pitchBend argument is a 14-bit int value (in range [-8192..+8191]). 
-	SoundFontSynthNote.prototype.updatePitchBend = function(pitchBend)
+	SoundFontSynthNote.prototype.updatePlaybackRate = function(pitchBend)
 	{
 	    let
-        playbackRate = this.bufferSource.playbackRate,
-        start = this.startTime,
-        keyLayer = this.keyLayers[0],
-        modAttackEndtime = start + keyLayer.modDelayDuration_sec + keyLayer.modAttackDuration_sec,
-        computedPlaybackRate = keyLayer.basePlaybackRate * Math.pow(Math.pow(2, 1 / 12),
-            (this.pitchBendSensitivity * (pitchBend / (pitchBend < 0 ? 8192 : 8191))) * keyLayer.scaleTuning_factor);
+        keyLayer = this.keyLayers[0]; 
 
 	    if(pitchBend < -8192 || pitchBend > 8191)
 	    {
 	        throw "Illegal pitchBend value.";
 	    }
 
-	    this.pitchBend = pitchBend;
-	    this.computedPlaybackRate = computedPlaybackRate;
+	    this.playbackRate = keyLayer.basePlaybackRate * Math.pow(Math.pow(2, 1 / 12),
+            (this.pitchBendSensitivity * (pitchBend / (pitchBend < 0 ? 8192 : 8191))) * keyLayer.scaleTuning_factor);
 
-	    playbackRate.setValueAtTime(computedPlaybackRate, modAttackEndtime);
+	    this.bufferSource.playbackRate.value = this.playbackRate;
 	};
 
 	return API;

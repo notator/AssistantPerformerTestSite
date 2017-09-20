@@ -117,283 +117,6 @@ WebMIDI.soundFont = (function()
 	    };
 	},
 
-    // Creates a keyLayer for each key in the generator's keyRange, and adds it to the key's keyLayers array in the preset.
-    // Each key's keyLayers array is at preset[keyIndex], and contains an array of keyLayer objects.
-    // This function creates an attribute for each generator in each keyLayer. The attribute values are the raw integer values
-    // that are either found in the soundFont or are default values. The attribute names are the official names of the
-    // generators in the sf2spec (see §8.1.2 and §8.1.3).
-    // When this function has returned, the following function (setPresetValues) converts these "amounts" to (possibly
-    // floating point) values that can subsequently be used more conveniently (in soundFontSynthNote.js).
-    getPresetAmounts = function(generatorTable, generator, preset)
-    {
-        // The terms presetZone, layer and keyLayer:
-        // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
-        // The sfspec also says that "layer" is an obsolete term for a "presetZone".
-        // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
-        // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
-        // setting of -500, the second a pan setting of +500.
-        // I am therefore assuming that a "presetZone" is a preset-level "channel", that is sent at the same time
-        // as other "presetZones" in the same preset, so as to create a fuller sound.
-        // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
-        // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
-        // There will always be a single MIDI output channel, whose pan position is realised by combining the
-        // channel's current pan value with the pan values of the key's (note's) "keyLayers".
-        // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
-        // is also unlimted.
-
-        let keyIndex = 0, keyLayer, keyLayers;
-
-        function getKeyLayer(generatorTable, generator)
-        {
-            let genIndex = 0, nGens = generatorTable.length, gen, amount, keyLayer = {};
-
-            for(genIndex = 0; genIndex < nGens; ++genIndex)
-            {
-                gen = generatorTable[genIndex];
-                if(gen !== undefined)
-                {
-                    amount = generator[gen.name] ? generator[gen.name].amount : gen.default;
-                    keyLayer[gen.name] = amount;
-                }
-            }
-            return keyLayer;
-        }
-
-        if(generator.keyRange === undefined || generator.sampleID === undefined)
-        {
-            throw "invalid soundFont";
-        }
-
-        for(keyIndex = generator.keyRange.lo; keyIndex <= generator.keyRange.hi; ++keyIndex)
-        {
-            keyLayers = preset[keyIndex];
-            if(keyLayers === undefined)
-            {
-                keyLayers = [];
-                preset[keyIndex] = keyLayers;
-            }
-
-            keyLayer = getKeyLayer(generatorTable, generator);
-            keyLayers.push(keyLayer);
-        }
-    },
-
-    // This function converts the (integer) values created by the previous function to (possibly floating-point)values
-    // that will be more convenient to use at runtime.
-    // It also combines some of the original attributes into new attributes (which I call pseudoGenerators in this code).
-    // Newly created attributes are, if meaningful given names that are the original names concatenated with their unit
-    // of measurement (delayModLFO_sec, chorusEffectsSend_percent etc.).
-    // Attributes that have been consumed, and are no longer needed, are deleted.
-    setPresetValues = function (parser, preset)
-    {
-        let keyIndex, keyLayers, layerIndex, nLayers, keyLayer, amount,
-            generatorTable = parser.GeneratorEnumeratorTable, nGenerators = generatorTable.length,
-            genIndex = 0, gen, genName, newGenName;
-
-        // PseudoGenerators are attributes of the keyLayer that are calculated
-        // from the generators in the soundFont (that already exist in the keyLayer).
-        // When they have been used, redundant generators are deleted.
-        function setPseudoGenerators1(parser, keyIndex, keyLayer)
-        {
-            let kl = keyLayer,
-                sampleHeader = parser.sampleHeader[kl.sampleID],
-                tune = kl.coarseTune + kl.fineTune / 100, // semitones              
-                rootKey = (kl.overridingRootKey === -1) ? sampleHeader.originalPitch : kl.overridingRootKey,
-                scaleTuning = kl.scaleTuning / 100;
-
-            kl.sample = parser.sample[kl.sampleID];
-            kl.sampleRate = sampleHeader.sampleRate;
-            kl.bufferStartTime_sec = ((kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset) / kl.sampleRate;
-            kl.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scaleTuning);
-
-            kl.endAddressOffset = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
-
-            kl.velocityMax = kl.velRange & 0xFF;
-            kl.velocityMin = (kl.velRange & 0xFF00) / 32767;
-
-            kl.modEnvToPitch_scaled = kl.modEnvToPitch * scaleTuning;
-
-            kl.loopFlags = kl.sampleModes & 3;
-            if(kl.loopFlags === 1 || kl.loopFlags === 3)
-            {
-                kl.loopStart_sec = (sampleHeader.startLoop + (kl.startloopAddrsCoarseOffset * 32768) + kl.startloopAddrsOffset) / kl.sampleRate;
-                kl.loopEnd_sec = (sampleHeader.endLoop + (kl.endloopAddrsCoarseOffset * 32768) + kl.endloopAddrsOffset) / kl.sampleRate;
-            }
-
-            delete kl.sampleID;
-            delete kl.coarseTune; // semitones
-            delete kl.fineTune; // cents
-            delete kl.startAddrsCoarseOffset;
-            delete kl.startAddrsOffset;
-            delete kl.endAddrsCoarseOffset;
-            delete kl.endAddrsOffset;
-            delete kl.startloopAddrsCoarseOffset;
-            delete kl.startloopAddrsOffset;
-            delete kl.endloopAddrsCoarseOffset;
-            delete kl.endloopAddrsOffset;
-
-            delete kl.instrument;
-            delete kl.keyRange;
-            delete kl.velRange;
-            delete kl.modEnvToPitch;
-            delete kl.sampleModes;
-            // kl.scaleTuning is required in SchedulePlaybackRate()
-            // kl.sampleRate is required for creating AudioBuffer.
-        }
-
-        function setPseudoGenerators2(keyLayer)
-        {
-            let baseFreq = keyLayer.initialFilterFc_Hz, peakFreq = baseFreq + keyLayer.modEnvToFilterFc_Hz;
-
-            keyLayer.modHoldDuration_sec *= keyLayer.keynumToModEnvHold_factor;
-            delete keyLayer.keynumToModEnvHold_factor;
-
-            keyLayer.modDecayDuration_sec = keyLayer.decayModEnv_sec * keyLayer.keynumToModEnvDecay_factor * keyLayer.sustainModEnv_factor; // see spec!                
-            delete keyLayer.decayModEnv_sec;
-            delete keyLayer.keynumToModEnvDecay_factor;
-
-            keyLayer.filterBaseFreq_Hz = baseFreq;
-            keyLayer.filterPeakFreq_Hz = peakFreq;
-            keyLayer.filterSustainFreq_Hz = baseFreq + ((peakFreq - baseFreq) * (1 - keyLayer.sustainModEnv_factor));
-            delete keyLayer.initialFilterFc_Hz;
-            delete keyLayer.modEnvToFilterFc_Hz;
-            delete keyLayer.sustainModEnv_factor;
-
-            keyLayer.volHoldDuration_sec *= keyLayer.keynumToVolEnvHold_factor;
-            delete keyLayer.keynumToVolEnvHold_factor;
-
-            keyLayer.volDecayDuration_sec = keyLayer.decayVolEnv_sec * keyLayer.keynumToVolEnvDecay_factor * keyLayer.sustainVolEnv_dB / 100; // see spec!
-            keyLayer.volSustainLevel_factor = (100 - keyLayer.sustainVolEnv_dB) / 100;
-            delete keyLayer.decayVolEnv_sec;
-            delete keyLayer.keynumToVolEnvDecay_factor;
-            delete keyLayer.sustainVolEnv_dB;
-        }
-            
-        for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
-        {
-            keyLayers = preset[keyIndex];
-            nLayers = keyLayers.length;
-            for(layerIndex = 0; layerIndex < nLayers; ++layerIndex)
-            {
-                keyLayer = keyLayers[layerIndex];
-                setPseudoGenerators1(parser, keyIndex, keyLayer);
-                for(genIndex = 0; genIndex < nGenerators; ++genIndex)
-                {
-                    gen = generatorTable[genIndex];
-                    if(gen !== undefined)
-                    {
-                        genName = gen.name;
-                        if(keyLayer[genName] !== undefined)
-                        {
-                            amount = keyLayer[genName];
-                            delete keyLayer[genName];
-
-                            switch(gen.conv)
-                            {
-                                case 'timecentToSec': // (original unit: timecent) delayVolEnv, delayModEnv etc.
-                                    switch(genName)
-                                    {
-                                        case 'delayModEnv':
-                                            newGenName = 'modDelayDuration_sec';
-                                            break;
-                                        case 'attackModEnv':
-                                            newGenName = 'modAttackDuration_sec';
-                                            break;
-                                        case 'holdModEnv':
-                                            newGenName = 'modHoldDuration_sec';
-                                            break;
-                                        case 'decayModEnv':
-                                            newGenName = 'decayModEnv_sec';  // see below in this function
-                                            break;
-                                        case 'releaseModEnv':
-                                            newGenName = 'modReleaseDuration_sec';
-                                            break;
-                                        case 'delayVolEnv':
-                                            newGenName = 'volDelayDuration_sec';
-                                            break;
-                                        case 'attackVolEnv':
-                                            newGenName = 'volAttackDuration_sec';
-                                            break;
-                                        case 'holdVolEnv':
-                                            newGenName = 'volHoldDuration_sec';
-                                            break;
-                                        case 'decayVolEnv':
-                                            newGenName = 'decayVolEnv_sec';  // see below in this function
-                                            break;
-                                        case 'releaseVolEnv':
-                                            newGenName = 'volReleaseDuration_sec';
-                                            break;
-                                        case 'delayModLFO':
-                                            newGenName = 'modLFODelayDuration_sec';
-                                            break;
-                                        case 'delayVibLFO':
-                                            newGenName = 'vibLFODelayDuration_sec';
-                                            break;
-                                        default:
-                                            throw "Wrong generator for this conversion.";
-                                            break;
-                                    }
-                                    keyLayer[newGenName] = (amount === 0) ? 0 : Math.pow(2, amount / 1200);
-                                    break;
-                                case 'keynumToFactor': // (original unit: timecents/keyNumber) keynumToModEnvHold, keynumToModEnvDecay etc.
-                                    // ji Sept 2017: This formula needs verifying.
-                                    // It does, however, satisfy the descriptions of the keynumTo... amounts in the spec.
-                                    // Simply multiply the corresponding duration by this factor to get the final value.
-                                    // The default amount in the soundFont file is 0, which gives a default factor 1 here.
-                                    keyLayer[genName + '_factor'] = Math.pow(2, ((60 - keyIndex) * amount) / 1200);
-                                    break;
-                                case 'div100': // original is int in range [0..100] (e.g. scaleTuning)
-                                    keyLayer[genName + '_factor'] = amount / 100;
-                                    break;
-                                case 'div1000': // (original unit: 0.1%) chorusEffectsSend etc.
-                                    keyLayer[genName + '_factor'] = amount / 1000;
-                                    break;
-                                case 'centsToSemitones':
-                                    keyLayer[genName + '_semitones'] = amount / 100;
-                                    break;
-                                case 'centsToHz':
-                                    // *************** formula needs checking/correcting
-                                    keyLayer[genName + '_Hz'] = amount / 100;
-                                    break;
-                                case 'centFsToSemitone': // (original unit: centFs) modLfoToPitch etc .
-                                    // *************** formula needs checking/correcting
-                                    keyLayer[genName + '_semitones'] = amount / 100;
-                                    break;
-                                case 'centFsToHz': // (original unit: centFs) modLfoToFilterFc etc.
-                                    // *************** this is the gree formula. Needs checking/correcting                                    
-                                    keyLayer[genName + '_Hz'] = Math.pow(2, (amount - 6900) / 1200) * 440;
-                                    break;
-                                case 'cBtoDB': // (original unit: centibels) initialFilterQ etc.
-                                    keyLayer[genName + '_dB'] = amount / 10;
-                                    break;
-                                case 'panPos': // pan (see sfspec)
-                                    keyLayer[genName + '_pos'] = (amount + 500) / 1000;
-                                    // keyLayer.pan_pos is now a number in range [0..1] corresponding to the left-right pan position.
-                                    break;
-                                case 'byte':
-                                    if(amount >= 0 && amount <= 127)
-                                    {
-                                        keyLayer[genName + '_byte'] = amount;                                        
-                                    }
-                                    break;
-                                case 'exclusiveClass':
-                                    // do nothing
-                                    keyLayer[genName + '_ID'] = amount;
-                                    break;
-                                default:
-                                    // generators that have units other than the above should already have been deleted
-                                    throw "Unknown unit conversion.";
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                setPseudoGenerators2(keyLayer);
-            }
-        }
-    },
-
 	// Parses the Uin8Array to create this soundFont's banks.
 	getBanks = function(uint8Array, nRequiredPresets)
 	{
@@ -466,7 +189,6 @@ WebMIDI.soundFont = (function()
 				return output;
 			}
 
-			// ji function:
 			// This function returns an array containing one array per preset. Each preset array contains
 			// a list of instrumentZones. The end of the list is marked by an empty entry.
 			function getInstruments(parser)
@@ -621,6 +343,194 @@ WebMIDI.soundFont = (function()
 				return instruments;
 			}
 
+		    // Creates a keyLayer for each key in the generator's keyRange, and adds it to the key's keyLayers array in the preset.
+		    // Each key's keyLayers array is at preset[keyIndex], and contains an array of keyLayer objects.
+		    // Each keyLayer has attributes that are either raw integer amounts retrieved from the soundFont or default values.
+			// The attribute names are the official names of the generators in the sf2spec (see §8.1.2 and §8.1.3).
+		    function getPresetAmounts(generatorTable, generator, preset)
+		    {
+		        // The terms presetZone, layer and keyLayer:
+		        // The sfspec says that a "presetZone" is "A subset of a preset containing generators, modulators, and an instrument."
+		        // The sfspec also says that "layer" is an obsolete term for a "presetZone".
+		        // The Awave soundfont editor says that a "layer" is "a set of regions with non-overlapping key ranges".
+		        // The Arachno soundFont contains two "presetZones" in the Grand Piano preset. The first has a pan
+		        // setting of -500, the second a pan setting of +500.
+		        // I therefore assume that a "presetZone" is a preset-level "channel", that is sent at the same time
+		        // as other "presetZones" in the same preset, so as to create a fuller sound.
+		        // I use the term "keyLayer" to mean the subsection of a presetZone associated with a single key.
+		        // A keyLayer contains a single audio sample and the parameters (generators) for playing it.
+		        // There will always be a single MIDI output channel, whose pan position is realised by combining the
+		        // channel's current pan value with the pan values of the key's (note's) "keyLayers".
+		        // The sfspec allows an unlimited number of "presetZones" in the pbag chunk, so the number of "keyLayers"
+		        // is also unlimted.
+
+		        let keyIndex = 0, keyLayer, keyLayers;
+
+		        function getKeyLayer(generatorTable, generator)
+		        {
+		            let genIndex = 0, nGens = generatorTable.length, gen, amount, keyLayer = {};
+
+		            for(genIndex = 0; genIndex < nGens; ++genIndex)
+		            {
+		                gen = generatorTable[genIndex];
+		                if(gen !== undefined)
+		                {
+		                    amount = generator[gen.name] ? generator[gen.name].amount : gen.default;
+		                    keyLayer[gen.name] = amount;
+		                }
+		            }
+		            return keyLayer;
+		        }
+
+		        if(generator.keyRange === undefined || generator.sampleID === undefined)
+		        {
+		            throw "invalid soundFont";
+		        }
+
+		        for(keyIndex = generator.keyRange.lo; keyIndex <= generator.keyRange.hi; ++keyIndex)
+		        {
+		            keyLayers = preset[keyIndex];
+		            if(keyLayers === undefined)
+		            {
+		                keyLayers = [];
+		                preset[keyIndex] = keyLayers;
+		            }
+
+		            keyLayer = getKeyLayer(generatorTable, generator);
+		            keyLayers.push(keyLayer);
+		        }
+		    }
+
+		    // This function replaces the (usually integer) amounts that have been retrieved from the soundFont
+		    // by (possibly floating-point) values that are more convenient/efficient to use at runtime.
+		    // Some of the new values are the result of combining more than one of the original amounts.
+		    // The newly created attributes are given names that reflect their use, and include their
+		    // unit of measurement (if any) e.g. volDelayDuration_sec, modLfoFreq_Hz, chorusEffectsSend_factor etc.
+		    function setPresetRuntimeValues(parser, preset)
+		    {
+		        let keyIndex, keyLayers, layerIndex, nLayers, keyLayer, runtimeValues;
+
+		        // The attributes required at runtime are calculated from the amounts that have been
+		        // parsed into the keyLayer from the soundFont.
+		        function getKeyLayerRuntimeValues(parser, keyIndex, keyLayer)
+		        {
+		            let rt = {}, // attributes that will be used at runtime
+                        kl = keyLayer,
+                        sampleHeader = parser.sampleHeader[kl.sampleID],
+                        tune = kl.coarseTune + kl.fineTune / 100, // semitones              
+                        rootKey = (kl.overridingRootKey === -1) ? sampleHeader.originalPitch : kl.overridingRootKey,
+                        scaleTuning = kl.scaleTuning / 100; // original is in in range [0..100]
+
+		            function centsToHz(amount)
+		            {
+		                return Math.pow(2, (amount - 6900) / 1200) * 440;
+		            }
+
+		            function tcentsToSec(amount)
+		            {
+		                return (amount === 0) ? 0 : Math.pow(2, amount / 1200);
+		            }
+
+		            function hundredthsToFloat(amount)
+		            {
+		                return amount / 100;
+		            }
+
+		            function thousandthsToFloat(amount)
+		            {
+		                return amount / 1000;
+		            }
+
+		            // ji Sept 2017: This formula needs verifying.
+		            // It does, however, satisfy the descriptions of the keynumTo... amounts in the spec.
+		            // Simply multiply the corresponding duration by this factor to get the final value.
+		            // The argument is keynumToVolEnvHold, keynumToVolEnvDecay, keynumToModEnvHold, keynumToModEnvDecay
+		            // The argument's default amount in the soundFont file is 0, which retuns a default factor 1 here.
+		            function tcentsPerKeyToFactor(amount, keyIndex)
+		            {
+		                return Math.pow(2, ((60 - keyIndex) * amount) / 1200);
+		            }
+
+		            rt.velocityMax = kl.velRange.hi;
+		            rt.velocityMin = kl.velRange.lo;
+
+		            rt.sample = parser.sample[kl.sampleID];
+		            rt.sampleRate = sampleHeader.sampleRate;
+		            rt.basePlaybackRate = Math.pow(Math.pow(2, 1 / 12), (keyIndex - rootKey + tune + (sampleHeader.pitchCorrection / 100)) * scaleTuning);
+		            rt.modEnvToPitch_scaled = kl.modEnvToPitch * scaleTuning;
+		            rt.scaleTuning_factor = scaleTuning;
+
+		            // set vol values
+		            rt.volDelayDuration_sec = tcentsToSec(kl.delayVolEnv);
+		            rt.volAttackDuration_sec = tcentsToSec(kl.attackVolEnv);
+		            rt.volHoldDuration_sec = tcentsToSec(kl.holdVolEnv) * tcentsPerKeyToFactor(kl.keynumToVolEnvHold, keyIndex);
+		            rt.volSustainLevel_factor = 1 - thousandthsToFloat(kl.sustainVolEnv);
+		            rt.volDecayDuration_sec = tcentsToSec(kl.decayVolEnv) * tcentsPerKeyToFactor(kl.keynumToVolEnvDecay, keyIndex) * rt.volSustainLevel_factor; // see spec!
+		            rt.volReleaseDuration_sec = tcentsToSec(kl.releaseVolEnv);
+		            // end
+
+		            // set mod values
+		            rt.modDelayDuration_sec = tcentsToSec(kl.delayModEnv);
+		            rt.modAttackDuration_sec = tcentsToSec(kl.attackModEnv);
+		            rt.modHoldDuration_sec = tcentsToSec(kl.holdModEnv) * tcentsPerKeyToFactor(kl.keynumToModEnvHold, keyIndex);
+		            rt.modSustainLevel_factor = 1 - thousandthsToFloat(kl.sustainModEnv);
+		            rt.modDecayDuration_sec = tcentsToSec(kl.decayModEnv) * tcentsPerKeyToFactor(kl.keynumToModEnvDecay, keyIndex) * rt.modSustainLevel_factor; // see spec!
+		            rt.modReleaseDuration_sec = tcentsToSec(kl.releaseModEnv);
+		            // end
+
+		            // set LFO values
+		            rt.modLfoDelayDuration_sec = tcentsToSec(kl.delayModLFO);
+		            rt.modLfoFreq_Hz = centsToHz(kl.freqModLFO);
+		            rt.modLfoToPitch_semitones = hundredthsToFloat(kl.modLfoToPitch);
+		            rt.vibLfoDelayDuration_sec = tcentsToSec(kl.delayVibLFO);
+		            rt.vibLfoFreq_Hz = centsToHz(kl.freqVibLFO);
+		            rt.vibLfoToPitch_semitones = hundredthsToFloat(kl.vibLfoToPitch);
+                    // end
+
+		            // set filter values
+		            rt.initialFilterQ_dB = hundredthsToFloat(kl.initialFilterQ); // ??
+		            rt.filterBaseFreq_Hz = centsToHz(kl.initialFilterFc);
+		            rt.filterPeakFreq_Hz = centsToHz(kl.initialFilterFc + kl.modEnvToFilterFc);
+		            rt.filterSustainFreq_Hz = rt.filterBaseFreq_Hz + ((rt.filterPeakFreq_Hz - rt.filterBaseFreq_Hz) * rt.modSustainLevel_factor);
+		            // end
+
+		            rt.chorusEffectsSend_factor = thousandthsToFloat(kl.chorusEffectsSend);
+		            rt.reverbEffectsSend_factor = thousandthsToFloat(kl.reverbEffectsSend);
+		            rt.pan_pos = thousandthsToFloat(kl.pan); // pan_pos is a number in range [-0.5..+0.5] corresponding to the left-right pan position.
+
+                    // set buffer values
+		            rt.bufferStartTime_sec = ((kl.startAddrsCoarseOffset * 32768) + kl.startAddrsOffset) / rt.sampleRate;
+		            rt.loopFlags = kl.sampleModes & 3;
+		            if(rt.loopFlags === 1 || rt.loopFlags === 3)
+		            {
+		                rt.loopStart_sec = (sampleHeader.startLoop + (kl.startloopAddrsCoarseOffset * 32768) + kl.startloopAddrsOffset) / rt.sampleRate;
+		                rt.loopEnd_sec = (sampleHeader.endLoop + (kl.endloopAddrsCoarseOffset * 32768) + kl.endloopAddrsOffset) / rt.sampleRate;
+		            }
+		            rt.endAddressOffset = (kl.endAddrsCoarseOffset * 32768) + kl.endAddrsOffset;
+		            // end
+
+                    // miscellaneous values
+		            rt.exclusiveClass_ID = kl.exclusiveClass;
+		            // end
+
+		            return rt;
+		        }
+
+		        for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
+		        {
+		            keyLayers = preset[keyIndex];
+		            nLayers = keyLayers.length;
+		            for(layerIndex = 0; layerIndex < nLayers; ++layerIndex)
+		            {
+		                keyLayer = keyLayers[layerIndex];
+
+		                runtimeValues = getKeyLayerRuntimeValues(parser, keyIndex, keyLayer);
+
+		                keyLayers[layerIndex] = runtimeValues; // forget the original soundFont amounts
+                    }
+		        }
+		    }
+
 		    // Get the preset level info that the parser has found in the phdr, pbag, pMod and pGen chunks
 			presets = getPresets(parser);
 
@@ -648,7 +558,7 @@ WebMIDI.soundFont = (function()
 				bank = banks[bankIndex];
 				if(bank[patchIndex] === undefined)
 				{
-					bank[patchIndex] = [];
+				    bank[patchIndex] = [];
 				}
 				bank[patchIndex].name = presetName;
 				for(j = 0; j < instrument.length; ++j)
@@ -659,7 +569,7 @@ WebMIDI.soundFont = (function()
 					    getPresetAmounts(parser.GeneratorEnumeratorTable, instr.info[k].generator, bank[patchIndex]);
 					}
 				}
-				setPresetValues(parser, bank[patchIndex]);
+				setPresetRuntimeValues(parser, bank[patchIndex]);
 			}
 
 			return banks;

@@ -551,7 +551,7 @@ WebMIDI.residentSf2Synth = (function(window)
 			il = currentNoteOn.length;
 			for(i = 0; i < il; ++i)
 			{
-			    currentNoteOn[i].updatePitchBend(pitchBend);
+			    currentNoteOn[i].updatePlaybackRate(pitchBend);
 			}
 		}
 		channelPitchBend[channel] = pitchBend;

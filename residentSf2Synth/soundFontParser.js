@@ -701,72 +701,68 @@ WebMIDI.soundFontParser = (function()
 		};
 	};
 
-    // 'default' is the default amount for the raw, integer value of the generator.
-    // 'conv' is the identifier of a conversion statement that converts the raw generator value
-    // to a value having a more convenient unit.
-	// For example, 'timecentToSec' converts a raw timecent value to the equivalent number of seconds.
-	// The 'conv' values are used in a switch statement in the function soundFont.js:setPresetValues(...).
-    // The conversion creates a new attribute. The original attribute is deleted when this has been done.
-    // For example: the original holdVolEnv, which is in timecent units, is converted to volHoldDuration_sec.      
+    // 'default' is the default amount for the raw, integer value of the generator.      
 	SoundFontParser.prototype.GeneratorEnumeratorTable = [
-	  { 'name': 'startAddrsOffset', 'default': 0 }, // original unit: smpls (deleted before conv conversion)
-	  { 'name': 'endAddrsOffset', 'default': 0 }, // original unit: smpls (deleted before conv conversion)
-	  { 'name': 'startloopAddrsOffset', 'default': 0 }, // original unit: smpls (deleted before conv conversion)
-	  { 'name': 'endloopAddrsOffset', 'default': 0 }, // original unit: smpls (deleted before conv conversion)
-	  { 'name': 'startAddrsCoarseOffset', 'default': 0 },  // original unit: 32k smpls (deleted before conv conversion)
+	  { 'name': 'startAddrsOffset', 'default': 0 },
+	  { 'name': 'endAddrsOffset', 'default': 0 },
+	  { 'name': 'startloopAddrsOffset', 'default': 0 },
+	  { 'name': 'endloopAddrsOffset', 'default': 0 },
+	  { 'name': 'startAddrsCoarseOffset', 'default': 0 },
 
-	  { 'name': 'modLfoToPitch', 'default': 0, 'conv': 'centFsToSemitone' }, // original unit: 'cent fs'
-	  { 'name': 'vibLfoToPitch', 'default': 0, 'conv': 'centFsToSemitone' }, // original unit: 'cent fs'
-	  { 'name': 'modEnvToPitch', 'default': 0 }, // (deleted before conv conversion)
-	  { 'name': 'initialFilterFc', 'default': 13500, 'conv': 'centsToHz' }, // original unit: 'cent'
-	  { 'name': 'initialFilterQ', 'default': 0, 'conv': 'cBtoDB' },  // original unit: centibels
-	  { 'name': 'modLfoToFilterFc', 'default': 0, 'conv': 'centFsToHz' }, // original unit: 'cent fs'
-	  { 'name': 'modEnvToFilterFc', 'default': 0, 'conv': 'centFsToHz' }, // original unit: 'cent fs'
-	  { 'name': 'endAddrsCoarseOffset', 'default': 0 },  // original unit: 32k smpls (deleted before conv conversion)
-	  { 'name': 'modLfoToVolume', 'default': 0, 'conv': 'cBtoDB' },  // original unit: centibels fs
+	  { 'name': 'modLfoToPitch', 'default': 0 },
+	  { 'name': 'vibLfoToPitch', 'default': 0 },
+	  { 'name': 'modEnvToPitch', 'default': 0 },
+
+	  { 'name': 'initialFilterFc', 'default': 13500 },
+	  { 'name': 'initialFilterQ', 'default': 0 },
+	  { 'name': 'modLfoToFilterFc', 'default': 0 },
+	  { 'name': 'modEnvToFilterFc', 'default': 0 },
+	
+	  { 'name': 'endAddrsCoarseOffset', 'default': 0 },
+	  { 'name': 'modLfoToVolume', 'default': 0 },
 	  , // 14
-	  { 'name': 'chorusEffectsSend', 'default': 0, 'conv': 'div1000' },  // original unit: 0.1%
-	  { 'name': 'reverbEffectsSend', 'default': 0, 'conv': 'div1000' },  // original unit: 0.1%
-	  { 'name': 'pan', 'default': 0, 'conv': 'panPos' },  // original unit: 0.1%
+	  { 'name': 'chorusEffectsSend', 'default': 0 },
+	  { 'name': 'reverbEffectsSend', 'default': 0 },
+	  { 'name': 'pan', 'default': 0 },
 	  , , , // 18,19,20
-	  { 'name': 'delayModLFO', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'freqModLFO', 'default': 0, 'conv': 'centsToHz' }, // original unit: 'cent'
-	  { 'name': 'delayVibLFO', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'freqVibLFO', 'default': 0, 'conv': 'centsToHz' }, // original unit: 'cent'
-	  { 'name': 'delayModEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'attackModEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'holdModEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'decayModEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'sustainModEnv', 'default': 0, 'conv': 'div1000' },  // original unit: -0.1%
-	  { 'name': 'releaseModEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'keynumToModEnvHold', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
-	  { 'name': 'keynumToModEnvDecay', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumer
-	  { 'name': 'delayVolEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'attackVolEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'holdVolEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'decayVolEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'sustainVolEnv', 'default': 0, 'conv': 'cBtoDB' },  // original unit: centibels attenuation
-	  { 'name': 'releaseVolEnv', 'default': -12000, 'conv': 'timecentToSec' },  // original unit: timecent
-	  { 'name': 'keynumToVolEnvHold', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
-	  { 'name': 'keynumToVolEnvDecay', 'default': 0, 'conv': 'keynumToFactor' }, // original unit: timecents/keyNumber
-	  { 'name': 'instrument', 'default': 0 }, // (deleted before conv conversion)
+	  { 'name': 'delayModLFO', 'default': -12000 },
+	  { 'name': 'freqModLFO', 'default': 0 },
+	  { 'name': 'delayVibLFO', 'default': -12000 },
+	  { 'name': 'freqVibLFO', 'default': 0 },
+	  { 'name': 'delayModEnv', 'default': -12000 },
+	  { 'name': 'attackModEnv', 'default': -12000 },
+	  { 'name': 'holdModEnv', 'default': -12000 },
+	  { 'name': 'decayModEnv', 'default': -12000 },
+	  { 'name': 'sustainModEnv', 'default': 0 },
+	  { 'name': 'releaseModEnv', 'default': -12000 },
+	  { 'name': 'keynumToModEnvHold', 'default': 0 },
+	  { 'name': 'keynumToModEnvDecay', 'default': 0 },
+	  { 'name': 'delayVolEnv', 'default': -12000 },
+	  { 'name': 'attackVolEnv', 'default': -12000 },
+	  { 'name': 'holdVolEnv', 'default': -12000 },
+	  { 'name': 'decayVolEnv', 'default': -12000 },
+	  { 'name': 'sustainVolEnv', 'default': 0 },
+	  { 'name': 'releaseVolEnv', 'default': -12000 },
+	  { 'name': 'keynumToVolEnvHold', 'default': 0 },
+	  { 'name': 'keynumToVolEnvDecay', 'default': 0 },
+	  { 'name': 'instrument', 'default': 0 },
 	  , // 42
-	  { 'name': 'keyRange', 'default': 127 }, // (deleted before conv conversion) 
-	  { 'name': 'velRange', 'default': 127 }, // (deleted before conv conversion)
-	  { 'name': 'startloopAddrsCoarseOffset', 'default': 0 }, // original unit: sample data points / 32768 (deleted before conv conversion)
-	  { 'name': 'keynum', 'default': -1, 'conv': 'byte' }, // original, legal range: [0..127]
-	  { 'name': 'velocity', 'default': -1, 'conv': 'byte' }, // original, legal range: [0..127]
-	  { 'name': 'initialAttenuation', 'default': 0, 'conv': 'cBtoDB' },   // original unit: centibels
+	  { 'name': 'keyRange', 'default': { 'lo': 0, 'hi': 127 } },
+	  { 'name': 'velRange', 'default': { 'lo': 0, 'hi': 127 } },
+	  { 'name': 'startloopAddrsCoarseOffset', 'default': 0 },
+	  { 'name': 'keynum', 'default': -1 },
+	  { 'name': 'velocity', 'default': -1 },
+	  { 'name': 'initialAttenuation', 'default': 0 },
 	  , // 49
-	  { 'name': 'endloopAddrsCoarseOffset', 'default': 0 }, // original unit: sample data points / 32768 (deleted before conv conversion)
-	  { 'name': 'coarseTune', 'default': 0 }, // (deleted before conv conversion)
-	  { 'name': 'fineTune', 'default': 0 }, // (deleted before conv conversion)
-	  { 'name': 'sampleID', 'default': 0 }, // (deleted before conv conversion)
-	  { 'name': 'sampleModes', 'default': 0 }, // (deleted before conv conversion) 
+	  { 'name': 'endloopAddrsCoarseOffset', 'default': 0 },
+	  { 'name': 'coarseTune', 'default': 0 },
+	  { 'name': 'fineTune', 'default': 0 },
+	  { 'name': 'sampleID', 'default': 0 },
+	  { 'name': 'sampleModes', 'default': 0 }, 
 	  , // 55
-	  { 'name': 'scaleTuning', 'default': 100, 'conv': 'div100' },  // original is int in range [0..100]
-	  { 'name': 'exclusiveClass', 'default': 0, 'conv': 'exclusiveClass' },  // original is an exclusive class ID
-	  { 'name': 'overridingRootKey', 'default': -1, 'conv': 'byte' }   // original, legal range: [0..127]
+	  { 'name': 'scaleTuning', 'default': 100 },
+	  { 'name': 'exclusiveClass', 'default': 0 },
+	  { 'name': 'overridingRootKey', 'default': -1 }
 	];
 
 	return API;
