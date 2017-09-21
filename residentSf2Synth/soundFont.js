@@ -372,12 +372,21 @@ WebMIDI.soundFont = (function()
 
 		            for(genIndex = 0; genIndex < nGens; ++genIndex)
 		            {
-		                gen = generatorTable[genIndex];
-		                if(gen !== undefined)
+                        // unused or reserved generators
+		                if(genIndex === 14 || genIndex === 18 || genIndex === 19 || genIndex === 20 || genIndex === 42 || genIndex === 49 || genIndex === 55)
 		                {
-		                    amount = generator[gen.name] ? generator[gen.name].amount : gen.default;
-		                    keyLayer[gen.name] = amount;
+		                    continue;
 		                }
+		                gen = generatorTable[genIndex];
+		                if(generator[gen.name] === undefined)
+		                {
+		                    amount = gen.default;
+		                }
+		                else
+		                {
+		                    amount = (generator[gen.name].amount) ? generator[gen.name].amount : gen.default;
+		                }		                    
+		                keyLayer[gen.name] = amount;
 		            }
 		            return keyLayer;
 		        }
@@ -464,8 +473,12 @@ WebMIDI.soundFont = (function()
 		            rt.volDelayDuration_sec = tcentsToSec(kl.delayVolEnv);
 		            rt.volAttackDuration_sec = tcentsToSec(kl.attackVolEnv);
 		            rt.volHoldDuration_sec = tcentsToSec(kl.holdVolEnv) * tcentsPerKeyToFactor(kl.keynumToVolEnvHold, keyIndex);
+		            // The spec says about sustainVolEnv: "conventionally 1000 indicates full attenuation", but I think that must be wrong...
+                    // Compare with the spec's description of sustainModEnv.
 		            rt.volSustainLevel_factor = 1 - thousandthsToFloat(kl.sustainVolEnv);
-		            rt.volDecayDuration_sec = tcentsToSec(kl.decayVolEnv) * tcentsPerKeyToFactor(kl.keynumToVolEnvDecay, keyIndex) * rt.volSustainLevel_factor; // see spec!
+		            rt.volSustainLevel_factor = (rt.volSustainLevel_factor < 0) ? 0 : rt.volSustainLevel_factor;
+		            rt.volSustainLevel_factor = (rt.volSustainLevel_factor > 1) ? 1 : rt.volSustainLevel_factor;
+		            rt.volDecayDuration_sec = tcentsToSec(kl.decayVolEnv) * thousandthsToFloat(kl.sustainVolEnv) * tcentsPerKeyToFactor(kl.keynumToVolEnvDecay, keyIndex); // see spec!
 		            rt.volReleaseDuration_sec = tcentsToSec(kl.releaseVolEnv);
 		            // end
 
@@ -474,7 +487,9 @@ WebMIDI.soundFont = (function()
 		            rt.modAttackDuration_sec = tcentsToSec(kl.attackModEnv);
 		            rt.modHoldDuration_sec = tcentsToSec(kl.holdModEnv) * tcentsPerKeyToFactor(kl.keynumToModEnvHold, keyIndex);
 		            rt.modSustainLevel_factor = 1 - thousandthsToFloat(kl.sustainModEnv);
-		            rt.modDecayDuration_sec = tcentsToSec(kl.decayModEnv) * tcentsPerKeyToFactor(kl.keynumToModEnvDecay, keyIndex) * rt.modSustainLevel_factor; // see spec!
+		            rt.modSustainLevel_factor = (rt.modSustainLevel_factor < 0) ? 0 : rt.modSustainLevel_factor;
+		            rt.modSustainLevel_factor = (rt.modSustainLevel_factor > 1) ? 1 : rt.modSustainLevel_factor;
+		            rt.modDecayDuration_sec = tcentsToSec(kl.decayModEnv) * thousandthsToFloat(kl.sustainModEnv) * tcentsPerKeyToFactor(kl.keynumToModEnvDecay, keyIndex); // see spec!
 		            rt.modReleaseDuration_sec = tcentsToSec(kl.releaseModEnv);
 		            // end
 
@@ -519,6 +534,10 @@ WebMIDI.soundFont = (function()
 		        for(keyIndex = 0; keyIndex < preset.length; ++keyIndex)
 		        {
 		            keyLayers = preset[keyIndex];
+		            if(keyLayers === undefined)
+		            {
+		                continue;
+		            }
 		            nLayers = keyLayers.length;
 		            for(layerIndex = 0; layerIndex < nLayers; ++layerIndex)
 		            {

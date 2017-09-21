@@ -708,23 +708,22 @@ WebMIDI.soundFontParser = (function()
 	  { 'name': 'startloopAddrsOffset', 'default': 0 },
 	  { 'name': 'endloopAddrsOffset', 'default': 0 },
 	  { 'name': 'startAddrsCoarseOffset', 'default': 0 },
-
 	  { 'name': 'modLfoToPitch', 'default': 0 },
 	  { 'name': 'vibLfoToPitch', 'default': 0 },
 	  { 'name': 'modEnvToPitch', 'default': 0 },
-
 	  { 'name': 'initialFilterFc', 'default': 13500 },
 	  { 'name': 'initialFilterQ', 'default': 0 },
 	  { 'name': 'modLfoToFilterFc', 'default': 0 },
-	  { 'name': 'modEnvToFilterFc', 'default': 0 },
-	
+	  { 'name': 'modEnvToFilterFc', 'default': 0 },	
 	  { 'name': 'endAddrsCoarseOffset', 'default': 0 },
 	  { 'name': 'modLfoToVolume', 'default': 0 },
-	  , // 14
+	  { 'name': 'unused1', 'default': 0}, // 14
 	  { 'name': 'chorusEffectsSend', 'default': 0 },
 	  { 'name': 'reverbEffectsSend', 'default': 0 },
 	  { 'name': 'pan', 'default': 0 },
-	  , , , // 18,19,20
+      { 'name': 'unused2', 'default': 0 }, // 18
+      { 'name': 'unused3', 'default': 0 }, // 19
+      { 'name': 'unused4', 'default': 0 }, // 20
 	  { 'name': 'delayModLFO', 'default': -12000 },
 	  { 'name': 'freqModLFO', 'default': 0 },
 	  { 'name': 'delayVibLFO', 'default': -12000 },
@@ -746,23 +745,24 @@ WebMIDI.soundFontParser = (function()
 	  { 'name': 'keynumToVolEnvHold', 'default': 0 },
 	  { 'name': 'keynumToVolEnvDecay', 'default': 0 },
 	  { 'name': 'instrument', 'default': 0 },
-	  , // 42
+	  { 'name': 'reserved1', 'default': 0 }, // 42
 	  { 'name': 'keyRange', 'default': { 'lo': 0, 'hi': 127 } },
 	  { 'name': 'velRange', 'default': { 'lo': 0, 'hi': 127 } },
 	  { 'name': 'startloopAddrsCoarseOffset', 'default': 0 },
 	  { 'name': 'keynum', 'default': -1 },
 	  { 'name': 'velocity', 'default': -1 },
 	  { 'name': 'initialAttenuation', 'default': 0 },
-	  , // 49
+	  { 'name': 'reserved2', 'default': 0 }, // 49
 	  { 'name': 'endloopAddrsCoarseOffset', 'default': 0 },
 	  { 'name': 'coarseTune', 'default': 0 },
 	  { 'name': 'fineTune', 'default': 0 },
 	  { 'name': 'sampleID', 'default': 0 },
 	  { 'name': 'sampleModes', 'default': 0 }, 
-	  , // 55
+	  { 'name': 'reserved3', 'default': 0 }, // 55
 	  { 'name': 'scaleTuning', 'default': 100 },
 	  { 'name': 'exclusiveClass', 'default': 0 },
-	  { 'name': 'overridingRootKey', 'default': -1 }
+	  { 'name': 'overridingRootKey', 'default': -1 } // 58
+      // generators with index 59 and 60 are always ignored, so dont exist here.
 	];
 
 	return API;
