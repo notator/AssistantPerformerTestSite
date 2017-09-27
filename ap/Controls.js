@@ -59,7 +59,9 @@ _AP.controls = (function(document, window)
     deleteSaveLink = function()
     {
         let
-        saveLink = document.getElementById("saveLink");
+        saveLink = document.getElementById("saveLink"),
+        downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the div containing the saveLink
+
         if(saveLink !== null)
         {
             // Need a small delay for the revokeObjectURL to work properly.
@@ -137,7 +139,7 @@ _AP.controls = (function(document, window)
         var
         standardMidiFile,
         downloadName,
-        downloadLinkDiv, saveLink, i, a,
+        downloadLinkDiv, saveLink, a,
         nOutputVoices = sequenceRecording.trackRecordings.length;
 
         if(hasData(nOutputVoices, sequenceRecording.trackRecordings))
