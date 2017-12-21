@@ -1491,6 +1491,10 @@ _AP.namespace('_AP.score');
 
     				for(staffIndex = 0; staffIndex < staves.length; staffIndex++)
     				{
+    					if(staves[staffIndex].isOutput === false)
+    					{
+    						break;
+    					}
     					voices = staves[staffIndex].voices;
     					for(voiceIndex = 0; voiceIndex < voices.length; voiceIndex++)
     					{
