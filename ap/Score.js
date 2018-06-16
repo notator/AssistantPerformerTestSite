@@ -917,11 +917,11 @@ _AP.namespace('_AP.score');
     			if(staff.isOutput === true)
     			{
     				outputVoiceElems = staffElem.getElementsByClassName("voice");
-    				stafflinesElem = staffElem.getElementsByClassName("stafflines")[0];
+					stafflinesElem = staffElem.getElementsByClassName("stafflines")[0];
+					staff.nameElem = getNameElem(outputVoiceElems[0]);
     				for(j = 0; j < outputVoiceElems.length; ++j)
     				{
     					outputVoiceElem = outputVoiceElems[j];
-    					staff.nameElem = getNameElem(outputVoiceElem);
     					voice = {};
     					voice.isOutput = true;
     					staff.voices.push(voice);
@@ -930,11 +930,11 @@ _AP.namespace('_AP.score');
     			else // input staff
     			{
     				inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
-    				stafflinesElem = staffElem.getElementsByClassName("inputStafflines")[0];
+					stafflinesElem = staffElem.getElementsByClassName("inputStafflines")[0];
+					staff.nameElem = getNameElem(inputVoiceElems[0]);
     				for(j = 0; j < inputVoiceElems.length; ++j)
     				{
     					inputVoiceElem = inputVoiceElems[j];
-    					staff.nameElem = getNameElem(inputVoiceElem);
     					voice = {};
     					voice.isOutput = false;
     					staff.voices.push(voice);
