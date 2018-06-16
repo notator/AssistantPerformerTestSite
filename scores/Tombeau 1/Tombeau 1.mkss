@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--file created: Friday 15.12.2017, 17:32:51-->
+<!--file created: Monday 11.06.2018, 14:39:11-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
@@ -31,7 +31,7 @@
 		minGapsBetweenStaves="6"
 		minGapsBetweenSystems="8"
 		voiceIndicesPerStaff="0, 1, 2, 3 "
-		clefsPerStaff="t2, t1, t, t"
+		clefsPerStaff="t, t, t, t"
 		stafflinesPerStaff="5,  5,  5,  5"
 		staffGroups="4"
 		longStaffNames="0, 1, 2, 3"
