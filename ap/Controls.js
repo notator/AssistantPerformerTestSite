@@ -38,14 +38,13 @@ _AP.controls = (function(document, window)
 		GLASS = "0", // control layer is completely transparent
 
 		PIANOLA_MUSIC_SCORE_INDEX = 1,
-		STUDY1_SCORE_INDEX = 2,
-		STUDY2_SCORE_INDEX = 3,
-		STUDY3_SKETCH1_SCORE_INDEX1 = 4,
-		STUDY3_SKETCH1_SCORE_INDEX2 = 5,
-		STUDY3_SKETCH2_SCORE_INDEX1 = 6,
-		STUDY3_SKETCH2_SCORE_INDEX2 = 7,
+		PIANOLA_MUSIC_SCORE_3STAVES_INDEX = 2,
+		STUDY1_SCORE_INDEX = 3,
+		STUDY2_SCORE_INDEX = 4,
+		STUDY3_SKETCH1_SCORE_INDEX1 = 5,
+		STUDY3_SKETCH1_SCORE_INDEX2 = 6,
+		STUDY3_SKETCH2_SCORE_INDEX1 = 7,
 		TOMBEAU1_SCORE_INDEX = 8,
-		PIANOLA_MUSIC_SCORE_3STAVES_INDEX = 9,
 
 		RESIDENT_SYNTH_INDEX = 1,
 
@@ -1159,12 +1158,6 @@ _AP.controls = (function(document, window)
 							break;
 						case STUDY3_SKETCH2_SCORE_INDEX1:
 							scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
-							scoreInfo.inputHandler = "keyboard1";
-							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-							break;
-						case STUDY3_SKETCH2_SCORE_INDEX2:
-							scoreInfo.path = "Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (scroll)";
 							scoreInfo.inputHandler = "keyboard1";
 							scoreInfo.aboutText = "about Study 3 Sketch";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
