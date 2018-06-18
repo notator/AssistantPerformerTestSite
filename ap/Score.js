@@ -699,7 +699,7 @@ _AP.namespace('_AP.score');
     		var i, j,
                 systemDy, staffDy,
                 staffElems, staffElem, stafflinesElem,
-                outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,
+                outputVoiceElems, inputVoiceElems,
                 staff, stafflineInfo,
                 voice;
 
@@ -921,7 +921,6 @@ _AP.namespace('_AP.score');
 					staff.nameElem = getNameElem(outputVoiceElems[0]);
     				for(j = 0; j < outputVoiceElems.length; ++j)
     				{
-    					outputVoiceElem = outputVoiceElems[j];
     					voice = {};
     					voice.isOutput = true;
     					staff.voices.push(voice);
@@ -934,7 +933,6 @@ _AP.namespace('_AP.score');
 					staff.nameElem = getNameElem(inputVoiceElems[0]);
     				for(j = 0; j < inputVoiceElems.length; ++j)
     				{
-    					inputVoiceElem = inputVoiceElems[j];
     					voice = {};
     					voice.isOutput = false;
     					staff.voices.push(voice);
