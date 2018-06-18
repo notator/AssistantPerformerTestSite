@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 1 (scroll)</dc:title>
-				<dc:date>Friday 15.06.2018, 13:44:59</dc:date>
+				<dc:date>Monday 18.06.2018, 09:51:35</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -104,7 +104,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
             {
                 font-size:84.0448px
             }
-            .timeStamp, .staffName, .lyric, .barNumberNumber
+            .timeStamp, .staffName, .barNumberNumber
             {
                 font-family:Arial
             }
@@ -115,11 +115,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
             .staffName
             {
                 font-size:70.4px;
-                text-anchor:middle
-            }
-            .lyric
-            {
-                font-size:62.72px;
                 text-anchor:middle
             }
             .barNumberNumber
@@ -235,7 +230,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="72">Study 3 sketch 1 (scroll), Friday 15.06.2018, 13:44:53</text>
+			y="72">Study 3 sketch 1 (scroll), Monday 18.06.2018, 09:51:31</text>
 		<g
 			class="titles">
 			<text
@@ -15708,79 +15703,79 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="928"
+					y1="924"
 					x2="537.9968"
 					y2="1216" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="926"
+					y1="922"
 					x2="7679.998"
 					y2="1218" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="1344"
+					y1="1340"
 					x2="537.9968"
 					y2="1600" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="1342"
+					y1="1338"
 					x2="7679.998"
 					y2="1602" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="1728"
+					y1="1724"
 					x2="537.9968"
 					y2="2048" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="1726"
+					y1="1722"
 					x2="7679.998"
 					y2="2050" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="2176"
+					y1="2172"
 					x2="537.9968"
 					y2="2432" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="2560"
+					y1="2556"
 					x2="537.9968"
 					y2="2752" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="2558"
+					y1="2554"
 					x2="7679.998"
 					y2="2754" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="2880"
+					y1="2876"
 					x2="537.9968"
 					y2="3104" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="2878"
+					y1="2874"
 					x2="7679.998"
 					y2="3106" />
 				<line
 					class="barline"
 					x1="537.9968"
-					y1="3232"
+					y1="3228"
 					x2="537.9968"
 					y2="3488" />
 				<line
 					class="barline"
 					x1="7679.998"
-					y1="3230"
+					y1="3226"
 					x2="7679.998"
 					y2="3490" />
 			</g>
@@ -15789,7 +15784,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			class="system">
 			<score:leftToRight
 				systemTop="4060.56"
-				systemBottom="6998.4" />
+				systemBottom="6966.4" />
 			<g
 				class="staff"
 				score:staffName="pal. 1">
@@ -15860,19 +15855,19 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 588.398 4213.12 L 626.798 4214.447 626.798 4234.607 588.398 4233.28 z" />
+							d="M 588.398 4213.12 L 626.798 4214.46 626.798 4234.62 588.398 4233.28 z" />
 						<path
 							class="beam"
-							d="M 588.398 4226.56 L 626.798 4227.887 626.798 4241.327 588.398 4240 z" />
+							d="M 588.398 4226.56 L 626.798 4227.9 626.798 4241.34 588.398 4240 z" />
 						<path
 							class="opaqueBeam"
-							d="M 588.398 4181.12 L 1041.4 4196.769 1041.4 4216.929 588.398 4201.28 z" />
+							d="M 588.398 4181.12 L 1042.057 4196.95 1042.057 4217.11 588.398 4201.28 z" />
 						<path
 							class="beam"
-							d="M 588.398 4194.56 L 1041.4 4210.208 1041.4 4223.648 588.398 4208 z" />
+							d="M 588.398 4194.56 L 1042.057 4210.39 1042.057 4223.83 588.398 4208 z" />
 						<path
 							class="beam"
-							d="M 588.398 4162.56 L 2132.328 4215.894 2132.328 4229.333 588.398 4176 z" />
+							d="M 588.398 4162.56 L 2116.805 4215.894 2116.805 4229.333 588.398 4176 z" />
 					</g>
 					<g
 						class="chord"
@@ -16083,7 +16078,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="697.3344"
-								y1="4166.323"
+								y1="4166.361"
 								x2="697.3344"
 								y2="4348.304" />
 							<text
@@ -16097,7 +16092,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="680.9218"
-								y="4147.123">~7</text>
+								y="4147.161">~7</text>
 						</g>
 					</g>
 					<g
@@ -16209,7 +16204,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="806.2713"
-								y1="4170.086"
+								y1="4170.163"
 								x2="806.2713"
 								y2="4364.304" />
 							<text
@@ -16219,16 +16214,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="789.8586"
-								y="4150.886">~8</text>
-							<text
-								class="lyric"
-								x="789.8586"
-								y="4558.233">lyric2</text>
+								y="4150.963">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="898.3141">
+						score:alignment="898.6173">
 						<score:midi>
 							<moments>
 								<moment
@@ -16334,23 +16325,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="914.7267"
-								y1="4173.833"
-								x2="914.7267"
+								x1="915.03"
+								y1="4173.958"
+								x2="915.03"
 								y2="4380.304" />
 							<text
 								class="notehead"
-								x="879.9014"
+								x="880.2047"
 								y="4384">œ</text>
 							<text
 								class="ornament"
-								x="898.3141"
-								y="4154.633">~8</text>
+								x="898.6173"
+								y="4154.758">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1024.987">
+						score:alignment="1025.644">
 						<score:midi>
 							<moments>
 								<moment
@@ -16467,27 +16458,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1041.4"
-								y1="4178.208"
-								x2="1041.4"
+								x1="1042.057"
+								y1="4178.39"
+								x2="1042.057"
 								y2="4396.304" />
 							<text
 								class="notehead"
-								x="1006.574"
+								x="1007.232"
 								y="4400">œ</text>
 							<text
 								class="ornament"
-								x="1024.987"
-								y="4159.008">~9</text>
-							<text
-								class="lyric"
-								x="1024.987"
-								y="4558.233">lyric4</text>
+								x="1025.644"
+								y="4159.19">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1172.419">
+						score:alignment="1173.488">
 						<score:midi>
 							<moments>
 								<moment
@@ -16604,27 +16591,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1188.831"
-								y1="4183.301"
-								x2="1188.831"
+								x1="1189.901"
+								y1="4183.549"
+								x2="1189.901"
 								y2="4428.304" />
 							<text
 								class="notehead"
-								x="1154.006"
+								x="1155.076"
 								y="4432">œ</text>
 							<text
 								class="accidental"
-								x="1114.834"
+								x="1115.903"
 								y="4432">#</text>
 							<text
 								class="ornament"
-								x="1172.419"
-								y="4164.101">~9</text>
+								x="1173.488"
+								y="4164.349">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1343.999">
+						score:alignment="1345.548">
 						<score:midi>
 							<moments>
 								<moment
@@ -16752,31 +16739,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1360.411"
-								y1="4189.229"
-								x2="1360.411"
+								x1="1361.96"
+								y1="4189.553"
+								x2="1361.96"
 								y2="4444.304" />
 							<text
 								class="notehead"
-								x="1325.586"
+								x="1327.135"
 								y="4448">œ</text>
 							<text
 								class="accidental"
-								x="1286.414"
+								x="1287.963"
 								y="4448">#</text>
 							<text
 								class="ornament"
-								x="1343.999"
-								y="4170.028">~10</text>
-							<text
-								class="lyric"
-								x="1343.999"
-								y="4562.391">lyric6</text>
+								x="1345.548"
+								y="4170.353">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1552.021">
+						score:alignment="1546.072">
 						<score:midi>
 							<moments>
 								<moment
@@ -16904,27 +16887,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1568.434"
-								y1="4196.414"
-								x2="1568.434"
+								x1="1562.484"
+								y1="4196.55"
+								x2="1562.484"
 								y2="4460.304" />
 							<text
 								class="notehead"
-								x="1533.609"
+								x="1527.659"
 								y="4464">œ</text>
 							<text
 								class="accidental"
-								x="1494.437"
+								x="1488.487"
 								y="4464">#</text>
 							<text
 								class="ornament"
-								x="1552.021"
-								y="4177.214">~10</text>
+								x="1546.072"
+								y="4177.351">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1795.14">
+						score:alignment="1779.308">
 						<score:midi>
 							<moments>
 								<moment
@@ -17063,36 +17046,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1811.553"
-								y1="4204.813"
-								x2="1811.553"
+								x1="1795.721"
+								y1="4204.689"
+								x2="1795.721"
 								y2="4476.304" />
 							<text
 								class="notehead"
-								x="1776.728"
+								x="1760.896"
 								y="4480">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="1762.315"
+									x1="1746.483"
 									y1="4480"
-									x2="1827.966"
+									x2="1812.134"
 									y2="4480" />
 							</g>
 							<text
 								class="ornament"
-								x="1795.14"
-								y="4185.612">~11</text>
-							<text
-								class="lyric"
-								x="1795.14"
-								y="4571.991">lyric8</text>
+								x="1779.308"
+								y="4185.489">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2115.916">
+						score:alignment="2100.393">
 						<score:midi>
 							<moments>
 								<moment
@@ -17231,36 +17210,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2132.328"
+								x1="2116.805"
 								y1="4215.894"
-								x2="2132.328"
+								x2="2116.805"
 								y2="4492.304" />
 							<text
 								class="notehead"
-								x="2097.503"
+								x="2081.98"
 								y="4496">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2083.09"
+									x1="2067.567"
 									y1="4480"
-									x2="2148.741"
+									x2="2133.218"
 									y2="4480" />
 							</g>
 							<text
 								class="ornament"
-								x="2115.916"
+								x="2100.393"
 								y="4196.693">~11</text>
-							<text
-								class="lyric"
-								x="2115.916"
-								y="4576.791">lyric9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2432.431">
+						score:alignment="2417.771">
 						<score:midi>
 							<moments>
 								<moment
@@ -17410,38 +17385,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2448.844"
+								x1="2434.184"
 								y1="4380.8"
-								x2="2448.844"
+								x2="2434.184"
 								y2="4508.304" />
 							<text
 								class="notehead"
-								x="2414.019"
+								x="2399.359"
 								y="4512">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2399.606"
+									x1="2384.946"
 									y1="4480"
-									x2="2465.256"
+									x2="2450.597"
 									y2="4480" />
 								<line
 									class="ledgerline"
-									x1="2399.606"
+									x1="2384.946"
 									y1="4512"
-									x2="2465.256"
+									x2="2450.597"
 									y2="4512" />
 							</g>
 							<text
 								class="ornament"
-								x="2432.431"
+								x="2417.771"
 								y="4300.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2799.74">
+						score:alignment="2786.107">
 						<score:midi>
 							<moments>
 								<moment
@@ -17591,48 +17566,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2816.153"
+								x1="2802.52"
 								y1="4380.8"
-								x2="2816.153"
+								x2="2802.52"
 								y2="4540.304" />
 							<text
 								class="notehead"
-								x="2781.327"
+								x="2767.694"
 								y="4544">œ</text>
 							<text
 								class="accidental"
-								x="2728.76"
+								x="2715.127"
 								y="4544">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2766.915"
+									x1="2753.282"
 									y1="4480"
-									x2="2832.565"
+									x2="2818.932"
 									y2="4480" />
 								<line
 									class="ledgerline"
-									x1="2766.915"
+									x1="2753.282"
 									y1="4512"
-									x2="2832.565"
+									x2="2818.932"
 									y2="4512" />
 								<line
 									class="ledgerline"
-									x1="2766.915"
+									x1="2753.282"
 									y1="4544"
-									x2="2832.565"
+									x2="2818.932"
 									y2="4544" />
 							</g>
 							<text
 								class="ornament"
-								x="2799.74"
+								x="2786.107"
 								y="4300.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="3219.631">
+						score:alignment="3207.194">
 						<score:midi>
 							<moments>
 								<moment
@@ -17648,15 +17623,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="3201.352"
+								x="3188.915"
 								y="4384">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
+						x1="7680"
 						y1="4318"
-						x2="7680.003"
+						x2="7680"
 						y2="4450" />
 				</g>
 			</g>
@@ -17734,17 +17709,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 1268.054 4692.209 L 1808.164 4696.675 1808.164 4716.835 1268.054 4712.37 z" />
+							d="M 1269.346 4692.2 L 1792.322 4696.555 1792.322 4716.715 1269.346 4712.36 z" />
 						<path
 							class="beam"
-							d="M 1268.054 4705.649 L 1808.164 4710.115 1808.164 4723.555 1268.054 4719.089 z" />
+							d="M 1269.346 4705.64 L 1792.322 4709.995 1792.322 4723.435 1269.346 4719.08 z" />
 						<path
 							class="beam"
-							d="M 1268.054 4673.649 L 3203.373 4689.649 3203.373 4703.089 1268.054 4687.089 z" />
+							d="M 1269.346 4673.64 L 3190.822 4689.64 3190.822 4703.08 1269.346 4687.08 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="1251.642">
+						score:alignment="1252.933">
 						<score:midi>
 							<moments>
 								<moment
@@ -17848,23 +17823,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1268.054"
-								y1="4673.649"
-								x2="1268.054"
+								x1="1269.346"
+								y1="4673.64"
+								x2="1269.346"
 								y2="4796.304" />
 							<text
 								class="notehead"
-								x="1233.229"
+								x="1234.52"
 								y="4800">œ</text>
 							<text
 								class="ornament"
-								x="1251.642"
-								y="4654.449">~7</text>
+								x="1252.933"
+								y="4654.44">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1361.792">
+						score:alignment="1363.391">
 						<score:midi>
 							<moments>
 								<moment
@@ -17972,23 +17947,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1378.205"
+								x1="1379.804"
 								y1="4674.56"
-								x2="1378.205"
+								x2="1379.804"
 								y2="4796.304" />
 							<text
 								class="notehead"
-								x="1343.38"
+								x="1344.979"
 								y="4800">œ</text>
 							<text
 								class="ornament"
-								x="1361.792"
+								x="1363.391"
 								y="4655.36">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1484.652">
+						score:alignment="1486.594">
 						<score:midi>
 							<moments>
 								<moment
@@ -18107,31 +18082,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1501.064"
-								y1="4675.576"
-								x2="1501.064"
+								x1="1503.007"
+								y1="4675.586"
+								x2="1503.007"
 								y2="4812.304" />
 							<text
 								class="notehead"
-								x="1466.239"
+								x="1468.182"
 								y="4816">œ</text>
 							<text
 								class="accidental"
-								x="1427.067"
+								x="1429.01"
 								y="4816">#</text>
 							<text
 								class="ornament"
-								x="1484.652"
-								y="4656.376">~8</text>
-							<text
-								class="lyric"
-								x="1484.652"
-								y="4916.851">lyric2a</text>
+								x="1486.594"
+								y="4656.386">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1640.083">
+						score:alignment="1623.817">
 						<score:midi>
 							<moments>
 								<moment
@@ -18250,27 +18221,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1656.495"
-								y1="4676.861"
-								x2="1656.495"
+								x1="1640.23"
+								y1="4676.729"
+								x2="1640.23"
 								y2="4812.304" />
 							<text
 								class="notehead"
-								x="1621.67"
+								x="1605.405"
 								y="4816">œ</text>
 							<text
 								class="accidental"
-								x="1582.498"
+								x="1566.232"
 								y="4816">#</text>
 							<text
 								class="ornament"
-								x="1640.083"
-								y="4657.661">~8</text>
+								x="1623.817"
+								y="4657.528">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1791.751">
+						score:alignment="1775.91">
 						<score:midi>
 							<moments>
 								<moment
@@ -18400,31 +18371,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1808.164"
-								y1="4678.115"
-								x2="1808.164"
+								x1="1792.322"
+								y1="4677.995"
+								x2="1792.322"
 								y2="4812.304" />
 							<text
 								class="notehead"
-								x="1773.339"
+								x="1757.497"
 								y="4816">œ</text>
 							<text
 								class="accidental"
-								x="1742.708"
+								x="1726.866"
 								y="4816">n</text>
 							<text
 								class="ornament"
-								x="1791.751"
-								y="4658.915">~9</text>
-							<text
-								class="lyric"
-								x="1791.751"
-								y="4916.851">lyric4a</text>
+								x="1775.91"
+								y="4658.795">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1983.956">
+						score:alignment="1968.433">
 						<score:midi>
 							<moments>
 								<moment
@@ -18554,23 +18521,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2000.369"
-								y1="4679.704"
-								x2="2000.369"
+								x1="1984.846"
+								y1="4679.598"
+								x2="1984.846"
 								y2="4812.304" />
 							<text
 								class="notehead"
-								x="1965.543"
+								x="1950.02"
 								y="4816">œ</text>
 							<text
 								class="ornament"
-								x="1983.956"
-								y="4660.504">~9</text>
+								x="1968.433"
+								y="4660.398">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2199.845">
+						score:alignment="2184.535">
 						<score:midi>
 							<moments>
 								<moment
@@ -18711,31 +18678,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2216.258"
-								y1="4681.488"
-								x2="2216.258"
+								x1="2200.948"
+								y1="4681.397"
+								x2="2200.948"
 								y2="4828.304" />
 							<text
 								class="notehead"
-								x="2181.432"
+								x="2166.123"
 								y="4832">œ</text>
 							<text
 								class="accidental"
-								x="2142.26"
+								x="2126.95"
 								y="4832">#</text>
 							<text
 								class="ornament"
-								x="2199.845"
-								y="4662.289">~10</text>
-							<text
-								class="lyric"
-								x="2199.845"
-								y="4921.009">lyric6a</text>
+								x="2184.535"
+								y="4662.198">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2408.706">
+						score:alignment="2393.98">
 						<score:midi>
 							<moments>
 								<moment
@@ -18876,27 +18839,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2425.119"
-								y1="4683.215"
-								x2="2425.119"
+								x1="2410.393"
+								y1="4683.142"
+								x2="2410.393"
 								y2="4828.304" />
 							<text
 								class="notehead"
-								x="2390.294"
+								x="2375.568"
 								y="4832">œ</text>
 							<text
 								class="accidental"
-								x="2351.121"
+								x="2336.396"
 								y="4832">#</text>
 							<text
 								class="ornament"
-								x="2408.706"
-								y="4664.015">~10</text>
+								x="2393.98"
+								y="4663.941">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2641.293">
+						score:alignment="2627.217">
 						<score:midi>
 							<moments>
 								<moment
@@ -19048,31 +19011,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2657.706"
-								y1="4685.138"
-								x2="2657.706"
+								x1="2643.63"
+								y1="4685.084"
+								x2="2643.63"
 								y2="4828.304" />
 							<text
 								class="notehead"
-								x="2622.881"
+								x="2608.805"
 								y="4832">œ</text>
 							<text
 								class="accidental"
-								x="2592.25"
+								x="2578.174"
 								y="4832">n</text>
 							<text
 								class="ornament"
-								x="2641.293"
-								y="4665.938">~11</text>
-							<text
-								class="lyric"
-								x="2641.293"
-								y="4921.009">lyric8a</text>
+								x="2627.217"
+								y="4665.884">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2899.722">
+						score:alignment="2886.369">
 						<score:midi>
 							<moments>
 								<moment
@@ -19224,27 +19183,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2916.135"
-								y1="4687.274"
-								x2="2916.135"
+								x1="2902.781"
+								y1="4687.242"
+								x2="2902.781"
 								y2="4828.304" />
 							<text
 								class="notehead"
-								x="2881.309"
+								x="2867.956"
 								y="4832">œ</text>
 							<text
 								class="ornament"
-								x="2899.722"
-								y="4668.075">~11</text>
-							<text
-								class="lyric"
-								x="2899.722"
-								y="4921.009">lyric9a</text>
+								x="2886.369"
+								y="4668.042">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3186.96">
+						score:alignment="3174.41">
 						<score:midi>
 							<moments>
 								<moment
@@ -19407,27 +19362,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3203.373"
-								y1="4689.649"
-								x2="3203.373"
+								x1="3190.822"
+								y1="4689.64"
+								x2="3190.822"
 								y2="4844.304" />
 							<text
 								class="notehead"
-								x="3168.548"
+								x="3155.997"
 								y="4848">œ</text>
 							<text
 								class="accidental"
-								x="3129.375"
+								x="3116.825"
 								y="4848">#</text>
 							<text
 								class="ornament"
-								x="3186.96"
-								y="4670.449">~12</text>
+								x="3174.41"
+								y="4670.44">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3507.243">
+						score:alignment="3495.587">
 						<score:midi>
 							<moments>
 								<moment
@@ -19590,27 +19545,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3523.656"
+								x1="3512"
 								y1="4732.8"
-								x2="3523.656"
+								x2="3512"
 								y2="4844.304" />
 							<text
 								class="notehead"
-								x="3488.83"
+								x="3477.175"
 								y="4848">œ</text>
 							<text
 								class="accidental"
-								x="3449.658"
+								x="3438.002"
 								y="4848">#</text>
 							<text
 								class="ornament"
-								x="3507.243"
+								x="3495.587"
 								y="4684.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="3855.112">
+						score:alignment="3844.452">
 						<score:midi>
 							<moments>
 								<moment
@@ -19626,15 +19581,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="3836.833"
+								x="3826.172"
 								y="4768">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
+						x1="7680"
 						y1="4702"
-						x2="7680.003"
+						x2="7680"
 						y2="4834" />
 				</g>
 			</g>
@@ -19643,6 +19598,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 3">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="5024"
+						x2="7680"
+						y2="5024" />
+					<line
+						class="staffline"
+						x1="400"
+						y1="5056"
+						x2="7680"
+						y2="5056" />
 					<line
 						class="staffline"
 						x1="400"
@@ -19661,36 +19628,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="5152"
 						x2="7680"
 						y2="5152" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="5184"
-						x2="7680"
-						y2="5184" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="5216"
-						x2="7680"
-						y2="5216" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="5177.6">pal. 3</text>
+						y="5113.6">pal. 3</text>
 					<use
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="5120" />
+						y="5056" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="5088"
+						y1="5024"
 						x2="503.2"
-						y2="5216" />
+						y2="5152" />
 					<g
 						class="rest"
 						score:alignment="577.7449">
@@ -19705,30 +19660,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="553.9952"
-								y="5152">Ó</text>
+								y="5088">Ó</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 1922.127 5093.12 L 1960.527 5094.519 1960.527 5114.679 1922.127 5113.28 z" />
+							d="M 1906.604 5029.12 L 1945.004 5030.515 1945.004 5050.675 1906.604 5049.28 z" />
 						<path
 							class="beam"
-							d="M 1922.127 5106.56 L 1960.527 5107.958 1960.527 5121.398 1922.127 5120 z" />
+							d="M 1906.604 5042.56 L 1945.004 5043.955 1945.004 5057.395 1906.604 5056 z" />
 						<path
 							class="opaqueBeam"
-							d="M 1922.127 5061.12 L 2514.087 5082.681 2514.087 5102.841 1922.127 5081.28 z" />
+							d="M 1906.604 4997.12 L 2499.609 5018.668 2499.609 5038.828 1906.604 5017.28 z" />
 						<path
 							class="beam"
-							d="M 1922.127 5074.56 L 2514.087 5096.121 2514.087 5109.561 1922.127 5088 z" />
+							d="M 1906.604 5010.56 L 2499.609 5032.108 2499.609 5045.548 1906.604 5024 z" />
 						<path
 							class="beam"
-							d="M 1922.127 5042.56 L 3386.392 5095.894 3386.392 5109.333 1922.127 5056 z" />
+							d="M 1906.604 4978.56 L 3374.353 5031.894 3374.353 5045.333 1906.604 4992 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="1905.714">
+						score:alignment="1890.191">
 						<score:midi>
 							<moments>
 								<moment
@@ -19819,27 +19774,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1922.127"
-								y1="5042.56"
-								x2="1922.127"
-								y2="5196.304" />
+								x1="1906.604"
+								y1="4978.56"
+								x2="1906.604"
+								y2="5132.304" />
 							<text
 								class="notehead"
-								x="1887.301"
-								y="5200">œ</text>
+								x="1871.778"
+								y="5136">œ</text>
 							<text
 								class="accidental"
-								x="1848.129"
-								y="5200">#</text>
+								x="1832.606"
+								y="5136">#</text>
 							<text
 								class="ornament"
-								x="1905.714"
-								y="5023.36">~7</text>
+								x="1890.191"
+								y="4959.36">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2014.651">
+						score:alignment="1999.128">
 						<score:midi>
 							<moments>
 								<moment
@@ -19934,27 +19889,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2031.063"
-								y1="5046.528"
-								x2="2031.063"
-								y2="5212.304" />
+								x1="2015.54"
+								y1="4982.519"
+								x2="2015.54"
+								y2="5148.304" />
 							<text
 								class="notehead"
-								x="1996.238"
-								y="5216">œ</text>
+								x="1980.715"
+								y="5152">œ</text>
 							<text
 								class="accidental"
-								x="1957.066"
-								y="5216">#</text>
+								x="1941.543"
+								y="5152">#</text>
 							<text
 								class="ornament"
-								x="2014.651"
-								y="5027.328">~7</text>
+								x="1999.128"
+								y="4963.318">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2123.587">
+						score:alignment="2108.064">
 						<score:midi>
 							<moments>
 								<moment
@@ -20060,27 +20015,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2140"
-								y1="5050.496"
-								x2="2140"
-								y2="5228.304" />
+								x1="2124.477"
+								y1="4986.477"
+								x2="2124.477"
+								y2="5164.304" />
 							<text
 								class="notehead"
-								x="2105.175"
-								y="5232">œ</text>
+								x="2089.652"
+								y="5168">œ</text>
 							<text
 								class="accidental"
-								x="2066.002"
-								y="5232">#</text>
+								x="2050.479"
+								y="5168">#</text>
 							<text
 								class="ornament"
-								x="2123.587"
-								y="5031.296">~8</text>
+								x="2108.064"
+								y="4967.277">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2229.5">
+						score:alignment="2214.274">
 						<score:midi>
 							<moments>
 								<moment
@@ -20186,32 +20141,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2245.913"
-								y1="5054.354"
-								x2="2245.913"
-								y2="5244.304" />
+								x1="2230.687"
+								y1="4990.336"
+								x2="2230.687"
+								y2="5180.304" />
 							<text
 								class="notehead"
-								x="2211.088"
-								y="5248">œ</text>
+								x="2195.861"
+								y="5184">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2196.675"
-									y1="5248"
-									x2="2262.326"
-									y2="5248" />
+									x1="2181.449"
+									y1="5184"
+									x2="2247.099"
+									y2="5184" />
 							</g>
 							<text
 								class="ornament"
-								x="2229.5"
-								y="5035.153">~8</text>
+								x="2214.274"
+								y="4971.136">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2353.208">
+						score:alignment="2338.327">
 						<score:midi>
 							<moments>
 								<moment
@@ -20328,32 +20283,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2369.62"
-								y1="5058.859"
-								x2="2369.62"
-								y2="5260.304" />
+								x1="2354.739"
+								y1="4994.844"
+								x2="2354.739"
+								y2="5196.304" />
 							<text
 								class="notehead"
-								x="2334.795"
-								y="5264">œ</text>
+								x="2319.914"
+								y="5200">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2320.382"
-									y1="5248"
-									x2="2386.033"
-									y2="5248" />
+									x1="2305.501"
+									y1="5184"
+									x2="2371.152"
+									y2="5184" />
 							</g>
 							<text
 								class="ornament"
-								x="2353.208"
-								y="5039.659">~9</text>
+								x="2338.327"
+								y="4975.644">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2497.674">
+						score:alignment="2483.197">
 						<score:midi>
 							<moments>
 								<moment
@@ -20470,38 +20425,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2514.087"
-								y1="5064.121"
-								x2="2514.087"
-								y2="5276.304" />
+								x1="2499.609"
+								y1="5000.108"
+								x2="2499.609"
+								y2="5212.304" />
 							<text
 								class="notehead"
-								x="2479.261"
-								y="5280">œ</text>
+								x="2464.784"
+								y="5216">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2464.849"
-									y1="5248"
-									x2="2530.499"
-									y2="5248" />
+									x1="2450.372"
+									y1="5184"
+									x2="2516.022"
+									y2="5184" />
 								<line
 									class="ledgerline"
-									x1="2464.849"
-									y1="5280"
-									x2="2530.499"
-									y2="5280" />
+									x1="2450.372"
+									y1="5216"
+									x2="2516.022"
+									y2="5216" />
 							</g>
 							<text
 								class="ornament"
-								x="2497.674"
-								y="5044.921">~9</text>
+								x="2483.197"
+								y="4980.908">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2666.712">
+						score:alignment="2652.708">
 						<score:midi>
 							<moments>
 								<moment
@@ -20629,48 +20584,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2683.125"
-								y1="5070.278"
-								x2="2683.125"
-								y2="5308.304" />
+								x1="2669.12"
+								y1="5006.268"
+								x2="2669.12"
+								y2="5244.304" />
 							<text
 								class="notehead"
-								x="2648.3"
-								y="5312">œ</text>
+								x="2634.295"
+								y="5248">œ</text>
 							<text
 								class="accidental"
-								x="2595.732"
-								y="5312">#</text>
+								x="2581.728"
+								y="5248">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2633.887"
+									x1="2619.882"
+									y1="5184"
+									x2="2685.533"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="2619.882"
+									y1="5216"
+									x2="2685.533"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="2619.882"
 									y1="5248"
-									x2="2699.538"
+									x2="2685.533"
 									y2="5248" />
-								<line
-									class="ledgerline"
-									x1="2633.887"
-									y1="5280"
-									x2="2699.538"
-									y2="5280" />
-								<line
-									class="ledgerline"
-									x1="2633.887"
-									y1="5312"
-									x2="2699.538"
-									y2="5312" />
 							</g>
 							<text
 								class="ornament"
-								x="2666.712"
-								y="5051.078">~10</text>
+								x="2652.708"
+								y="4987.067">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2865.406">
+						score:alignment="2851.957">
 						<score:midi>
 							<moments>
 								<moment
@@ -20798,48 +20753,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2881.819"
-								y1="5077.515"
-								x2="2881.819"
-								y2="5324.304" />
+								x1="2868.369"
+								y1="5013.507"
+								x2="2868.369"
+								y2="5260.304" />
 							<text
 								class="notehead"
-								x="2846.993"
-								y="5328">œ</text>
+								x="2833.544"
+								y="5264">œ</text>
 							<text
 								class="accidental"
-								x="2794.426"
-								y="5328">#</text>
+								x="2780.977"
+								y="5264">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2832.581"
+									x1="2819.132"
+									y1="5184"
+									x2="2884.782"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="2819.132"
+									y1="5216"
+									x2="2884.782"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="2819.132"
 									y1="5248"
-									x2="2898.231"
+									x2="2884.782"
 									y2="5248" />
-								<line
-									class="ledgerline"
-									x1="2832.581"
-									y1="5280"
-									x2="2898.231"
-									y2="5280" />
-								<line
-									class="ledgerline"
-									x1="2832.581"
-									y1="5312"
-									x2="2898.231"
-									y2="5312" />
 							</g>
 							<text
 								class="ornament"
-								x="2865.406"
-								y="5058.315">~10</text>
+								x="2851.957"
+								y="4994.308">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3097.992">
+						score:alignment="3085.193">
 						<score:midi>
 							<moments>
 								<moment
@@ -20978,54 +20933,54 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3114.405"
-								y1="5085.987"
-								x2="3114.405"
-								y2="5340.304" />
+								x1="3101.606"
+								y1="5021.982"
+								x2="3101.606"
+								y2="5276.304" />
 							<text
 								class="notehead"
-								x="3079.58"
-								y="5344">œ</text>
+								x="3066.781"
+								y="5280">œ</text>
 							<text
 								class="accidental"
-								x="3027.012"
-								y="5344">#</text>
+								x="3014.213"
+								y="5280">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3065.167"
+									x1="3052.368"
+									y1="5184"
+									x2="3118.019"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="3052.368"
+									y1="5216"
+									x2="3118.019"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="3052.368"
 									y1="5248"
-									x2="3130.818"
+									x2="3118.019"
 									y2="5248" />
 								<line
 									class="ledgerline"
-									x1="3065.167"
+									x1="3052.368"
 									y1="5280"
-									x2="3130.818"
+									x2="3118.019"
 									y2="5280" />
-								<line
-									class="ledgerline"
-									x1="3065.167"
-									y1="5312"
-									x2="3130.818"
-									y2="5312" />
-								<line
-									class="ledgerline"
-									x1="3065.167"
-									y1="5344"
-									x2="3130.818"
-									y2="5344" />
 							</g>
 							<text
 								class="ornament"
-								x="3097.992"
-								y="5066.787">~11</text>
+								x="3085.193"
+								y="5002.783">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3369.979">
+						score:alignment="3357.94">
 						<score:midi>
 							<moments>
 								<moment
@@ -21164,50 +21119,50 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3386.392"
-								y1="5095.894"
-								x2="3386.392"
-								y2="5356.304" />
+								x1="3374.353"
+								y1="5031.894"
+								x2="3374.353"
+								y2="5292.304" />
 							<text
 								class="notehead"
-								x="3351.566"
-								y="5360">œ</text>
+								x="3339.527"
+								y="5296">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3337.154"
+									x1="3325.115"
+									y1="5184"
+									x2="3390.765"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="3325.115"
+									y1="5216"
+									x2="3390.765"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="3325.115"
 									y1="5248"
-									x2="3402.804"
+									x2="3390.765"
 									y2="5248" />
 								<line
 									class="ledgerline"
-									x1="3337.154"
+									x1="3325.115"
 									y1="5280"
-									x2="3402.804"
+									x2="3390.765"
 									y2="5280" />
-								<line
-									class="ledgerline"
-									x1="3337.154"
-									y1="5312"
-									x2="3402.804"
-									y2="5312" />
-								<line
-									class="ledgerline"
-									x1="3337.154"
-									y1="5344"
-									x2="3402.804"
-									y2="5344" />
 							</g>
 							<text
 								class="ornament"
-								x="3369.979"
-								y="5068.8">~11</text>
+								x="3357.94"
+								y="5004.8">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3688.567">
+						score:alignment="3677.418">
 						<score:midi>
 							<moments>
 								<moment
@@ -21357,60 +21312,60 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3704.979"
-								y1="5148.8"
-								x2="3704.979"
-								y2="5372.304" />
+								x1="3693.831"
+								y1="5084.8"
+								x2="3693.831"
+								y2="5308.304" />
 							<text
 								class="notehead"
-								x="3670.154"
-								y="5376">œ</text>
+								x="3659.006"
+								y="5312">œ</text>
 							<text
 								class="accidental"
-								x="3617.587"
-								y="5376">#</text>
+								x="3606.438"
+								y="5312">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3655.741"
+									x1="3644.593"
+									y1="5184"
+									x2="3710.243"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="3644.593"
+									y1="5216"
+									x2="3710.243"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="3644.593"
 									y1="5248"
-									x2="3721.392"
+									x2="3710.243"
 									y2="5248" />
 								<line
 									class="ledgerline"
-									x1="3655.741"
+									x1="3644.593"
 									y1="5280"
-									x2="3721.392"
+									x2="3710.243"
 									y2="5280" />
 								<line
 									class="ledgerline"
-									x1="3655.741"
+									x1="3644.593"
 									y1="5312"
-									x2="3721.392"
+									x2="3710.243"
 									y2="5312" />
-								<line
-									class="ledgerline"
-									x1="3655.741"
-									y1="5344"
-									x2="3721.392"
-									y2="5344" />
-								<line
-									class="ledgerline"
-									x1="3655.741"
-									y1="5376"
-									x2="3721.392"
-									y2="5376" />
 							</g>
 							<text
 								class="ornament"
-								x="3688.567"
-								y="5068.8">~12</text>
+								x="3677.418"
+								y="5004.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4061.382">
+						score:alignment="4051.276">
 						<score:midi>
 							<moments>
 								<moment
@@ -21560,60 +21515,60 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4077.795"
-								y1="5148.8"
-								x2="4077.795"
-								y2="5372.304" />
+								x1="4067.688"
+								y1="5084.8"
+								x2="4067.688"
+								y2="5308.304" />
 							<text
 								class="notehead"
-								x="4042.97"
-								y="5376">œ</text>
+								x="4032.863"
+								y="5312">œ</text>
 							<text
 								class="accidental"
-								x="3998.944"
-								y="5376">n</text>
+								x="3988.837"
+								y="5312">n</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4028.557"
+									x1="4018.451"
+									y1="5184"
+									x2="4084.101"
+									y2="5184" />
+								<line
+									class="ledgerline"
+									x1="4018.451"
+									y1="5216"
+									x2="4084.101"
+									y2="5216" />
+								<line
+									class="ledgerline"
+									x1="4018.451"
 									y1="5248"
-									x2="4094.208"
+									x2="4084.101"
 									y2="5248" />
 								<line
 									class="ledgerline"
-									x1="4028.557"
+									x1="4018.451"
 									y1="5280"
-									x2="4094.208"
+									x2="4084.101"
 									y2="5280" />
 								<line
 									class="ledgerline"
-									x1="4028.557"
+									x1="4018.451"
 									y1="5312"
-									x2="4094.208"
+									x2="4084.101"
 									y2="5312" />
-								<line
-									class="ledgerline"
-									x1="4028.557"
-									y1="5344"
-									x2="4094.208"
-									y2="5344" />
-								<line
-									class="ledgerline"
-									x1="4028.557"
-									y1="5376"
-									x2="4094.208"
-									y2="5376" />
 							</g>
 							<text
 								class="ornament"
-								x="4061.382"
-								y="5068.8">~12</text>
+								x="4051.276"
+								y="5004.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="4490.594">
+						score:alignment="4481.709">
 						<score:midi>
 							<moments>
 								<moment
@@ -21629,16 +21584,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="4472.315"
-								y="5152">∑</text>
+								x="4463.43"
+								y="5088">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="5086"
-						x2="7680.003"
-						y2="5218" />
+						x1="7680"
+						y1="5022"
+						x2="7680"
+						y2="5154" />
 				</g>
 			</g>
 			<g
@@ -21646,6 +21601,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 4">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="5472"
+						x2="7680"
+						y2="5472" />
+					<line
+						class="staffline"
+						x1="400"
+						y1="5504"
+						x2="7680"
+						y2="5504" />
 					<line
 						class="staffline"
 						x1="400"
@@ -21664,36 +21631,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="5600"
 						x2="7680"
 						y2="5600" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="5632"
-						x2="7680"
-						y2="5632" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="5664"
-						x2="7680"
-						y2="5664" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="5625.6">pal. 4</text>
+						y="5561.6">pal. 4</text>
 					<use
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="5568" />
+						y="5504" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="5536"
+						y1="5472"
 						x2="503.2"
-						y2="5664" />
+						y2="5600" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -21708,24 +21663,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="5600">∑</text>
+								y="5536">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 2608.562 5604.158 L 2984.767 5607.37 2984.767 5627.53 2608.562 5624.318 z" />
+							d="M 2594.349 5540.158 L 2971.605 5543.37 2971.605 5563.53 2594.349 5560.318 z" />
 						<path
 							class="beam"
-							d="M 2608.562 5617.598 L 2984.767 5620.81 2984.767 5634.25 2608.562 5631.038 z" />
+							d="M 2594.349 5553.598 L 2971.605 5556.81 2971.605 5570.25 2594.349 5567.038 z" />
 						<path
 							class="beam"
-							d="M 2608.562 5585.598 L 4482.386 5601.598 4482.386 5615.038 2608.562 5599.038 z" />
+							d="M 2594.349 5521.598 L 4473.41 5537.598 4473.41 5551.038 2594.349 5535.038 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="2592.149">
+						score:alignment="2577.936">
 						<score:midi>
 							<moments>
 								<moment
@@ -21805,32 +21760,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2608.562"
-								y1="5585.598"
-								x2="2608.562"
-								y2="5708.304" />
+								x1="2594.349"
+								y1="5521.598"
+								x2="2594.349"
+								y2="5644.304" />
 							<text
 								class="notehead"
-								x="2573.737"
-								y="5712">œ</text>
+								x="2559.523"
+								y="5648">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2559.324"
-									y1="5696"
-									x2="2624.974"
-									y2="5696" />
+									x1="2545.111"
+									y1="5632"
+									x2="2610.761"
+									y2="5632" />
 							</g>
 							<text
 								class="ornament"
-								x="2592.149"
-								y="5516.8">~6</text>
+								x="2577.936"
+								y="5452.8">~6</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2704.842">
+						score:alignment="2690.943">
 						<score:midi>
 							<moments>
 								<moment
@@ -21925,32 +21880,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2721.254"
-								y1="5586.56"
-								x2="2721.254"
-								y2="5708.304" />
+								x1="2707.356"
+								y1="5522.56"
+								x2="2707.356"
+								y2="5644.304" />
 							<text
 								class="notehead"
-								x="2686.429"
-								y="5712">œ</text>
+								x="2672.531"
+								y="5648">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2672.016"
-									y1="5696"
-									x2="2737.667"
-									y2="5696" />
+									x1="2658.118"
+									y1="5632"
+									x2="2723.768"
+									y2="5632" />
 							</g>
 							<text
 								class="ornament"
-								x="2704.842"
-								y="5516.8">~7</text>
+								x="2690.943"
+								y="5452.8">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2829.396">
+						score:alignment="2815.845">
 						<score:midi>
 							<moments>
 								<moment
@@ -22056,42 +22011,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2845.808"
-								y1="5587.624"
-								x2="2845.808"
-								y2="5724.304" />
+								x1="2832.258"
+								y1="5523.624"
+								x2="2832.258"
+								y2="5660.304" />
 							<text
 								class="notehead"
-								x="2810.983"
-								y="5728">œ</text>
+								x="2797.433"
+								y="5664">œ</text>
 							<text
 								class="accidental"
-								x="2758.416"
-								y="5728">#</text>
+								x="2744.865"
+								y="5664">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2796.57"
-									y1="5696"
-									x2="2862.221"
-									y2="5696" />
+									x1="2783.02"
+									y1="5632"
+									x2="2848.671"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="2796.57"
-									y1="5728"
-									x2="2862.221"
-									y2="5728" />
+									x1="2783.02"
+									y1="5664"
+									x2="2848.671"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="2829.396"
-								y="5516.8">~8</text>
+								x="2815.845"
+								y="5452.8">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2968.354">
+						score:alignment="2955.193">
 						<score:midi>
 							<moments>
 								<moment
@@ -22208,42 +22163,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2984.767"
-								y1="5588.81"
-								x2="2984.767"
-								y2="5724.304" />
+								x1="2971.605"
+								y1="5524.81"
+								x2="2971.605"
+								y2="5660.304" />
 							<text
 								class="notehead"
-								x="2949.941"
-								y="5728">œ</text>
+								x="2936.78"
+								y="5664">œ</text>
 							<text
 								class="accidental"
-								x="2897.374"
-								y="5728">#</text>
+								x="2884.213"
+								y="5664">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2935.529"
-									y1="5696"
-									x2="3001.179"
-									y2="5696" />
+									x1="2922.367"
+									y1="5632"
+									x2="2988.018"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="2935.529"
-									y1="5728"
-									x2="3001.179"
-									y2="5728" />
+									x1="2922.367"
+									y1="5664"
+									x2="2988.018"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="2968.354"
-								y="5516.8">~9</text>
+								x="2955.193"
+								y="5452.8">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3121.717">
+						score:alignment="3108.984">
 						<score:midi>
 							<moments>
 								<moment
@@ -22371,42 +22326,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3138.13"
-								y1="5590.12"
-								x2="3138.13"
-								y2="5724.304" />
+								x1="3125.397"
+								y1="5526.12"
+								x2="3125.397"
+								y2="5660.304" />
 							<text
 								class="notehead"
-								x="3103.305"
-								y="5728">œ</text>
+								x="3090.572"
+								y="5664">œ</text>
 							<text
 								class="accidental"
-								x="3059.279"
-								y="5728">n</text>
+								x="3046.546"
+								y="5664">n</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3088.892"
-									y1="5696"
-									x2="3154.542"
-									y2="5696" />
+									x1="3076.159"
+									y1="5632"
+									x2="3141.81"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="3088.892"
-									y1="5728"
-									x2="3154.542"
-									y2="5728" />
+									x1="3076.159"
+									y1="5664"
+									x2="3141.81"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="3121.717"
-								y="5516.8">~10</text>
+								x="3108.984"
+								y="5452.8">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3292.45">
+						score:alignment="3280.194">
 						<score:midi>
 							<moments>
 								<moment
@@ -22545,38 +22500,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3308.863"
-								y1="5591.577"
-								x2="3308.863"
-								y2="5724.304" />
+								x1="3296.607"
+								y1="5527.577"
+								x2="3296.607"
+								y2="5660.304" />
 							<text
 								class="notehead"
-								x="3274.037"
-								y="5728">œ</text>
+								x="3261.782"
+								y="5664">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3259.625"
-									y1="5696"
-									x2="3325.275"
-									y2="5696" />
+									x1="3247.369"
+									y1="5632"
+									x2="3313.02"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="3259.625"
-									y1="5728"
-									x2="3325.275"
-									y2="5728" />
+									x1="3247.369"
+									y1="5664"
+									x2="3313.02"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="3292.45"
-								y="5516.8">~11</text>
+								x="3280.194"
+								y="5452.8">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3480.977">
+						score:alignment="3469.248">
 						<score:midi>
 							<moments>
 								<moment
@@ -22726,38 +22681,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3497.389"
-								y1="5593.188"
-								x2="3497.389"
-								y2="5740.304" />
+								x1="3485.66"
+								y1="5529.188"
+								x2="3485.66"
+								y2="5676.304" />
 							<text
 								class="notehead"
-								x="3462.564"
-								y="5744">œ</text>
+								x="3450.835"
+								y="5680">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3448.151"
-									y1="5696"
-									x2="3513.802"
-									y2="5696" />
+									x1="3436.422"
+									y1="5632"
+									x2="3502.073"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="3448.151"
-									y1="5728"
-									x2="3513.802"
-									y2="5728" />
+									x1="3436.422"
+									y1="5664"
+									x2="3502.073"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="3480.977"
-								y="5516.8">~12</text>
+								x="3469.248"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3690.685">
+						score:alignment="3679.542">
 						<score:midi>
 							<moments>
 								<moment
@@ -22907,38 +22862,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3707.098"
-								y1="5594.978"
-								x2="3707.098"
-								y2="5740.304" />
+								x1="3695.955"
+								y1="5530.978"
+								x2="3695.955"
+								y2="5676.304" />
 							<text
 								class="notehead"
-								x="3672.272"
-								y="5744">œ</text>
+								x="3661.13"
+								y="5680">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3657.86"
-									y1="5696"
-									x2="3723.51"
-									y2="5696" />
+									x1="3646.717"
+									y1="5632"
+									x2="3712.368"
+									y2="5632" />
 								<line
 									class="ledgerline"
-									x1="3657.86"
-									y1="5728"
-									x2="3723.51"
-									y2="5728" />
+									x1="3646.717"
+									y1="5664"
+									x2="3712.368"
+									y2="5664" />
 							</g>
 							<text
 								class="ornament"
-								x="3690.685"
-								y="5516.8">~12</text>
+								x="3679.542"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3922.848">
+						score:alignment="3912.354">
 						<score:midi>
 							<moments>
 								<moment
@@ -23088,48 +23043,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3939.26"
-								y1="5596.96"
-								x2="3939.26"
-								y2="5756.304" />
+								x1="3928.767"
+								y1="5532.96"
+								x2="3928.767"
+								y2="5692.304" />
 							<text
 								class="notehead"
-								x="3904.435"
-								y="5760">œ</text>
+								x="3893.941"
+								y="5696">œ</text>
 							<text
 								class="accidental"
-								x="3851.868"
-								y="5760">#</text>
+								x="3841.374"
+								y="5696">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3890.022"
+									x1="3879.529"
+									y1="5632"
+									x2="3945.179"
+									y2="5632" />
+								<line
+									class="ledgerline"
+									x1="3879.529"
+									y1="5664"
+									x2="3945.179"
+									y2="5664" />
+								<line
+									class="ledgerline"
+									x1="3879.529"
 									y1="5696"
-									x2="3955.673"
+									x2="3945.179"
 									y2="5696" />
-								<line
-									class="ledgerline"
-									x1="3890.022"
-									y1="5728"
-									x2="3955.673"
-									y2="5728" />
-								<line
-									class="ledgerline"
-									x1="3890.022"
-									y1="5760"
-									x2="3955.673"
-									y2="5760" />
 							</g>
 							<text
 								class="ornament"
-								x="3922.848"
-								y="5516.8">~12</text>
+								x="3912.354"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4180.429">
+						score:alignment="4170.656">
 						<score:midi>
 							<moments>
 								<moment
@@ -23279,48 +23234,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4196.842"
-								y1="5599.16"
-								x2="4196.842"
-								y2="5756.304" />
+								x1="4187.068"
+								y1="5535.16"
+								x2="4187.068"
+								y2="5692.304" />
 							<text
 								class="notehead"
-								x="4162.017"
-								y="5760">œ</text>
+								x="4152.243"
+								y="5696">œ</text>
 							<text
 								class="accidental"
-								x="4109.449"
-								y="5760">#</text>
+								x="4099.676"
+								y="5696">#</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4147.604"
+									x1="4137.831"
+									y1="5632"
+									x2="4203.481"
+									y2="5632" />
+								<line
+									class="ledgerline"
+									x1="4137.831"
+									y1="5664"
+									x2="4203.481"
+									y2="5664" />
+								<line
+									class="ledgerline"
+									x1="4137.831"
 									y1="5696"
-									x2="4213.254"
+									x2="4203.481"
 									y2="5696" />
-								<line
-									class="ledgerline"
-									x1="4147.604"
-									y1="5728"
-									x2="4213.254"
-									y2="5728" />
-								<line
-									class="ledgerline"
-									x1="4147.604"
-									y1="5760"
-									x2="4213.254"
-									y2="5760" />
 							</g>
 							<text
 								class="ornament"
-								x="4180.429"
-								y="5516.8">~12</text>
+								x="4170.656"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4465.973">
+						score:alignment="4456.997">
 						<score:midi>
 							<moments>
 								<moment
@@ -23470,48 +23425,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4482.386"
-								y1="5601.598"
-								x2="4482.386"
-								y2="5756.304" />
+								x1="4473.41"
+								y1="5537.598"
+								x2="4473.41"
+								y2="5692.304" />
 							<text
 								class="notehead"
-								x="4447.561"
-								y="5760">œ</text>
+								x="4438.584"
+								y="5696">œ</text>
 							<text
 								class="accidental"
-								x="4403.535"
-								y="5760">n</text>
+								x="4394.559"
+								y="5696">n</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4433.148"
+									x1="4424.172"
+									y1="5632"
+									x2="4489.822"
+									y2="5632" />
+								<line
+									class="ledgerline"
+									x1="4424.172"
+									y1="5664"
+									x2="4489.822"
+									y2="5664" />
+								<line
+									class="ledgerline"
+									x1="4424.172"
 									y1="5696"
-									x2="4498.798"
+									x2="4489.822"
 									y2="5696" />
-								<line
-									class="ledgerline"
-									x1="4433.148"
-									y1="5728"
-									x2="4498.798"
-									y2="5728" />
-								<line
-									class="ledgerline"
-									x1="4433.148"
-									y1="5760"
-									x2="4498.798"
-									y2="5760" />
 							</g>
 							<text
 								class="ornament"
-								x="4465.973"
-								y="5516.8">~12</text>
+								x="4456.997"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4782.866">
+						score:alignment="4774.776">
 						<score:midi>
 							<moments>
 								<moment
@@ -23661,44 +23616,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4799.278"
-								y1="5596.8"
-								x2="4799.278"
-								y2="5756.304" />
+								x1="4791.188"
+								y1="5532.8"
+								x2="4791.188"
+								y2="5692.304" />
 							<text
 								class="notehead"
-								x="4764.453"
-								y="5760">œ</text>
+								x="4756.363"
+								y="5696">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4750.041"
+									x1="4741.951"
+									y1="5632"
+									x2="4807.601"
+									y2="5632" />
+								<line
+									class="ledgerline"
+									x1="4741.951"
+									y1="5664"
+									x2="4807.601"
+									y2="5664" />
+								<line
+									class="ledgerline"
+									x1="4741.951"
 									y1="5696"
-									x2="4815.691"
+									x2="4807.601"
 									y2="5696" />
-								<line
-									class="ledgerline"
-									x1="4750.041"
-									y1="5728"
-									x2="4815.691"
-									y2="5728" />
-								<line
-									class="ledgerline"
-									x1="4750.041"
-									y1="5760"
-									x2="4815.691"
-									y2="5760" />
 							</g>
 							<text
 								class="ornament"
-								x="4782.866"
-								y="5516.8">~12</text>
+								x="4774.776"
+								y="5452.8">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="5126.076">
+						score:alignment="5118.968">
 						<score:midi>
 							<moments>
 								<moment
@@ -23714,16 +23669,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="5107.797"
-								y="5600">∑</text>
+								x="5100.688"
+								y="5536">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="5534"
-						x2="7680.003"
-						y2="5666" />
+						x1="7680"
+						y1="5470"
+						x2="7680"
+						y2="5602" />
 				</g>
 			</g>
 			<g
@@ -23731,6 +23686,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 5">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="5824"
+						x2="7680"
+						y2="5824" />
 					<line
 						class="staffline"
 						x1="400"
@@ -23755,30 +23716,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="5952"
 						x2="7680"
 						y2="5952" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="5984"
-						x2="7680"
-						y2="5984" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="5945.6">pal. 5</text>
+						y="5913.6">pal. 5</text>
 					<use
 						class="clef"
 						href="#trebleClef"
 						x="400"
-						y="5952" />
+						y="5920" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="5856"
+						y1="5824"
 						x2="503.2"
-						y2="5984" />
+						y2="5952" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -23793,30 +23748,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="5920">∑</text>
+								y="5888">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 3568.715 5829.12 L 3607.115 5829.12 3607.115 5849.28 3568.715 5849.28 z" />
+							d="M 3557.293 5797.12 L 3595.693 5797.12 3595.693 5817.28 3557.293 5817.28 z" />
 						<path
 							class="beam"
-							d="M 3568.715 5842.56 L 3607.115 5842.56 3607.115 5856 3568.715 5856 z" />
+							d="M 3557.293 5810.56 L 3595.693 5810.56 3595.693 5824 3557.293 5824 z" />
 						<path
 							class="opaqueBeam"
-							d="M 4839.678 5829.12 L 4878.078 5829.12 4878.078 5849.28 4839.678 5849.28 z" />
+							d="M 4831.809 5797.12 L 4870.208 5797.12 4870.208 5817.28 4831.809 5817.28 z" />
 						<path
 							class="beam"
-							d="M 4839.678 5842.56 L 4878.078 5842.56 4878.078 5856 4839.678 5856 z" />
+							d="M 4831.809 5810.56 L 4870.208 5810.56 4870.208 5824 4831.809 5824 z" />
 						<path
 							class="beam"
-							d="M 3244.043 5810.56 L 5565.247 5810.56 5565.247 5824 3244.043 5824 z" />
+							d="M 3231.607 5778.56 L 5559.297 5778.56 5559.297 5792 3231.607 5792 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="3227.631">
+						score:alignment="3215.194">
 						<score:midi>
 							<moments>
 								<moment
@@ -23860,23 +23815,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3244.043"
-								y1="5810.56"
-								x2="3244.043"
-								y2="5932.304" />
+								x1="3231.607"
+								y1="5778.56"
+								x2="3231.607"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="3209.218"
-								y="5936">œ</text>
+								x="3196.781"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="3170.046"
-								y="5936">#</text>
+								x="3157.609"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3397.093">
+						score:alignment="3385.129">
 						<score:midi>
 							<moments>
 								<moment
@@ -23924,23 +23879,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3413.505"
-								y1="5810.56"
-								x2="3413.505"
-								y2="5932.304" />
+								x1="3401.542"
+								y1="5778.56"
+								x2="3401.542"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="3378.68"
-								y="5936">œ</text>
+								x="3366.717"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="3339.508"
-								y="5936">#</text>
+								x="3327.544"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3590.703">
+						score:alignment="3579.281">
 						<score:midi>
 							<moments>
 								<moment
@@ -23980,23 +23935,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3607.115"
-								y1="5810.56"
-								x2="3607.115"
-								y2="5932.304" />
+								x1="3595.693"
+								y1="5778.56"
+								x2="3595.693"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="3572.29"
-								y="5936">œ</text>
+								x="3560.868"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="3533.118"
-								y="5936">#</text>
+								x="3521.696"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3739.405">
+						score:alignment="3728.399">
 						<score:midi>
 							<moments>
 								<moment
@@ -24052,23 +24007,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3755.818"
-								y1="5810.56"
-								x2="3755.818"
-								y2="5932.304" />
+								x1="3744.812"
+								y1="5778.56"
+								x2="3744.812"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="3720.993"
-								y="5936">œ</text>
+								x="3709.986"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="3681.82"
-								y="5936">#</text>
+								x="3670.814"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3991.056">
+						score:alignment="3980.753">
 						<score:midi>
 							<moments>
 								<moment
@@ -24112,23 +24067,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4007.469"
-								y1="5810.56"
-								x2="4007.469"
-								y2="5932.304" />
+								x1="3997.166"
+								y1="5778.56"
+								x2="3997.166"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="3972.643"
-								y="5936">œ</text>
+								x="3962.34"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="3933.471"
-								y="5936">#</text>
+								x="3923.168"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4277.871">
+						score:alignment="4268.369">
 						<score:midi>
 							<moments>
 								<moment
@@ -24168,23 +24123,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4294.283"
-								y1="5810.56"
-								x2="4294.283"
-								y2="5932.304" />
+								x1="4284.782"
+								y1="5778.56"
+								x2="4284.782"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="4259.458"
-								y="5936">œ</text>
+								x="4249.957"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="4220.286"
-								y="5936">#</text>
+								x="4210.784"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4498.594">
+						score:alignment="4489.709">
 						<score:midi>
 							<moments>
 								<moment
@@ -24232,23 +24187,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4515.007"
-								y1="5810.56"
-								x2="4515.007"
-								y2="5932.304" />
+								x1="4506.122"
+								y1="5778.56"
+								x2="4506.122"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="4480.182"
-								y="5936">œ</text>
+								x="4471.297"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="4441.009"
-								y="5936">#</text>
+								x="4432.125"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4668.055">
+						score:alignment="4659.645">
 						<score:midi>
 							<moments>
 								<moment
@@ -24296,23 +24251,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4684.468"
-								y1="5810.56"
-								x2="4684.468"
-								y2="5932.304" />
+								x1="4676.057"
+								y1="5778.56"
+								x2="4676.057"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="4649.643"
-								y="5936">œ</text>
+								x="4641.232"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="4610.47"
-								y="5936">#</text>
+								x="4602.06"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4861.666">
+						score:alignment="4853.796">
 						<score:midi>
 							<moments>
 								<moment
@@ -24352,23 +24307,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4878.078"
-								y1="5810.56"
-								x2="4878.078"
-								y2="5932.304" />
+								x1="4870.208"
+								y1="5778.56"
+								x2="4870.208"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="4843.253"
-								y="5936">œ</text>
+								x="4835.383"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="4804.081"
-								y="5936">#</text>
+								x="4796.211"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5010.369">
+						score:alignment="5002.915">
 						<score:midi>
 							<moments>
 								<moment
@@ -24424,23 +24379,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5026.782"
-								y1="5810.56"
-								x2="5026.782"
-								y2="5932.304" />
+								x1="5019.327"
+								y1="5778.56"
+								x2="5019.327"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="4991.957"
-								y="5936">œ</text>
+								x="4984.502"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="4952.784"
-								y="5936">#</text>
+								x="4945.33"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5262.02">
+						score:alignment="5255.269">
 						<score:midi>
 							<moments>
 								<moment
@@ -24484,23 +24439,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5278.432"
-								y1="5810.56"
-								x2="5278.432"
-								y2="5932.304" />
+								x1="5271.682"
+								y1="5778.56"
+								x2="5271.682"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="5243.607"
-								y="5936">œ</text>
+								x="5236.856"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="5204.435"
-								y="5936">#</text>
+								x="5197.684"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5548.834">
+						score:alignment="5542.885">
 						<score:midi>
 							<moments>
 								<moment
@@ -24540,23 +24495,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5565.247"
-								y1="5810.56"
-								x2="5565.247"
-								y2="5932.304" />
+								x1="5559.297"
+								y1="5778.56"
+								x2="5559.297"
+								y2="5900.304" />
 							<text
 								class="notehead"
-								x="5530.422"
-								y="5936">œ</text>
+								x="5524.472"
+								y="5904">œ</text>
 							<text
 								class="accidental"
-								x="5491.25"
-								y="5936">#</text>
+								x="5485.3"
+								y="5904">#</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="5761.559">
+						score:alignment="5756.226">
 						<score:midi>
 							<moments>
 								<moment
@@ -24572,16 +24527,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="5743.28"
-								y="5920">∑</text>
+								x="5737.946"
+								y="5888">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="5854"
-						x2="7680.003"
-						y2="5986" />
+						x1="7680"
+						y1="5822"
+						x2="7680"
+						y2="5954" />
 				</g>
 			</g>
 			<g
@@ -24589,6 +24544,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 6">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="6112"
+						x2="7680"
+						y2="6112" />
 					<line
 						class="staffline"
 						x1="400"
@@ -24613,30 +24574,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="6240"
 						x2="7680"
 						y2="6240" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="6272"
-						x2="7680"
-						y2="6272" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="6233.6">pal. 6</text>
+						y="6201.6">pal. 6</text>
 					<use
 						class="clef"
 						href="#trebleClef"
 						x="400"
-						y="6240" />
+						y="6208" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="6144"
+						y1="6112"
 						x2="503.2"
-						y2="6272" />
+						y2="6240" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -24651,30 +24606,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="6208">∑</text>
+								y="6176">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 4204.197 6117.12 L 4242.597 6117.12 4242.597 6137.28 4204.197 6137.28 z" />
+							d="M 4194.551 6085.12 L 4232.951 6085.12 4232.951 6105.28 4194.551 6105.28 z" />
 						<path
 							class="beam"
-							d="M 4204.197 6130.56 L 4242.597 6130.56 4242.597 6144 4204.197 6144 z" />
+							d="M 4194.551 6098.56 L 4232.951 6098.56 4232.951 6112 4194.551 6112 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5475.161 6117.12 L 5513.561 6117.12 5513.561 6137.28 5475.161 6137.28 z" />
+							d="M 5469.067 6085.12 L 5507.467 6085.12 5507.467 6105.28 5469.067 6105.28 z" />
 						<path
 							class="beam"
-							d="M 5475.161 6130.56 L 5513.561 6130.56 5513.561 6144 5475.161 6144 z" />
+							d="M 5469.067 6098.56 L 5507.467 6098.56 5507.467 6112 5469.067 6112 z" />
 						<path
 							class="beam"
-							d="M 3879.525 6098.56 L 6200.729 6098.56 6200.729 6112 3879.525 6112 z" />
+							d="M 3868.864 6066.56 L 6196.555 6066.56 6196.555 6080 3868.864 6080 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="3863.112">
+						score:alignment="3852.452">
 						<score:midi>
 							<moments>
 								<moment
@@ -24782,23 +24737,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3879.525"
-								y1="6098.56"
-								x2="3879.525"
-								y2="6220.304" />
+								x1="3868.864"
+								y1="6066.56"
+								x2="3868.864"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="3844.7"
-								y="6224">œ</text>
+								x="3834.039"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="3805.527"
-								y="6224">#</text>
+								x="3794.867"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4032.574">
+						score:alignment="4022.387">
 						<score:midi>
 							<moments>
 								<moment
@@ -24898,23 +24853,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4048.987"
-								y1="6098.56"
-								x2="4048.987"
-								y2="6220.304" />
+								x1="4038.8"
+								y1="6066.56"
+								x2="4038.8"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="4014.161"
-								y="6224">œ</text>
+								x="4003.974"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="3974.989"
-								y="6224">#</text>
+								x="3964.802"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4226.184">
+						score:alignment="4216.539">
 						<score:midi>
 							<moments>
 								<moment
@@ -25006,23 +24961,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4242.597"
-								y1="6098.56"
-								x2="4242.597"
-								y2="6220.304" />
+								x1="4232.951"
+								y1="6066.56"
+								x2="4232.951"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="4207.771"
-								y="6224">œ</text>
+								x="4198.126"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="4168.599"
-								y="6224">#</text>
+								x="4158.954"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4374.888">
+						score:alignment="4365.657">
 						<score:midi>
 							<moments>
 								<moment
@@ -25144,23 +25099,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4391.3"
-								y1="6098.56"
-								x2="4391.3"
-								y2="6220.304" />
+								x1="4382.07"
+								y1="6066.56"
+								x2="4382.07"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="4356.475"
-								y="6224">œ</text>
+								x="4347.245"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="4317.303"
-								y="6224">#</text>
+								x="4308.072"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4626.538">
+						score:alignment="4618.011">
 						<score:midi>
 							<moments>
 								<moment
@@ -25262,23 +25217,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4642.95"
-								y1="6098.56"
-								x2="4642.95"
-								y2="6220.304" />
+								x1="4634.423"
+								y1="6066.56"
+								x2="4634.423"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="4608.125"
-								y="6224">œ</text>
+								x="4599.598"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="4568.953"
-								y="6224">#</text>
+								x="4560.426"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4913.352">
+						score:alignment="4905.626">
 						<score:midi>
 							<moments>
 								<moment
@@ -25382,23 +25337,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4929.765"
-								y1="6098.56"
-								x2="4929.765"
-								y2="6220.304" />
+								x1="4922.039"
+								y1="6066.56"
+								x2="4922.039"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="4894.939"
-								y="6224">œ</text>
+								x="4887.214"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="4855.767"
-								y="6224">#</text>
+								x="4848.042"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5134.076">
+						score:alignment="5126.968">
 						<score:midi>
 							<moments>
 								<moment
@@ -25510,23 +25465,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5150.489"
-								y1="6098.56"
-								x2="5150.489"
-								y2="6220.304" />
+								x1="5143.38"
+								y1="6066.56"
+								x2="5143.38"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="5115.664"
-								y="6224">œ</text>
+								x="5108.555"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="5076.491"
-								y="6224">#</text>
+								x="5069.383"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5303.537">
+						score:alignment="5296.903">
 						<score:midi>
 							<moments>
 								<moment
@@ -25626,23 +25581,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5319.95"
-								y1="6098.56"
-								x2="5319.95"
-								y2="6220.304" />
+								x1="5313.315"
+								y1="6066.56"
+								x2="5313.315"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="5285.125"
-								y="6224">œ</text>
+								x="5278.49"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="5245.952"
-								y="6224">#</text>
+								x="5239.318"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5497.148">
+						score:alignment="5491.054">
 						<score:midi>
 							<moments>
 								<moment
@@ -25734,23 +25689,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5513.561"
-								y1="6098.56"
-								x2="5513.561"
-								y2="6220.304" />
+								x1="5507.467"
+								y1="6066.56"
+								x2="5507.467"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="5478.735"
-								y="6224">œ</text>
+								x="5472.642"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="5439.563"
-								y="6224">#</text>
+								x="5433.469"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5645.852">
+						score:alignment="5640.173">
 						<score:midi>
 							<moments>
 								<moment
@@ -25866,23 +25821,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5662.264"
-								y1="6098.56"
-								x2="5662.264"
-								y2="6220.304" />
+								x1="5656.585"
+								y1="6066.56"
+								x2="5656.585"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="5627.439"
-								y="6224">œ</text>
+								x="5621.76"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="5588.267"
-								y="6224">#</text>
+								x="5582.588"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5897.503">
+						score:alignment="5892.527">
 						<score:midi>
 							<moments>
 								<moment
@@ -25978,23 +25933,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5913.916"
-								y1="6098.56"
-								x2="5913.916"
-								y2="6220.304" />
+								x1="5908.939"
+								y1="6066.56"
+								x2="5908.939"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="5879.09"
-								y="6224">œ</text>
+								x="5874.114"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="5839.918"
-								y="6224">#</text>
+								x="5834.942"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6184.317">
+						score:alignment="6180.143">
 						<score:midi>
 							<moments>
 								<moment
@@ -26098,23 +26053,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6200.729"
-								y1="6098.56"
-								x2="6200.729"
-								y2="6220.304" />
+								x1="6196.555"
+								y1="6066.56"
+								x2="6196.555"
+								y2="6188.304" />
 							<text
 								class="notehead"
-								x="6165.904"
-								y="6224">œ</text>
+								x="6161.73"
+								y="6192">œ</text>
 							<text
 								class="accidental"
-								x="6126.732"
-								y="6224">#</text>
+								x="6122.558"
+								y="6192">#</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="6410.801">
+						score:alignment="6407.244">
 						<score:midi>
 							<moments>
 								<moment
@@ -26130,16 +26085,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="6387.051"
-								y="6208">Ó</text>
+								x="6383.494"
+								y="6176">Ó</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="6142"
-						x2="7680.003"
-						y2="6274" />
+						x1="7680"
+						y1="6110"
+						x2="7680"
+						y2="6242" />
 				</g>
 			</g>
 			<g
@@ -26147,6 +26102,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 7">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="6464"
+						x2="7680"
+						y2="6464" />
 					<line
 						class="staffline"
 						x1="400"
@@ -26171,30 +26132,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="6592"
 						x2="7680"
 						y2="6592" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="6624"
-						x2="7680"
-						y2="6624" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="6585.6">pal. 7</text>
+						y="6553.6">pal. 7</text>
 					<use
 						class="clef"
 						href="#trebleClef"
 						x="400"
-						y="6592" />
+						y="6560" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="6496"
+						y1="6464"
 						x2="503.2"
-						y2="6624" />
+						y2="6592" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -26209,42 +26164,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="6560">∑</text>
+								y="6528">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 4795.618 6423.997 L 4834.018 6424.346 4834.018 6444.506 4795.618 6444.157 z" />
+							d="M 4787.625 6391.998 L 4826.025 6392.346 4826.025 6412.506 4787.625 6412.158 z" />
 						<path
 							class="beam"
-							d="M 4795.618 6437.437 L 4834.018 6437.786 4834.018 6451.226 4795.618 6450.877 z" />
+							d="M 4787.625 6405.438 L 4826.025 6405.786 4826.025 6419.226 4787.625 6418.878 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5219.697 6427.853 L 5258.097 6428.203 5258.097 6448.363 5219.697 6448.013 z" />
+							d="M 5212.89 6395.854 L 5251.29 6396.203 5251.29 6416.363 5212.89 6416.014 z" />
 						<path
 							class="beam"
-							d="M 5219.697 6441.293 L 5258.097 6441.643 5258.097 6455.083 5219.697 6454.733 z" />
+							d="M 5212.89 6409.294 L 5251.29 6409.643 5251.29 6423.083 5212.89 6422.734 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5631.49 6431.598 L 5669.89 6431.947 5669.89 6452.107 5631.49 6451.758 z" />
+							d="M 5625.833 6399.599 L 5664.232 6399.947 5664.232 6420.107 5625.833 6419.759 z" />
 						<path
 							class="beam"
-							d="M 5631.49 6445.038 L 5669.89 6445.387 5669.89 6458.827 5631.49 6458.478 z" />
+							d="M 5625.833 6413.039 L 5664.232 6413.387 5664.232 6426.827 5625.833 6426.479 z" />
 						<path
 							class="opaqueBeam"
-							d="M 6034.386 6435.261 L 6072.786 6435.61 6072.786 6455.77 6034.386 6455.421 z" />
+							d="M 6029.854 6403.262 L 6068.254 6403.61 6068.254 6423.77 6029.854 6423.422 z" />
 						<path
 							class="beam"
-							d="M 6034.386 6448.701 L 6072.786 6449.05 6072.786 6462.49 6034.386 6462.141 z" />
+							d="M 6029.854 6416.702 L 6068.254 6417.05 6068.254 6430.49 6029.854 6430.142 z" />
 						<path
 							class="beam"
-							d="M 4515.007 6402.886 L 6861.206 6424.219 6861.206 6437.659 4515.007 6416.326 z" />
+							d="M 4506.122 6370.886 L 6858.879 6392.219 6858.879 6405.659 4506.122 6384.326 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="4498.594">
+						score:alignment="4489.709">
 						<score:midi>
 							<moments>
 								<moment
@@ -26358,27 +26313,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4515.007"
-								y1="6402.886"
-								x2="4515.007"
-								y2="6524.304" />
+								x1="4506.122"
+								y1="6370.886"
+								x2="4506.122"
+								y2="6492.304" />
 							<text
 								class="notehead"
-								x="4480.182"
-								y="6528">œ</text>
+								x="4471.297"
+								y="6496">œ</text>
 							<text
 								class="accidental"
-								x="4441.009"
-								y="6528">#</text>
+								x="4432.125"
+								y="6496">#</text>
 							<text
 								class="ornament"
-								x="4498.594"
-								y="6383.686">~7</text>
+								x="4489.709"
+								y="6351.686">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4817.605">
+						score:alignment="4809.612">
 						<score:midi>
 							<moments>
 								<moment
@@ -26473,27 +26428,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4834.018"
-								y1="6405.786"
-								x2="4834.018"
-								y2="6588.304" />
+								x1="4826.025"
+								y1="6373.786"
+								x2="4826.025"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="4799.192"
-								y="6592">œ</text>
+								x="4791.2"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="4760.02"
-								y="6592">#</text>
+								x="4752.027"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="4817.605"
-								y="6386.586">~6</text>
+								x="4809.612"
+								y="6354.586">~6</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4947.245">
+						score:alignment="4939.614">
 						<score:midi>
 							<moments>
 								<moment
@@ -26618,27 +26573,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4963.657"
-								y1="6406.965"
-								x2="4963.657"
-								y2="6588.304" />
+								x1="4956.026"
+								y1="6374.965"
+								x2="4956.026"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="4928.832"
-								y="6592">œ</text>
+								x="4921.201"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="4889.66"
-								y="6592">#</text>
+								x="4882.029"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="4947.245"
-								y="6387.765">~8</text>
+								x="4939.614"
+								y="6355.765">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5241.685">
+						score:alignment="5234.877">
 						<score:midi>
 							<moments>
 								<moment
@@ -26722,27 +26677,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5258.097"
-								y1="6409.643"
-								x2="5258.097"
-								y2="6588.304" />
+								x1="5251.29"
+								y1="6377.643"
+								x2="5251.29"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="5223.272"
-								y="6592">œ</text>
+								x="5216.464"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="5184.1"
-								y="6592">#</text>
+								x="5177.292"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="5241.685"
-								y="6390.442">~5</text>
+								x="5234.877"
+								y="6358.442">~5</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5382.337">
+						score:alignment="5375.923">
 						<score:midi>
 							<moments>
 								<moment
@@ -26886,27 +26841,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5398.75"
-								y1="6410.921"
-								x2="5398.75"
-								y2="6588.304" />
+								x1="5392.335"
+								y1="6378.921"
+								x2="5392.335"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="5363.924"
-								y="6592">œ</text>
+								x="5357.51"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="5324.752"
-								y="6592">#</text>
+								x="5318.338"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="5382.337"
-								y="6391.721">~9</text>
+								x="5375.923"
+								y="6359.721">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5653.478">
+						score:alignment="5647.82">
 						<score:midi>
 							<moments>
 								<moment
@@ -26979,27 +26934,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5669.89"
-								y1="6413.387"
-								x2="5669.89"
-								y2="6588.304" />
+								x1="5664.232"
+								y1="6381.387"
+								x2="5664.232"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="5635.065"
-								y="6592">œ</text>
+								x="5629.407"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="5595.893"
-								y="6592">#</text>
+								x="5590.235"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="5653.478"
-								y="6394.187">~4</text>
+								x="5647.82"
+								y="6362.187">~4</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5806.417">
+						score:alignment="5801.187">
 						<score:midi>
 							<moments>
 								<moment
@@ -27138,27 +27093,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5822.83"
-								y1="6414.777"
-								x2="5822.83"
-								y2="6636.304" />
+								x1="5817.599"
+								y1="6382.777"
+								x2="5817.599"
+								y2="6604.304" />
 							<text
 								class="notehead"
-								x="5788.004"
-								y="6640">œ</text>
+								x="5782.774"
+								y="6608">œ</text>
 							<text
 								class="accidental"
-								x="5748.832"
-								y="6640">#</text>
+								x="5743.602"
+								y="6608">#</text>
 							<text
 								class="ornament"
-								x="5806.417"
-								y="6395.577">~10</text>
+								x="5801.187"
+								y="6363.577">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6056.374">
+						score:alignment="6051.841">
 						<score:midi>
 							<moments>
 								<moment
@@ -27220,27 +27175,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6072.786"
-								y1="6417.05"
-								x2="6072.786"
-								y2="6588.304" />
+								x1="6068.254"
+								y1="6385.05"
+								x2="6068.254"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="6037.961"
-								y="6592">œ</text>
+								x="6033.429"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="5998.789"
-								y="6592">#</text>
+								x="5994.256"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="6056.374"
-								y="6397.85">~3</text>
+								x="6051.841"
+								y="6365.85">~3</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6222.445">
+						score:alignment="6218.378">
 						<score:midi>
 							<moments>
 								<moment
@@ -27402,27 +27357,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6238.858"
-								y1="6418.56"
-								x2="6238.858"
-								y2="6524.304" />
+								x1="6234.791"
+								y1="6386.56"
+								x2="6234.791"
+								y2="6492.304" />
 							<text
 								class="notehead"
-								x="6204.033"
-								y="6528">œ</text>
+								x="6199.965"
+								y="6496">œ</text>
 							<text
 								class="accidental"
-								x="6164.86"
-								y="6528">#</text>
+								x="6160.793"
+								y="6496">#</text>
 							<text
 								class="ornament"
-								x="6222.445"
-								y="6399.36">~11</text>
+								x="6218.378"
+								y="6367.36">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6452.49">
+						score:alignment="6449.066">
 						<score:midi>
 							<moments>
 								<moment
@@ -27473,27 +27428,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6468.902"
-								y1="6420.652"
-								x2="6468.902"
-								y2="6588.304" />
+								x1="6465.479"
+								y1="6388.652"
+								x2="6465.479"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="6434.077"
-								y="6592">œ</text>
+								x="6430.653"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="6394.905"
-								y="6592">#</text>
+								x="6391.481"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="6452.49"
-								y="6401.452">~2</text>
+								x="6449.066"
+								y="6369.452">~2</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6632.543">
+						score:alignment="6629.623">
 						<score:midi>
 							<moments>
 								<moment
@@ -27654,27 +27609,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6648.956"
-								y1="6422.289"
-								x2="6648.956"
-								y2="6588.304" />
+								x1="6646.035"
+								y1="6390.289"
+								x2="6646.035"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="6614.13"
-								y="6592">œ</text>
+								x="6611.21"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="6574.958"
-								y="6592">#</text>
+								x="6572.038"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="6632.543"
-								y="6403.089">~12</text>
+								x="6629.623"
+								y="6371.089">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6844.793">
+						score:alignment="6842.467">
 						<score:midi>
 							<moments>
 								<moment
@@ -27725,27 +27680,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6861.206"
-								y1="6424.219"
-								x2="6861.206"
-								y2="6588.304" />
+								x1="6858.879"
+								y1="6392.219"
+								x2="6858.879"
+								y2="6556.304" />
 							<text
 								class="notehead"
-								x="6826.381"
-								y="6592">œ</text>
+								x="6824.054"
+								y="6560">œ</text>
 							<text
 								class="accidental"
-								x="6787.208"
-								y="6592">#</text>
+								x="6784.882"
+								y="6560">#</text>
 							<text
 								class="ornament"
-								x="6844.793"
-								y="6405.019">~2</text>
+								x="6842.467"
+								y="6373.019">~2</text>
 						</g>
 					</g>
 					<g
 						class="rest"
-						score:alignment="7040.522">
+						score:alignment="7038.742">
 						<score:midi>
 							<moments>
 								<moment
@@ -27761,16 +27716,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="7021.042"
-								y="6560">Œ</text>
+								x="7019.262"
+								y="6528">Œ</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="6494"
-						x2="7680.003"
-						y2="6626" />
+						x1="7680"
+						y1="6462"
+						x2="7680"
+						y2="6594" />
 				</g>
 			</g>
 			<g
@@ -27778,6 +27733,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 8">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="6784"
+						x2="7680"
+						y2="6784" />
 					<line
 						class="staffline"
 						x1="400"
@@ -27802,30 +27763,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="6912"
 						x2="7680"
 						y2="6912" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="6944"
-						x2="7680"
-						y2="6944" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="6905.6">pal. 8</text>
+						y="6873.6">pal. 8</text>
 					<use
 						class="clef"
 						href="#trebleClef"
 						x="400"
-						y="6912" />
+						y="6880" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="6816"
+						y1="6784"
 						x2="503.2"
-						y2="6944" />
+						y2="6912" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -27840,42 +27795,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="6880">∑</text>
+								y="6848">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 5423.474 6789.12 L 5461.874 6789.12 5461.874 6809.28 5423.474 6809.28 z" />
+							d="M 5417.236 6757.12 L 5455.636 6757.12 5455.636 6777.28 5417.236 6777.28 z" />
 						<path
 							class="beam"
-							d="M 5423.474 6802.56 L 5461.874 6802.56 5461.874 6816 5423.474 6816 z" />
+							d="M 5417.236 6770.56 L 5455.636 6770.56 5455.636 6784 5417.236 6784 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5846.707 6789.12 L 5885.107 6789.12 5885.107 6809.28 5846.707 6809.28 z" />
+							d="M 5841.65 6757.12 L 5880.05 6757.12 5880.05 6777.28 5841.65 6777.28 z" />
 						<path
 							class="beam"
-							d="M 5846.707 6802.56 L 5885.107 6802.56 5885.107 6816 5846.707 6816 z" />
+							d="M 5841.65 6770.56 L 5880.05 6770.56 5880.05 6784 5841.65 6784 z" />
 						<path
 							class="opaqueBeam"
-							d="M 6259.346 6789.12 L 6297.746 6789.12 6297.746 6809.28 6259.346 6809.28 z" />
+							d="M 6255.443 6757.12 L 6293.843 6757.12 6293.843 6777.28 6255.443 6777.28 z" />
 						<path
 							class="beam"
-							d="M 6259.346 6802.56 L 6297.746 6802.56 6297.746 6816 6259.346 6816 z" />
+							d="M 6255.443 6770.56 L 6293.843 6770.56 6293.843 6784 6255.443 6784 z" />
 						<path
 							class="opaqueBeam"
-							d="M 6663.513 6789.12 L 6701.913 6789.12 6701.913 6809.28 6663.513 6809.28 z" />
+							d="M 6660.74 6757.12 L 6699.14 6757.12 6699.14 6777.28 6660.74 6777.28 z" />
 						<path
 							class="beam"
-							d="M 6663.513 6802.56 L 6701.913 6802.56 6701.913 6816 6663.513 6816 z" />
+							d="M 6660.74 6770.56 L 6699.14 6770.56 6699.14 6784 6660.74 6784 z" />
 						<path
 							class="beam"
-							d="M 5150.489 6770.56 L 7495.417 6770.56 7495.417 6784 5150.489 6784 z" />
+							d="M 5143.38 6738.56 L 7494.862 6738.56 7494.862 6752 5143.38 6752 z" />
 					</g>
 					<g
 						class="chord"
-						score:alignment="5134.076">
+						score:alignment="5126.968">
 						<score:midi>
 							<moments>
 								<moment
@@ -27919,27 +27874,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5150.489"
-								y1="6770.56"
-								x2="5150.489"
-								y2="6892.304" />
+								x1="5143.38"
+								y1="6738.56"
+								x2="5143.38"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="5115.664"
-								y="6896">œ</text>
+								x="5108.555"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="5076.491"
-								y="6896">#</text>
+								x="5069.383"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="5134.076"
-								y="6751.36">~1</text>
+								x="5126.968"
+								y="6719.36">~1</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5445.461">
+						score:alignment="5439.224">
 						<score:midi>
 							<moments>
 								<moment
@@ -28034,27 +27989,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5461.874"
-								y1="6770.56"
-								x2="5461.874"
-								y2="6892.304" />
+								x1="5455.636"
+								y1="6738.56"
+								x2="5455.636"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="5427.049"
-								y="6896">œ</text>
+								x="5420.811"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="5387.876"
-								y="6896">#</text>
+								x="5381.639"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="5445.461"
-								y="6751.36">~7</text>
+								x="5439.224"
+								y="6719.36">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5579.761">
+						score:alignment="5573.898">
 						<score:midi>
 							<moments>
 								<moment
@@ -28179,27 +28134,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5596.174"
-								y1="6770.56"
-								x2="5596.174"
-								y2="6892.304" />
+								x1="5590.311"
+								y1="6738.56"
+								x2="5590.311"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="5561.349"
-								y="6896">œ</text>
+								x="5555.485"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="5522.176"
-								y="6896">#</text>
+								x="5516.313"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="5579.761"
-								y="6751.36">~8</text>
+								x="5573.898"
+								y="6719.36">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5868.694">
+						score:alignment="5863.638">
 						<score:midi>
 							<moments>
 								<moment
@@ -28283,27 +28238,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5885.107"
-								y1="6770.56"
-								x2="5885.107"
-								y2="6892.304" />
+								x1="5880.05"
+								y1="6738.56"
+								x2="5880.05"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="5850.282"
-								y="6896">œ</text>
+								x="5845.225"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="5811.109"
-								y="6896">#</text>
+								x="5806.053"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="5868.694"
-								y="6751.36">~5</text>
+								x="5863.638"
+								y="6719.36">~5</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6013.584">
+						score:alignment="6008.933">
 						<score:midi>
 							<moments>
 								<moment
@@ -28447,27 +28402,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6029.997"
-								y1="6770.56"
-								x2="6029.997"
-								y2="6892.304" />
+								x1="6025.345"
+								y1="6738.56"
+								x2="6025.345"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="5995.172"
-								y="6896">œ</text>
+								x="5990.52"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="5956"
-								y="6896">#</text>
+								x="5951.348"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="6013.584"
-								y="6751.36">~9</text>
+								x="6008.933"
+								y="6719.36">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6281.333">
+						score:alignment="6277.431">
 						<score:midi>
 							<moments>
 								<moment
@@ -28540,27 +28495,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6297.746"
-								y1="6770.56"
-								x2="6297.746"
-								y2="6892.304" />
+								x1="6293.843"
+								y1="6738.56"
+								x2="6293.843"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="6262.921"
-								y="6896">œ</text>
+								x="6259.018"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="6223.749"
-								y="6896">#</text>
+								x="6219.846"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="6281.333"
-								y="6751.36">~4</text>
+								x="6277.431"
+								y="6719.36">~4</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6437.662">
+						score:alignment="6434.196">
 						<score:midi>
 							<moments>
 								<moment
@@ -28699,27 +28654,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6454.074"
-								y1="6770.56"
-								x2="6454.074"
-								y2="6892.304" />
+								x1="6450.609"
+								y1="6738.56"
+								x2="6450.609"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="6419.249"
-								y="6896">œ</text>
+								x="6415.784"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="6380.077"
-								y="6896">#</text>
+								x="6376.611"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="6437.662"
-								y="6751.36">~10</text>
+								x="6434.196"
+								y="6719.36">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6685.5">
+						score:alignment="6682.728">
 						<score:midi>
 							<moments>
 								<moment
@@ -28781,27 +28736,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6701.913"
-								y1="6770.56"
-								x2="6701.913"
-								y2="6892.304" />
+								x1="6699.14"
+								y1="6738.56"
+								x2="6699.14"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="6667.087"
-								y="6896">œ</text>
+								x="6664.315"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="6627.915"
-								y="6896">#</text>
+								x="6625.143"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="6685.5"
-								y="6751.36">~3</text>
+								x="6682.728"
+								y="6719.36">~3</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6854.538">
+						score:alignment="6852.238">
 						<score:midi>
 							<moments>
 								<moment
@@ -28963,27 +28918,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6870.95"
-								y1="6770.56"
-								x2="6870.95"
-								y2="6892.304" />
+								x1="6868.65"
+								y1="6738.56"
+								x2="6868.65"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="6836.125"
-								y="6896">œ</text>
+								x="6833.825"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="6796.953"
-								y="6896">#</text>
+								x="6794.653"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="6854.538"
-								y="6751.36">~11</text>
+								x="6852.238"
+								y="6719.36">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="7083.734">
+						score:alignment="7082.075">
 						<score:midi>
 							<moments>
 								<moment
@@ -29034,27 +28989,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7100.147"
-								y1="6770.56"
-								x2="7100.147"
-								y2="6892.304" />
+								x1="7098.488"
+								y1="6738.56"
+								x2="7098.488"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="7065.322"
-								y="6896">œ</text>
+								x="7063.663"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="7026.149"
-								y="6896">#</text>
+								x="7024.49"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="7083.734"
-								y="6751.36">~2</text>
+								x="7082.075"
+								y="6719.36">~2</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="7266.329">
+						score:alignment="7265.181">
 						<score:midi>
 							<moments>
 								<moment
@@ -29215,27 +29170,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7282.742"
-								y1="6770.56"
-								x2="7282.742"
-								y2="6892.304" />
+								x1="7281.593"
+								y1="6738.56"
+								x2="7281.593"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="7247.917"
-								y="6896">œ</text>
+								x="7246.768"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="7208.744"
-								y="6896">#</text>
+								x="7207.596"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="7266.329"
-								y="6751.36">~12</text>
+								x="7265.181"
+								y="6719.36">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="7479.004">
+						score:alignment="7478.45">
 						<score:midi>
 							<moments>
 								<moment
@@ -29319,30 +29274,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7495.417"
-								y1="6770.56"
-								x2="7495.417"
-								y2="6892.304" />
+								x1="7494.862"
+								y1="6738.56"
+								x2="7494.862"
+								y2="6860.304" />
 							<text
 								class="notehead"
-								x="7460.591"
-								y="6896">œ</text>
+								x="7460.037"
+								y="6864">œ</text>
 							<text
 								class="accidental"
-								x="7421.419"
-								y="6896">#</text>
+								x="7420.865"
+								y="6864">#</text>
 							<text
 								class="ornament"
-								x="7479.004"
-								y="6751.36">~6</text>
+								x="7478.45"
+								y="6719.36">~6</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="7680.003"
-						y1="6814"
-						x2="7680.003"
-						y2="6946" />
+						x1="7680"
+						y1="6782"
+						x2="7680"
+						y2="6914" />
 				</g>
 			</g>
 			<g
@@ -29350,93 +29305,99 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="4448"
+					y1="4444"
 					x2="503.2"
 					y2="4704" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="4446"
-					x2="7680.003"
+					x1="7680"
+					y1="4442"
+					x2="7680"
 					y2="4706" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="4832"
+					y1="4828"
 					x2="503.2"
-					y2="5088" />
+					y2="5024" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="4830"
-					x2="7680.003"
-					y2="5090" />
+					x1="7680"
+					y1="4826"
+					x2="7680"
+					y2="5026" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="5216"
+					y1="5148"
 					x2="503.2"
-					y2="5536" />
+					y2="5472" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="5214"
-					x2="7680.003"
-					y2="5538" />
+					x1="7680"
+					y1="5146"
+					x2="7680"
+					y2="5474" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="5664"
+					y1="5596"
 					x2="503.2"
-					y2="5856" />
+					y2="5824" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="5984"
+					y1="5948"
 					x2="503.2"
-					y2="6144" />
+					y2="6112" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="5982"
-					x2="7680.003"
-					y2="6146" />
+					x1="7680"
+					y1="5946"
+					x2="7680"
+					y2="6114" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="6272"
+					y1="6236"
 					x2="503.2"
-					y2="6496" />
+					y2="6464" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="6270"
-					x2="7680.003"
-					y2="6498" />
+					x1="7680"
+					y1="6234"
+					x2="7680"
+					y2="6466" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="6624"
+					y1="6588"
 					x2="503.2"
-					y2="6816" />
+					y2="6784" />
 				<line
 					class="barline"
-					x1="7680.003"
-					y1="6622"
-					x2="7680.003"
-					y2="6818" />
+					x1="7680"
+					y1="6586"
+					x2="7680"
+					y2="6786" />
 			</g>
 		</g>
 		<g
 			class="system">
 			<score:leftToRight
-				systemTop="7324.56"
+				systemTop="7292.56"
 				systemBottom="10198.4" />
 			<g
 				class="staff"
 				score:staffName="pal. 1">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="7552"
+						x2="7680"
+						y2="7552" />
 					<line
 						class="staffline"
 						x1="400"
@@ -29461,29 +29422,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="7680"
 						x2="7680"
 						y2="7680" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="7712"
-						x2="7680"
-						y2="7712" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="7673.6">pal. 1</text>
+						y="7641.6">pal. 1</text>
 					<g
 						class="barNumber">
 						<text
 							class="barNumberNumber"
 							x="503.2"
-							y="7273.135">3</text>
+							y="7241.135">3</text>
 						<rect
 							class="barNumberFrame"
 							x="457.456"
-							y="7205.694"
+							y="7173.694"
 							width="91.488"
 							height="89.4404" />
 					</g>
@@ -29491,30 +29446,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="7616" />
+						y="7584" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="7584"
+						y1="7552"
 						x2="503.2"
-						y2="7712" />
+						y2="7680" />
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 588.398 7477.12 L 626.798 7478.501 626.798 7498.661 588.398 7497.28 z" />
+							d="M 588.398 7445.12 L 626.798 7446.501 626.798 7466.661 588.398 7465.28 z" />
 						<path
 							class="beam"
-							d="M 588.398 7490.56 L 626.798 7491.941 626.798 7505.381 588.398 7504 z" />
+							d="M 588.398 7458.56 L 626.798 7459.941 626.798 7473.381 588.398 7472 z" />
 						<path
 							class="opaqueBeam"
-							d="M 588.398 7445.12 L 1032.365 7461.084 1032.365 7481.245 588.398 7465.28 z" />
+							d="M 588.398 7413.12 L 1032.365 7429.084 1032.365 7449.245 588.398 7433.28 z" />
 						<path
 							class="beam"
-							d="M 588.398 7458.56 L 1032.365 7474.524 1032.365 7487.964 588.398 7472 z" />
+							d="M 588.398 7426.56 L 1032.365 7442.524 1032.365 7455.964 588.398 7440 z" />
 						<path
 							class="beam"
-							d="M 588.398 7426.56 L 2071.578 7479.894 2071.578 7493.333 588.398 7440 z" />
+							d="M 588.398 7394.56 L 2071.578 7447.894 2071.578 7461.333 588.398 7408 z" />
 					</g>
 					<g
 						class="chord"
@@ -29610,21 +29565,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="588.3975"
-								y1="7426.56"
+								y1="7394.56"
 								x2="588.3975"
-								y2="7596.304" />
+								y2="7564.304" />
 							<text
 								class="notehead"
 								x="553.5722"
-								y="7600">œ</text>
+								y="7568">œ</text>
 							<text
 								class="accidental"
 								x="514.4"
-								y="7600">#</text>
+								y="7568">#</text>
 							<text
 								class="ornament"
 								x="571.9849"
-								y="7407.36">~7</text>
+								y="7375.36">~7</text>
 						</g>
 					</g>
 					<g
@@ -29725,21 +29680,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="697.3344"
-								y1="7430.477"
+								y1="7398.477"
 								x2="697.3344"
-								y2="7612.304" />
+								y2="7580.304" />
 							<text
 								class="notehead"
 								x="662.5091"
-								y="7616">œ</text>
+								y="7584">œ</text>
 							<text
 								class="accidental"
 								x="623.3369"
-								y="7616">#</text>
+								y="7584">#</text>
 							<text
 								class="ornament"
 								x="680.9218"
-								y="7411.277">~7</text>
+								y="7379.277">~7</text>
 						</g>
 					</g>
 					<g
@@ -29851,17 +29806,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="806.2713"
-								y1="7434.395"
+								y1="7402.395"
 								x2="806.2713"
-								y2="7628.304" />
+								y2="7596.304" />
 							<text
 								class="notehead"
 								x="771.446"
-								y="7632">œ</text>
+								y="7600">œ</text>
 							<text
 								class="ornament"
 								x="789.8586"
-								y="7415.194">~8</text>
+								y="7383.194">~8</text>
 						</g>
 					</g>
 					<g
@@ -29973,17 +29928,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="910.5596"
-								y1="7438.145"
+								y1="7406.145"
 								x2="910.5596"
-								y2="7644.304" />
+								y2="7612.304" />
 							<text
 								class="notehead"
 								x="875.7343"
-								y="7648">œ</text>
+								y="7616">œ</text>
 							<text
 								class="ornament"
 								x="894.147"
-								y="7418.944">~8</text>
+								y="7386.944">~8</text>
 						</g>
 					</g>
 					<g
@@ -30106,17 +30061,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1032.365"
-								y1="7442.524"
+								y1="7410.524"
 								x2="1032.365"
-								y2="7660.304" />
+								y2="7628.304" />
 							<text
 								class="notehead"
 								x="997.5399"
-								y="7664">œ</text>
+								y="7632">œ</text>
 							<text
 								class="ornament"
 								x="1015.953"
-								y="7423.325">~9</text>
+								y="7391.325">~9</text>
 						</g>
 					</g>
 					<g
@@ -30239,21 +30194,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1174.132"
-								y1="7447.622"
+								y1="7415.622"
 								x2="1174.132"
-								y2="7692.304" />
+								y2="7660.304" />
 							<text
 								class="notehead"
 								x="1139.307"
-								y="7696">œ</text>
+								y="7664">œ</text>
 							<text
 								class="accidental"
 								x="1100.135"
-								y="7696">#</text>
+								y="7664">#</text>
 							<text
 								class="ornament"
 								x="1157.719"
-								y="7428.422">~9</text>
+								y="7396.422">~9</text>
 						</g>
 					</g>
 					<g
@@ -30387,21 +30342,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1339.119"
-								y1="7453.555"
+								y1="7421.555"
 								x2="1339.119"
-								y2="7708.304" />
+								y2="7676.304" />
 							<text
 								class="notehead"
 								x="1304.294"
-								y="7712">œ</text>
+								y="7680">œ</text>
 							<text
 								class="accidental"
 								x="1265.122"
-								y="7712">#</text>
+								y="7680">#</text>
 							<text
 								class="ornament"
 								x="1322.707"
-								y="7434.355">~10</text>
+								y="7402.355">~10</text>
 						</g>
 					</g>
 					<g
@@ -30535,21 +30490,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1531.401"
-								y1="7460.469"
+								y1="7428.469"
 								x2="1531.401"
-								y2="7724.304" />
+								y2="7692.304" />
 							<text
 								class="notehead"
 								x="1496.576"
-								y="7728">œ</text>
+								y="7696">œ</text>
 							<text
 								class="accidental"
 								x="1457.404"
-								y="7728">#</text>
+								y="7696">#</text>
 							<text
 								class="ornament"
 								x="1514.989"
-								y="7441.269">~10</text>
+								y="7409.269">~10</text>
 						</g>
 					</g>
 					<g
@@ -30694,26 +30649,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1755.051"
-								y1="7468.511"
+								y1="7436.511"
 								x2="1755.051"
-								y2="7740.304" />
+								y2="7708.304" />
 							<text
 								class="notehead"
 								x="1720.226"
-								y="7744">œ</text>
+								y="7712">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="1705.813"
-									y1="7744"
+									y1="7712"
 									x2="1771.464"
-									y2="7744" />
+									y2="7712" />
 							</g>
 							<text
 								class="ornament"
 								x="1738.638"
-								y="7449.312">~11</text>
+								y="7417.312">~11</text>
 						</g>
 					</g>
 					<g
@@ -30858,26 +30813,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2071.578"
-								y1="7479.894"
+								y1="7447.894"
 								x2="2071.578"
-								y2="7756.304" />
+								y2="7724.304" />
 							<text
 								class="notehead"
 								x="2036.753"
-								y="7760">œ</text>
+								y="7728">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="2022.34"
-									y1="7744"
+									y1="7712"
 									x2="2087.991"
-									y2="7744" />
+									y2="7712" />
 							</g>
 							<text
 								class="ornament"
 								x="2055.166"
-								y="7460.693">~11</text>
+								y="7428.693">~11</text>
 						</g>
 					</g>
 					<g
@@ -31033,32 +30988,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2383.32"
-								y1="7644.8"
+								y1="7612.8"
 								x2="2383.32"
-								y2="7772.304" />
+								y2="7740.304" />
 							<text
 								class="notehead"
 								x="2348.494"
-								y="7776">œ</text>
+								y="7744">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2334.082"
+									y1="7712"
+									x2="2399.732"
+									y2="7712" />
 								<line
 									class="ledgerline"
 									x1="2334.082"
 									y1="7744"
 									x2="2399.732"
 									y2="7744" />
-								<line
-									class="ledgerline"
-									x1="2334.082"
-									y1="7776"
-									x2="2399.732"
-									y2="7776" />
 							</g>
 							<text
 								class="ornament"
 								x="2366.907"
-								y="7564.8">~12</text>
+								y="7532.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -31214,19 +31169,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2736.515"
-								y1="7644.8"
+								y1="7612.8"
 								x2="2736.515"
-								y2="7804.304" />
+								y2="7772.304" />
 							<text
 								class="notehead"
 								x="2701.69"
-								y="7808">œ</text>
+								y="7776">œ</text>
 							<text
 								class="accidental"
 								x="2649.122"
-								y="7808">#</text>
+								y="7776">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2687.277"
+									y1="7712"
+									x2="2752.927"
+									y2="7712" />
 								<line
 									class="ledgerline"
 									x1="2687.277"
@@ -31239,23 +31200,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="7776"
 									x2="2752.927"
 									y2="7776" />
-								<line
-									class="ledgerline"
-									x1="2687.277"
-									y1="7808"
-									x2="2752.927"
-									y2="7808" />
 							</g>
 							<text
 								class="ornament"
 								x="2720.102"
-								y="7564.8">~12</text>
+								y="7532.8">~12</text>
 							<line
 								class="noteExtender"
 								x1="2760.927"
-								y1="7808"
+								y1="7776"
 								x2="3261.558"
-								y2="7808" />
+								y2="7776" />
 						</g>
 					</g>
 					<g
@@ -31277,15 +31232,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="3266.359"
-								y="7648">∑</text>
+								y="7616">∑</text>
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="5129.831"
-						y1="7584"
+						y1="7552"
 						x2="5129.831"
-						y2="7712" />
+						y2="7680" />
 					<g
 						class="rest"
 						score:alignment="5195.739">
@@ -31300,7 +31255,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="5177.459"
-								y="7648">∑</text>
+								y="7616">∑</text>
 						</g>
 					</g>
 					<g
@@ -31308,15 +31263,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<line
 							class="barline"
 							x1="7647.998"
-							y1="7582"
+							y1="7550"
 							x2="7647.998"
-							y2="7714" />
+							y2="7682" />
 						<line
 							class="thickBarline"
 							x1="7671.998"
-							y1="7582"
+							y1="7550"
 							x2="7671.998"
-							y2="7714" />
+							y2="7682" />
 					</g>
 				</g>
 			</g>
@@ -31325,6 +31280,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 2">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="7936"
+						x2="7680"
+						y2="7936" />
 					<line
 						class="staffline"
 						x1="400"
@@ -31349,30 +31310,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="8064"
 						x2="7680"
 						y2="8064" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="8096"
-						x2="7680"
-						y2="8096" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="8057.6">pal. 2</text>
+						y="8025.6">pal. 2</text>
 					<use
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="8000" />
+						y="7968" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="7968"
+						y1="7936"
 						x2="503.2"
-						y2="8096" />
+						y2="8064" />
 					<g
 						class="rest"
 						score:alignment="571.9849">
@@ -31387,20 +31342,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="552.5048"
-								y="8032">Œ</text>
+								y="8000">Œ</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 1250.311 7956.259 L 1751.792 7960.336 1751.792 7980.497 1250.311 7976.419 z" />
+							d="M 1250.311 7924.259 L 1751.792 7928.336 1751.792 7948.497 1250.311 7944.419 z" />
 						<path
 							class="beam"
-							d="M 1250.311 7969.699 L 1751.792 7973.776 1751.792 7987.216 1250.311 7983.139 z" />
+							d="M 1250.311 7937.699 L 1751.792 7941.776 1751.792 7955.216 1250.311 7951.139 z" />
 						<path
 							class="beam"
-							d="M 1250.311 7937.699 L 3218.25 7953.699 3218.25 7967.139 1250.311 7951.139 z" />
+							d="M 1250.311 7905.699 L 3218.25 7921.699 3218.25 7935.139 1250.311 7919.139 z" />
 					</g>
 					<g
 						class="chord"
@@ -31509,17 +31464,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1250.311"
-								y1="7937.699"
+								y1="7905.699"
 								x2="1250.311"
-								y2="8060.304" />
+								y2="8028.304" />
 							<text
 								class="notehead"
 								x="1215.486"
-								y="8064">œ</text>
+								y="8032">œ</text>
 							<text
 								class="ornament"
 								x="1233.899"
-								y="7918.499">~7</text>
+								y="7886.499">~7</text>
 						</g>
 					</g>
 					<g
@@ -31633,17 +31588,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1356.229"
-								y1="7938.56"
+								y1="7906.56"
 								x2="1356.229"
-								y2="8060.304" />
+								y2="8028.304" />
 							<text
 								class="notehead"
 								x="1321.404"
-								y="8064">œ</text>
+								y="8032">œ</text>
 							<text
 								class="ornament"
 								x="1339.817"
-								y="7919.36">~7</text>
+								y="7887.36">~7</text>
 						</g>
 					</g>
 					<g
@@ -31768,21 +31723,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1474.369"
-								y1="7939.521"
+								y1="7907.521"
 								x2="1474.369"
-								y2="8076.304" />
+								y2="8044.304" />
 							<text
 								class="notehead"
 								x="1439.543"
-								y="8080">œ</text>
+								y="8048">œ</text>
 							<text
 								class="accidental"
 								x="1400.371"
-								y="8080">#</text>
+								y="8048">#</text>
 							<text
 								class="ornament"
 								x="1457.956"
-								y="7920.32">~8</text>
+								y="7888.32">~8</text>
 						</g>
 					</g>
 					<g
@@ -31907,21 +31862,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1605.951"
-								y1="7940.59"
+								y1="7908.59"
 								x2="1605.951"
-								y2="8076.304" />
+								y2="8044.304" />
 							<text
 								class="notehead"
 								x="1571.126"
-								y="8080">œ</text>
+								y="8048">œ</text>
 							<text
 								class="accidental"
 								x="1531.954"
-								y="8080">#</text>
+								y="8048">#</text>
 							<text
 								class="ornament"
 								x="1589.538"
-								y="7921.39">~8</text>
+								y="7889.39">~8</text>
 						</g>
 					</g>
 					<g
@@ -32057,21 +32012,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1751.792"
-								y1="7941.776"
+								y1="7909.776"
 								x2="1751.792"
-								y2="8076.304" />
+								y2="8044.304" />
 							<text
 								class="notehead"
 								x="1716.967"
-								y="8080">œ</text>
+								y="8048">œ</text>
 							<text
 								class="accidental"
 								x="1686.336"
-								y="8080">n</text>
+								y="8048">n</text>
 							<text
 								class="ornament"
 								x="1735.379"
-								y="7922.576">~9</text>
+								y="7890.576">~9</text>
 						</g>
 					</g>
 					<g
@@ -32207,17 +32162,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1939.618"
-								y1="7943.303"
+								y1="7911.303"
 								x2="1939.618"
-								y2="8076.304" />
+								y2="8044.304" />
 							<text
 								class="notehead"
 								x="1904.793"
-								y="8080">œ</text>
+								y="8048">œ</text>
 							<text
 								class="ornament"
 								x="1923.205"
-								y="7924.103">~9</text>
+								y="7892.103">~9</text>
 						</g>
 					</g>
 					<g
@@ -32364,21 +32319,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2157.684"
-								y1="7945.076"
+								y1="7913.076"
 								x2="2157.684"
-								y2="8092.304" />
+								y2="8060.304" />
 							<text
 								class="notehead"
 								x="2122.859"
-								y="8096">œ</text>
+								y="8064">œ</text>
 							<text
 								class="accidental"
 								x="2083.687"
-								y="8096">#</text>
+								y="8064">#</text>
 							<text
 								class="ornament"
 								x="2141.271"
-								y="7925.876">~10</text>
+								y="7893.876">~10</text>
 						</g>
 					</g>
 					<g
@@ -32525,21 +32480,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2360.506"
-								y1="7946.725"
+								y1="7914.725"
 								x2="2360.506"
-								y2="8092.304" />
+								y2="8060.304" />
 							<text
 								class="notehead"
 								x="2325.681"
-								y="8096">œ</text>
+								y="8064">œ</text>
 							<text
 								class="accidental"
 								x="2286.509"
-								y="8096">#</text>
+								y="8064">#</text>
 							<text
 								class="ornament"
 								x="2344.094"
-								y="7927.525">~10</text>
+								y="7895.525">~10</text>
 						</g>
 					</g>
 					<g
@@ -32697,21 +32652,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2584.156"
-								y1="7948.543"
+								y1="7916.543"
 								x2="2584.156"
-								y2="8092.304" />
+								y2="8060.304" />
 							<text
 								class="notehead"
 								x="2549.331"
-								y="8096">œ</text>
+								y="8064">œ</text>
 							<text
 								class="accidental"
 								x="2518.7"
-								y="8096">n</text>
+								y="8064">n</text>
 							<text
 								class="ornament"
 								x="2567.744"
-								y="7929.343">~11</text>
+								y="7897.343">~11</text>
 						</g>
 					</g>
 					<g
@@ -32869,25 +32824,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2832.656"
-								y1="7950.564"
+								y1="7918.564"
 								x2="2832.656"
-								y2="8092.304" />
+								y2="8060.304" />
 							<text
 								class="notehead"
 								x="2797.831"
-								y="8096">œ</text>
+								y="8064">œ</text>
 							<text
 								class="ornament"
 								x="2816.243"
-								y="7931.364">~11</text>
+								y="7899.364">~11</text>
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="3115.773"
-						y1="7968"
+						y1="7936"
 						x2="3115.773"
-						y2="8096" />
+						y2="8064" />
 					<g
 						class="chord"
 						score:alignment="3201.838">
@@ -33054,21 +33009,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3218.25"
-								y1="7953.699"
+								y1="7921.699"
 								x2="3218.25"
-								y2="8108.304" />
+								y2="8076.304" />
 							<text
 								class="notehead"
 								x="3183.425"
-								y="8112">œ</text>
+								y="8080">œ</text>
 							<text
 								class="accidental"
 								x="3144.253"
-								y="8112">#</text>
+								y="8080">#</text>
 							<text
 								class="ornament"
 								x="3201.838"
-								y="7934.499">~12</text>
+								y="7902.499">~12</text>
 						</g>
 					</g>
 					<g
@@ -33237,21 +33192,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3577.919"
-								y1="7996.8"
+								y1="7964.8"
 								x2="3577.919"
-								y2="8108.304" />
+								y2="8076.304" />
 							<text
 								class="notehead"
 								x="3543.094"
-								y="8112">œ</text>
+								y="8080">œ</text>
 							<text
 								class="accidental"
 								x="3503.921"
-								y="8112">#</text>
+								y="8080">#</text>
 							<text
 								class="ornament"
 								x="3561.506"
-								y="7948.8">~12</text>
+								y="7916.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -33273,15 +33228,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="3885.712"
-								y="8032">Ó</text>
+								y="8000">Ó</text>
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="5129.831"
-						y1="7968"
+						y1="7936"
 						x2="5129.831"
-						y2="8096" />
+						y2="8064" />
 					<g
 						class="rest"
 						score:alignment="5195.739">
@@ -33296,7 +33251,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="5177.459"
-								y="8032">∑</text>
+								y="8000">∑</text>
 						</g>
 					</g>
 					<g
@@ -33304,15 +33259,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<line
 							class="barline"
 							x1="7647.998"
-							y1="7966"
+							y1="7934"
 							x2="7647.998"
-							y2="8098" />
+							y2="8066" />
 						<line
 							class="thickBarline"
 							x1="7671.998"
-							y1="7966"
+							y1="7934"
 							x2="7671.998"
-							y2="8098" />
+							y2="8066" />
 					</g>
 				</g>
 			</g>
@@ -33321,6 +33276,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 3">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="8256"
+						x2="7680"
+						y2="8256" />
 					<line
 						class="staffline"
 						x1="400"
@@ -33345,30 +33306,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="8384"
 						x2="7680"
 						y2="8384" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="8416"
-						x2="7680"
-						y2="8416" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="8377.6">pal. 3</text>
+						y="8345.6">pal. 3</text>
 					<use
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="8320" />
+						y="8288" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="8288"
+						y1="8256"
 						x2="503.2"
-						y2="8416" />
+						y2="8384" />
 					<g
 						class="rest"
 						score:alignment="577.7449">
@@ -33383,26 +33338,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="553.9952"
-								y="8352">Ó</text>
+								y="8320">Ó</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 1861.376 8293.12 L 1899.776 8294.412 1899.776 8314.572 1861.376 8313.28 z" />
+							d="M 1861.376 8261.12 L 1899.776 8262.412 1899.776 8282.572 1861.376 8281.28 z" />
 						<path
 							class="beam"
-							d="M 1861.376 8306.561 L 1899.776 8307.853 1899.776 8321.293 1861.376 8320.001 z" />
+							d="M 1861.376 8274.561 L 1899.776 8275.853 1899.776 8289.293 1861.376 8288.001 z" />
 						<path
 							class="opaqueBeam"
-							d="M 1861.376 8261.12 L 2446.055 8280.799 2446.055 8300.959 1861.376 8281.28 z" />
+							d="M 1861.376 8229.12 L 2446.055 8248.799 2446.055 8268.959 1861.376 8249.28 z" />
 						<path
 							class="beam"
-							d="M 1861.376 8274.561 L 2446.055 8294.239 2446.055 8307.68 1861.376 8288.001 z" />
+							d="M 1861.376 8242.561 L 2446.055 8262.239 2446.055 8275.68 1861.376 8256.001 z" />
 						<path
 							class="beam"
-							d="M 1861.376 8242.561 L 3445.929 8295.894 3445.929 8309.334 1861.376 8256.001 z" />
+							d="M 1861.376 8210.561 L 3445.929 8263.894 3445.929 8277.334 1861.376 8224.001 z" />
 					</g>
 					<g
 						class="chord"
@@ -33498,21 +33453,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1861.376"
-								y1="8242.561"
+								y1="8210.561"
 								x2="1861.376"
-								y2="8396.304" />
+								y2="8364.304" />
 							<text
 								class="notehead"
 								x="1826.551"
-								y="8400">œ</text>
+								y="8368">œ</text>
 							<text
 								class="accidental"
 								x="1787.379"
-								y="8400">#</text>
+								y="8368">#</text>
 							<text
 								class="ornament"
 								x="1844.964"
-								y="8223.36">~7</text>
+								y="8191.36">~7</text>
 						</g>
 					</g>
 					<g
@@ -33613,21 +33568,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="1970.313"
-								y1="8246.227"
+								y1="8214.227"
 								x2="1970.313"
-								y2="8412.304" />
+								y2="8380.304" />
 							<text
 								class="notehead"
 								x="1935.488"
-								y="8416">œ</text>
+								y="8384">œ</text>
 							<text
 								class="accidental"
 								x="1896.315"
-								y="8416">#</text>
+								y="8384">#</text>
 							<text
 								class="ornament"
 								x="1953.9"
-								y="8227.026">~7</text>
+								y="8195.026">~7</text>
 						</g>
 					</g>
 					<g
@@ -33739,21 +33694,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2079.25"
-								y1="8249.894"
+								y1="8217.894"
 								x2="2079.25"
-								y2="8428.304" />
+								y2="8396.304" />
 							<text
 								class="notehead"
 								x="2044.425"
-								y="8432">œ</text>
+								y="8400">œ</text>
 							<text
 								class="accidental"
 								x="2005.252"
-								y="8432">#</text>
+								y="8400">#</text>
 							<text
 								class="ornament"
 								x="2062.837"
-								y="8230.693">~8</text>
+								y="8198.693">~8</text>
 						</g>
 					</g>
 					<g
@@ -33865,26 +33820,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2188.186"
-								y1="8253.56"
+								y1="8221.56"
 								x2="2188.186"
-								y2="8444.304" />
+								y2="8412.304" />
 							<text
 								class="notehead"
 								x="2153.361"
-								y="8448">œ</text>
+								y="8416">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="2138.948"
-									y1="8448"
+									y1="8416"
 									x2="2204.599"
-									y2="8448" />
+									y2="8416" />
 							</g>
 							<text
 								class="ornament"
 								x="2171.774"
-								y="8234.359">~8</text>
+								y="8202.359">~8</text>
 						</g>
 					</g>
 					<g
@@ -34007,26 +33962,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2307.14"
-								y1="8257.563"
+								y1="8225.563"
 								x2="2307.14"
-								y2="8460.304" />
+								y2="8428.304" />
 							<text
 								class="notehead"
 								x="2272.315"
-								y="8464">œ</text>
+								y="8432">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="2257.902"
-									y1="8448"
+									y1="8416"
 									x2="2323.553"
-									y2="8448" />
+									y2="8416" />
 							</g>
 							<text
 								class="ornament"
 								x="2290.728"
-								y="8238.363">~9</text>
+								y="8206.363">~9</text>
 						</g>
 					</g>
 					<g
@@ -34149,32 +34104,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2446.055"
-								y1="8262.239"
+								y1="8230.239"
 								x2="2446.055"
-								y2="8476.304" />
+								y2="8444.304" />
 							<text
 								class="notehead"
 								x="2411.23"
-								y="8480">œ</text>
+								y="8448">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2396.818"
+									y1="8416"
+									x2="2462.468"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="2396.818"
 									y1="8448"
 									x2="2462.468"
 									y2="8448" />
-								<line
-									class="ledgerline"
-									x1="2396.818"
-									y1="8480"
-									x2="2462.468"
-									y2="8480" />
 							</g>
 							<text
 								class="ornament"
 								x="2429.643"
-								y="8243.039">~9</text>
+								y="8211.039">~9</text>
 						</g>
 					</g>
 					<g
@@ -34308,19 +34263,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2608.599"
-								y1="8267.71"
+								y1="8235.71"
 								x2="2608.599"
-								y2="8508.304" />
+								y2="8476.304" />
 							<text
 								class="notehead"
 								x="2573.773"
-								y="8512">œ</text>
+								y="8480">œ</text>
 							<text
 								class="accidental"
 								x="2521.206"
-								y="8512">#</text>
+								y="8480">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2559.361"
+									y1="8416"
+									x2="2625.011"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="2559.361"
@@ -34333,17 +34294,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8480"
 									x2="2625.011"
 									y2="8480" />
-								<line
-									class="ledgerline"
-									x1="2559.361"
-									y1="8512"
-									x2="2625.011"
-									y2="8512" />
 							</g>
 							<text
 								class="ornament"
 								x="2592.186"
-								y="8248.51">~10</text>
+								y="8216.51">~10</text>
 						</g>
 					</g>
 					<g
@@ -34477,19 +34432,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2799.658"
-								y1="8274.141"
+								y1="8242.141"
 								x2="2799.658"
-								y2="8524.304" />
+								y2="8492.304" />
 							<text
 								class="notehead"
 								x="2764.833"
-								y="8528">œ</text>
+								y="8496">œ</text>
 							<text
 								class="accidental"
 								x="2712.266"
-								y="8528">#</text>
+								y="8496">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2750.42"
+									y1="8416"
+									x2="2816.071"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="2750.42"
@@ -34502,17 +34463,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8480"
 									x2="2816.071"
 									y2="8480" />
-								<line
-									class="ledgerline"
-									x1="2750.42"
-									y1="8512"
-									x2="2816.071"
-									y2="8512" />
 							</g>
 							<text
 								class="ornament"
 								x="2783.246"
-								y="8254.941">~10</text>
+								y="8222.941">~10</text>
 						</g>
 					</g>
 					<g
@@ -34657,19 +34612,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3023.308"
-								y1="8281.669"
+								y1="8249.669"
 								x2="3023.308"
-								y2="8540.304" />
+								y2="8508.304" />
 							<text
 								class="notehead"
 								x="2988.483"
-								y="8544">œ</text>
+								y="8512">œ</text>
 							<text
 								class="accidental"
 								x="2935.916"
-								y="8544">#</text>
+								y="8512">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2974.07"
+									y1="8416"
+									x2="3039.721"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="2974.07"
@@ -34688,17 +34649,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8512"
 									x2="3039.721"
 									y2="8512" />
-								<line
-									class="ledgerline"
-									x1="2974.07"
-									y1="8544"
-									x2="3039.721"
-									y2="8544" />
 							</g>
 							<text
 								class="ornament"
 								x="3006.896"
-								y="8262.469">~11</text>
+								y="8230.469">~11</text>
 						</g>
 					</g>
 					<g
@@ -34843,15 +34798,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3445.929"
-								y1="8295.894"
+								y1="8263.894"
 								x2="3445.929"
-								y2="8556.304" />
+								y2="8524.304" />
 							<text
 								class="notehead"
 								x="3411.104"
-								y="8560">œ</text>
+								y="8528">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3396.691"
+									y1="8416"
+									x2="3462.342"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="3396.691"
@@ -34870,17 +34831,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8512"
 									x2="3462.342"
 									y2="8512" />
-								<line
-									class="ledgerline"
-									x1="3396.691"
-									y1="8544"
-									x2="3462.342"
-									y2="8544" />
 							</g>
 							<text
 								class="ornament"
 								x="3429.516"
-								y="8268.8">~11</text>
+								y="8236.8">~11</text>
 						</g>
 					</g>
 					<g
@@ -35036,19 +34991,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3752.276"
-								y1="8348.8"
+								y1="8316.8"
 								x2="3752.276"
-								y2="8572.304" />
+								y2="8540.304" />
 							<text
 								class="notehead"
 								x="3717.451"
-								y="8576">œ</text>
+								y="8544">œ</text>
 							<text
 								class="accidental"
 								x="3664.883"
-								y="8576">#</text>
+								y="8544">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3703.038"
+									y1="8416"
+									x2="3768.688"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="3703.038"
@@ -35073,17 +35034,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8544"
 									x2="3768.688"
 									y2="8544" />
-								<line
-									class="ledgerline"
-									x1="3703.038"
-									y1="8576"
-									x2="3768.688"
-									y2="8576" />
 							</g>
 							<text
 								class="ornament"
 								x="3735.863"
-								y="8268.8">~12</text>
+								y="8236.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -35239,19 +35194,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="4110.767"
-								y1="8348.8"
+								y1="8316.8"
 								x2="4110.767"
-								y2="8572.304" />
+								y2="8540.304" />
 							<text
 								class="notehead"
 								x="4075.941"
-								y="8576">œ</text>
+								y="8544">œ</text>
 							<text
 								class="accidental"
 								x="4031.915"
-								y="8576">n</text>
+								y="8544">n</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4061.529"
+									y1="8416"
+									x2="4127.179"
+									y2="8416" />
 								<line
 									class="ledgerline"
 									x1="4061.529"
@@ -35276,17 +35237,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8544"
 									x2="4127.179"
 									y2="8544" />
-								<line
-									class="ledgerline"
-									x1="4061.529"
-									y1="8576"
-									x2="4127.179"
-									y2="8576" />
 							</g>
 							<text
 								class="ornament"
 								x="4094.354"
-								y="8268.8">~12</text>
+								y="8236.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -35308,15 +35263,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="4495.286"
-								y="8352">Œ</text>
+								y="8320">Œ</text>
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="5129.831"
-						y1="8288"
+						y1="8256"
 						x2="5129.831"
-						y2="8416" />
+						y2="8384" />
 					<g
 						class="rest"
 						score:alignment="5195.739">
@@ -35331,7 +35286,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="5177.459"
-								y="8352">∑</text>
+								y="8320">∑</text>
 						</g>
 					</g>
 					<g
@@ -35339,15 +35294,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<line
 							class="barline"
 							x1="7647.998"
-							y1="8286"
+							y1="8254"
 							x2="7647.998"
-							y2="8418" />
+							y2="8386" />
 						<line
 							class="thickBarline"
 							x1="7671.998"
-							y1="8286"
+							y1="8254"
 							x2="7671.998"
-							y2="8418" />
+							y2="8386" />
 					</g>
 				</g>
 			</g>
@@ -35356,6 +35311,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				score:staffName="pal. 4">
 				<g
 					class="stafflines">
+					<line
+						class="staffline"
+						x1="400"
+						y1="8704"
+						x2="7680"
+						y2="8704" />
 					<line
 						class="staffline"
 						x1="400"
@@ -35380,30 +35341,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="8832"
 						x2="7680"
 						y2="8832" />
-					<line
-						class="staffline"
-						x1="400"
-						y1="8864"
-						x2="7680"
-						y2="8864" />
 				</g>
 				<g
 					class="voice">
 					<text
 						class="staffName"
 						x="232"
-						y="8825.6">pal. 4</text>
+						y="8793.6">pal. 4</text>
 					<use
 						class="clef"
 						href="#bassClef8"
 						x="400"
-						y="8768" />
+						y="8736" />
 					<line
 						class="barline"
 						x1="503.2"
-						y1="8736"
+						y1="8704"
 						x2="503.2"
-						y2="8864" />
+						y2="8832" />
 					<g
 						class="rest"
 						score:alignment="563.9849">
@@ -35418,20 +35373,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="545.7056"
-								y="8800">∑</text>
+								y="8768">∑</text>
 						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 2536.901 8804.236 L 2898.651 8807.185 2898.651 8827.345 2536.901 8824.396 z" />
+							d="M 2536.901 8772.236 L 2898.651 8775.185 2898.651 8795.345 2536.901 8792.396 z" />
 						<path
 							class="beam"
-							d="M 2536.901 8817.677 L 2898.651 8820.625 2898.651 8834.065 2536.901 8831.117 z" />
+							d="M 2536.901 8785.677 L 2898.651 8788.625 2898.651 8802.065 2536.901 8799.117 z" />
 						<path
 							class="beam"
-							d="M 2536.901 8785.677 L 4499.811 8801.677 4499.811 8815.117 2536.901 8799.117 z" />
+							d="M 2536.901 8753.677 L 4499.811 8769.677 4499.811 8783.117 2536.901 8767.117 z" />
 					</g>
 					<g
 						class="chord"
@@ -35516,26 +35471,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2536.901"
-								y1="8785.677"
+								y1="8753.677"
 								x2="2536.901"
-								y2="8908.304" />
+								y2="8876.304" />
 							<text
 								class="notehead"
 								x="2502.075"
-								y="8912">œ</text>
+								y="8880">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="2487.663"
-									y1="8896"
+									y1="8864"
 									x2="2553.313"
-									y2="8896" />
+									y2="8864" />
 							</g>
 							<text
 								class="ornament"
 								x="2520.488"
-								y="8716.8">~6</text>
+								y="8684.8">~6</text>
 						</g>
 					</g>
 					<g
@@ -35636,26 +35591,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2645.263"
-								y1="8786.561"
+								y1="8754.561"
 								x2="2645.263"
-								y2="8908.304" />
+								y2="8876.304" />
 							<text
 								class="notehead"
 								x="2610.438"
-								y="8912">œ</text>
+								y="8880">œ</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
 									x1="2596.025"
-									y1="8896"
+									y1="8864"
 									x2="2661.675"
-									y2="8896" />
+									y2="8864" />
 							</g>
 							<text
 								class="ornament"
 								x="2628.85"
-								y="8716.8">~7</text>
+								y="8684.8">~7</text>
 						</g>
 					</g>
 					<g
@@ -35767,36 +35722,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2765.031"
-								y1="8787.536"
+								y1="8755.536"
 								x2="2765.031"
-								y2="8924.304" />
+								y2="8892.304" />
 							<text
 								class="notehead"
 								x="2730.206"
-								y="8928">œ</text>
+								y="8896">œ</text>
 							<text
 								class="accidental"
 								x="2677.638"
-								y="8928">#</text>
+								y="8896">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2715.793"
+									y1="8864"
+									x2="2781.444"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="2715.793"
 									y1="8896"
 									x2="2781.444"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="2715.793"
-									y1="8928"
-									x2="2781.444"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="2748.618"
-								y="8716.8">~8</text>
+								y="8684.8">~8</text>
 						</g>
 					</g>
 					<g
@@ -35919,36 +35874,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="2898.651"
-								y1="8788.625"
+								y1="8756.625"
 								x2="2898.651"
-								y2="8924.304" />
+								y2="8892.304" />
 							<text
 								class="notehead"
 								x="2863.826"
-								y="8928">œ</text>
+								y="8896">œ</text>
 							<text
 								class="accidental"
 								x="2811.258"
-								y="8928">#</text>
+								y="8896">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2849.413"
+									y1="8864"
+									x2="2915.063"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="2849.413"
 									y1="8896"
 									x2="2915.063"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="2849.413"
-									y1="8928"
-									x2="2915.063"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="2882.238"
-								y="8716.8">~9</text>
+								y="8684.8">~9</text>
 						</g>
 					</g>
 					<g
@@ -36082,36 +36037,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3046.121"
-								y1="8789.827"
+								y1="8757.827"
 								x2="3046.121"
-								y2="8924.304" />
+								y2="8892.304" />
 							<text
 								class="notehead"
 								x="3011.296"
-								y="8928">œ</text>
+								y="8896">œ</text>
 							<text
 								class="accidental"
 								x="2967.27"
-								y="8928">n</text>
+								y="8896">n</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2996.884"
+									y1="8864"
+									x2="3062.534"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="2996.884"
 									y1="8896"
 									x2="3062.534"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="2996.884"
-									y1="8928"
-									x2="3062.534"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="3029.709"
-								y="8716.8">~10</text>
+								y="8684.8">~10</text>
 						</g>
 					</g>
 					<g
@@ -36256,32 +36211,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3371.379"
-								y1="8792.479"
+								y1="8760.479"
 								x2="3371.379"
-								y2="8924.304" />
+								y2="8892.304" />
 							<text
 								class="notehead"
 								x="3336.554"
-								y="8928">œ</text>
+								y="8896">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3322.141"
+									y1="8864"
+									x2="3387.792"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="3322.141"
 									y1="8896"
 									x2="3387.792"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="3322.141"
-									y1="8928"
-									x2="3387.792"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="3354.967"
-								y="8716.8">~11</text>
+								y="8684.8">~11</text>
 						</g>
 					</g>
 					<g
@@ -36437,32 +36392,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3552.662"
-								y1="8793.956"
+								y1="8761.956"
 								x2="3552.662"
-								y2="8940.304" />
+								y2="8908.304" />
 							<text
 								class="notehead"
 								x="3517.836"
-								y="8944">œ</text>
+								y="8912">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3503.424"
+									y1="8864"
+									x2="3569.074"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="3503.424"
 									y1="8896"
 									x2="3569.074"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="3503.424"
-									y1="8928"
-									x2="3569.074"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="3536.249"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -36618,32 +36573,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3754.313"
-								y1="8795.6"
+								y1="8763.6"
 								x2="3754.313"
-								y2="8940.304" />
+								y2="8908.304" />
 							<text
 								class="notehead"
 								x="3719.487"
-								y="8944">œ</text>
+								y="8912">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3705.075"
+									y1="8864"
+									x2="3770.725"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="3705.075"
 									y1="8896"
 									x2="3770.725"
 									y2="8896" />
-								<line
-									class="ledgerline"
-									x1="3705.075"
-									y1="8928"
-									x2="3770.725"
-									y2="8928" />
 							</g>
 							<text
 								class="ornament"
 								x="3737.9"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -36799,19 +36754,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="3977.555"
-								y1="8797.42"
+								y1="8765.42"
 								x2="3977.555"
-								y2="8956.304" />
+								y2="8924.304" />
 							<text
 								class="notehead"
 								x="3942.729"
-								y="8960">œ</text>
+								y="8928">œ</text>
 							<text
 								class="accidental"
 								x="3890.162"
-								y="8960">#</text>
+								y="8928">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3928.317"
+									y1="8864"
+									x2="3993.967"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="3928.317"
@@ -36824,17 +36785,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8928"
 									x2="3993.967"
 									y2="8928" />
-								<line
-									class="ledgerline"
-									x1="3928.317"
-									y1="8960"
-									x2="3993.967"
-									y2="8960" />
 							</g>
 							<text
 								class="ornament"
 								x="3961.142"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -36990,19 +36945,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="4225.24"
-								y1="8799.438"
+								y1="8767.438"
 								x2="4225.24"
-								y2="8956.304" />
+								y2="8924.304" />
 							<text
 								class="notehead"
 								x="4190.415"
-								y="8960">œ</text>
+								y="8928">œ</text>
 							<text
 								class="accidental"
 								x="4137.847"
-								y="8960">#</text>
+								y="8928">#</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4176.002"
+									y1="8864"
+									x2="4241.652"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="4176.002"
@@ -37015,17 +36976,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8928"
 									x2="4241.652"
 									y2="8928" />
-								<line
-									class="ledgerline"
-									x1="4176.002"
-									y1="8960"
-									x2="4241.652"
-									y2="8960" />
 							</g>
 							<text
 								class="ornament"
 								x="4208.827"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -37181,19 +37136,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="4499.811"
-								y1="8801.677"
+								y1="8769.677"
 								x2="4499.811"
-								y2="8956.304" />
+								y2="8924.304" />
 							<text
 								class="notehead"
 								x="4464.986"
-								y="8960">œ</text>
+								y="8928">œ</text>
 							<text
 								class="accidental"
 								x="4420.96"
-								y="8960">n</text>
+								y="8928">n</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4450.573"
+									y1="8864"
+									x2="4516.224"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="4450.573"
@@ -37206,17 +37167,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8928"
 									x2="4516.224"
 									y2="8928" />
-								<line
-									class="ledgerline"
-									x1="4450.573"
-									y1="8960"
-									x2="4516.224"
-									y2="8960" />
 							</g>
 							<text
 								class="ornament"
 								x="4483.398"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<g
@@ -37372,15 +37327,21 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<line
 								class="stem"
 								x1="4804.529"
-								y1="8796.8"
+								y1="8764.8"
 								x2="4804.529"
-								y2="8956.304" />
+								y2="8924.304" />
 							<text
 								class="notehead"
 								x="4769.704"
-								y="8960">œ</text>
+								y="8928">œ</text>
 							<g
 								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4755.291"
+									y1="8864"
+									x2="4820.941"
+									y2="8864" />
 								<line
 									class="ledgerline"
 									x1="4755.291"
@@ -37393,25 +37354,19 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									y1="8928"
 									x2="4820.941"
 									y2="8928" />
-								<line
-									class="ledgerline"
-									x1="4755.291"
-									y1="8960"
-									x2="4820.941"
-									y2="8960" />
 							</g>
 							<text
 								class="ornament"
 								x="4788.116"
-								y="8716.8">~12</text>
+								y="8684.8">~12</text>
 						</g>
 					</g>
 					<line
 						class="barline"
 						x1="5129.831"
-						y1="8736"
+						y1="8704"
 						x2="5129.831"
-						y2="8864" />
+						y2="8832" />
 					<g
 						class="rest"
 						score:alignment="5195.739">
@@ -37431,7 +37386,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="rest"
 								x="5177.459"
-								y="8800">∑</text>
+								y="8768">∑</text>
 						</g>
 					</g>
 					<g
@@ -37439,15 +37394,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<line
 							class="barline"
 							x1="7647.998"
-							y1="8734"
+							y1="8702"
 							x2="7647.998"
-							y2="8866" />
+							y2="8834" />
 						<line
 							class="thickBarline"
 							x1="7671.998"
-							y1="8734"
+							y1="8702"
 							x2="7671.998"
-							y2="8866" />
+							y2="8834" />
 					</g>
 				</g>
 			</g>
@@ -43220,190 +43175,190 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="7712"
+					y1="7676"
 					x2="503.2"
-					y2="7968" />
+					y2="7936" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="7808"
+					y1="7772"
 					x2="3115.773"
-					y2="7950.5" />
+					y2="7919.031" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="7712"
+					y1="7676"
 					x2="5129.831"
-					y2="7968" />
+					y2="7936" />
 				<g
 					class="endBarline">
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="7710"
+						y1="7674"
 						x2="7647.998"
-						y2="7970" />
+						y2="7938" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="7710"
+						y1="7674"
 						x2="7671.998"
-						y2="7970" />
+						y2="7938" />
 				</g>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="8096"
+					y1="8060"
 					x2="503.2"
-					y2="8288" />
+					y2="8256" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="8096"
+					y1="8060"
 					x2="3115.773"
-					y2="8284.66" />
+					y2="8250.565" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="8096"
+					y1="8060"
 					x2="5129.831"
-					y2="8288" />
+					y2="8256" />
 				<g
 					class="endBarline">
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="8094"
+						y1="8058"
 						x2="7647.998"
-						y2="8290" />
+						y2="8258" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="8094"
+						y1="8058"
 						x2="7671.998"
-						y2="8290" />
+						y2="8258" />
 				</g>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="8416"
+					y1="8380"
 					x2="503.2"
-					y2="8736" />
+					y2="8704" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="8560"
+					y1="8524"
 					x2="3115.773"
-					y2="8736" />
+					y2="8704" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="8416"
+					y1="8380"
 					x2="5129.831"
-					y2="8736" />
+					y2="8704" />
 				<g
 					class="endBarline">
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="8414"
+						y1="8378"
 						x2="7647.998"
-						y2="8738" />
+						y2="8706" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="8414"
+						y1="8378"
 						x2="7671.998"
-						y2="8738" />
+						y2="8706" />
 				</g>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="8864"
+					y1="8828"
 					x2="503.2"
 					y2="9056" />
 				<line
 					class="barline"
 					x1="503.2"
-					y1="9184"
+					y1="9180"
 					x2="503.2"
 					y2="9344" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="9184"
+					y1="9180"
 					x2="3115.773"
 					y2="9344" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="9184"
+					y1="9180"
 					x2="5129.831"
-					y2="9344" />
+					y2="9298.561" />
 				<g
 					class="endBarline">
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="9182"
+						y1="9178"
 						x2="7647.998"
 						y2="9346" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="9182"
+						y1="9178"
 						x2="7671.998"
 						y2="9346" />
 				</g>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="9472"
+					y1="9468"
 					x2="503.2"
 					y2="9696" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="9472"
+					y1="9468"
 					x2="3115.773"
 					y2="9696" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="9472"
+					y1="9468"
 					x2="5129.831"
-					y2="9605.745" />
+					y2="9608.031" />
 				<g
 					class="endBarline">
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="9470"
+						y1="9466"
 						x2="7647.998"
 						y2="9698" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="9470"
+						y1="9466"
 						x2="7671.998"
 						y2="9698" />
 				</g>
 				<line
 					class="barline"
 					x1="503.2"
-					y1="9824"
+					y1="9820"
 					x2="503.2"
 					y2="10016" />
 				<line
 					class="barline"
 					x1="3115.773"
-					y1="9824"
+					y1="9820"
 					x2="3115.773"
 					y2="10016" />
 				<line
 					class="barline"
 					x1="5129.831"
-					y1="9824"
+					y1="9820"
 					x2="5129.831"
 					y2="10016" />
 				<g
@@ -43411,13 +43366,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					<line
 						class="barline"
 						x1="7647.998"
-						y1="9822"
+						y1="9818"
 						x2="7647.998"
 						y2="10018" />
 					<line
 						class="thickBarline"
 						x1="7671.998"
-						y1="9822"
+						y1="9818"
 						x2="7671.998"
 						y2="10018" />
 				</g>

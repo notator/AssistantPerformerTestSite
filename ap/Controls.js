@@ -38,13 +38,15 @@ _AP.controls = (function(document, window)
 		GLASS = "0", // control layer is completely transparent
 
 		PIANOLA_MUSIC_SCORE_INDEX = 1,
-		PIANOLA_MUSIC_SCORE_3STAVES_INDEX = 2,
+		PIANOLA_MUSIC_3STAVES_SCORE_INDEX = 2,
 		STUDY1_SCORE_INDEX = 3,
 		STUDY2_SCORE_INDEX = 4,
-		STUDY3_SKETCH1_SCORE_INDEX1 = 5,
-		STUDY3_SKETCH1_SCORE_INDEX2 = 6,
-		STUDY3_SKETCH2_SCORE_INDEX1 = 7,
-		TOMBEAU1_SCORE_INDEX = 8,
+		STUDY2_2STAVES_SCORE_INDEX = 5,
+		STUDY3_SKETCH1_SCORE_INDEX = 6,
+		STUDY3_SKETCH1_PAGES_SCORE_INDEX = 7,
+		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 8,
+		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 9,
+		TOMBEAU1_SCORE_INDEX = 10,
 
 		RESIDENT_SYNTH_INDEX = 1,
 
@@ -193,7 +195,7 @@ _AP.controls = (function(document, window)
 		residentSynthCanPlayScore = function(scoreIndex)
 		{
 			var rval = false,
-				playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_SCORE_3STAVES_INDEX];
+				playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX];
 
 			console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
@@ -875,7 +877,7 @@ _AP.controls = (function(document, window)
 									name: "Grand Piano",
 									url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 									presetIndices: [0],
-									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_SCORE_3STAVES_INDEX]
+									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
 								}
 							];
 
@@ -1132,6 +1134,12 @@ _AP.controls = (function(document, window)
 							scoreInfo.aboutText = "about Pianola Music";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
+						case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
+							scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
+							scoreInfo.inputHandler = "none";
+							scoreInfo.aboutText = "about Pianola Music";
+							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+							break;
 						case STUDY1_SCORE_INDEX:
 							scoreInfo.path = "Study 1/Study 1 (scroll)";
 							scoreInfo.inputHandler = "none";
@@ -1144,19 +1152,31 @@ _AP.controls = (function(document, window)
 							scoreInfo.aboutText = "about Study 2";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 							break;
-						case STUDY3_SKETCH1_SCORE_INDEX1:
+						case STUDY2_2STAVES_SCORE_INDEX:
+							scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
+							scoreInfo.inputHandler = "none";
+							scoreInfo.aboutText = "about Study 2";
+							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+							break;
+						case STUDY3_SKETCH1_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
-						case STUDY3_SKETCH1_SCORE_INDEX2:
+						case STUDY3_SKETCH1_PAGES_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
-						case STUDY3_SKETCH2_SCORE_INDEX1:
+						case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
+							scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
+							scoreInfo.inputHandler = "none";
+							scoreInfo.aboutText = "about Study 3 Sketch";
+							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							break;
+						case STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX:
 							scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
 							scoreInfo.inputHandler = "keyboard1";
 							scoreInfo.aboutText = "about Study 3 Sketch";
@@ -1167,12 +1187,6 @@ _AP.controls = (function(document, window)
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Tombeau 1";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
-							break;
-						case PIANOLA_MUSIC_SCORE_3STAVES_INDEX:
-							scoreInfo.path = "Pianola MusicTwoVoicesPerStaffTest/Pianola Music (scroll)";
-							scoreInfo.inputHandler = "none";
-							scoreInfo.aboutText = "about Pianola Music";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
 						default:
 							break;
