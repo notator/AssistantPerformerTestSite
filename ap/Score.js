@@ -679,17 +679,9 @@ _AP.namespace('_AP.score');
     	}
 
     	function getSVGElem(svgPage)
-    	{
-    		var i, children = svgPage.children, svgElem;
-
-    		for(i = 0; i < children.length; ++i)
-    		{
-    			if(children[i].nodeName === 'svg')
-    			{
-    				svgElem = children[i];
-    				break;
-    			}
-    		}
+		{
+			let svgPageContent = svgPage.contentDocument;
+			svgElem = svgPageContent.getElementsByTagName("svg")[0];
 
     		return svgElem;
     	}
@@ -1107,12 +1099,12 @@ _AP.namespace('_AP.score');
     	// Returns the viewBox in the final page of the score.
     	function setGraphics()
     	{
-    		var
-            i, svgPage, embedsWidth, viewBox, pagesFrameWidth,
-            svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
-            svgPagesFrameElem = document.getElementById("svgPagesFrame"), svgPagesFrameElemHeight,
-            svgPageEmbeds = svgPagesFrameElem.getElementsByClassName("svgPage"),
-            leftpx, nPages = svgPageEmbeds.length;
+			var
+				i, svgPage, svgElem, viewBox, embedsWidth, pagesFrameWidth,
+				svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
+				svgPagesFrameElem = document.getElementById("svgPagesFrame"), svgPagesFrameElemHeight,
+				svgPageEmbeds = svgPagesFrameElem.getElementsByClassName("svgPage"),
+				leftpx, nPages = svgPageEmbeds.length;
 
     		function getViewBox(svgElem)
     		{
@@ -1136,8 +1128,8 @@ _AP.namespace('_AP.score');
 
     		for(i = 0; i < nPages; ++i)
     		{
-    			svgPage = svgPageEmbeds[i].contentDocument;
-    			svgElem = getSVGElem(svgPage);
+				svgPage = svgPageEmbeds[i];
+				svgElem = getSVGElem(svgPage);
     			viewBox = getViewBox(svgElem); // global
     			embedsWidth = Math.ceil(viewBox.width / viewBox.scale);
     			svgPageEmbeds[i].style.width = embedsWidth.toString() + "px";
@@ -1183,7 +1175,7 @@ _AP.namespace('_AP.score');
     	nPages = svgPageEmbeds.length;
     	for(i = 0; i < nPages; ++i)
     	{
-    		svgPage = svgPageEmbeds[i].contentDocument;
+    		svgPage = svgPageEmbeds[i];
     		svgElem = getSVGElem(svgPage);
     		pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
     		pageSystemElems = pageSystemsElem.getElementsByClassName("system");
