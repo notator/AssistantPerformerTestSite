@@ -1443,10 +1443,10 @@ _AP.namespace('_AP.score');
 
     		function setVoices(systemIndex, staff, staffElem, voiceType, viewBoxScale1)
     		{
-    			var voiceElems, voiceElem, isFirstVisibleVoiceInStaff;
+    			var voiceElems, voiceElem, isFirstVoiceInStaff;
 
     			voiceElems = staffElem.getElementsByClassName(voiceType);
-    			isFirstVisibleVoiceInStaff = true;
+    			isFirstVoiceInStaff = true;
     			for(voiceIndex = 0; voiceIndex < voiceElems.length; ++voiceIndex)
     			{
     				voiceElem = voiceElems[voiceIndex];
@@ -1455,10 +1455,10 @@ _AP.namespace('_AP.score');
     				if(voice.timeObjects[0].alignment !== undefined)  // is undefined if the voice is invisible
     				{
     					voice.graphicElements = getGraphicElements(systemIndex, voiceElem); // will be used to set opacity when the voice is disabled
-    					if(isFirstVisibleVoiceInStaff === true)
+    					if(isFirstVoiceInStaff === true)
     					{
     						voice.staffLinesElem = staffElem.getElementsByClassName("staffLines");
-    						isFirstVisibleVoiceInStaff = false;
+    						isFirstVoiceInStaff = false;
     					}
 					}    				
     			}
@@ -1470,10 +1470,10 @@ _AP.namespace('_AP.score');
                     staff,
                     staffIndex;
 
-    			// 21.12.2017: Moritz now always enforces that
-    			// 1. Every system contains all tracks (though some may be invisible)
+    			// Moritz now always enforces that
+				// 1. Every system contains all tracks
     			// 2. Each track's MidiChannel is the same as its index (from top to bottom in each system).
-    			// The top track (which may be invisible) therefore always has MidiChannel == 0, and the
+    			// The top track therefore always has MidiChannel == 0, and the
 				// MidiChannels increase contiguously from top to bottom of each system.
     			function getMidiChannelPerOutputTrack(system)
     			{
