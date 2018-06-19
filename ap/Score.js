@@ -250,7 +250,7 @@ _AP.namespace('_AP.score');
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
     refreshDisplay = function(trackIsOnArrayArg)
     {
-    	var i, system = systems[startMarker.systemIndex],
+    	var i, system = systems[startMarker.systemIndexInScore],
         startMarkerAlignment = startMarker.alignment,
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
         nOutputTracks = midiChannelPerOutputTrack.length;
@@ -601,7 +601,7 @@ _AP.namespace('_AP.score');
     	}
     	hideRunningMarkers();
     	moveRunningMarkersToStartMarkers();
-    	runningMarker = systems[startMarker.systemIndex].runningMarker;
+    	runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
     	runningMarker.setVisible(true);
     },
 
@@ -635,7 +635,7 @@ _AP.namespace('_AP.score');
 
     			timePointers.push(system.timePointer);
 
-    			if(sysIndex === startMarker.systemIndex)
+    			if(sysIndex === startMarker.systemIndexInScore)
     			{
     				conductor.setTimePointer(system.timePointer);
     			}
@@ -664,9 +664,10 @@ _AP.namespace('_AP.score');
     // If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptySystems = function(isLivePerformanceArg, startPlayingFunction)
     {
-    	var system, svgPageEmbeds, viewBox, nPages,
+		var system, svgPageEmbeds, viewBox, nPages,
             svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-            i, j, markersLayer, pageSystems;
+			i, j, markersLayer, pageSystems,
+			systemIndexInScore = 0;
 
     	function resetContent(isLivePerformanceArg)
     	{
@@ -987,7 +988,7 @@ _AP.namespace('_AP.score');
     	}
 
     	// Appends the markers and timePointers to the markerslayer.
-    	function createMarkers(conductor, markersLayer, viewBoxScale, system, systIndex)
+    	function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore)
     	{
     		var startMarkerElem, runningMarkerElem, endMarkerElem, runningMarkerHeight;
 
@@ -1062,9 +1063,9 @@ _AP.namespace('_AP.score');
     		markersLayer.appendChild(runningMarkerElem);
     		markersLayer.appendChild(endMarkerElem);
 
-    		system.startMarker = new StartMarker(system, systIndex, startMarkerElem, viewBoxScale);
-    		system.runningMarker = new RunningMarker(system, systIndex, runningMarkerElem, viewBoxScale);
-    		system.endMarker = new EndMarker(system, systIndex, endMarkerElem, viewBoxScale);
+			system.startMarker = new StartMarker(system, systemIndexInScore, startMarkerElem, viewBoxScale);
+			system.runningMarker = new RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
+			system.endMarker = new EndMarker(system, systemIndexInScore, endMarkerElem, viewBoxScale);
 
     		runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
 
@@ -1172,10 +1173,10 @@ _AP.namespace('_AP.score');
 
     	svgPageEmbeds = document.getElementsByClassName("svgPage");
 
-    	nPages = svgPageEmbeds.length;
+		nPages = svgPageEmbeds.length;
     	for(i = 0; i < nPages; ++i)
     	{
-    		svgPage = svgPageEmbeds[i];
+			svgPage = svgPageEmbeds[i];
     		svgElem = getSVGElem(svgPage);
     		pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
     		pageSystemElems = pageSystemsElem.getElementsByClassName("system");
@@ -1190,11 +1191,12 @@ _AP.namespace('_AP.score');
     			systemElems.push(systemElem);
 
     			system = getEmptySystem(viewBox.scale, systemElem);
-    			system.pageIndex = i;
+				system.pageIndex = i;
+				system.pageOffsetTop = svgPage.offsetTop;
     			systems.push(system); // systems is global inside this namespace
     			pageSystems.push(system);
 
-    			createMarkers(conductor, markersLayer, viewBox.scale, system, j);
+				createMarkers(conductor, markersLayer, viewBox.scale, system, systemIndexInScore++);
     		}
     	}
 
@@ -1252,7 +1254,7 @@ _AP.namespace('_AP.score');
 
     	if((startMarkerYCoordinates.top < scrollTop) || (startMarkerYCoordinates.bottom > (scrollTop + height)))
     	{
-    		if(startMarker.systemIndex === 0)
+    		if(startMarker.systemIndexInScore === 0)
     		{
     			svgPagesDiv.scrollTop = 0;
     		}
@@ -1268,25 +1270,25 @@ _AP.namespace('_AP.score');
     // If isConducting is true, and the runningMarker is moved to
     // the next system, the timePointer is also moved to the next system.
     // Does nothing when the end of the score is reached.
-    advanceRunningMarker = function(msPosition, systemIndex)
+    advanceRunningMarker = function(msPosition, systemIndexInScore)
     {
-    	if(systemIndex > runningMarker.systemIndex)
+    	if(systemIndexInScore > runningMarker.systemIndexInScore)
     	{
-    		systemIndex = runningMarker.systemIndex + 1; // just to be sure!
+    		systemIndexInScore = runningMarker.systemIndexInScore + 1; // just to be sure!
 
     		// Move runningMarker and timePointer to msPosition in the next system.
     		runningMarker.setVisible(false);
-    		if(runningMarker.systemIndex < endMarker.systemIndex)
+    		if(runningMarker.systemIndexInScore < endMarker.systemIndexInScore)
     		{
-    			runningMarker = systems[systemIndex].runningMarker;
+    			runningMarker = systems[systemIndexInScore].runningMarker;
     			runningMarker.moveTo(msPosition);
     			runningMarker.setVisible(true);
     			if(isConducting)
     			{
-    				conductor.setTimePointer(systems[systemIndex].timePointer);
+    				conductor.setTimePointer(systems[systemIndexInScore].timePointer);
     			}
     			// callback for auto scroll
-    			runningMarkerHeightChanged(runningMarker.yCoordinates);
+				runningMarkerHeightChanged(runningMarker.yCoordinates, systems[systemIndexInScore].pageOffsetTop);
     		}
     	}
     	else

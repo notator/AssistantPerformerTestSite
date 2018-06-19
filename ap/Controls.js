@@ -997,14 +997,14 @@ _AP.controls = (function(document, window)
 			}
 
 			// callback passed to score. Called when the running marker moves to a new system.
-			function runningMarkerHeightChanged(runningMarkerYCoordinates)
+			function runningMarkerHeightChanged(runningMarkerYCoordinates, pageOffsetTop)
 			{
 				var div = globalElements.svgPagesFrame,
 					height = Math.round(parseFloat(div.style.height));
 
-				if(runningMarkerYCoordinates.bottom > (height + div.scrollTop))
+				if((runningMarkerYCoordinates.bottom + pageOffsetTop) > (height + div.scrollTop))
 				{
-					div.scrollTop = runningMarkerYCoordinates.top - 10;
+					div.scrollTop = runningMarkerYCoordinates.top + pageOffsetTop - 10;
 				}
 			}
 
