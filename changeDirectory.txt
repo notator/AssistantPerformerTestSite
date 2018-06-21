@@ -1,0 +1,21 @@
+﻿
+********************************************************************************************
+
+Change the root directory for the Package Manger Console to the root directory of this
+typescript project (which contains a tsconfig.json file) by executing the following command:
+
+cd "D:\Visual Studio\Projects\MyWebsite\james-ingram-act-two\open-source\assistantPerformerTestSite"
+
+Forward slashes also work:
+cd "D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformerTestSite"
+
+********************************************************************************************
+
+
+The root folder for the Package Manager Console (when started from MyWebsite project) is
+"D:\Visual Studio\Projects\MyWebsite"
+
+The typescript compiler (tsc) can also be executed from any other (external) command line application
+(e.g. "Eingabeaufforderung") by first changing the current directory with the following command:
+
+CD /D "D:\Visual Studio\Projects\MyWebsite\james-ingram-act-two\open-source\assistantPerformerTestSite"
