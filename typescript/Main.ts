@@ -1,17 +1,14 @@
 
-/// <reference path="Utilities.ts" />
-/// <reference path="Message.ts" />
+/// <reference path="CursorGroupElem.ts" />
+/// <reference path="SvgSystem.ts" />
+/// <reference path="Cursor.ts" />
 
 function Main(): void
 {
-	console.log("test");
+	let cGroupElem = new _AP.CursorGroupElem();
+	let system = new _AP.SvgSystem(0, 100);
 
-	let m: AP.Message = new AP.Message(4, 5, 6);
-
-	let u = new AP.Utilities();
-	let a: number[] = u.numberArray("4 6 8 90");
-
-	console.log(m.data[0].toString(10) + " " + m.data[1].toString(10) + " " + m.data[2].toString(10));
+	let c: _AP.Cursor = new _AP.Cursor(system, 0, cGroupElem, 8);
 }
 
 window.addEventListener("load", Main);

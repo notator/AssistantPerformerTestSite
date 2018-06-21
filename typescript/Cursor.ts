@@ -1,53 +1,92 @@
-﻿/*!
- *  copyright 2018 James Ingram
- *  http://james-ingram-act-two.de/
- *
- *  Code licensed under MIT
- *  https://github.com/notator/assistant-performer/blob/master/License.md
- *
- *  typescript/Cursor.ts
- *  Defines the Cursor class.
- *  The Cursor is the line which shows the current position in a
- *  performance while it is running.
- */
+﻿/// <reference path="SvgSystem.ts" />
+/// <reference path="CursorGroupElem.ts" />
 
-/*************************************************************************************
-/// <reference path="../ap/Namespace.js" />
-/// <reference path="../ap/Constants.js" />
-/// <reference path="../ap/Utilities.js" />
-/// <reference path="../ap/Message.js" />
-/// <reference path="../ap/Moment.js" />
-/// <reference path="../ap/MidiObject.js" />
-/// <reference path="../ap/Track.js" />
-/// <reference path="../ap/Conductor.js" />
-/// <reference path="../ap/Sequence.js" />
-/// <reference path="../ap/Seq.js" />
-/// <reference path="../ap/TrackRecording.js" />
-/// <reference path="../ap/SequenceRecording.js" />
-/// <reference path="../ap/StandardMidiFile.js" />
-/// <reference path="../ap/TrkOptions.js" />
-/// <reference path="../ap/InputObjectDef.js" />
-/// <reference path="../ap/InputChord.js" />
-/// <reference path="../ap/StartMarker.js" />
-/// <reference path="../ap/RunningMarker.js" />
-/// <reference path="../ap/EndMarker.js" />
-/// <reference path="../ap/TimePointer.js" />
-/// <reference path="../ap/Score.js" />
-/// <reference path="../ap/TracksControl.js" />
-/// <reference path="../ap/Controls.js" />
-/// <reference path="../ap/Keyboard1.js" />
-/// <reference path="../ap/Main.js" />
-/// <reference path="System.ts" />
-
-namespace AP
+namespace _AP
 {
+	export class YCoordinates
+	{
+		constructor(public top: number, public bottom: number)
+		{
+		}
+	}
+
 	export class Cursor
 	{
-		constructor(system: System, systemIndexInScore: number, svgRunningMarkerGroup : SVGElem, vbScale: number)
+		constructor(
+			system: ISvgSystem,
+			systemIndexInScore: number,
+			svgRunningMarkerGroup: ICursorGroupElem,
+			vbScale: number)
 		{
+			const EXTRA_TOP_AND_BOTTOM = 45; // user html pixels
+			let top:string = (system.markersTop - EXTRA_TOP_AND_BOTTOM).toString();
+			let bottom:string = (system.markersBottom + EXTRA_TOP_AND_BOTTOM).toString();
 
+			this.systemIndexInScore = systemIndexInScore;
+
+			this.line = this._getLine(svgRunningMarkerGroup, top, bottom);
+			this.viewboxScale = vbScale;
+			this.yCoordinates = this._getYCoordinates(top, bottom, vbScale);
+			this.timeObjects = [];
+
+			this.setVisible(false);
+		}
+
+		private _getLine(svgRunningMarkerGroup: ICursorGroupElem, top:string, bottom:string): SVGLine
+		{
+			function setLine(line: SVGLine, top:string, bottom:string): void
+			{
+				const strokeWidth = 8, // 1 pixel
+					  color = '#999999';
+
+				line.setAttribute('x1', '0');
+				line.setAttribute('y1', top);
+				line.setAttribute('x2', '0');
+				line.setAttribute('y2', bottom);
+
+				line.style.strokeWidth = strokeWidth;
+				line.style.stroke = color;
+
+			}
+
+			let i: number,
+				groupChildren: any[] = svgRunningMarkerGroup.childNodes;
+
+			for(i = 0; i < groupChildren.length; ++i)
+			{
+				if(groupChildren[i].nodeName === 'line')
+				{
+					break;
+				}
+			}
+			let line = groupChildren[i] as SVGLine;
+			setLine(line, top, bottom);
+			return line;
+		}
+
+		private _getYCoordinates(top: string, bottom:string, vbScale:number): YCoordinates
+		{
+			return { top: Math.round(parseFloat(top) / vbScale), bottom: Math.round(parseFloat(bottom) / vbScale) };
+		}
+
+		readonly systemIndexInScore: number;
+		readonly line: SVGLine;
+		readonly viewboxScale: number;
+		readonly yCoordinates: YCoordinates;
+		readonly timeObjects: any[];
+		positionIndex: number = 0;
+		nextMsPosition: number = 0;
+
+		public setVisible(setToVisible: boolean): void
+		{
+			if(setToVisible)
+			{
+				this.line.style.visibility = 'visible';
+			}
+			else
+			{
+				this.line.style.visibility = 'hidden';
+			}
 		}
 	}
 }
-
-******************************************************************/
