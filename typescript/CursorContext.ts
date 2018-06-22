@@ -43,23 +43,27 @@ namespace _AP
 		constructor() { }
 	}
 
-	export interface ICursorGroupElem
-	{
-		childNodes: INode[];
-	}
-
 	export interface INode
 	{
 		nodeName: string;
 	}
 
-	export class CursorGroupElem implements ICursorGroupElem
+	export class CursorGroupElem
 	{
 		childNodes: INode[] = [];
 		
 		constructor()
 		{
 			this.childNodes.push(new _AP.SVGLine);
+		}
+	}
+
+	/*******************************************************/
+
+	export class SvgSystem
+	{
+		constructor(public markersTop: number, public markersBottom: number)
+		{
 		}
 	}
 }

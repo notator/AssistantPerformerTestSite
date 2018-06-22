@@ -1,6 +1,5 @@
 
-/// <reference path="CursorGroupElem.ts" />
-/// <reference path="SvgSystem.ts" />
+/// <reference path="CursorContext.ts" />
 /// <reference path="Cursor.ts" />
 
 function Main(): void

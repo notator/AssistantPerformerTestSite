@@ -1,5 +1,5 @@
-﻿/// <reference path="SvgSystem.ts" />
-/// <reference path="CursorGroupElem.ts" />
+﻿
+/// <reference path="CursorContext.ts" />
 
 namespace _AP
 {
@@ -13,9 +13,9 @@ namespace _AP
 	export class Cursor
 	{
 		constructor(
-			system: ISvgSystem,
+			system: SvgSystem,
 			systemIndexInScore: number,
-			svgRunningMarkerGroup: ICursorGroupElem,
+			svgRunningMarkerGroup: CursorGroupElem,
 			vbScale: number)
 		{
 			const EXTRA_TOP_AND_BOTTOM = 45; // user html pixels
@@ -32,7 +32,7 @@ namespace _AP
 			this.setVisible(false);
 		}
 
-		private _getLine(svgRunningMarkerGroup: ICursorGroupElem, top:string, bottom:string): SVGLine
+		private _getLine(svgRunningMarkerGroup: CursorGroupElem, top:string, bottom:string): SVGLine
 		{
 			function setLine(line: SVGLine, top:string, bottom:string): void
 			{
