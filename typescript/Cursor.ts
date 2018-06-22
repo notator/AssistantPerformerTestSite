@@ -193,6 +193,48 @@ namespace _AP
 			this.positionIndex = positionIndex;
 		}
 
+
+		public incrementPosition()
+		{
+			var timeObjects = this.timeObjects;
+
+			this.positionIndex++;
+
+			if(this.positionIndex < (timeObjects.length - 1))
+			{
+				this.nextMsPosition = timeObjects[this.positionIndex + 1].msPositionInScore;
+			}
+			else
+			{
+				// was this.nextMsPosition = undefined;
+				this.nextMsPosition = -1;
+			}
+
+			this.moveLineToAlignment(this.timeObjects[this.positionIndex].alignment);
+		}
+
+		public currentTimeObject()
+		{
+			var currentTimeObject;
+
+			if(this.positionIndex < this.timeObjects.length)
+			{
+				currentTimeObject = this.timeObjects[this.positionIndex];
+			}
+			return currentTimeObject;
+		}
+
+		public nextTimeObject()
+		{
+			var currentTimeObject;
+
+			if((this.positionIndex + 1) < this.timeObjects.length)
+			{
+				currentTimeObject = this.timeObjects[this.positionIndex + 1];
+			}
+			return currentTimeObject;
+		};
+
 		readonly systemIndexInScore: number;
 		readonly line: SVGLine;
 		readonly viewBoxScale: number;
@@ -200,7 +242,5 @@ namespace _AP
 		readonly timeObjects: any[];
 		positionIndex: number = 0;
 		nextMsPosition: number = 0;
-
-
 	}
 }
