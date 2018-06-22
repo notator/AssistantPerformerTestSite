@@ -25,13 +25,14 @@ namespace _AP
 			this.systemIndexInScore = systemIndexInScore;
 
 			this.line = this._getLine(svgRunningMarkerGroup, top, bottom);
-			this.viewboxScale = vbScale;
+			this.viewBoxScale = vbScale;
 			this.yCoordinates = this._getYCoordinates(top, bottom, vbScale);
 			this.timeObjects = [];
 
 			this.setVisible(false);
 		}
 
+		/* begin constructor helper functions */
 		private _getLine(svgRunningMarkerGroup: CursorGroupElem, top:string, bottom:string): SVGLine
 		{
 			function setLine(line: SVGLine, top:string, bottom:string): void
@@ -63,19 +64,11 @@ namespace _AP
 			setLine(line, top, bottom);
 			return line;
 		}
-
 		private _getYCoordinates(top: string, bottom:string, vbScale:number): YCoordinates
 		{
 			return { top: Math.round(parseFloat(top) / vbScale), bottom: Math.round(parseFloat(bottom) / vbScale) };
 		}
-
-		readonly systemIndexInScore: number;
-		readonly line: SVGLine;
-		readonly viewboxScale: number;
-		readonly yCoordinates: YCoordinates;
-		readonly timeObjects: any[];
-		positionIndex: number = 0;
-		nextMsPosition: number = 0;
+		/* end constructor helper functions */
 
 		public setVisible(setToVisible: boolean): void
 		{
@@ -88,5 +81,102 @@ namespace _AP
 				this.line.style.visibility = 'hidden';
 			}
 		}
+
+		public moveLineToAlignment(alignment:number) : void
+		{
+			var x = alignment * this.viewBoxScale;
+			this.line.setAttribute('x1', x.toString());
+			this.line.setAttribute('x2', x.toString());
+		}
+
+		// The timeObjects array contains one timeObject per msPositionInScore in the system.
+		// It is ordered according to each timeObject msPositionInScore.
+		// If isLivePerformance === true, the timeObjects are inputObjects from inputVoices,
+		// otherwise the timeObjects are midiObjects from outputVoices.
+		public setTimeObjects(system: SvgSystem, isLivePerformance: boolean, trackIsOnArray: boolean[]): void
+		{
+			var
+				MidiChord = _AP.midiObject.MidiChord,
+				MidiRest = _AP.midiObject.MidiRest,
+				InputChordDef = _AP.inputObjectDef.InputChordDef,
+				InputRestDef = _AP.inputObjectDef.InputRestDef,
+				timeObject;
+
+			function findFollowingTimeObject(system: SvgSystem, msPositionInScore: number, isLivePerformance: boolean, trackIsOnArray: boolean[]) : any
+			{
+				var nextTimeObject, staff, voice, i, k, voiceIndex, trackIndex = 0,
+					voiceTimeObjects = [];
+
+				for(i = 0; i < system.staves.length; ++i)
+				{
+					staff = system.staves[i];
+					for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+					{
+						if(staff.isVisible && staff.topLineY !== undefined)
+						{
+							if(trackIsOnArray[trackIndex] === true)
+							{
+								voice = staff.voices[voiceIndex];
+								if(voice.isOutput === true && isLivePerformance === false)
+								{
+									for(k = 0; k < voice.timeObjects.length; ++k)
+									{
+										if(voice.timeObjects[k].msPositionInScore > msPositionInScore)
+										{
+											voiceTimeObjects.push(voice.timeObjects[k]);
+											break;
+										}
+									}
+								}
+								else if(voice.isOutput === false && isLivePerformance === true)
+								{
+									for(k = 0; k < voice.timeObjects.length; ++k)
+									{
+										if(voice.timeObjects[k].msPositionInScore > msPositionInScore)
+										{
+											voiceTimeObjects.push(voice.timeObjects[k]);
+											break;
+										}
+									}
+								}
+							}
+						}
+						trackIndex++;
+					}
+				}
+
+				// voiceTimeObjects now contains the next timeObject in each active, visible voice.
+				// Now find the one having the minimum msPositionInScore.
+				nextTimeObject = voiceTimeObjects[0];
+				if(voiceTimeObjects.length > 1)
+				{
+					for(i = 1; i < voiceTimeObjects.length; ++i)
+					{
+						if(voiceTimeObjects[i].msPositionInScore < nextTimeObject.msPositionInScore)
+						{
+							nextTimeObject = voiceTimeObjects[i];
+						}
+					}
+				}
+				return nextTimeObject;
+			}
+
+			timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
+			while(timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+			{
+				this.timeObjects.push(timeObject);
+				timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
+			}
+		};
+
+		readonly systemIndexInScore: number;
+		readonly line: SVGLine;
+		readonly viewBoxScale: number;
+		readonly yCoordinates: YCoordinates;
+		readonly timeObjects: any[];
+		positionIndex: number = 0;
+		nextMsPosition: number = 0;
+
+
 	}
 }

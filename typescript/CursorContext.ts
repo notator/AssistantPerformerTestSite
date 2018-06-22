@@ -62,9 +62,87 @@ namespace _AP
 
 	export class SvgSystem
 	{
+		staves: Staff[] = [];
 		constructor(public markersTop: number, public markersBottom: number)
 		{
 		}
 	}
-}
+
+	export class Staff
+	{
+		isVisible: boolean = true;
+		voices: Voice[] = [];
+		topLineY: number = 0;
+		constructor()
+		{
+		}
+	}
+
+	export class Voice
+	{
+		isOutput: boolean = true;
+		timeObjects: TimeObject[] = [];
+		constructor()
+		{
+		}
+	}
+
+	export class TimeObject
+	{
+		msPositionInScore: number = 0;
+		constructor()
+		{
+		}
+	}
+
+	/*******************************************************/
+
+	export class MidiChord
+	{
+		constructor()
+		{ }
+	}
+
+	export class MidiRest
+	{
+		constructor()
+		{ }
+	}
+
+	export class midiObject
+	{
+		static MidiChord: any = MidiChord.constructor;
+		static MidiRest: any = MidiRest.constructor;
+		constructor()
+		{
+
+		}
+	}
+
+	/*******************************************************/
+
+	export class InputChordDef
+	{
+		constructor()
+		{ }
+	}
+
+	export class InputRestDef
+	{
+		constructor()
+		{ }
+	}
+
+	export class inputObjectDef
+	{
+		static InputChordDef: any = InputChordDef.constructor;
+		static InputRestDef: any = InputRestDef.constructor;
+		constructor()
+		{
+
+		}
+	}
+
+	/*******************************************************/
+ }
 
