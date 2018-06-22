@@ -169,6 +169,30 @@ namespace _AP
 			}
 		};
 
+		// This function is necessary after changing systems, where the first position of the system needs to be skipped.
+		// msPositionInScore must be in the current system
+		public moveTo(msPosInScore: number)
+		{
+			var positionIndex = 0, timeObjects = this.timeObjects, timeObject;
+
+			while(positionIndex < (timeObjects.length - 1) && timeObjects[positionIndex].msPositionInScore < msPosInScore)
+			{
+				positionIndex++;
+			}
+
+			timeObject = timeObjects[positionIndex];
+			this.moveLineToAlignment(timeObject.alignment);
+			if(positionIndex === (timeObjects.length - 1))
+			{
+				this.nextMsPosition = timeObject.msPositionInScore + timeObject.msDurationInScore;
+			}
+			else
+			{
+				this.nextMsPosition = timeObjects[positionIndex + 1].msPositionInScore; // may be system's end msPosition
+			}
+			this.positionIndex = positionIndex;
+		}
+
 		readonly systemIndexInScore: number;
 		readonly line: SVGLine;
 		readonly viewBoxScale: number;
