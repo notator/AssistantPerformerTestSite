@@ -167,7 +167,7 @@ namespace _AP
 				this.timeObjects.push(timeObject);
 				timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
 			}
-		};
+		}
 
 		// This function is necessary after changing systems, where the first position of the system needs to be skipped.
 		// msPositionInScore must be in the current system
@@ -192,7 +192,6 @@ namespace _AP
 			}
 			this.positionIndex = positionIndex;
 		}
-
 
 		public incrementPosition()
 		{
@@ -233,7 +232,7 @@ namespace _AP
 				currentTimeObject = this.timeObjects[this.positionIndex + 1];
 			}
 			return currentTimeObject;
-		};
+		}
 
 		readonly systemIndexInScore: number;
 		readonly line: SVGLine;

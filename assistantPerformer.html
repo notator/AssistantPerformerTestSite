@@ -116,13 +116,13 @@
             </label>
             <input type="range" id="speedControlInput" value="90" min="0" max="180"
                    onmousemove="_AP.controls.doControl('speedControlMousemove')"
-                   style="position:absolute; top:4px; left:45px; width:180px; margin:0;">
+                   style="position:absolute; top:4px; left:45px; width:180px; margin:0;" />
             <label id="speedControlLabel2" for="speedControlInput" style="position:absolute; top:5px; left:227px; margin:0;">
                 100%
             </label>
-            <input type="checkbox" id="speedControlCheckbox" checked="checked" disabled="disabled" min="0" max="100"
+            <input type="checkbox" id="speedControlCheckbox" checked="checked" disabled="disabled"
                    onclick="_AP.controls.doControl('speedControlCheckboxClick')"
-                   style="position:absolute; top:8px; left:261px; margin:0;">
+                   style="position:absolute; top:8px; left:261px; margin:0;" />
             <div id="speedControlSmokeDiv" style="position: absolute; top: -1px; left:-142px; width:281px; height:31px; margin:0; padding:0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="281" height="31" style="position: absolute; top: 0;">
                     <rect x="0" y="0" width="281" height="31" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
@@ -363,44 +363,47 @@
          style="position:absolute; top: 36px; width: 100px; height: 100px; margin:0; padding:0; visibility:hidden;">
     </div>
 
-    <script src="../WebMIDI/namespace.js" type="text/javascript"></script>
-    <script src="../WebMIDI/constants.js" type="text/javascript"></script>
+    <script src="../WebMIDI/namespace.js"></script>
+    <script src="../WebMIDI/constants.js"></script>
 
-    <script src="../residentSf2Synth/riffParser.js" type="text/javascript"></script>
-    <script src="../residentSf2Synth/soundFontParser.js" type="text/javascript"></script>
-    <script src="../residentSf2Synth/soundFont.js" type="text/javascript"></script>
-    <script src="../residentSf2Synth/soundFontSynthNote.js" type="text/javascript"></script>
-    <script src="../residentSf2Synth/residentSf2Synth.js" type="text/javascript"></script>
+    <script src="../residentSf2Synth/riffParser.js"></script>
+    <script src="../residentSf2Synth/soundFontParser.js"></script>
+    <script src="../residentSf2Synth/soundFont.js"></script>
+    <script src="../residentSf2Synth/soundFontSynthNote.js"></script>
+    <script src="../residentSf2Synth/residentSf2Synth.js"></script>
 
-    <script src="shim/WebMIDIAPI.min.js" type="text/javascript"></script>
+    <script src="shim/WebMIDIAPI.min.js"></script>
 
-    <script src="ap/Namespace.js" type="text/javascript"></script>
+    <script src="ap/Namespace.js"></script>
 
-    <script src="ap/Constants.js" type="text/javascript"></script>
-    <script src="ap/Utilities.js" type="text/javascript"></script>
-    <script src="ap/Message.js" type="text/javascript"></script>
-    <script src="ap/Moment.js" type="text/javascript"></script>
-    <script src="ap/MidiObject.js" type="text/javascript"></script>
-    <script src="ap/Track.js" type="text/javascript"></script>
-    <script src="ap/Conductor.js" type="text/javascript"></script>
-    <script src="ap/Sequence.js" type="text/javascript"></script>
-    <script src="ap/Seq.js" type="text/javascript"></script>
-    <script src="ap/TrackRecording.js" type="text/javascript"></script>
-    <script src="ap/SequenceRecording.js" type="text/javascript"></script>
-    <script src="ap/StandardMidiFile.js" type="text/javascript"></script>
-    <script src="ap/TrkOptions.js" type="text/javascript"></script>
-    <script src="ap/InputObjectDef.js" type="text/javascript"></script>
-    <script src="ap/InputChord.js" type="text/javascript"></script>
-    <script src="ap/StartMarker.js" type="text/javascript"></script>
-    <script src="ap/RunningMarker.js" type="text/javascript"></script>
-    <script src="ap/EndMarker.js" type="text/javascript"></script>
-    <script src="ap/TimePointer.js" type="text/javascript"></script>
-    <script src="ap/Score.js" type="text/javascript"></script>
-    <script src="ap/TracksControl.js" type="text/javascript"></script>
-    <script src="ap/Controls.js" type="text/javascript"></script>
+    <script src="ap/Constants.js"></script>
+    <script src="ap/Utilities.js"></script>
+    <script src="ap/Message.js"></script>
+    <script src="ap/Moment.js"></script>
+    <script src="ap/MidiObject.js"></script>
+    <script src="ap/Track.js"></script>
+    <script src="ap/Conductor.js"></script>
+    <script src="ap/Sequence.js"></script>
+    <script src="ap/Seq.js"></script>
+    <script src="ap/TrackRecording.js"></script>
+    <script src="ap/SequenceRecording.js"></script>
+    <script src="ap/StandardMidiFile.js"></script>
+    <script src="ap/TrkOptions.js"></script>
+    <script src="ap/InputObjectDef.js"></script>
+    <script src="ap/InputChord.js"></script>
+    <script src="ap/StartMarker.js"></script>
+    <script src="ap/RunningMarker.js"></script>
+    <script src="ap/EndMarker.js"></script>
 
-    <script src="ap/Keyboard1.js" type="text/javascript"></script>
+    <script src="ts_out/Cursor.js"></script>
 
-    <script src="ap/Main.js" type="text/javascript"></script>
+    <script src="ap/TimePointer.js"></script>
+    <script src="ap/Score.js"></script>
+    <script src="ap/TracksControl.js"></script>
+    <script src="ap/Controls.js"></script>
+
+    <script src="ap/Keyboard1.js"></script>
+
+    <script src="ap/Main.js"></script>
 </body>
 </html>
