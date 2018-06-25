@@ -20,7 +20,7 @@ _AP.score = (function(document)
 	var
 		Cursor = _AP.Cursor,
 		StartMarker = _AP.startMarker.StartMarker,
-		//RunningMarker = _AP.runningMarker.RunningMarker,
+		//RunningMarker = _AP.RunningMarker.constructor,
 		EndMarker = _AP.endMarker.EndMarker,
 		TimePointer = _AP.timePointer.TimePointer,
 		Conductor = _AP.conductor.Conductor,
@@ -1065,8 +1065,8 @@ _AP.score = (function(document)
 				markersLayer.appendChild(endMarkerElem);
 
 				system.startMarker = new StartMarker(system, systemIndexInScore, startMarkerElem, viewBoxScale);
-				//system.runningMarker = new RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
-				system.runningMarker = new Cursor(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
+				system.runningMarker = new _AP.RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
+				//system.runningMarker = new Cursor(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
 				system.endMarker = new EndMarker(system, systemIndexInScore, endMarkerElem, viewBoxScale);
 
 				runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;

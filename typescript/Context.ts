@@ -144,5 +144,14 @@ namespace _AP
 	}
 
 	/*******************************************************/
+
+	export class YCoordinates
+	{
+		constructor(public top: number, public bottom: number)
+		{
+		}
+	}
+
+	/*******************************************************/
  }
 

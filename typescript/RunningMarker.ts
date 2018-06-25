@@ -1,16 +1,9 @@
 ﻿
-/// <reference path="CursorContext.ts" />
+/// <reference path="Context.ts" />
 
 namespace _AP
 {
-	export class YCoordinates
-	{
-		constructor(public top: number, public bottom: number)
-		{
-		}
-	}
-
-	export class Cursor
+	export class RunningMarker
 	{
 		constructor(
 			system: SvgSystem,
@@ -70,6 +63,15 @@ namespace _AP
 		}
 		/* end constructor helper functions */
 
+		private _moveLineToAlignment(alignment: number): void
+		{
+			var x = alignment * this.viewBoxScale;
+			this.line.setAttribute('x1', x.toString());
+			this.line.setAttribute('x2', x.toString());
+		}
+
+		/** public functions **/
+
 		public setVisible(setToVisible: boolean): void
 		{
 			if(setToVisible)
@@ -80,13 +82,6 @@ namespace _AP
 			{
 				this.line.style.visibility = 'hidden';
 			}
-		}
-
-		public moveLineToAlignment(alignment:number) : void
-		{
-			var x = alignment * this.viewBoxScale;
-			this.line.setAttribute('x1', x.toString());
-			this.line.setAttribute('x2', x.toString());
 		}
 
 		// The timeObjects array contains one timeObject per msPositionInScore in the system.
@@ -181,7 +176,7 @@ namespace _AP
 			}
 
 			timeObject = timeObjects[positionIndex];
-			this.moveLineToAlignment(timeObject.alignment);
+			this._moveLineToAlignment(timeObject.alignment);
 			if(positionIndex === (timeObjects.length - 1))
 			{
 				this.nextMsPosition = timeObject.msPositionInScore + timeObject.msDurationInScore;
@@ -209,29 +204,7 @@ namespace _AP
 				this.nextMsPosition = -1;
 			}
 
-			this.moveLineToAlignment(this.timeObjects[this.positionIndex].alignment);
-		}
-
-		public currentTimeObject()
-		{
-			var currentTimeObject;
-
-			if(this.positionIndex < this.timeObjects.length)
-			{
-				currentTimeObject = this.timeObjects[this.positionIndex];
-			}
-			return currentTimeObject;
-		}
-
-		public nextTimeObject()
-		{
-			var currentTimeObject;
-
-			if((this.positionIndex + 1) < this.timeObjects.length)
-			{
-				currentTimeObject = this.timeObjects[this.positionIndex + 1];
-			}
-			return currentTimeObject;
+			this._moveLineToAlignment(this.timeObjects[this.positionIndex].alignment);
 		}
 
 		readonly systemIndexInScore: number;
