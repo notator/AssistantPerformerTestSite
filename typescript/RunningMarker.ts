@@ -84,6 +84,7 @@ namespace _AP
 			}
 		}
 
+		// This function is called when the Go button is clicked, immediately before the score starts playing.
 		// The timeObjects array contains one timeObject per msPositionInScore in the system.
 		// It is ordered according to each timeObject msPositionInScore.
 		// If isLivePerformance === true, the timeObjects are inputObjects from inputVoices,

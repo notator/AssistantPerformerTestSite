@@ -18,7 +18,6 @@ _AP.score = (function(document)
 	"use strict";
 
 	var
-		Cursor = _AP.Cursor,
 		StartMarker = _AP.startMarker.StartMarker,
 		//RunningMarker = _AP.RunningMarker.constructor,
 		EndMarker = _AP.endMarker.EndMarker,
@@ -44,6 +43,12 @@ _AP.score = (function(document)
 		// This array is initialized to all tracks on (=true) when the score is loaded,
 		// and reset when the tracksControl calls refreshDisplay().
 		trackIsOnArray = [], // all tracks, including input tracks
+
+		// An array of SimData objects having attributes
+		//    .msPositionInScore
+		//    .cursorYAttributes
+		// The simDatas array includes a SimData object for the final barline in the score.
+		simDatas,  
 
 		viewBoxScale,
 
@@ -1899,6 +1904,9 @@ _AP.score = (function(document)
 			{
 				tracksData.inputKeyRange = getInputKeyRange(inputTracks);
 			}
+
+			let scoreSimDatas = new _AP.ScoreSimDatas(systems); 
+			simDatas = scoreSimDatas.scoreSimDatas;
 		},
 
 		getTracksData = function()
