@@ -48,7 +48,9 @@ _AP.score = (function(document)
 		//    .msPositionInScore
 		//    .cursorYAttributes
 		// The simDatas array includes a SimData object for the final barline in the score.
-		simDatas,  
+		simDatas,
+
+		cursor, // The cursor that is going to replace all the RunningMarkers
 
 		viewBoxScale,
 
@@ -609,6 +611,9 @@ _AP.score = (function(document)
 			moveRunningMarkersToStartMarkers();
 			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
 			runningMarker.setVisible(true);
+
+			// do the equivalent for a new Cursor object here.
+			cursor = new _AP.Cursor(simDatas, systems, isLivePerformance, trackIsOnArray, startMarker);
 		},
 
 		// Called when the start conducting button is clicked on or off.
