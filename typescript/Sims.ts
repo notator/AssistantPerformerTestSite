@@ -20,6 +20,7 @@ namespace _AP
 	{
 		readonly msPositionInScore: number;
 		readonly cursorYAttributes: CursorYAttributes;
+		isFunctional: boolean = true; // is set to false, if the sim has no performing midiObjects
 
 		constructor(msPosInScore: number, cursorYAttributes: CursorYAttributes)
 		{
@@ -72,7 +73,6 @@ namespace _AP
 						{
 							throw "not a voice";
 						}
-
 						// voice.timeObjects can be undefined if this is an input voice and the input device is not selected
 						if(voice.timeObjects !== undefined)
 						{
