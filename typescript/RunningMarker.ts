@@ -8,7 +8,7 @@ namespace _AP
 		constructor(
 			system: SvgSystem,
 			systemIndexInScore: number,
-			svgRunningMarkerGroup: CursorGroupElem,
+			svgRunningMarkerGroup: SVGGElement,
 			vbScale: number)
 		{
 			const EXTRA_TOP_AND_BOTTOM = 45; // user html pixels

@@ -6,6 +6,8 @@ namespace _AP
 		staves: Staff[];
 		startMarker: StartMarker;
 		endMarker: EndMarker;
+		markersTop: number; // used when constructing StartMarker and EndMarker
+		markersBottom: number; // used when constructing StartMarker and EndMarker
 	}
 
 	export interface Staff
