@@ -5,14 +5,14 @@ namespace _AP
 {
 	export class CursorYAttributes
 	{
-		readonly markersTop: number;
-		readonly markersBottom: number;
-		readonly pageOffsetTop: number;
-		constructor(markersTop: number, markersBottom: number, pageOffsetTop: number)
+		readonly top: SVGLength;
+		readonly bottom: SVGLength;
+		constructor(startMarker:StartMarker)
 		{
-			this.markersTop = markersTop;
-			this.markersBottom = markersBottom;
-			this.pageOffsetTop = pageOffsetTop;
+			let line = startMarker.line;
+
+			this.top = line.y1.baseVal;
+			this.bottom = line.y2.baseVal;
 		}
 	}
 
@@ -89,10 +89,10 @@ namespace _AP
 			}
 		}
 
-		private getSystemSimData(system: any): SimData[]
+		private getSystemSimData(system: SvgSystem): SimData[]
 		{
 			let systemSimsData: SimData[] = [],
-				cursorYAttributes = new CursorYAttributes(system.markersTop, system.markersBottom, system.pageOffsetTop),
+				cursorYAttributes = new CursorYAttributes(system.startMarker),
 				nStaves = system.staves.length;
 
 			for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
@@ -156,10 +156,10 @@ namespace _AP
 			return systemSimsData;
 		}
 
-		private getFinalBarlineSimData(systems: any[]): SimData
+		private getFinalBarlineSimData(systems: SvgSystem[]): SimData
 		{
 			let system = systems[systems.length - 1],
-				cursorYAttributes = new CursorYAttributes(system.markersTop, system.markersBottom, system.pageOffsetTop),
+				cursorYAttributes = new CursorYAttributes(system.startMarker),
 				timeObjects = system.staves[0].voices[0].timeObjects,
 				msPos: number = timeObjects[timeObjects.length - 1].msPositionInScore,
 				finalBarlineSimData = new SimData(msPos, cursorYAttributes);

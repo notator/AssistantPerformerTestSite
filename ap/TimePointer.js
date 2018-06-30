@@ -15,15 +15,16 @@ _AP.timePointer = (function()
     "use strict";
 
     var
-    TimePointer = function (originY, height, viewBoxScale, advanceRunningMarker)
-    {
-        if (!(this instanceof TimePointer))
-        {
-            return new TimePointer(originY, viewBoxScale, advanceRunningMarker);
-        }
+		TimePointer = function(originY, height, viewBoxScale, advanceRunningMarker)
+		{
+			if(!(this instanceof TimePointer))
+			{
+				return new TimePointer(originY, viewBoxScale, advanceRunningMarker);
+			}
 
-        /*** public interface*/
-        Object.defineProperty(this, "graphicElement", { value: this._graphicElem(this, height, viewBoxScale), writable: false });
+		/*** public interface*/
+		Object.defineProperty(this, "class", { value: "timePointer", writable: false } );
+		Object.defineProperty(this, "graphicElement", { value: this._graphicElem(this, height, viewBoxScale), writable: false });
         Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true });
 
         /*** private interface */

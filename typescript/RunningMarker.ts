@@ -26,9 +26,9 @@ namespace _AP
 		}
 
 		/* begin constructor helper functions */
-		private _getLine(svgRunningMarkerGroup: CursorGroupElem, top:string, bottom:string): SVGLine
+		private _getLine(svgRunningMarkerGroup: SVGGElement, top:string, bottom:string): SVGLineElement
 		{
-			function setLine(line: SVGLine, top:string, bottom:string): void
+			function setLine(line: SVGLineElement, top:string, bottom:string): void
 			{
 				const strokeWidth = 8, // 1 pixel
 					  color = '#999999';
@@ -38,22 +38,20 @@ namespace _AP
 				line.setAttribute('x2', '0');
 				line.setAttribute('y2', bottom);
 
-				line.style.strokeWidth = strokeWidth;
+				line.style.strokeWidth = strokeWidth.toString(10);
 				line.style.stroke = color;
 
 			}
 
-			let i: number,
-				groupChildren: any[] = svgRunningMarkerGroup.childNodes;
-
-			for(i = 0; i < groupChildren.length; ++i)
+			let node: any = undefined;
+			for(node of svgRunningMarkerGroup.childNodes)
 			{
-				if(groupChildren[i].nodeName === 'line')
+				if(node instanceof SVGLineElement)
 				{
 					break;
 				}
 			}
-			let line = groupChildren[i] as SVGLine;
+			let line = node as SVGLineElement;
 			setLine(line, top, bottom);
 			return line;
 		}
@@ -209,7 +207,7 @@ namespace _AP
 		}
 
 		readonly systemIndexInScore: number;
-		readonly line: SVGLine;
+		readonly line: SVGLineElement;
 		readonly viewBoxScale: number;
 		readonly yCoordinates: YCoordinates;
 		readonly timeObjects: any[];

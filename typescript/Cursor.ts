@@ -16,7 +16,7 @@ namespace _AP
 				}
 			}
 		}
-		checkStartMarker(startMarker: any): void
+		checkStartMarker(startMarker: StartMarker): void
 		{
 			if(startMarker.alignment === undefined
 				|| startMarker.msPositionInScore === undefined
@@ -31,11 +31,14 @@ namespace _AP
 				throw "not a startMarker";
 			}
 		}
+
+		readonly line: SVGLineElement;
+
 		/* Includes SimData for the final barline. */
 		readonly scoreSimDatas: SimData[];
 
 		// foreach system, system.runningMarker.setTimeObjects
-		private setTimeObjects(systems: any[], isLivePerformance: boolean, trackIsOnArray: boolean[]): void
+		private setTimeObjects(systems: SvgSystem[], isLivePerformance: boolean, trackIsOnArray: boolean[]): void
 		{
 			throw new Error("Method not implemented.");
 		}
@@ -43,23 +46,34 @@ namespace _AP
 		// score.hideRunningMarkers()
 		private hide(): void
 		{
-			throw new Error("Method not implemented.");
-		}
-
-		// score.moveRunningMarkersToStartMarkers();
-		private moveRunningMarkersToStartMarkers(): void
-		{
-			throw new Error("Method not implemented.");
+			this.line.style.visibility = 'hidden';
 		}
 
 		//runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
 		//runningMarker.setVisible(true);
-		private setVisibleAtStartMarker(startMarker: any): void
+		private setVisibleAtStartMarker(startMarker: StartMarker): void
 		{
-			throw new Error("Method not implemented.");
+			let sLine = startMarker.line,
+				x = sLine.x1.baseVal.valueAsString,
+				y1 = sLine.y1.baseVal.valueAsString,
+				y2 = sLine.y2.baseVal.valueAsString;			
+
+			this.line.setAttribute("x1", x);
+			this.line.setAttribute("y1", y1);
+			this.line.setAttribute("x2", x);
+			this.line.setAttribute("y2", y2);
+
+			this.line.style.visibility = 'visible';
 		}
 
-		constructor(scoreSimDatas: SimData[], systems:any[], isLivePerformance:boolean, trackIsOnArray:boolean[], startMarker: any) // an array of systems
+
+
+		constructor(scoreSimDatas: SimData[],
+			systems: SvgSystem[],
+			markersLayers: SVGGElement[],
+			isLivePerformance: boolean,
+			trackIsOnArray: boolean[],
+			startMarker: StartMarker)
 		{
 			// scoreSimDatas is type-checked by typescript
 			// systems have been checked when constructing scoreSimDatas
@@ -68,9 +82,9 @@ namespace _AP
 			this.checkStartMarker(startMarker);
 
 			this.scoreSimDatas = scoreSimDatas;
-			this.setTimeObjects(systems, isLivePerformance, trackIsOnArray);
-			this.hide();
-			this.moveRunningMarkersToStartMarkers();
+
+			this.line = markersLayers[0].getElementsByClassName("cursorLine")[0] as SVGLineElement;
+
 			this.setVisibleAtStartMarker(startMarker);
 		}
 

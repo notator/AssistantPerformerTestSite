@@ -54,7 +54,7 @@ _AP.score = (function(document)
 
 		viewBoxScale,
 
-		// The frames around each svgPage
+		// The frame containing the cursorLine and the start- and end-markers
 		markersLayers = [],
 
 
@@ -610,10 +610,10 @@ _AP.score = (function(document)
 			hideRunningMarkers();
 			moveRunningMarkersToStartMarkers();
 			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
-			runningMarker.setVisible(true);
+			//runningMarker.setVisible(true);
 
 			// do the equivalent for a new Cursor object here.
-			cursor = new _AP.Cursor(simDatas, systems, isLivePerformance, trackIsOnArray, startMarker);
+			cursor = new _AP.Cursor(simDatas, systems, markersLayers, isLivePerformance, trackIsOnArray, startMarker);
 		},
 
 		// Called when the start conducting button is clicked on or off.
@@ -677,7 +677,7 @@ _AP.score = (function(document)
 		{
 			var system, svgPageEmbeds, viewBox, nPages,
 				svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-				i, j, markersLayer, pageSystems,
+				pageIndex, systemIndexOnPage, markersLayer, pageSystems,
 				systemIndexInScore = 0;
 
 			function resetContent(isLivePerformanceArg)
@@ -1020,6 +1020,7 @@ _AP.score = (function(document)
 					startMarkerDisk.setAttribute("r", "0");
 					startMarkerDisk.setAttribute("style", "stroke-width:1px");
 
+					startMarkerElem.setAttribute("class", "startMarkerElem");
 					startMarkerElem.appendChild(startMarkerLine);
 					startMarkerElem.appendChild(startMarkerDisk);
 
@@ -1037,6 +1038,7 @@ _AP.score = (function(document)
 					runningMarkerLine.setAttribute("y2", "0");
 					runningMarkerLine.setAttribute("style", "stroke-width:1px");
 
+					runningMarkerElem.setAttribute("class", "runningMarkerElem");
 					runningMarkerElem.appendChild(runningMarkerLine);
 
 					return runningMarkerElem;
@@ -1060,6 +1062,7 @@ _AP.score = (function(document)
 					endMarkerRect.setAttribute("height", "0");
 					endMarkerRect.setAttribute("style", "stroke-width:1px");
 
+					endMarkerElem.setAttribute("class", "endMarkerElem");
 					endMarkerElem.appendChild(endMarkerLine);
 					endMarkerElem.appendChild(endMarkerRect);
 
@@ -1076,7 +1079,6 @@ _AP.score = (function(document)
 
 				system.startMarker = new StartMarker(system, systemIndexInScore, startMarkerElem, viewBoxScale);
 				system.runningMarker = new _AP.RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
-				//system.runningMarker = new Cursor(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
 				system.endMarker = new EndMarker(system, systemIndexInScore, endMarkerElem, viewBoxScale);
 
 				runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
@@ -1084,6 +1086,20 @@ _AP.score = (function(document)
 				system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, runningMarkerHeight, viewBoxScale, advanceRunningMarker);
 
 				markersLayer.appendChild(system.timePointer.graphicElement);
+			}
+
+			function newCursorLine()
+			{
+				var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+
+				cursorLine.setAttribute("class", "cursorLine");
+				cursorLine.setAttribute("x1", "0");
+				cursorLine.setAttribute("y1", "0");
+				cursorLine.setAttribute("x2", "0");
+				cursorLine.setAttribute("y2", "0");
+				cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
+				
+				return cursorLine;
 			}
 
 			function initializeTrackIsOnArray(system)
@@ -1181,14 +1197,14 @@ _AP.score = (function(document)
 
 			conductor = new Conductor(startPlayingFunction);
 
-			viewBox = setGraphics();
+			viewBox = setGraphics(); // the viewBox is the area in which the score can be seen and is scrolled
 
 			svgPageEmbeds = document.getElementsByClassName("svgPage");
 
 			nPages = svgPageEmbeds.length;
-			for(i = 0; i < nPages; ++i)
+			for(pageIndex = 0; pageIndex < nPages; ++pageIndex)
 			{
-				svgPage = svgPageEmbeds[i];
+				svgPage = svgPageEmbeds[pageIndex];
 				svgElem = getSVGElem(svgPage);
 				pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
 				pageSystemElems = pageSystemsElem.getElementsByClassName("system");
@@ -1197,19 +1213,22 @@ _AP.score = (function(document)
 				markersLayers.push(markersLayer);
 
 				pageSystems = [];
-				for(j = 0; j < pageSystemElems.length; ++j)
+				for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
 				{
-					systemElem = pageSystemElems[j];
+					systemElem = pageSystemElems[systemIndexOnPage];
 					systemElems.push(systemElem);
 
 					system = getEmptySystem(viewBox.scale, systemElem);
-					system.pageIndex = i;
+					//system.pageIndex = pageIndex;
 					system.pageOffsetTop = svgPage.offsetTop;
-					systems.push(system); // systems is global inside this namespace
+			 		systems.push(system); // systems is global inside this namespace
 					pageSystems.push(system);
 
 					createMarkers(conductor, markersLayer, viewBox.scale, system, systemIndexInScore++);
 				}
+
+				let line = newCursorLine();
+				markersLayer.appendChild(line);
 			}
 
 			setConductingLayer(); // just sets its dimensions
