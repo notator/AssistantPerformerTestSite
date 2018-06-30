@@ -70,7 +70,7 @@ namespace _AP
 
 		constructor(scoreSimDatas: SimData[],
 			systems: SvgSystem[],
-			markersLayers: SVGGElement[],
+			markersLayer: SVGGElement,
 			isLivePerformance: boolean,
 			trackIsOnArray: boolean[],
 			startMarker: StartMarker)
@@ -83,7 +83,7 @@ namespace _AP
 
 			this.scoreSimDatas = scoreSimDatas;
 
-			this.line = markersLayers[0].getElementsByClassName("cursorLine")[0] as SVGLineElement;
+			this.line = markersLayer.getElementsByClassName("cursorLine")[0] as SVGLineElement;
 
 			this.setVisibleAtStartMarker(startMarker);
 		}

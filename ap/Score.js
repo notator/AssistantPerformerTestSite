@@ -55,8 +55,7 @@ _AP.score = (function(document)
 		viewBoxScale,
 
 		// The frame containing the cursorLine and the start- and end-markers
-		markersLayers = [],
-
+		markersLayer,
 
 		// See comments in the publicAPI definition at the bottom of this file.
 		systemElems = [], // an array of all the systemElems
@@ -364,38 +363,10 @@ _AP.score = (function(document)
 				cursorX = e.pageX,
 				cursorY = e.pageY,
 				systemIndex, system,
-				pageIndex,
 				timeObjectsArray, timeObject, trackIndex, nOutputTracks = midiChannelPerOutputTrack.length;
 
-			// cursorX and cursorY now use the <body> element as their frame of reference.
-			// this is the same frame of reference as in the systems.
-			// systems is a single global array (inside this namespace)of all systems.
-			// This is important when identifying systems, and when performing.
-
-			// returns the index of the page that has been clicked
-			function findPageIndex(target)
-			{
-				var i, pageIndex = 0, rect;
-
-				for(i = 0; i < markersLayers.length; ++i)
-				{
-					rect = markersLayers[i].childNodes[0];
-					if(rect.nodeName !== 'rect')
-					{
-						throw "error";
-					}
-					if(rect === target)
-					{
-						pageIndex = i;
-						break;
-					}
-				}
-
-				return pageIndex;
-			}
-
-			// Returns the system having stafflines closest to cursorY on the target page.
-			function findSystemIndex(cursorY, pageIndex)
+			// Returns the system having stafflines closest to cursorY.
+			function findSystemIndex(cursorY)
 			{
 				var i, topLimit, bottomLimit, system, systemIndex;
 
@@ -406,31 +377,16 @@ _AP.score = (function(document)
 				else
 				{
 					topLimit = -1;
-					for(i = 0; i < systems.length - 1; ++i)
+					for(i = 0; i < systems.length; ++i)
 					{
 						system = systems[i];
-						if(system.pageIndex === pageIndex)
+						bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
+						if(cursorY >= topLimit && cursorY < bottomLimit)
 						{
-							bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
-							if(cursorY >= topLimit && cursorY < bottomLimit)
-							{
-								systemIndex = i;
-								break;
-							}
-							topLimit = bottomLimit;
+							systemIndex = i;
+							break;
 						}
-					}
-
-					if(systemIndex === undefined)
-					{
-						for(i = 0; i < systems.length; ++i)
-						{
-							system = systems[i];
-							if(system.pageIndex === pageIndex)
-							{
-								systemIndex = i; // last system on page
-							}
-						}
+						topLimit = bottomLimit;
 					}
 				}
 				return systemIndex;
@@ -525,50 +481,46 @@ _AP.score = (function(document)
 				return trackIndex;
 			}
 
-			pageIndex = findPageIndex(target);
-			systemIndex = findSystemIndex(cursorY, pageIndex);
-			if(systemIndex !== undefined)
+			systemIndex = findSystemIndex(cursorY);
+			system = systems[systemIndex];
+
+			timeObjectsArray = getTimeObjectsArray(system);
+
+			trackIndex = findTrackIndex(cursorY, system);
+
+			if(isLivePerformance === true)
 			{
-				system = systems[systemIndex];
+				timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
+			}
+			else
+			{
+				timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
+			}
 
-				timeObjectsArray = getTimeObjectsArray(system);
-
-				trackIndex = findTrackIndex(cursorY, system);
-
-				if(isLivePerformance === true)
+			// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
+			// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
+			if(timeObject !== null)
+			{
+				switch(state)
 				{
-					timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
-				}
-				else
-				{
-					timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
-				}
-
-				// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
-				// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
-				if(timeObject !== null)
-				{
-					switch(state)
-					{
-						case 'settingStart':
-							if(timeObject.msPositionInScore < endMarker.msPositionInScore)
-							{
-								startMarker = system.startMarker;
-								hideStartMarkersExcept(startMarker);
-								updateStartMarker(timeObjectsArray, timeObject);
-							}
-							break;
-						case 'settingEnd':
-							if(startMarker.msPositionInScore < timeObject.msPositionInScore)
-							{
-								endMarker = system.endMarker;
-								hideEndMarkersExcept(endMarker);
-								endMarker.moveTo(timeObject);
-							}
-							break;
-						default:
-							break;
-					}
+					case 'settingStart':
+						if(timeObject.msPositionInScore < endMarker.msPositionInScore)
+						{
+							startMarker = system.startMarker;
+							hideStartMarkersExcept(startMarker);
+							updateStartMarker(timeObjectsArray, timeObject);
+						}
+						break;
+					case 'settingEnd':
+						if(startMarker.msPositionInScore < timeObject.msPositionInScore)
+						{
+							endMarker = system.endMarker;
+							hideEndMarkersExcept(endMarker);
+							endMarker.moveTo(timeObject);
+						}
+						break;
+					default:
+						break;
 				}
 			}
 		},
@@ -613,7 +565,7 @@ _AP.score = (function(document)
 			//runningMarker.setVisible(true);
 
 			// do the equivalent for a new Cursor object here.
-			cursor = new _AP.Cursor(simDatas, systems, markersLayers, isLivePerformance, trackIsOnArray, startMarker);
+			cursor = new _AP.Cursor(simDatas, systems, this.markersLayer, isLivePerformance, trackIsOnArray, startMarker);
 		},
 
 		// Called when the start conducting button is clicked on or off.
@@ -677,13 +629,12 @@ _AP.score = (function(document)
 		{
 			var system, svgPageEmbeds, viewBox, nPages,
 				svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-				pageIndex, systemIndexOnPage, markersLayer, pageSystems,
+				localMarkersLayer, systemIndexOnPage, pageSystems,
 				systemIndexInScore = 0;
 
 			function resetContent(isLivePerformanceArg)
 			{
 				isLivePerformance = isLivePerformanceArg;
-				markersLayers.length = 0;
 				systemElems.length = 0;
 				systems.length = 0;
 				midiChannelPerOutputTrack.length = 0;
@@ -1098,7 +1049,7 @@ _AP.score = (function(document)
 				cursorLine.setAttribute("x2", "0");
 				cursorLine.setAttribute("y2", "0");
 				cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
-				
+
 				return cursorLine;
 			}
 
@@ -1201,35 +1152,36 @@ _AP.score = (function(document)
 
 			svgPageEmbeds = document.getElementsByClassName("svgPage");
 
-			nPages = svgPageEmbeds.length;
-			for(pageIndex = 0; pageIndex < nPages; ++pageIndex)
+			if(svgPageEmbeds.length > 1)
 			{
-				svgPage = svgPageEmbeds[pageIndex];
-				svgElem = getSVGElem(svgPage);
-				pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
-				pageSystemElems = pageSystemsElem.getElementsByClassName("system");
-
-				markersLayer = createMarkersLayer(svgElem);
-				markersLayers.push(markersLayer);
-
-				pageSystems = [];
-				for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
-				{
-					systemElem = pageSystemElems[systemIndexOnPage];
-					systemElems.push(systemElem);
-
-					system = getEmptySystem(viewBox.scale, systemElem);
-					//system.pageIndex = pageIndex;
-					system.pageOffsetTop = svgPage.offsetTop;
-			 		systems.push(system); // systems is global inside this namespace
-					pageSystems.push(system);
-
-					createMarkers(conductor, markersLayer, viewBox.scale, system, systemIndexInScore++);
-				}
-
-				let line = newCursorLine();
-				markersLayer.appendChild(line);
+				throw "Only single page (scroll) scores are supported.";
 			}
+			nPages = svgPageEmbeds.length;
+			svgPage = svgPageEmbeds[0];
+			svgElem = getSVGElem(svgPage);
+			pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
+			pageSystemElems = pageSystemsElem.getElementsByClassName("system");
+
+			localMarkersLayer = createMarkersLayer(svgElem); // markersLayer is global inside the score namespace  
+
+			pageSystems = [];
+			for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
+			{
+				systemElem = pageSystemElems[systemIndexOnPage];
+				systemElems.push(systemElem);
+
+				system = getEmptySystem(viewBox.scale, systemElem);
+				system.pageOffsetTop = svgPage.offsetTop;
+				systems.push(system); // systems is global inside the score namespace
+				pageSystems.push(system);
+
+				createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++);
+			}
+
+			let line = newCursorLine();
+			localMarkersLayer.appendChild(line);
+
+			this.markersLayer = localMarkersLayer;
 
 			setConductingLayer(); // just sets its dimensions
 
@@ -1929,7 +1881,7 @@ _AP.score = (function(document)
 				tracksData.inputKeyRange = getInputKeyRange(inputTracks);
 			}
 
-			let scoreSimDatas = new _AP.ScoreSimDatas(systems); 
+			let scoreSimDatas = new _AP.ScoreSimDatas(systems);
 			simDatas = scoreSimDatas.scoreSimDatas;
 		},
 
@@ -1946,7 +1898,6 @@ _AP.score = (function(document)
 				return new Score(callback);
 			}
 
-			markersLayers = [];
 			systems = [];
 
 			runningMarkerHeightChanged = callback;
@@ -1984,11 +1935,10 @@ _AP.score = (function(document)
 			this.getConductor = getConductor;
 			this.conduct = conduct;
 
-			// markersLayers contains one markersLayer per page of the score.
-			// Each markersLayer contains the assistant performer's markers
-			// and the page-sized transparent, clickable surface used when
-			// setting them.
-			this.markersLayers = markersLayers;
+			// markersLayer is initially undefined, but is set properly when a specific score is loaded.
+			// It contains the cursor line and the start - and end - markers for each system in the score.
+			// It is also used as the transparent, clickable surface used when setting the markers.
+			this.markersLayer = markersLayer;
 
 			this.getEmptySystems = getEmptySystems;
 
