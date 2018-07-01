@@ -20,7 +20,8 @@ namespace _AP
 	{
 		readonly msPositionInScore: number;
 		readonly cursorYAttributes: CursorYAttributes;
-		isFunctional: boolean = true; // is set to false, if the sim has no performing midiObjects
+		readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
+		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
 
 		constructor(msPosInScore: number, cursorYAttributes: CursorYAttributes)
 		{
@@ -91,68 +92,116 @@ namespace _AP
 
 		private getSystemSimData(system: SvgSystem): SimData[]
 		{
-			let systemSimsData: SimData[] = [],
-				cursorYAttributes = new CursorYAttributes(system.startMarker),
-				nStaves = system.staves.length;
-
-			for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+			function getEmptySimDatas(system: SvgSystem): SimData[]
 			{
-				let staff = system.staves[staffIndex],
-					nVoices = staff.voices.length;
+				let systemSimsData: SimData[] = [],
+					cursorYAttributes = new CursorYAttributes(system.startMarker),
+					nStaves = system.staves.length;
 
-				for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 				{
-					if(staff.voices[voiceIndex].timeObjects === undefined)
-					{
-						// this can happen if the voice is an InputVoice, and the input device is not selected.
-						break
-					}
+					let staff = system.staves[staffIndex],
+						nVoices = staff.voices.length;
 
-					let timeObjects = staff.voices[voiceIndex].timeObjects,
-						nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
-
-					if(staffIndex === 0 && voiceIndex === 0)
+					for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 					{
-						for(let ti = 0; ti < nTimeObjects; ++ti)
+						if(staff.voices[voiceIndex].timeObjects === undefined)
 						{
-							let simData = new SimData(timeObjects[ti].msPositionInScore, cursorYAttributes);
-							systemSimsData.push(simData);
+							// this can happen if the voice is an InputVoice, and the input device is not selected.
+							break
 						}
-					}
-					else
-					{
-						let maxPos = Number.MAX_VALUE,
-							simIndex = systemSimsData.length - 1;
-						for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+
+						let timeObjects = staff.voices[voiceIndex].timeObjects,
+							nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
+
+						if(staffIndex === 0 && voiceIndex === 0)
 						{
-							let tObjPos = timeObjects[ti].msPositionInScore,
-								simPos = systemSimsData[simIndex].msPositionInScore;
-
-							while(simPos >= tObjPos && simIndex > 0)
+							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								maxPos = simPos;
-								simIndex--;
-								simPos = systemSimsData[simIndex].msPositionInScore;
+								let simData = new SimData(timeObjects[ti].msPositionInScore, cursorYAttributes);
+								systemSimsData.push(simData);
 							}
-
-							if(maxPos > tObjPos)
+						}
+						else
+						{
+							let maxPos = Number.MAX_VALUE,
+								simIndex = systemSimsData.length - 1;
+							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
-								maxPos = tObjPos;
-								if(simPos < tObjPos)
+								let tObjPos = timeObjects[ti].msPositionInScore,
+									simPos = systemSimsData[simIndex].msPositionInScore;
+
+								while(simPos >= tObjPos && simIndex > 0)
 								{
-									let sim = new SimData(tObjPos, cursorYAttributes);
-									systemSimsData.splice(simIndex + 1, 0, sim);
+									maxPos = simPos;
+									simIndex--;
+									simPos = systemSimsData[simIndex].msPositionInScore;
 								}
-								else if(simPos > tObjPos)
+
+								if(maxPos > tObjPos)
 								{
-									let sim = new SimData(tObjPos, cursorYAttributes);
-									systemSimsData.splice(0, 0, sim);
+									maxPos = tObjPos;
+									if(simPos < tObjPos)
+									{
+										let sim = new SimData(tObjPos, cursorYAttributes);
+										systemSimsData.splice(simIndex + 1, 0, sim);
+									}
+									else if(simPos > tObjPos)
+									{
+										let sim = new SimData(tObjPos, cursorYAttributes);
+										systemSimsData.splice(0, 0, sim);
+									}
 								}
 							}
 						}
 					}
 				}
+
+				return systemSimsData;
 			}
+			function addTimeObjectsToSimDatas(system: SvgSystem, systemSimsData: SimData[])
+			{
+				let nStaves = system.staves.length,
+					trackIndex: number = 0;
+
+				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+				{
+					let staff = system.staves[staffIndex],
+						nVoices = staff.voices.length;
+
+					for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex, ++trackIndex)
+					{
+						let simIndex: number = 0;
+
+						if(staff.voices[voiceIndex].timeObjects === undefined)
+						{
+							// this can happen if the voice is an InputVoice, and the input device is not selected.
+							break
+						}
+
+						let timeObjects = staff.voices[voiceIndex].timeObjects;
+
+						for(let tObjIndex = 0; tObjIndex < timeObjects.length - 1; ++tObjIndex) // (dont look at final barline)
+						{
+							let timeObject = timeObjects[tObjIndex]; 
+							while(timeObject.msPositionInScore > systemSimsData[simIndex].msPositionInScore)
+							{
+								simIndex++;
+								if(simIndex >= systemSimsData.length)
+								{
+									throw "error";
+								}
+							}
+
+							systemSimsData[simIndex].timeObjects[trackIndex] = timeObject; // undefined array elements can be added...
+						}
+					}
+				}
+			}
+
+			let systemSimsData = getEmptySimDatas(system);
+			addTimeObjectsToSimDatas(system, systemSimsData);
+
 			return systemSimsData;
 		}
 

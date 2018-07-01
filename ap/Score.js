@@ -47,6 +47,7 @@ _AP.score = (function(document)
 		// An array of SimData objects having attributes
 		//    .msPositionInScore
 		//    .cursorYAttributes
+		//    .timeObjects
 		// The simDatas array includes a SimData object for the final barline in the score.
 		simDatas,
 
