@@ -27,6 +27,7 @@ namespace _AP
 	{
 		msPositionInScore: number;
 		msDurationInScore: number;
+		alignment: number;
 		isOn: boolean;
 	}
 

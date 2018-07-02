@@ -19,14 +19,16 @@ namespace _AP
 	export class Sim
 	{
 		readonly msPositionInScore: number;
+		alignment: number;
 		readonly yCoordinates: YCoordinates;
 		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
 
 		private readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
-		constructor(msPosInScore: number, yCoordinates: YCoordinates)
+		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates)
 		{
 			this.msPositionInScore = msPosInScore;
+			this.alignment = alignment;
 			this.yCoordinates = yCoordinates;
 		}
 
@@ -125,7 +127,8 @@ namespace _AP
 						{
 							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								let sim = new Sim(timeObjects[ti].msPositionInScore, yCoordinates);
+								let tObj = timeObjects[ti];
+								let sim = new Sim(tObj.msPositionInScore, tObj.alignment, yCoordinates);
 								systemSims.push(sim);
 							}
 						}
@@ -135,7 +138,8 @@ namespace _AP
 								simIndex = systemSims.length - 1;
 							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
-								let tObjPos = timeObjects[ti].msPositionInScore,
+								let tObj = timeObjects[ti],
+									tObjPos = tObj.msPositionInScore,
 									simPos = systemSims[simIndex].msPositionInScore;
 
 								while(simPos >= tObjPos && simIndex > 0)
@@ -150,12 +154,12 @@ namespace _AP
 									maxPos = tObjPos;
 									if(simPos < tObjPos)
 									{
-										let sim = new Sim(tObjPos, yCoordinates);
+										let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
 										systemSims.splice(simIndex + 1, 0, sim);
 									}
 									else if(simPos > tObjPos)
 									{
-										let sim = new Sim(tObjPos, yCoordinates);
+										let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
 										systemSims.splice(0, 0, sim);
 									}
 								}
@@ -218,8 +222,10 @@ namespace _AP
 			let system = systems[systems.length - 1],
 				yCoordinates = new YCoordinates(system.startMarker),
 				timeObjects = system.staves[0].voices[0].timeObjects,
-				msPos: number = timeObjects[timeObjects.length - 1].msPositionInScore,
-				finalBarlineSim = new Sim(msPos, yCoordinates);
+				finalBarlineTimeObject = timeObjects[timeObjects.length - 1],
+				msPos = finalBarlineTimeObject.msPositionInScore,
+				alignment = finalBarlineTimeObject.alignment, 
+				finalBarlineSim = new Sim(msPos, alignment, yCoordinates);
 
 			return finalBarlineSim;
 		}

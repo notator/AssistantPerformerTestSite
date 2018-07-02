@@ -39,7 +39,7 @@ namespace _AP
 			this.yCoordinates = simsInScore[0].yCoordinates;
 		}
 
-		public setVisible(setToVisible:boolean): void
+		public setVisible(setToVisible: boolean): void
 		{
 			if(setToVisible)
 			{
@@ -65,13 +65,51 @@ namespace _AP
 			this.line.setAttribute("x2", x);
 			this.line.setAttribute("y2", y2);
 
-			this.yCoordinates = startMarker.yCoordinates
+			this.yCoordinates = startMarker.yCoordinates;
+
+			this.startMarkerMsPositionInScore = startMarker.msPositionInScore;
 		}
 
-		readonly line: SVGLineElement;
-		yCoordinates: YCoordinates;
-		sims: Sim[] = [];
+		public setEndMarkerMsPosition(endMarkerMsPosition:number)
+		{
+			this.endMarkerMsPositionInScore = endMarkerMsPosition;
+		}
+
+		public incrementPosition()
+		{			
+			let sims = this.sims;
+
+			this.positionIndex++;
+
+			if(this.sims[this.positionIndex].msPositionInScore < this.endMarkerMsPositionInScore)
+			{
+				this.moveLineToSim(sims[this.positionIndex]);
+			}
+			else
+			{
+				throw "Temp exception: (end of performance)"
+			}
+		}
+
+		moveLineToSim(sim: Sim)
+		{
+			if(sim.yCoordinates !== this.yCoordinates)
+			{
+				this.line.setAttribute("y1", sim.yCoordinates.top.toString(10));
+				this.line.setAttribute("y2", sim.yCoordinates.bottom.toString(10));
+			}
+
+			this.line.setAttribute("x1", sim.alignment.toString(10));
+			this.line.setAttribute("x2", sim.alignment.toString(10));
+		}
+
+		public yCoordinates: YCoordinates;
+
+		private readonly line: SVGLineElement;
+		private sims: Sim[] = [];
 		positionIndex: number = 0;
 		nextMsPosition: number = 0;
+		private startMarkerMsPositionInScore: number = 0;
+		private endMarkerMsPositionInScore: number = 0;
 	}
 }

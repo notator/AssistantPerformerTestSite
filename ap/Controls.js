@@ -483,6 +483,9 @@ _AP.controls = (function(document, window)
 
 				startMarkerMsPosition = score.startMarkerMsPosition();
 				endMarkerMsPosition = score.endMarkerMsPosition();
+
+				player.cursor.setEndMarkerMsPosition(endMarkerMsPosition);
+
 				if(options.isConducting === true)
 				{
 					baseSpeed = 1;
@@ -1074,7 +1077,7 @@ _AP.controls = (function(document, window)
 
 			player = sequence; // sequence is a namespace, not a class.
 			player.outputTracks = score.getTracksData().outputTracks; // public player.outputTracks is needed for sending track initialization messages
-			player.sims = score.getSims();
+			player.cursor = score.getCursor();
 
 			if(options.isConducting)
 			{
@@ -1751,7 +1754,7 @@ _AP.controls = (function(document, window)
 			{
 				player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
 				player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-				player.sims = score.getSims();
+				player.cursor = score.getCursor(); // contains sims
 				player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
 			else

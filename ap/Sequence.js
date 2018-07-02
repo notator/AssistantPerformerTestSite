@@ -34,7 +34,7 @@ _AP.sequence = (function(window)
     outputDevice,
     timer, // performance or conductor (use performance.now() or conductor.now())
 	tracks,
-	sims,
+	cursor,
 
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
@@ -429,7 +429,7 @@ _AP.sequence = (function(window)
 
         timer = timerArg; // performance or score.timePointer
 		tracks = this.outputTracks;
-		sims = this.sims;
+		cursor = this.cursor;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;
@@ -456,13 +456,13 @@ _AP.sequence = (function(window)
             var i,
 				// Note that the sims currently just contain midiObjects, but that the trackIsOnArray will also
 				// include input tracks if the score has any.
-                nSims = sims.length,
+                nSims = cursor.sims.length,
 				nTracks = trackIsOnArray.length,
 				track, timeObject;
 
             for(i = 0; i < nSims; ++i)
             {
-				let sim = sims[i], timeObjects = sim.timeObjects;
+				let sim = cursor.sims[i], timeObjects = sim.timeObjects;
 				for(let trackIndex = 0; trackIndex < nTracks; ++trackIndex)
 				{
 					timeObject = timeObjects[trackIndex];

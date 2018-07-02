@@ -1890,9 +1890,9 @@ _AP.score = (function(document)
 			return tracksData;
 		},
 
-		getSims = function()
+		getCursor = function()
 		{
-			return scoreSims;
+			return cursor; // contains sims
 		},
 
 		// an empty score
@@ -1956,7 +1956,7 @@ _AP.score = (function(document)
 			this.setTracksData = setTracksData;
 			this.getTracksData = getTracksData;
 
-			this.getSims = getSims;
+			this.getCursor = getCursor;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
 			this.refreshDisplay = refreshDisplay;
