@@ -32,11 +32,11 @@ namespace _AP
 
 	/*******************************************************/
 
-	export interface YCoordinates
-	{
-		top: number;
-		bottom: number;
-	}
+	//export interface YCoordinates
+	//{
+	//	top: number;
+	//	bottom: number;
+	//}
 
 	export interface StartMarker
 	{

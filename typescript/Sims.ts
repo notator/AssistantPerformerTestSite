@@ -3,31 +3,31 @@
 
 namespace _AP
 {
-	export class CursorYAttributes
+	export class YCoordinates
 	{
-		readonly top: SVGLength;
-		readonly bottom: SVGLength;
+		readonly top: number;
+		readonly bottom: number;
 		constructor(startMarker: StartMarker)
 		{
 			let line = startMarker.line;
 
-			this.top = line.y1.baseVal;
-			this.bottom = line.y2.baseVal;
+			this.top = line.y1.baseVal.value;
+			this.bottom = line.y2.baseVal.value;
 		}
 	}
 
 	export class Sim
 	{
 		readonly msPositionInScore: number;
-		readonly cursorYAttributes: CursorYAttributes;
+		readonly yCoordinates: YCoordinates;
 		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
 
 		private readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
-		constructor(msPosInScore: number, cursorYAttributes: CursorYAttributes)
+		constructor(msPosInScore: number, yCoordinates: YCoordinates)
 		{
 			this.msPositionInScore = msPosInScore;
-			this.cursorYAttributes = cursorYAttributes;
+			this.yCoordinates = yCoordinates;
 		}
 
 		push(timeObject: TimeObject, trackIndex: number): void
@@ -102,7 +102,7 @@ namespace _AP
 			function getEmptySims(system: SvgSystem): Sim[]
 			{
 				let systemSims: Sim[] = [],
-					cursorYAttributes = new CursorYAttributes(system.startMarker),
+					yCoordinates = new YCoordinates(system.startMarker),
 					nStaves = system.staves.length;
 
 				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
@@ -125,7 +125,7 @@ namespace _AP
 						{
 							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								let sim = new Sim(timeObjects[ti].msPositionInScore, cursorYAttributes);
+								let sim = new Sim(timeObjects[ti].msPositionInScore, yCoordinates);
 								systemSims.push(sim);
 							}
 						}
@@ -150,12 +150,12 @@ namespace _AP
 									maxPos = tObjPos;
 									if(simPos < tObjPos)
 									{
-										let sim = new Sim(tObjPos, cursorYAttributes);
+										let sim = new Sim(tObjPos, yCoordinates);
 										systemSims.splice(simIndex + 1, 0, sim);
 									}
 									else if(simPos > tObjPos)
 									{
-										let sim = new Sim(tObjPos, cursorYAttributes);
+										let sim = new Sim(tObjPos, yCoordinates);
 										systemSims.splice(0, 0, sim);
 									}
 								}
@@ -216,10 +216,10 @@ namespace _AP
 		private getFinalBarlineSim(systems: SvgSystem[]): Sim
 		{
 			let system = systems[systems.length - 1],
-				cursorYAttributes = new CursorYAttributes(system.startMarker),
+				yCoordinates = new YCoordinates(system.startMarker),
 				timeObjects = system.staves[0].voices[0].timeObjects,
 				msPos: number = timeObjects[timeObjects.length - 1].msPositionInScore,
-				finalBarlineSim = new Sim(msPos, cursorYAttributes);
+				finalBarlineSim = new Sim(msPos, yCoordinates);
 
 			return finalBarlineSim;
 		}

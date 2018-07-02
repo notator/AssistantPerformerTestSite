@@ -6,11 +6,11 @@ namespace _AP
 {
 	export class Cursor
 	{
-		constructor(markersLayer: SVGGElement, cursorYAttributes: CursorYAttributes)
+		constructor(markersLayer: SVGGElement, yCoordinates: YCoordinates)
 		{
 			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
-			this.cursorYAttributes = cursorYAttributes;
+			this.yCoordinates = yCoordinates;
 		}
 
 		private newCursorLine(): SVGLineElement
@@ -36,7 +36,7 @@ namespace _AP
 		public setSims(simsInScore: Sim[])
 		{
 			this.sims = simsInScore;
-			this.cursorYAttributes = simsInScore[0].cursorYAttributes;
+			this.yCoordinates = simsInScore[0].yCoordinates;
 		}
 
 		public setVisible(setToVisible:boolean): void
@@ -64,10 +64,12 @@ namespace _AP
 			this.line.setAttribute("y1", y1);
 			this.line.setAttribute("x2", x);
 			this.line.setAttribute("y2", y2);
+
+			this.yCoordinates = startMarker.yCoordinates
 		}
 
 		readonly line: SVGLineElement;
-		cursorYAttributes: CursorYAttributes;
+		yCoordinates: YCoordinates;
 		sims: Sim[] = [];
 		positionIndex: number = 0;
 		nextMsPosition: number = 0;
