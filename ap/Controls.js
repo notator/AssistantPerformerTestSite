@@ -43,10 +43,9 @@ _AP.controls = (function(document, window)
 		STUDY2_SCORE_INDEX = 4,
 		STUDY2_2STAVES_SCORE_INDEX = 5,
 		STUDY3_SKETCH1_SCORE_INDEX = 6,
-		STUDY3_SKETCH1_PAGES_SCORE_INDEX = 7,
-		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 8,
-		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 9,
-		TOMBEAU1_SCORE_INDEX = 10,
+		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
+		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 8,
+		TOMBEAU1_SCORE_INDEX = 9,
 
 		RESIDENT_SYNTH_INDEX = 1,
 
@@ -269,8 +268,7 @@ _AP.controls = (function(document, window)
 
 		setCursorAndEventListener = function(svgControlsState)
 		{
-			var i,
-				s = score;
+			var s = score;
 
 			if(s.markersLayer !== undefined)
 			{
@@ -1151,12 +1149,6 @@ _AP.controls = (function(document, window)
 							break;
 						case STUDY3_SKETCH1_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
-							scoreInfo.inputHandler = "none";
-							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-							break;
-						case STUDY3_SKETCH1_PAGES_SCORE_INDEX:
-							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
 							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
