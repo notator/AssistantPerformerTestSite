@@ -6,52 +6,47 @@ namespace _AP
 {
 	export class Cursor
 	{
-		checkTrackIsOnArray(trackIsOnArray: any[]): void
+		constructor(markersLayer: SVGGElement)
 		{
-			for(let bool of trackIsOnArray)
+			this.line = this.newLine();
+			markersLayer.appendChild(this.line);
+		}
+
+		private newLine(): SVGLineElement
+		{
+			var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+
+			cursorLine.setAttribute("class", "cursorLine");
+			cursorLine.setAttribute("x1", "0");
+			cursorLine.setAttribute("y1", "0");
+			cursorLine.setAttribute("x2", "0");
+			cursorLine.setAttribute("y2", "0");
+			cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
+
+			return cursorLine;
+		}
+
+		//// foreach system, system.runningMarker.setTimeObjects
+		//private setTimeObjects(systems: SvgSystem[], isLivePerformance: boolean, trackIsOnArray: boolean[]): void
+		//{
+		//	throw new Error("Method not implemented.");
+		//}
+
+		public setVisible(setToVisible:boolean): void
+		{
+			if(setToVisible)
 			{
-				if(typeof(bool) !== "boolean")
-				{
-					throw "not an array of boolean.";
-				}
+				this.line.style.visibility = 'visible';
 			}
-		}
-		checkStartMarker(startMarker: StartMarker): void
-		{
-			if(startMarker.alignment === undefined
-				|| startMarker.msPositionInScore === undefined
-				|| startMarker.systemIndexInScore === undefined
-				|| startMarker.viewBoxScale === undefined
-				|| startMarker.yCoordinates === undefined
-				|| startMarker.yCoordinates.top === undefined
-				|| startMarker.yCoordinates.bottom === undefined
-				|| startMarker.line === undefined
-				|| startMarker.circle === undefined)
+			else
 			{
-				throw "not a startMarker";
-			}
-		}
-
-		readonly line: SVGLineElement;
-
-		/* Includes SimData for the final barline. */
-		readonly scoreSimDatas: SimData[];
-
-		// foreach system, system.runningMarker.setTimeObjects
-		private setTimeObjects(systems: SvgSystem[], isLivePerformance: boolean, trackIsOnArray: boolean[]): void
-		{
-			throw new Error("Method not implemented.");
-		}
-
-		// score.hideRunningMarkers()
-		private hide(): void
-		{
-			this.line.style.visibility = 'hidden';
+				this.line.style.visibility = 'hidden';
+			}			
 		}
 
 		//runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
 		//runningMarker.setVisible(true);
-		private setVisibleAtStartMarker(startMarker: StartMarker): void
+		public moveToStartMarker(startMarker: StartMarker): void
 		{
 			let sLine = startMarker.line,
 				x = sLine.x1.baseVal.valueAsString,
@@ -62,31 +57,8 @@ namespace _AP
 			this.line.setAttribute("y1", y1);
 			this.line.setAttribute("x2", x);
 			this.line.setAttribute("y2", y2);
-
-			this.line.style.visibility = 'visible';
 		}
 
-
-
-		constructor(scoreSimDatas: SimData[],
-			systems: SvgSystem[],
-			markersLayer: SVGGElement,
-			isLivePerformance: boolean,
-			trackIsOnArray: boolean[],
-			startMarker: StartMarker)
-		{
-			// scoreSimDatas is type-checked by typescript
-			// systems have been checked when constructing scoreSimDatas
-			// isLivePerformance is type-checked by typescript
-			this.checkTrackIsOnArray(trackIsOnArray);
-			this.checkStartMarker(startMarker);
-
-			this.scoreSimDatas = scoreSimDatas;
-
-			this.line = markersLayer.getElementsByClassName("cursorLine")[0] as SVGLineElement;
-
-			this.setVisibleAtStartMarker(startMarker);
-		}
-
+		readonly line: SVGLineElement;
 	}
 }

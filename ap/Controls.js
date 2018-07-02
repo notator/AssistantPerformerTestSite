@@ -1070,10 +1070,11 @@ _AP.controls = (function(document, window)
 		// (live) during other performances (normal Sequence and Keyboard1).
 		initializePlayer = function(score, options)
 		{
-			var timer, speed, tracksData = score.getTracksData();
+			var timer, speed;
 
 			player = sequence; // sequence is a namespace, not a class.
-			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+			player.outputTracks = score.getTracksData().outputTracks; // public player.outputTracks is needed for sending track initialization messages
+			player.simsData = score.getSimsData();
 
 			if(options.isConducting)
 			{
@@ -1572,7 +1573,7 @@ _AP.controls = (function(document, window)
 		// It does not require a MIDI input.
 		beginRuntime = function()
 		{
-			var tracksData;
+			let tracksData;
 
 			function setMIDIDevices(options)
 			{
@@ -1750,6 +1751,7 @@ _AP.controls = (function(document, window)
 			{
 				player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
 				player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+				player.simsData = score.getSimsData();
 				player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
 			else

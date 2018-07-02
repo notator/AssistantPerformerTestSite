@@ -48,8 +48,8 @@ _AP.score = (function(document)
 		//    .msPositionInScore
 		//    .cursorYAttributes
 		//    .timeObjects
-		// The simDatas array includes a SimData object for the final barline in the score.
-		simDatas,
+		// The simsData array includes a SimData object for the final barline in the score.
+		simsData,
 
 		cursor, // The cursor that is going to replace all the RunningMarkers
 
@@ -538,6 +538,8 @@ _AP.score = (function(document)
 					systems[i].timePointer.setVisible(false);
 				}
 			}
+
+			cursor.setVisible(false);
 		},
 
 		moveRunningMarkersToStartMarkers = function()
@@ -565,8 +567,9 @@ _AP.score = (function(document)
 			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
 			//runningMarker.setVisible(true);
 
-			// do the equivalent for a new Cursor object here.
-			cursor = new _AP.Cursor(simDatas, systems, this.markersLayer, isLivePerformance, trackIsOnArray, startMarker);
+			// do the equivalent for the cursor here.
+			cursor.moveToStartMarker(startMarker);
+			cursor.setVisible(true);
 		},
 
 		// Called when the start conducting button is clicked on or off.
@@ -1040,20 +1043,6 @@ _AP.score = (function(document)
 				markersLayer.appendChild(system.timePointer.graphicElement);
 			}
 
-			function newCursorLine()
-			{
-				var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
-
-				cursorLine.setAttribute("class", "cursorLine");
-				cursorLine.setAttribute("x1", "0");
-				cursorLine.setAttribute("y1", "0");
-				cursorLine.setAttribute("x2", "0");
-				cursorLine.setAttribute("y2", "0");
-				cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
-
-				return cursorLine;
-			}
-
 			function initializeTrackIsOnArray(system)
 			{
 				var i, j, staff;
@@ -1179,10 +1168,9 @@ _AP.score = (function(document)
 				createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++);
 			}
 
-			let line = newCursorLine();
-			localMarkersLayer.appendChild(line);
+			cursor = new _AP.Cursor(localMarkersLayer);
 
-			this.markersLayer = localMarkersLayer;
+			markersLayer = localMarkersLayer;
 
 			setConductingLayer(); // just sets its dimensions
 
@@ -1882,13 +1870,18 @@ _AP.score = (function(document)
 				tracksData.inputKeyRange = getInputKeyRange(inputTracks);
 			}
 
-			let scoreSimDatas = new _AP.ScoreSimDatas(systems);
-			simDatas = scoreSimDatas.scoreSimDatas;
+			let scoreSimsData = new _AP.ScoreSimsData(systems);
+			simsData = scoreSimsData.scoreSimsData;
 		},
 
 		getTracksData = function()
 		{
 			return tracksData;
+		},
+
+		getSimsData = function()
+		{
+			return simsData;
 		},
 
 		// an empty score
@@ -1951,6 +1944,8 @@ _AP.score = (function(document)
 			//            inputKeyRange.topKey
 			this.setTracksData = setTracksData;
 			this.getTracksData = getTracksData;
+
+			this.getSimsData = getSimsData;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
 			this.refreshDisplay = refreshDisplay;

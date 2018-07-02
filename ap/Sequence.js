@@ -33,7 +33,8 @@ _AP.sequence = (function(window)
 
     outputDevice,
     timer, // performance or conductor (use performance.now() or conductor.now())
-    tracks,
+	tracks,
+	sims,
 
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
@@ -427,7 +428,8 @@ _AP.sequence = (function(window)
         }
 
         timer = timerArg; // performance or score.timePointer
-        tracks = this.outputTracks;
+		tracks = this.outputTracks;
+		sims = this.simsData;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;
@@ -445,28 +447,52 @@ _AP.sequence = (function(window)
     // of tracks as this (calling) sequence.
     play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
     {
-        // Sets each (output) track's isPerforming attribute.
+        // Sets each sim and timeObject's isOn attribute.
         // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
         // sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
         // all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
         function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
         {
             var i,
-                // Note that the trackIsOnArray will also include input tracks if the score has any,
-                // but that these are ignored here because _tracks_ only contains the _output_ tracks.
-                nTracks = tracks.length,
-                track;
+				// Note that the sims currently just contain midiObjects, but that the trackIsOnArray will also
+				// include input tracks if the score has any.
+                nSims = sims.length,
+				nTracks = trackIsOnArray.length,
+				track, timeObject;
 
-            for(i = 0; i < nTracks; ++i)
+            for(i = 0; i < nSims; ++i)
             {
-                track = tracks[i];
-                track.isPerforming = trackIsOnArray[i];
+				let sim = sims[i], timeObjects = sim.timeObjects;
+				for(let trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+				{
+					timeObject = timeObjects[trackIndex];
+					if(timeObject instanceof _AP.midiObject.MidiChord || timeObject instanceof _AP.midiObject.MidiRest)
+					{
+						timeObject.isOn = trackIsOnArray[trackIndex];
+					}
+				}
+				sim.isOn = false;
+				for(let trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+				{
+					timeObject = timeObjects[trackIndex];
+					if((timeObject instanceof _AP.midiObject.MidiChord || timeObject instanceof _AP.midiObject.MidiRest) && timeObject.isOn)
+					{
+						sim.isOn = true;
+						break;
+					}
+				}
+			}
 
-                if(track.isPerforming)
-                {
-                    track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
-                }
-            }
+			for(i = 0; i < nTracks; ++i)
+			{
+				track = tracks[i];
+				track.isPerforming = trackIsOnArray[i];
+
+				if(track.isPerforming)
+				{
+					track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
+				}
+			}
         }
 
         // In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)

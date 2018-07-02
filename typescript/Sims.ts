@@ -20,18 +20,25 @@ namespace _AP
 	{
 		readonly msPositionInScore: number;
 		readonly cursorYAttributes: CursorYAttributes;
-		readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
+
+		private readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
 		constructor(msPosInScore: number, cursorYAttributes: CursorYAttributes)
 		{
 			this.msPositionInScore = msPosInScore;
 			this.cursorYAttributes = cursorYAttributes;
 		}
+
+		push(timeObject: TimeObject, trackIndex: number): void
+		{
+			timeObject.isOn = true;
+			this.timeObjects[trackIndex] = timeObject;
+		}
 	}
 
 	/* Includes SimData for the final barline. */
-	export class ScoreSimDatas
+	export class ScoreSimsData
 	{
 		// Checks the following:
 		// Each system has the following attributes:
@@ -92,7 +99,7 @@ namespace _AP
 
 		private getSystemSimData(system: SvgSystem): SimData[]
 		{
-			function getEmptySimDatas(system: SvgSystem): SimData[]
+			function getEmptySimsData(system: SvgSystem): SimData[]
 			{
 				let systemSimsData: SimData[] = [],
 					cursorYAttributes = new CursorYAttributes(system.startMarker),
@@ -159,7 +166,7 @@ namespace _AP
 
 				return systemSimsData;
 			}
-			function addTimeObjectsToSimDatas(system: SvgSystem, systemSimsData: SimData[])
+			function addTimeObjectsToSimsData(system: SvgSystem, systemSimsData: SimData[]) : void
 			{
 				let nStaves = system.staves.length,
 					trackIndex: number = 0;
@@ -193,14 +200,15 @@ namespace _AP
 								}
 							}
 
-							systemSimsData[simIndex].timeObjects[trackIndex] = timeObject; // undefined array elements can be added...
+							systemSimsData[simIndex].push(timeObject, trackIndex); // undefined array elements can be added...
 						}
 					}
 				}
 			}
 
-			let systemSimsData = getEmptySimDatas(system);
-			addTimeObjectsToSimDatas(system, systemSimsData);
+			let systemSimsData = getEmptySimsData(system);
+
+			addTimeObjectsToSimsData(system, systemSimsData);
 
 			return systemSimsData;
 		}
@@ -216,7 +224,7 @@ namespace _AP
 			return finalBarlineSimData;
 		}
 
-		scoreSimDatas: SimData[] = [];
+		scoreSimsData: SimData[] = [];
 
 		/**
 		 * The .scoreSimData attribute will include SimData for the final barline.
@@ -237,7 +245,7 @@ namespace _AP
 		 * and also has other attributes, including .alignment and .msDurationInScore, but these are not checked.
 		 * @param systems
 		 */
-		constructor(systems: any[]) // an array of systems
+		constructor(systems: SvgSystem[]) // an array of systems
 		{
 			this.checkArgument(systems);
 
@@ -247,11 +255,11 @@ namespace _AP
 
 				for(let sim of systemSimData)
 				{
-					this.scoreSimDatas.push(sim);
+					this.scoreSimsData.push(sim);
 				}
 			}
 			let finalBarlineSimData: SimData = this.getFinalBarlineSimData(systems); 
-			this.scoreSimDatas.push(finalBarlineSimData);
+			this.scoreSimsData.push(finalBarlineSimData);
 
 			//let c: CursorYAttributes = this.sims[0].cursorYAttributes;
 			//let a: number = 0;

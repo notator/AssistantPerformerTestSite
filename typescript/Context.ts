@@ -26,6 +26,38 @@ namespace _AP
 	export interface TimeObject
 	{
 		msPositionInScore: number;
+		msDurationInScore: number;
+		isOn: boolean;
+	}
+
+	/*******************************************************/
+
+	export interface YCoordinates
+	{
+		top: number;
+		bottom: number;
+	}
+
+	export interface StartMarker
+	{
+		alignment: number;
+		msPositionInScore: number;
+		systemIndexInScore: number;
+		viewBoxScale: number;
+		yCoordinates: YCoordinates;
+		line: SVGLineElement;
+		circle: SVGCircleElement;
+	}
+
+	export interface EndMarker
+	{
+		alignment: number;
+		msPositioninScore: number;
+		systemIndexInScore: number;
+		viewBoxScale: number;
+		yCoordinates: YCoordinates;
+		line: SVGLineElement;
+		circle: SVGCircleElement;
 	}
 
 	/*******************************************************/
@@ -76,36 +108,6 @@ namespace _AP
 		}
 	}
 
-	/*******************************************************/
 
-	export interface YCoordinates
-	{
-		top: number;
-		bottom: number;
-	}
-
-	export interface StartMarker
-	{
-		alignment: number;
-		msPositionInScore: number;
-		systemIndexInScore: number;
-		viewBoxScale: number;
-		yCoordinates: YCoordinates;
-		line: SVGLineElement;
-		circle: SVGCircleElement;
-	}
-
-	export interface EndMarker
-	{
-		alignment: number;
-		msPositioninScore: number;
-		systemIndexInScore: number;
-		viewBoxScale: number;
-		yCoordinates: YCoordinates;
-		line: SVGLineElement;
-		circle: SVGCircleElement;
-	}
-
-	/*******************************************************/
  }
 
