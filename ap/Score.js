@@ -44,12 +44,12 @@ _AP.score = (function(document)
 		// and reset when the tracksControl calls refreshDisplay().
 		trackIsOnArray = [], // all tracks, including input tracks
 
-		// An array of SimData objects having attributes
+		// An array of Sim objects having attributes
 		//    .msPositionInScore
 		//    .cursorYAttributes
 		//    .timeObjects
-		// The simsData array includes a SimData object for the final barline in the score.
-		simsData,
+		// The sims array includes a Sim object for the final barline in the score.
+		scoreSims,
 
 		cursor, // The cursor that is going to replace all the RunningMarkers
 
@@ -550,6 +550,8 @@ _AP.score = (function(document)
 			{
 				systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
 			}
+
+			cursor.moveToStartMarker(startMarker);
 		},
 
 		// Called when the go button or the startConducting button is clicked.
@@ -565,7 +567,7 @@ _AP.score = (function(document)
 			hideRunningMarkers();
 			moveRunningMarkersToStartMarkers();
 			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
-			//runningMarker.setVisible(true);
+			runningMarker.setVisible(true);
 
 			// do the equivalent for the cursor here.
 			cursor.moveToStartMarker(startMarker);
@@ -1270,6 +1272,12 @@ _AP.score = (function(document)
 					// this function can assume that the runningMarker's currentPosition can simply be incremented
 					runningMarker.incrementPosition();
 				}
+
+				while(msPosition >= cursor.nextMsPosition)
+				{
+					// this function can assume that the runningMarker's currentPosition can simply be incremented
+					cursor.incrementPosition();
+				}
 			}
 		},
 
@@ -1731,6 +1739,9 @@ _AP.score = (function(document)
 				endMarker = systems[systems.length - 1].endMarker;
 				endMarker.moveTo(finalBarlineInScore);
 				endMarker.setVisible(true);
+
+				cursor.setSims(scoreSims);
+				cursor.moveToStartMarker(startMarker);
 			}
 
 			function setTrackAttributes(outputTracks, inputTracks, system0staves)
@@ -1860,6 +1871,9 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
+			let sims = new _AP.ScoreSims(systems);
+			scoreSims = sims.scoreSims;
+
 			setMarkers(systems, isLivePerformance);
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
@@ -1869,9 +1883,6 @@ _AP.score = (function(document)
 			{
 				tracksData.inputKeyRange = getInputKeyRange(inputTracks);
 			}
-
-			let scoreSimsData = new _AP.ScoreSimsData(systems);
-			simsData = scoreSimsData.scoreSimsData;
 		},
 
 		getTracksData = function()
@@ -1879,9 +1890,9 @@ _AP.score = (function(document)
 			return tracksData;
 		},
 
-		getSimsData = function()
+		getSims = function()
 		{
-			return simsData;
+			return scoreSims;
 		},
 
 		// an empty score
@@ -1945,7 +1956,7 @@ _AP.score = (function(document)
 			this.setTracksData = setTracksData;
 			this.getTracksData = getTracksData;
 
-			this.getSimsData = getSimsData;
+			this.getSims = getSims;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
 			this.refreshDisplay = refreshDisplay;

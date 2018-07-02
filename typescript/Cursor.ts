@@ -6,13 +6,14 @@ namespace _AP
 {
 	export class Cursor
 	{
-		constructor(markersLayer: SVGGElement)
+		constructor(markersLayer: SVGGElement, cursorYAttributes: CursorYAttributes)
 		{
-			this.line = this.newLine();
+			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
+			this.cursorYAttributes = cursorYAttributes;
 		}
 
-		private newLine(): SVGLineElement
+		private newCursorLine(): SVGLineElement
 		{
 			var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 
@@ -31,6 +32,12 @@ namespace _AP
 		//{
 		//	throw new Error("Method not implemented.");
 		//}
+
+		public setSims(simsInScore: Sim[])
+		{
+			this.sims = simsInScore;
+			this.cursorYAttributes = simsInScore[0].cursorYAttributes;
+		}
 
 		public setVisible(setToVisible:boolean): void
 		{
@@ -60,5 +67,9 @@ namespace _AP
 		}
 
 		readonly line: SVGLineElement;
+		cursorYAttributes: CursorYAttributes;
+		sims: Sim[] = [];
+		positionIndex: number = 0;
+		nextMsPosition: number = 0;
 	}
 }

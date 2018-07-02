@@ -429,7 +429,7 @@ _AP.sequence = (function(window)
 
         timer = timerArg; // performance or score.timePointer
 		tracks = this.outputTracks;
-		sims = this.simsData;
+		sims = this.sims;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;

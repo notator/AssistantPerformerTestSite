@@ -1074,7 +1074,7 @@ _AP.controls = (function(document, window)
 
 			player = sequence; // sequence is a namespace, not a class.
 			player.outputTracks = score.getTracksData().outputTracks; // public player.outputTracks is needed for sending track initialization messages
-			player.simsData = score.getSimsData();
+			player.sims = score.getSims();
 
 			if(options.isConducting)
 			{
@@ -1751,7 +1751,7 @@ _AP.controls = (function(document, window)
 			{
 				player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
 				player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-				player.simsData = score.getSimsData();
+				player.sims = score.getSims();
 				player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
 			else

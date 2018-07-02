@@ -7,7 +7,7 @@ namespace _AP
 	{
 		readonly top: SVGLength;
 		readonly bottom: SVGLength;
-		constructor(startMarker:StartMarker)
+		constructor(startMarker: StartMarker)
 		{
 			let line = startMarker.line;
 
@@ -16,7 +16,7 @@ namespace _AP
 		}
 	}
 
-	export class SimData
+	export class Sim
 	{
 		readonly msPositionInScore: number;
 		readonly cursorYAttributes: CursorYAttributes;
@@ -37,8 +37,8 @@ namespace _AP
 		}
 	}
 
-	/* Includes SimData for the final barline. */
-	export class ScoreSimsData
+	/* Includes Sim for the final barline. */
+	export class ScoreSims
 	{
 		// Checks the following:
 		// Each system has the following attributes:
@@ -97,11 +97,11 @@ namespace _AP
 			}
 		}
 
-		private getSystemSimData(system: SvgSystem): SimData[]
+		private getSystemSims(system: SvgSystem): Sim[]
 		{
-			function getEmptySimsData(system: SvgSystem): SimData[]
+			function getEmptySims(system: SvgSystem): Sim[]
 			{
-				let systemSimsData: SimData[] = [],
+				let systemSims: Sim[] = [],
 					cursorYAttributes = new CursorYAttributes(system.startMarker),
 					nStaves = system.staves.length;
 
@@ -125,24 +125,24 @@ namespace _AP
 						{
 							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								let simData = new SimData(timeObjects[ti].msPositionInScore, cursorYAttributes);
-								systemSimsData.push(simData);
+								let sim = new Sim(timeObjects[ti].msPositionInScore, cursorYAttributes);
+								systemSims.push(sim);
 							}
 						}
 						else
 						{
 							let maxPos = Number.MAX_VALUE,
-								simIndex = systemSimsData.length - 1;
+								simIndex = systemSims.length - 1;
 							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
 								let tObjPos = timeObjects[ti].msPositionInScore,
-									simPos = systemSimsData[simIndex].msPositionInScore;
+									simPos = systemSims[simIndex].msPositionInScore;
 
 								while(simPos >= tObjPos && simIndex > 0)
 								{
 									maxPos = simPos;
 									simIndex--;
-									simPos = systemSimsData[simIndex].msPositionInScore;
+									simPos = systemSims[simIndex].msPositionInScore;
 								}
 
 								if(maxPos > tObjPos)
@@ -150,13 +150,13 @@ namespace _AP
 									maxPos = tObjPos;
 									if(simPos < tObjPos)
 									{
-										let sim = new SimData(tObjPos, cursorYAttributes);
-										systemSimsData.splice(simIndex + 1, 0, sim);
+										let sim = new Sim(tObjPos, cursorYAttributes);
+										systemSims.splice(simIndex + 1, 0, sim);
 									}
 									else if(simPos > tObjPos)
 									{
-										let sim = new SimData(tObjPos, cursorYAttributes);
-										systemSimsData.splice(0, 0, sim);
+										let sim = new Sim(tObjPos, cursorYAttributes);
+										systemSims.splice(0, 0, sim);
 									}
 								}
 							}
@@ -164,9 +164,9 @@ namespace _AP
 					}
 				}
 
-				return systemSimsData;
+				return systemSims;
 			}
-			function addTimeObjectsToSimsData(system: SvgSystem, systemSimsData: SimData[]) : void
+			function addTimeObjectsToSims(system: SvgSystem, systemSims: Sim[]) : void
 			{
 				let nStaves = system.staves.length,
 					trackIndex: number = 0;
@@ -191,43 +191,43 @@ namespace _AP
 						for(let tObjIndex = 0; tObjIndex < timeObjects.length - 1; ++tObjIndex) // (dont look at final barline)
 						{
 							let timeObject = timeObjects[tObjIndex]; 
-							while(timeObject.msPositionInScore > systemSimsData[simIndex].msPositionInScore)
+							while(timeObject.msPositionInScore > systemSims[simIndex].msPositionInScore)
 							{
 								simIndex++;
-								if(simIndex >= systemSimsData.length)
+								if(simIndex >= systemSims.length)
 								{
 									throw "error";
 								}
 							}
 
-							systemSimsData[simIndex].push(timeObject, trackIndex); // undefined array elements can be added...
+							systemSims[simIndex].push(timeObject, trackIndex); // undefined array elements can be added...
 						}
 					}
 				}
 			}
 
-			let systemSimsData = getEmptySimsData(system);
+			let systemSims = getEmptySims(system);
 
-			addTimeObjectsToSimsData(system, systemSimsData);
+			addTimeObjectsToSims(system, systemSims);
 
-			return systemSimsData;
+			return systemSims;
 		}
 
-		private getFinalBarlineSimData(systems: SvgSystem[]): SimData
+		private getFinalBarlineSim(systems: SvgSystem[]): Sim
 		{
 			let system = systems[systems.length - 1],
 				cursorYAttributes = new CursorYAttributes(system.startMarker),
 				timeObjects = system.staves[0].voices[0].timeObjects,
 				msPos: number = timeObjects[timeObjects.length - 1].msPositionInScore,
-				finalBarlineSimData = new SimData(msPos, cursorYAttributes);
+				finalBarlineSim = new Sim(msPos, cursorYAttributes);
 
-			return finalBarlineSimData;
+			return finalBarlineSim;
 		}
 
-		scoreSimsData: SimData[] = [];
+		scoreSims: Sim[] = [];
 
 		/**
-		 * The .scoreSimData attribute will include SimData for the final barline.
+		 * The .scoreSims attribute includes a Sim for the final barline.
 		 * Each system is checked that it has the following attributes:
 		 *     .markersTop
 		 *     .markersBottom
@@ -251,15 +251,15 @@ namespace _AP
 
 			for(let system of systems)
 			{
-				let systemSimData: SimData[] = this.getSystemSimData(system);
+				let systemSim: Sim[] = this.getSystemSims(system);
 
-				for(let sim of systemSimData)
+				for(let sim of systemSim)
 				{
-					this.scoreSimsData.push(sim);
+					this.scoreSims.push(sim);
 				}
 			}
-			let finalBarlineSimData: SimData = this.getFinalBarlineSimData(systems); 
-			this.scoreSimsData.push(finalBarlineSimData);
+			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems); 
+			this.scoreSims.push(finalBarlineSim);
 
 			//let c: CursorYAttributes = this.sims[0].cursorYAttributes;
 			//let a: number = 0;
