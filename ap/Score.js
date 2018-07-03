@@ -560,10 +560,6 @@ _AP.score = (function(document)
 			moveRunningMarkersToStartMarkers();
 			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
 			runningMarker.setVisible(true);
-
-			// do the equivalent for the cursor here.
-			cursor.moveToStartMarker(startMarker);
-			cursor.setVisible(true);
 		},
 
 		// Called when the start conducting button is clicked on or off.
@@ -1194,11 +1190,6 @@ _AP.score = (function(document)
 			endMarker.moveTo(lastTimeObjects[lastTimeObjects.length - 1]);
 		},
 
-		startMarkerMsPosition = function()
-		{
-			return startMarker.msPositionInScore;
-		},
-
 		endMarkerMsPosition = function()
 		{
 			return endMarker.msPositionInScore;
@@ -1262,11 +1253,11 @@ _AP.score = (function(document)
 					runningMarker.incrementPosition();
 				}
 
-				while(msPosition >= cursor.nextMsPosition)
-				{
-					// this function can assume that the runningMarker's currentPosition can simply be incremented
-					cursor.incrementPosition();
-				}
+				//while(msPosition >= cursor.nextMsPosition)
+				//{
+				//	// this function can assume that the runningMarker's currentPosition can simply be incremented
+				//	cursor.incrementPosition();
+				//}
 			}
 		},
 
@@ -1887,6 +1878,11 @@ _AP.score = (function(document)
 			return cursor; // is undefined before a score is loaded
 		},
 
+		getStartMarker = function()
+		{
+			return startMarker; // is undefined before a score is loaded
+		},
+
 		// an empty score
 		Score = function(callback)
 		{
@@ -1907,8 +1903,6 @@ _AP.score = (function(document)
 			this.sendStartMarkerToStart = sendStartMarkerToStart;
 			this.sendEndMarkerToEnd = sendEndMarkerToEnd;
 
-			// functions which return the current start and end times.
-			this.startMarkerMsPosition = startMarkerMsPosition;
 			this.endMarkerMsPosition = endMarkerMsPosition;
 			this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
 
@@ -1948,6 +1942,7 @@ _AP.score = (function(document)
 			// It is also the transparent, clickable surface used when setting the start and end markers.
 			this.getMarkersLayer = getMarkersLayer;
 			this.getCursor = getCursor;
+			this.getStartMarker = getStartMarker;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
 			this.refreshDisplay = refreshDisplay;

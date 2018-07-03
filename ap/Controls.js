@@ -478,13 +478,19 @@ _AP.controls = (function(document, window)
 				// the running marker is at its correct position:
 				// either at the start marker, or somewhere paused.
 				score.setRunningMarkers();
+
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 				score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-				startMarkerMsPosition = score.startMarkerMsPosition();
 				endMarkerMsPosition = score.endMarkerMsPosition();
 
-				player.cursor.setEndMarkerMsPosition(endMarkerMsPosition);
+				let startMarker = score.getStartMarker(),
+					outputTracks = score.getTracksData().outputTracks;
+
+				// set the cursor's endMarkerMsPosition
+				// set the isOn attribute of each timeObject in the cursor's sims
+				// move the cursor's line to the startMarker and make it visible.
+				player.cursor.setPlayingState(startMarker, outputTracks, endMarkerMsPosition, trackIsOnArray);
 
 				if(options.isConducting === true)
 				{
@@ -495,7 +501,7 @@ _AP.controls = (function(document, window)
 					baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 				}
 
-				player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
+				player.play(startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
 			}
 
 			if(options.isConducting === false)
@@ -1686,7 +1692,7 @@ _AP.controls = (function(document, window)
 					for(i = 0; i < nTracks; ++i)
 					{
 						track = tracks[i];
-						if(track.isPerforming)
+						if(track.isOn)
 						{
 							msgs = tracks[i].startStateMessages;
 							nMsgs = msgs.length;

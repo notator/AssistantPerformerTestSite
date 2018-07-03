@@ -22,6 +22,13 @@ namespace _AP
 		readonly timeObjects: TimeObject[];
 	}
 
+	export interface Track
+	{
+		midiObjects: TimeObject[];
+		setForOutputSpan(a: number, b: number): void;
+		isOn: boolean;
+	}
+
 	export interface TimeObject
 	{
 		readonly msPositionInScore: number;

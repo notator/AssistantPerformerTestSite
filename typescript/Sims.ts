@@ -23,9 +23,9 @@ namespace _AP
 		readonly yCoordinates: YCoordinates;
 		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
 
-		private readonly midiObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
+		public readonly midiObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
-		private readonly inputObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
+		public readonly inputObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
 		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates)
 		{
@@ -47,24 +47,27 @@ namespace _AP
 	}
 
 	/* Includes Sim for the final barline. */
-	export class ReadonlyScoreSims
+	export class ScoreSims
 	{
-		// Checks the following:
-		// Each system has the following attributes:
-		//     .markersTop
-		//     .markersBottom
-		//     .staves
-		// Each system.staff has voices
-		// Each voices has voice
-		// Each voice has
-		//     .isOutput
-		//     .timeObjects
-		// Each timeObject has
-		//     .msPositionInScore
-		//
-		// Each timeObject is either a:
-		//     MidiChord, MidiRest, InputChordDef or InputRestDef
-		// and also has other attributes, including .alignment and .msDurationInScore, but these are not checked.
+		constructor(systems: SvgSystem[]) // an array of systems
+		{
+			this.checkArgument(systems);
+
+			for(let system of systems)
+			{
+				let o: { systemSims: Sim[], nOutputTracks: number } = this.getSystemSims(system);
+
+				this.nOutputTracks = (this.nOutputTracks > o.nOutputTracks) ? this.nOutputTracks : o.nOutputTracks; 
+
+				for(let sim of o.systemSims)
+				{
+					this.scoreSims.push(sim);
+				}
+			}
+			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems);
+			this.scoreSims.push(finalBarlineSim);
+		}
+
 		private checkArgument(systems: any): any
 		{
 			if(systems.length === 0)
@@ -106,7 +109,7 @@ namespace _AP
 			}
 		}
 
-		private getSystemSims(system: SvgSystem): Sim[]
+		private getSystemSims(system: SvgSystem): { systemSims: Sim[], nOutputTracks: number }
 		{
 			function getEmptySims(system: SvgSystem): Sim[]
 			{
@@ -177,7 +180,7 @@ namespace _AP
 
 				return systemSims;
 			}
-			function addTimeObjectsToSims(system: SvgSystem, systemSims: Sim[]) : void
+			function addTimeObjectsToSims(system: SvgSystem, systemSims: Sim[]) : number
 			{
 				let nStaves = system.staves.length,
 					outputTrackIndex: number = 0,
@@ -232,13 +235,15 @@ namespace _AP
 						}
 					}
 				}
+
+				return outputTrackIndex;
 			}
 
 			let systemSims = getEmptySims(system);
 
-			addTimeObjectsToSims(system, systemSims);
+			let nOutputTracks = addTimeObjectsToSims(system, systemSims);
 
-			return systemSims;
+			return { systemSims: systemSims, nOutputTracks: nOutputTracks };
 		}
 
 		private getFinalBarlineSim(systems: SvgSystem[]): Sim
@@ -254,55 +259,7 @@ namespace _AP
 			return finalBarlineSim;
 		}
 
-		private scoreSims: Sim[] = [];
-
-		public readonlyScoreSims: ReadonlyArray<Sim>;
-
-		/**
-		 * The .scoreSims attribute includes a Sim for the final barline.
-		 * Each system is checked that it has the following attributes:
-		 *     .markersTop
-		 *     .markersBottom
-		 *     .staves
-		 * Each system.staff has voices
-		 * Each voices has voice
-		 * Each voice has
-		 *     .isOutput
-		 *     .timeObjects
-		 * Each timeObject has
-		 *     .msPositionInScore
-		 *
-		 * Each timeObject is either a:
-		 *     MidiChord, MidiRest, InputChordDef or InputRestDef
-		 * and also has other attributes, including .alignment and .msDurationInScore, but these are not checked.
-		 * @param systems
-		 */
-		constructor(systems: SvgSystem[]) // an array of systems
-		{
-			this.checkArgument(systems);
-
-			for(let system of systems)
-			{
-				let systemSim: Sim[] = this.getSystemSims(system);
-
-				for(let sim of systemSim)
-				{
-					this.scoreSims.push(sim);
-				}
-			}
-			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems); 
-			this.scoreSims.push(finalBarlineSim);
-
-			this.readonlyScoreSims = this.scoreSims; 
-
-			//let c: CursorYAttributes = this.sims[0].cursorYAttributes;
-			//let a: number = 0;
-			//for(let i = 0; i < this.sims.length; ++i)
-			//{
-			//	if(this.sims[i].cursorYAttributes !== c)
-			//	{
-			//		a = 1;
-			//	}
-		}
+		public readonly scoreSims: Sim[] = [];
+		public readonly nOutputTracks: number = 0;
 	}
 }
