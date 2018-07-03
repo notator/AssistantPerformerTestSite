@@ -23,7 +23,9 @@ namespace _AP
 		readonly yCoordinates: YCoordinates;
 		isOn: boolean = true; // is set to false, if the sim has no performing midiObjects
 
-		private readonly timeObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
+		private readonly midiObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
+
+		private readonly inputObjects: TimeObject[] = []; // This array is accessed by trackIndex, and may contain undefined members.
 
 		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates)
 		{
@@ -32,10 +34,15 @@ namespace _AP
 			this.yCoordinates = yCoordinates;
 		}
 
-		push(timeObject: TimeObject, trackIndex: number): void
+		pushMidiObject(midiObject: TimeObject, trackIndex: number): void
 		{
-			timeObject.isOn = true;
-			this.timeObjects[trackIndex] = timeObject;
+			midiObject.isOn = true;
+			this.midiObjects[trackIndex] = midiObject;
+		}
+		pushInputObject(inputObject: TimeObject, trackIndex: number): void
+		{
+			inputObject.isOn = true;
+			this.inputObjects[trackIndex] = inputObject;
 		}
 	}
 
@@ -173,28 +180,29 @@ namespace _AP
 			function addTimeObjectsToSims(system: SvgSystem, systemSims: Sim[]) : void
 			{
 				let nStaves = system.staves.length,
-					trackIndex: number = 0;
+					outputTrackIndex: number = 0,
+					inputTrackIndex: number = 0;
 
 				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 				{
 					let staff = system.staves[staffIndex],
 						nVoices = staff.voices.length;
 
-					for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex, ++trackIndex)
+					for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 					{
-						let simIndex: number = 0;
+						let simIndex: number = 0, voice = staff.voices[voiceIndex];
 
-						if(staff.voices[voiceIndex].timeObjects === undefined)
+						if(voice.isOutput === false && voice.timeObjects === undefined)
 						{
-							// this can happen if the voice is an InputVoice, and the input device is not selected.
-							break
+							// this happens if the input device is not selected.
+							break;
 						}
 
-						let timeObjects = staff.voices[voiceIndex].timeObjects;
+						let timeObjects = voice.timeObjects;
 
-						for(let tObjIndex = 0; tObjIndex < timeObjects.length - 1; ++tObjIndex) // (dont look at final barline)
+						for(let timeObjIndex = 0; timeObjIndex < timeObjects.length - 1; ++timeObjIndex) // (don't look at final barline)
 						{
-							let timeObject = timeObjects[tObjIndex]; 
+							let timeObject = timeObjects[timeObjIndex];
 							while(timeObject.msPositionInScore > systemSims[simIndex].msPositionInScore)
 							{
 								simIndex++;
@@ -204,7 +212,23 @@ namespace _AP
 								}
 							}
 
-							systemSims[simIndex].push(timeObject, trackIndex); // undefined array elements can be added...
+							if(voice.isOutput)
+							{
+								systemSims[simIndex].pushMidiObject(timeObject, outputTrackIndex); // undefined array elements can be added...
+							}
+							else
+							{
+								systemSims[simIndex].pushInputObject(timeObject, inputTrackIndex); // undefined array elements can be added...
+							}
+						}
+
+						if(voice.isOutput)
+						{
+							outputTrackIndex++;
+						}
+						else
+						{
+							inputTrackIndex++;
 						}
 					}
 				}

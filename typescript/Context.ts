@@ -56,6 +56,7 @@ namespace _AP
 
 	/*******************************************************/
 
+	// the following can be deleted when the running marker is deleted!
 	export class MidiChord
 	{
 		constructor()
@@ -101,7 +102,5 @@ namespace _AP
 
 		}
 	}
-
-
  }
 
