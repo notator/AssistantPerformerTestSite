@@ -6,11 +6,16 @@ namespace _AP
 {
 	export class Cursor
 	{
-		constructor(markersLayer: SVGGElement, yCoordinates: YCoordinates)
+		//constructor(markersLayer: SVGGElement, yCoordinates: YCoordinates)
+		constructor(systems: SvgSystem[], markersLayer: SVGGElement)
 		{
+			this.sims = new ReadonlyScoreSims(systems).readonlyScoreSims;
+			this.yCoordinates = this.sims[0].yCoordinates;
+
+			this.sims[0].isOn = false;
+
 			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
-			this.yCoordinates = yCoordinates;
 		}
 
 		private newCursorLine(): SVGLineElement
@@ -25,18 +30,6 @@ namespace _AP
 			cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
 
 			return cursorLine;
-		}
-
-		//// foreach system, system.runningMarker.setTimeObjects
-		//private setTimeObjects(systems: SvgSystem[], isLivePerformance: boolean, trackIsOnArray: boolean[]): void
-		//{
-		//	throw new Error("Method not implemented.");
-		//}
-
-		public setSims(simsInScore: Sim[])
-		{
-			this.sims = simsInScore;
-			this.yCoordinates = simsInScore[0].yCoordinates;
 		}
 
 		public setVisible(setToVisible: boolean): void
@@ -106,7 +99,7 @@ namespace _AP
 		public yCoordinates: YCoordinates;
 
 		private readonly line: SVGLineElement;
-		private sims: Sim[] = [];
+		private readonly sims: ReadonlyArray<Sim>;
 		positionIndex: number = 0;
 		nextMsPosition: number = 0;
 		private startMarkerMsPositionInScore: number = 0;

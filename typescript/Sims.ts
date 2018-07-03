@@ -40,7 +40,7 @@ namespace _AP
 	}
 
 	/* Includes Sim for the final barline. */
-	export class ScoreSims
+	export class ReadonlyScoreSims
 	{
 		// Checks the following:
 		// Each system has the following attributes:
@@ -230,7 +230,9 @@ namespace _AP
 			return finalBarlineSim;
 		}
 
-		scoreSims: Sim[] = [];
+		private scoreSims: Sim[] = [];
+
+		public readonlyScoreSims: ReadonlyArray<Sim>;
 
 		/**
 		 * The .scoreSims attribute includes a Sim for the final barline.
@@ -266,6 +268,8 @@ namespace _AP
 			}
 			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems); 
 			this.scoreSims.push(finalBarlineSim);
+
+			this.readonlyScoreSims = this.scoreSims; 
 
 			//let c: CursorYAttributes = this.sims[0].cursorYAttributes;
 			//let a: number = 0;

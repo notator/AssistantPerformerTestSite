@@ -106,7 +106,7 @@ namespace _AP
 					staff = system.staves[i];
 					for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
 					{
-						if(staff.isVisible && staff.topLineY !== undefined)
+						if(staff.topLineY !== undefined)
 						{
 							if(trackIsOnArray[trackIndex] === true)
 							{

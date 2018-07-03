@@ -3,62 +3,55 @@ namespace _AP
 {
 	export interface SvgSystem
 	{
-		staves: Staff[];
-		startMarker: StartMarker;
-		endMarker: EndMarker;
-		markersTop: number; // used when constructing StartMarker and EndMarker
-		markersBottom: number; // used when constructing StartMarker and EndMarker
+		readonly staves: Staff[];
+		readonly startMarker: StartMarker;
+		readonly endMarker: EndMarker;
+		readonly markersTop: number; // used when constructing StartMarker and EndMarker
+		readonly markersBottom: number; // used when constructing StartMarker and EndMarker
 	}
 
 	export interface Staff
 	{
-		isVisible: boolean;
-		voices: Voice[];
-		topLineY: number;
+		readonly voices: Voice[];
+		readonly topLineY: number;
 	}
 
 	export interface Voice
 	{
-		isOutput: boolean;
-		timeObjects: TimeObject[];
+		readonly isOutput: boolean;
+		readonly timeObjects: TimeObject[];
 	}
 
 	export interface TimeObject
 	{
-		msPositionInScore: number;
-		msDurationInScore: number;
-		alignment: number;
+		readonly msPositionInScore: number;
+		readonly msDurationInScore: number;
+		readonly alignment: number;
 		isOn: boolean;
 	}
 
 	/*******************************************************/
 
-	//export interface YCoordinates
-	//{
-	//	top: number;
-	//	bottom: number;
-	//}
-
 	export interface StartMarker
 	{
 		alignment: number;
 		msPositionInScore: number;
-		systemIndexInScore: number;
-		viewBoxScale: number;
-		yCoordinates: YCoordinates;
-		line: SVGLineElement;
-		circle: SVGCircleElement;
+		readonly systemIndexInScore: number;
+		readonly viewBoxScale: number;
+		readonly yCoordinates: YCoordinates;
+		readonly line: SVGLineElement;
+		readonly circle: SVGCircleElement;
 	}
 
 	export interface EndMarker
 	{
 		alignment: number;
 		msPositioninScore: number;
-		systemIndexInScore: number;
-		viewBoxScale: number;
-		yCoordinates: YCoordinates;
-		line: SVGLineElement;
-		circle: SVGCircleElement;
+		readonly systemIndexInScore: number;
+		readonly viewBoxScale: number;
+		readonly yCoordinates: YCoordinates;
+		readonly line: SVGLineElement;
+		readonly rect: SVGRectElement;
 	}
 
 	/*******************************************************/

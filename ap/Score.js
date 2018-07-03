@@ -1170,8 +1170,6 @@ _AP.score = (function(document)
 				createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++);
 			}
 
-			cursor = new _AP.Cursor(localMarkersLayer);
-
 			markersLayer = localMarkersLayer;
 
 			setConductingLayer(); // just sets its dimensions
@@ -1740,7 +1738,6 @@ _AP.score = (function(document)
 				endMarker.moveTo(finalBarlineInScore);
 				endMarker.setVisible(true);
 
-				cursor.setSims(scoreSims);
 				cursor.moveToStartMarker(startMarker);
 			}
 
@@ -1871,8 +1868,7 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
-			let sims = new _AP.ScoreSims(systems);
-			scoreSims = sims.scoreSims;
+			cursor = new _AP.Cursor(systems, markersLayer);
 
 			setMarkers(systems, isLivePerformance);
 
