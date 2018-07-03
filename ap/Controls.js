@@ -268,19 +268,19 @@ _AP.controls = (function(document, window)
 
 		setCursorAndEventListener = function(svgControlsState)
 		{
-			var s = score;
+			var s = score, markersLayer = s.getMarkersLayer();
 
-			if(s.markersLayer !== undefined)
+			if(markersLayer !== undefined)
 			{
 				switch(svgControlsState)
 				{
 					case 'settingStart':
-						s.markersLayer.addEventListener('click', s.setStartMarkerClick, false);
-						s.markersLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
+						markersLayer.addEventListener('click', s.setStartMarkerClick, false);
+						markersLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
 						break;
 					case 'settingEnd':
-						s.markersLayer.addEventListener('click', s.setEndMarkerClick, false);
-						s.markersLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
+						markersLayer.addEventListener('click', s.setEndMarkerClick, false);
+						markersLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
 						break;
 					case 'conducting':
 						globalElements.conductingLayer.style.visibility = "visible";
@@ -293,9 +293,9 @@ _AP.controls = (function(document, window)
 						// https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
 						// "Calling removeEventListener() with arguments which do not identify any currently 
 						//  registered EventListener on the EventTarget has no effect."
-						s.markersLayer.removeEventListener('click', s.setStartMarkerClick, false);
-						s.markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
-						s.markersLayer.style.cursor = 'auto';
+						markersLayer.removeEventListener('click', s.setStartMarkerClick, false);
+						markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
+						markersLayer.style.cursor = 'auto';
 						globalElements.conductingLayer.style.visibility = "hidden";
 						globalElements.conductingLayer.removeEventListener('mousemove', s.conduct, false);
 						globalElements.conductingLayer.removeEventListener('click', setConductorControlClicked, false);

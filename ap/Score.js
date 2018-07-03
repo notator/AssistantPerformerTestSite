@@ -44,13 +44,6 @@ _AP.score = (function(document)
 		// and reset when the tracksControl calls refreshDisplay().
 		trackIsOnArray = [], // all tracks, including input tracks
 
-		// An array of Sim objects having attributes
-		//    .msPositionInScore
-		//    .cursorYAttributes
-		//    .timeObjects
-		// The sims array includes a Sim object for the final barline in the score.
-		scoreSims,
-
 		cursor, // The cursor that is going to replace all the RunningMarkers
 
 		viewBoxScale,
@@ -360,8 +353,7 @@ _AP.score = (function(document)
 		// this function is called only when state is 'settingStart' or 'settingEnd'.
 		svgPageClicked = function(e, state)
 		{
-			var target = e.target,
-				cursorX = e.pageX,
+			var cursorX = e.pageX,
 				cursorY = e.pageY,
 				systemIndex, system,
 				timeObjectsArray, timeObject, trackIndex, nOutputTracks = midiChannelPerOutputTrack.length;
@@ -369,7 +361,7 @@ _AP.score = (function(document)
 			// Returns the system having stafflines closest to cursorY.
 			function findSystemIndex(cursorY)
 			{
-				var i, topLimit, bottomLimit, system, systemIndex;
+				var i, topLimit, bottomLimit, systemIndex;
 
 				if(systems.length === 1)
 				{
@@ -633,7 +625,7 @@ _AP.score = (function(document)
 		// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
 		getEmptySystems = function(isLivePerformanceArg, startPlayingFunction)
 		{
-			var system, svgPageEmbeds, viewBox, nPages,
+			var system, svgPageEmbeds, viewBox,
 				svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
 				localMarkersLayer, systemIndexOnPage, pageSystems,
 				systemIndexInScore = 0;
@@ -1144,11 +1136,10 @@ _AP.score = (function(document)
 
 			svgPageEmbeds = document.getElementsByClassName("svgPage");
 
-			if(svgPageEmbeds.length > 1)
+			if(svgPageEmbeds.length !== 1)
 			{
 				throw "Only single page (scroll) scores are supported.";
 			}
-			nPages = svgPageEmbeds.length;
 			svgPage = svgPageEmbeds[0];
 			svgElem = getSVGElem(svgPage);
 			pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
@@ -1170,7 +1161,7 @@ _AP.score = (function(document)
 				createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++);
 			}
 
-			markersLayer = localMarkersLayer;
+			markersLayer = localMarkersLayer; // markersLayer is accessed outside the score using a getter function
 
 			setConductingLayer(); // just sets its dimensions
 
@@ -1868,7 +1859,7 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
-			cursor = new _AP.Cursor(systems, markersLayer);
+			cursor = new _AP.Cursor(systems, markersLayer); // cursor is accessed outside the score using a getter function
 
 			setMarkers(systems, isLivePerformance);
 
@@ -1886,9 +1877,14 @@ _AP.score = (function(document)
 			return tracksData;
 		},
 
+		getMarkersLayer = function()
+		{
+			return markersLayer; // is undefined before a score is loaded
+		},
+
 		getCursor = function()
 		{
-			return cursor; // contains sims
+			return cursor; // is undefined before a score is loaded
 		},
 
 		// an empty score
@@ -1936,11 +1932,6 @@ _AP.score = (function(document)
 			this.getConductor = getConductor;
 			this.conduct = conduct;
 
-			// markersLayer is initially undefined, but is set properly when a specific score is loaded.
-			// It contains the cursor line and the start - and end - markers for each system in the score.
-			// It is also used as the transparent, clickable surface used when setting the markers.
-			this.markersLayer = markersLayer;
-
 			this.getEmptySystems = getEmptySystems;
 
 			// tracksData is an object having the following defined attributes:
@@ -1952,6 +1943,10 @@ _AP.score = (function(document)
 			this.setTracksData = setTracksData;
 			this.getTracksData = getTracksData;
 
+			// The markersLayer is set when a specific score is loaded.
+			// It contains the cursor line and the start- and endMarkers for each system in the score.
+			// It is also the transparent, clickable surface used when setting the start and end markers.
+			this.getMarkersLayer = getMarkersLayer;
 			this.getCursor = getCursor;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
