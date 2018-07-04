@@ -348,6 +348,8 @@ _AP.score = (function(document)
 			{
 				updateStartMarker(timeObjectsArray, timeObject);
 			}
+
+			cursor.updateMsPosInScoreSequence(trackIsOnArrayArg);
 		},
 
 		// this function is called only when state is 'settingStart' or 'settingEnd'.

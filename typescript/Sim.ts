@@ -18,16 +18,36 @@ namespace _AP
 
 	export class Sim
 	{
-		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates)
+		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates, outputTrackIndex:number)
 		{
 			this.msPositionInScore = msPosInScore;
 			this.alignment = alignment;
 			this.yCoordinates = yCoordinates;
+			if(outputTrackIndex >= 0) // -1 is the final barline sim (that has no tracks)
+			{
+				this.outputTrackIndices.push(outputTrackIndex);
+			}
+		}
+
+		public pushOutputTrackIndex(outputTrackIndex: number): void
+		{
+			let index = this.outputTrackIndices.indexOf(outputTrackIndex); 
+			if(index >= 0)
+			{
+				throw "duplicate trackIndex.";
+			}
+			this.outputTrackIndices.push(outputTrackIndex);
+		}
+
+		public getOutputTrackIndices(): number[]
+		{
+			return this.outputTrackIndices.slice();
 		}
 
 		public readonly msPositionInScore: number;
 		public alignment: number;
 		public readonly yCoordinates: YCoordinates;
 		public isOn: boolean = true; // will be set to false, if the sim has no performing midiObjects
+		private outputTrackIndices: number[] = [];
 	}
 }

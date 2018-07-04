@@ -8,11 +8,18 @@ namespace _AP
 	{
 		constructor(systems: SvgSystem[], markersLayer: SVGGElement, nOutputTracks: number, regionDefs: RegionDef[], regionSequence:string  )
 		{
-			this.sims = this.getScoreSims(systems);	// includes the Sim for the final barline.
+			this.systems = systems;
+			this.nOutputTracks = nOutputTracks;
+			this.regionDefs = regionDefs;
+			this.regionSequence = regionSequence; 
+
+			let outputTrackIsOnArray = this.allTracksOnArray(nOutputTracks);
+
+			this.sims = this.getScoreSims(systems, outputTrackIsOnArray);	// includes the Sim for the final barline.
 			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
 
-			this.nOutputTracks = nOutputTracks;
+
 			this.yCoordinates = this.sims[0].yCoordinates;
 
 			// This sequence goes backwards if regions are repeated in the region sequence.
@@ -20,12 +27,22 @@ namespace _AP
 			this.msPosInScoreSequence = this.getMsPosInScoreSequence(regionDefs, regionSequence);
 		}
 
-		private getScoreSims(systems: SvgSystem[]): Sim[]
+		private allTracksOnArray(nOutputTracks: number): boolean[]
+		{
+			let array: boolean[] = [];
+			for(let i = 0; i < nOutputTracks; ++i)
+			{
+				array.push(true);
+			}
+			return array;
+		}
+
+		private getScoreSims(systems: SvgSystem[], trackIsOnArray: boolean[]): Sim[]
 		{
 			let scoreSims: Sim[] = [];
 			for(let system of systems)
 			{
-				let systemSims = this.getSystemSims(system);
+				let systemSims = this.getSystemSims(system, trackIsOnArray);
 
 				for(let sim of systemSims)
 				{
@@ -38,11 +55,12 @@ namespace _AP
 			return scoreSims;
 		}
 
-		private getSystemSims(system: SvgSystem): Sim[]
+		private getSystemSims(system: SvgSystem, trackIsOnArray: boolean[] ): Sim[]
 		{
 			let systemSims: Sim[] = [],
 				yCoordinates = new YCoordinates(system.startMarker),
-				nStaves = system.staves.length;
+				nStaves = system.staves.length, 
+				outputTrackIndex = 0;
 
 			for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 			{
@@ -51,57 +69,73 @@ namespace _AP
 
 				for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 				{
-					if(staff.voices[voiceIndex].timeObjects === undefined)
+					if(trackIsOnArray[outputTrackIndex])
 					{
-						// this can happen if the voice is an InputVoice, and the input device is not selected.
-						break
-					}
-
-					let timeObjects = staff.voices[voiceIndex].timeObjects,
-						nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
-
-					if(staffIndex === 0 && voiceIndex === 0)
-					{
-						for(let ti = 0; ti < nTimeObjects; ++ti)
+						if(staff.voices[voiceIndex].timeObjects === undefined)
 						{
-							let tObj = timeObjects[ti];
-							let sim = new Sim(tObj.msPositionInScore, tObj.alignment, yCoordinates);
-							systemSims.push(sim);
+							// this can happen if the voice is an InputVoice, and the input device is not selected.
+							break
 						}
-					}
-					else
-					{
-						let maxPos = Number.MAX_VALUE,
-							simIndex = systemSims.length - 1;
-						for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+
+						let timeObjects = staff.voices[voiceIndex].timeObjects,
+							nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
+
+						if(staffIndex === 0 && voiceIndex === 0)
 						{
-							let tObj = timeObjects[ti],
-								tObjPos = tObj.msPositionInScore,
-								simPos = systemSims[simIndex].msPositionInScore;
-
-							while(simPos >= tObjPos && simIndex > 0)
+							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								maxPos = simPos;
-								simIndex--;
-								simPos = systemSims[simIndex].msPositionInScore;
-							}
-
-							if(maxPos > tObjPos)
-							{
-								maxPos = tObjPos;
-								if(simPos < tObjPos)
-								{
-									let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
-									systemSims.splice(simIndex + 1, 0, sim);
-								}
-								else if(simPos > tObjPos)
-								{
-									let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
-									systemSims.splice(0, 0, sim);
-								}
+								let tObj = timeObjects[ti];
+								let sim = new Sim(tObj.msPositionInScore, tObj.alignment, yCoordinates, 0);
+								systemSims.push(sim);
 							}
 						}
+						else
+						{
+							let maxPos = Number.MAX_VALUE,
+								simIndex = systemSims.length - 1;
+							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+							{
+								let tObj = timeObjects[ti],
+									tObjPos = tObj.msPositionInScore,
+									sim = systemSims[simIndex],
+									simPos = sim.msPositionInScore;
+
+								while(simPos >= tObjPos && simIndex > 0)
+								{
+									maxPos = simPos;
+									simIndex--;
+									sim = systemSims[simIndex];
+									simPos = sim.msPositionInScore;
+								}
+
+								if(maxPos > tObjPos)
+								{
+									maxPos = tObjPos;
+									if(simPos === tObjPos)
+									{
+										sim.pushOutputTrackIndex(outputTrackIndex);
+									}
+									else if(simPos < tObjPos)
+									{
+										let sim = new Sim(tObjPos, tObj.alignment, yCoordinates, outputTrackIndex);
+										systemSims.splice(simIndex + 1, 0, sim);
+									}
+									else if(simPos > tObjPos)
+									{
+										let sim = new Sim(tObjPos, tObj.alignment, yCoordinates, outputTrackIndex);
+										systemSims.splice(0, 0, sim);
+									}
+								}
+							}
+						}
 					}
+
+					outputTrackIndex++;
+				}
+
+				if(outputTrackIndex === this.nOutputTracks)
+				{
+					break;
 				}
 			}
 
@@ -116,7 +150,7 @@ namespace _AP
 				finalBarlineTimeObject = timeObjects[timeObjects.length - 1],
 				msPos = finalBarlineTimeObject.msPositionInScore,
 				alignment = finalBarlineTimeObject.alignment,
-				finalBarlineSim = new Sim(msPos, alignment, yCoordinates);
+				finalBarlineSim = new Sim(msPos, alignment, yCoordinates, -1);
 
 			return finalBarlineSim;
 		}
@@ -134,7 +168,6 @@ namespace _AP
 
 			return cursorLine;
 		}
-
 
 		private getMsPosInScoreSequence(regionDefs: RegionDef[], regionSequence: string): number[]
 		{
@@ -221,7 +254,17 @@ namespace _AP
 			this.yCoordinates = startMarker.yCoordinates;
 		}
 
-		// sets the cursor's internal startMarkerMsPosition and endMarkerMsPosition fields
+		// called when a track is toggled on or off
+		public updateMsPosInScoreSequence(trackIsOnArray: boolean[]): void
+		{
+			if(trackIsOnArray !== undefined)
+			{
+				this.sims = this.getScoreSims(this.systems, trackIsOnArray);
+				this.msPosInScoreSequence = this.getMsPosInScoreSequence(this.regionDefs, this.regionSequence);
+			}
+		}
+
+		// sets the cursor's internal startMarkerMsPosition and endMarkerMsPosition fields 
 		// sets the isOn attribute of each timeObject in the cursor's sims
 		// sets the outputTracks to their playing state
 		// moves the cursor's line to the startMarker and makes it visible
@@ -319,14 +362,18 @@ namespace _AP
 
 		public yCoordinates: YCoordinates;
 
+		private readonly systems: SvgSystem[];
+		private readonly regionDefs: RegionDef[];
+		private readonly regionSequence: string;
 		private readonly line: SVGLineElement;
-		private readonly sims: Sim[];
 		private readonly nOutputTracks: number;
-		private readonly msPosInScoreSequence: number[];
 
-		positionIndex: number = 0;
-		nextMsPosition: number = 0;
+		private sims: Sim[];
+		private msPosInScoreSequence: number[];
 		private startMarkerMsPosInScore: number = 0;
 		private endMarkerMsPosInScore: number = 0;
+
+		private positionIndex: number = 0;
+		private nextMsPosition: number = 0;
 	}
 }
