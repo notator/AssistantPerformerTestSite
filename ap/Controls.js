@@ -484,14 +484,6 @@ _AP.controls = (function(document, window)
 
 				endMarkerMsPosition = score.endMarkerMsPosition();
 
-				let startMarker = score.getStartMarker(),
-					outputTracks = score.getTracksData().outputTracks;
-
-				// set the cursor's endMarkerMsPosition
-				// set the isOn attribute of each timeObject in the cursor's sims
-				// move the cursor's line to the startMarker and make it visible.
-				player.cursor.setPlayingState(startMarker, outputTracks, endMarkerMsPosition, trackIsOnArray);
-
 				if(options.isConducting === true)
 				{
 					baseSpeed = 1;

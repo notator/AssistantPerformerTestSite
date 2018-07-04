@@ -504,6 +504,7 @@ _AP.score = (function(document)
 							startMarker = system.startMarker;
 							hideStartMarkersExcept(startMarker);
 							updateStartMarker(timeObjectsArray, timeObject);
+							cursor.updateStartMarkerMsPos(startMarker.msPositionInScore);
 						}
 						break;
 					case 'settingEnd':
@@ -512,6 +513,7 @@ _AP.score = (function(document)
 							endMarker = system.endMarker;
 							hideEndMarkersExcept(endMarker);
 							endMarker.moveTo(timeObject);
+							cursor.updateEndMarkerMsPos(endMarker.msPositionInScore);
 						}
 						break;
 					default:
@@ -1722,8 +1724,6 @@ _AP.score = (function(document)
 				endMarker = systems[systems.length - 1].endMarker;
 				endMarker.moveTo(finalBarlineInScore);
 				endMarker.setVisible(true);
-
-				cursor.moveToStartMarker(startMarker);
 			}
 
 			function setTrackAttributes(outputTracks, inputTracks, system0staves)
@@ -1879,9 +1879,11 @@ _AP.score = (function(document)
 			regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
 			regionSequence = getRegionSequence(); // a string such as "aabada"
 
-			cursor = new _AP.Cursor(systems, markersLayer, outputTracks.length, regionDefs, regionSequence); // cursor is accessed outside the score using a getter function
-
 			setMarkers(systems, isLivePerformance);
+
+			// cursor is accessed outside the score using a getter function
+			cursor = new _AP.Cursor(systems, markersLayer, startMarker.msPositionInScore, endMarker.msPositionInScore,
+				outputTracks.length, regionDefs, regionSequence); 
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 			//        inputKeyRange.bottomKey
