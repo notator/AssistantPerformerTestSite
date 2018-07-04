@@ -1277,6 +1277,7 @@ _AP.score = (function(document)
 				voiceIndex, nVoices, voice,
 				staffIndex, nStaves, staff,
 				sysIndex, nSystems = systems.length, system, systemElem,
+				regionDefs, regionSequence,
 				inputChord;
 
 			// Gets the timeObjects for both input and output voices. 
@@ -1776,6 +1777,29 @@ _AP.score = (function(document)
 				inputKeyRange.topKey = topKey;
 
 				return inputKeyRange;
+			}
+
+			// demo function (uses study 2 score)
+			function getRegionDefs()
+			{
+				let regionDefs = [], regionADef = {}, regionBDef = {};
+				regionADef.name = "a";
+				regionADef.startMsPositionInScore = 1234; // study 2, beginning of bar 2
+				regionADef.endMsPositionInScore = 4447; // study 2, top track, bar 3, midiObjectIndex 1 (0 is a rest)
+				regionBDef.name = "b";
+				regionBDef.startMsPositionInScore = 2769; // study 2, top track, bar 2, last three chords
+				regionBDef.endMsPositionInScore = 7338; // study 2, start of bar 4
+
+				regionDefs.push(regionADef);
+				regionDefs.push(regionBDef);
+
+				return regionDefs;
+			}
+
+			// demo function
+			function getRegionSequence()
+			{
+				return "aaba";
 			}
 
 			getVoiceObjects();
