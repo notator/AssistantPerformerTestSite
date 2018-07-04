@@ -1,23 +1,123 @@
 ﻿
 /// <reference path="Context.ts" />
-/// <reference path="Sims.ts" />
+/// <reference path="Sim.ts" />
 
 namespace _AP
 {
 	export class Cursor
 	{
 		//constructor(markersLayer: SVGGElement, yCoordinates: YCoordinates)
-		constructor(systems: SvgSystem[], markersLayer: SVGGElement)
+		constructor(systems: SvgSystem[], markersLayer: SVGGElement, nOutputTracks: number)
 		{
-			let o: ScoreSims = new ScoreSims(systems);
-			this.sims = o.scoreSims;
-			this.nOutputTracks = o.nOutputTracks;
+			this.sims = this.getScoreSims(systems);	// includes the Sim for the final barline.
+			this.nOutputTracks = nOutputTracks;
 			this.yCoordinates = this.sims[0].yCoordinates;
 
 			this.sims[0].isOn = false;
 
 			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
+		}
+
+		private getScoreSims(systems: SvgSystem[]): Sim[]
+		{
+			let scoreSims: Sim[] = [];
+			for(let system of systems)
+			{
+				let systemSims = this.getSystemSims(system);
+
+				for(let sim of systemSims)
+				{
+					scoreSims.push(sim);
+				}
+			}
+			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems);
+			scoreSims.push(finalBarlineSim);
+
+			return scoreSims;
+		}
+
+		private getSystemSims(system: SvgSystem): Sim[]
+		{
+			let systemSims: Sim[] = [],
+				yCoordinates = new YCoordinates(system.startMarker),
+				nStaves = system.staves.length;
+
+			for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+			{
+				let staff = system.staves[staffIndex],
+					nVoices = staff.voices.length;
+
+				for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+				{
+					if(staff.voices[voiceIndex].timeObjects === undefined)
+					{
+						// this can happen if the voice is an InputVoice, and the input device is not selected.
+						break
+					}
+
+					let timeObjects = staff.voices[voiceIndex].timeObjects,
+						nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
+
+					if(staffIndex === 0 && voiceIndex === 0)
+					{
+						for(let ti = 0; ti < nTimeObjects; ++ti)
+						{
+							let tObj = timeObjects[ti];
+							let sim = new Sim(tObj.msPositionInScore, tObj.alignment, yCoordinates);
+							systemSims.push(sim);
+						}
+					}
+					else
+					{
+						let maxPos = Number.MAX_VALUE,
+							simIndex = systemSims.length - 1;
+						for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+						{
+							let tObj = timeObjects[ti],
+								tObjPos = tObj.msPositionInScore,
+								simPos = systemSims[simIndex].msPositionInScore;
+
+							while(simPos >= tObjPos && simIndex > 0)
+							{
+								maxPos = simPos;
+								simIndex--;
+								simPos = systemSims[simIndex].msPositionInScore;
+							}
+
+							if(maxPos > tObjPos)
+							{
+								maxPos = tObjPos;
+								if(simPos < tObjPos)
+								{
+									let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
+									systemSims.splice(simIndex + 1, 0, sim);
+								}
+								else if(simPos > tObjPos)
+								{
+									let sim = new Sim(tObjPos, tObj.alignment, yCoordinates);
+									systemSims.splice(0, 0, sim);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return systemSims;
+		}
+
+		private getFinalBarlineSim(systems: SvgSystem[]): Sim
+		{
+			let system = systems[systems.length - 1],
+				yCoordinates = new YCoordinates(system.startMarker),
+				timeObjects = system.staves[0].voices[0].timeObjects,
+				finalBarlineTimeObject = timeObjects[timeObjects.length - 1],
+				msPos = finalBarlineTimeObject.msPositionInScore,
+				alignment = finalBarlineTimeObject.alignment,
+				finalBarlineSim = new Sim(msPos, alignment, yCoordinates);
+
+			return finalBarlineSim;
 		}
 
 		private newCursorLine(): SVGLineElement
@@ -73,7 +173,7 @@ namespace _AP
 			this.startMarkerMsPosInScore = startMarker.msPositionInScore;
 			this.endMarkerMsPosInScore = endMarkerMsPositionInScore;
 
-			this.setTimeObjectIsOnAttributes(trackIsOnArray);
+			//this.setSimIsOnAttributes(trackIsOnArray);
 
 			this.setForOutputSpan(outputTracks, trackIsOnArray);
 
@@ -97,37 +197,37 @@ namespace _AP
 			}
 		}
 
-		private setTimeObjectIsOnAttributes(trackIsOnArray: boolean[])
-		{
-			for(let sim of this.sims)
-			{
-				let inputTrackIndex = 0;
-				for(let trackIndex = 0; trackIndex < trackIsOnArray.length; ++trackIndex)
-				{
-					let bool = trackIsOnArray[trackIndex]; // both input and output tracks
-					if(trackIndex < this.nOutputTracks)
-					{
-						let midiObject = sim.midiObjects[trackIndex];
-						if(midiObject !== undefined)
-						{
-							midiObject.isOn = bool;
-						}
-					}
-					else
-					{
-						let inputObject = sim.inputObjects[inputTrackIndex];
-						if(inputObject !== undefined)
-						{
-							inputObject.isOn = bool;
-						}
-					}
-					if(trackIndex >= this.nOutputTracks)
-					{
-						inputTrackIndex++;
-					}
-				}
-			}
-		}
+		//private setSimIsOnAttributes(trackIsOnArray: boolean[])
+		//{
+			//for(let sim of this.sims)
+			//{
+			//	let inputTrackIndex = 0;
+			//	for(let trackIndex = 0; trackIndex < trackIsOnArray.length; ++trackIndex)
+			//	{
+			//		let bool = trackIsOnArray[trackIndex]; // both input and output tracks
+			//		if(trackIndex < this.nOutputTracks)
+			//		{
+			//			let midiObject = sim.midiObjects[trackIndex];
+			//			if(midiObject !== undefined)
+			//			{
+			//				midiObject.isOn = bool;
+			//			}
+			//		}
+			//		else
+			//		{
+			//			let inputObject = sim.inputObjects[inputTrackIndex];
+			//			if(inputObject !== undefined)
+			//			{
+			//				inputObject.isOn = bool;
+			//			}
+			//		}
+			//		if(trackIndex >= this.nOutputTracks)
+			//		{
+			//			inputTrackIndex++;
+			//		}
+			//	}
+			//}
+		//}
 
 		/*--- end setup ------------------------*/
 		/*--- begin runtime --------------------*/
