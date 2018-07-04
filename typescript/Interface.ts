@@ -37,6 +37,13 @@ namespace _AP
 		isOn: boolean;
 	}
 
+	export interface RegionDef
+	{
+		readonly name: string; // a single character
+		readonly startMsPositionInScore: number;
+		readonly endMsPositionInScore: number; // as usual, non-inclusive
+	}
+
 	/*******************************************************/
 
 	export interface StartMarker

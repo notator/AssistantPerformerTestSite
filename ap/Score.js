@@ -1850,7 +1850,10 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
-			cursor = new _AP.Cursor(systems, markersLayer, outputTracks.length); // cursor is accessed outside the score using a getter function
+			regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
+			regionSequence = getRegionSequence(); // a string such as "aabada"
+
+			cursor = new _AP.Cursor(systems, markersLayer, outputTracks.length, regionDefs, regionSequence); // cursor is accessed outside the score using a getter function
 
 			setMarkers(systems, isLivePerformance);
 

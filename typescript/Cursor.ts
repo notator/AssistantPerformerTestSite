@@ -1,22 +1,23 @@
 ﻿
-/// <reference path="Context.ts" />
+/// <reference path="Interface.ts" />
 /// <reference path="Sim.ts" />
 
 namespace _AP
 {
 	export class Cursor
 	{
-		//constructor(markersLayer: SVGGElement, yCoordinates: YCoordinates)
-		constructor(systems: SvgSystem[], markersLayer: SVGGElement, nOutputTracks: number)
+		constructor(systems: SvgSystem[], markersLayer: SVGGElement, nOutputTracks: number, regionDefs: RegionDef[], regionSequence:string  )
 		{
 			this.sims = this.getScoreSims(systems);	// includes the Sim for the final barline.
+			this.line = this.newCursorLine();
+			markersLayer.appendChild(this.line);
+
 			this.nOutputTracks = nOutputTracks;
 			this.yCoordinates = this.sims[0].yCoordinates;
 
-			this.sims[0].isOn = false;
-
-			this.line = this.newCursorLine();
-			markersLayer.appendChild(this.line);
+			// This sequence goes backwards if regions are repeated in the region sequence.
+			// In other words, the msPosInScore values are in performed sequence, but they are not unique.
+			this.msPosInScoreSequence = this.getMsPosInScoreSequence(regionDefs, regionSequence);
 		}
 
 		private getScoreSims(systems: SvgSystem[]): Sim[]
@@ -132,6 +133,62 @@ namespace _AP
 			cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
 
 			return cursorLine;
+		}
+
+
+		private getMsPosInScoreSequence(regionDefs: RegionDef[], regionSequence: string): number[]
+		{
+			let msPosInScoreSequence: number[] = [];
+
+			for(let i = 0; i < regionSequence.length; ++i)
+			{
+				let regionDef = this.getRegionDef(regionDefs, regionSequence[i]);
+				let startSimIndex = this.getSimIndex(regionDef.startMsPositionInScore);
+				let endSimIndex = this.getSimIndex(regionDef.endMsPositionInScore);
+				for(let simIndex = startSimIndex; simIndex < endSimIndex; ++simIndex)
+				{
+					msPosInScoreSequence.push(this.sims[simIndex].msPositionInScore);
+				}
+			}
+
+			return msPosInScoreSequence;
+		}
+
+		private getSimIndex(msPosInScore: number): number
+		{
+			let simIndex = -1;
+			for(let i = 0; i < this.sims.length; ++i)
+			{
+				let sim = this.sims[i]; 
+				if(sim.msPositionInScore === msPosInScore)
+				{
+					simIndex = i;
+					break;
+				}
+			}
+			if(simIndex === -1)
+			{
+				throw "sim not found at msPos " + msPosInScore.toString(10);
+			}
+			return simIndex;
+		}
+
+		private getRegionDef(regionDefs: RegionDef[], name: string): RegionDef
+		{
+			let regionDef: RegionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
+			for(let j = 0; j < regionDefs.length; ++j)
+			{
+				if(name.localeCompare(regionDefs[j].name) === 0)
+				{
+					regionDef = regionDefs[j];
+					break;
+				}
+			}
+			if(regionDef.name.length === 0)
+			{
+				throw "regionDef is not defined";
+			}
+			return regionDef;
 		}
 
 		/*--- end of constructor --------------------*/
@@ -265,6 +322,8 @@ namespace _AP
 		private readonly line: SVGLineElement;
 		private readonly sims: Sim[];
 		private readonly nOutputTracks: number;
+		private readonly msPosInScoreSequence: number[];
+
 		positionIndex: number = 0;
 		nextMsPosition: number = 0;
 		private startMarkerMsPosInScore: number = 0;
