@@ -32,7 +32,7 @@ namespace _AP
 
 			this.scoreSimIndexTrajectory = this.setScoreSimIndexTrajectory(regionDefs, regionSequence);
 
-			this.yCoordinates = this.scoreSims[0].yCoordinates;
+			this.yCoordinates = this.scoreSims[0].yCoordinates as YCoordinates;
 		}
 
 		private allTracksOnArray(nOutputTracks: number): boolean[]
@@ -64,9 +64,9 @@ namespace _AP
 				}
 			}
 
-			// The (-1) alignment and the yCoordinates are dummy values that should never need to be accessed.
-			// The (-1) trackIndex argument means that sim.tracks will be empty.
-			let endMarkerSim = new Sim(this.endMarkerMsPosInScore, -1, this.yCoordinates, -1);
+			// The undefined values for alignment and yCoordinates should never be accessed.
+			// The undefined trackIndex argument means that sim.tracks array will be empty.
+			let endMarkerSim = new Sim(this.endMarkerMsPosInScore, undefined, undefined, undefined);
 
 			scoreSims.push(endMarkerSim);
 
@@ -341,14 +341,26 @@ namespace _AP
 		{
 			let scoreSim = this.scoreSims[indexInScoreSims];
 
-			if(scoreSim.yCoordinates !== this.yCoordinates)
+			if(scoreSim.msPositionInScore === this.endMarkerMsPosInScore)
 			{
-				this.line.setAttribute("y1", scoreSim.yCoordinates.top.toString(10));
-				this.line.setAttribute("y2", scoreSim.yCoordinates.bottom.toString(10));
+				this.setVisible(false);
 			}
+			else
+			{
+				// these values should never be undefined when
+				// scoreSim.msPositionInScore < this.endMarkerMsPosInScore
+				let yCoordinates = scoreSim.yCoordinates as YCoordinates,
+					alignment = scoreSim.alignment as number;
 
-			this.line.setAttribute("x1", scoreSim.alignment.toString(10));
-			this.line.setAttribute("x2", scoreSim.alignment.toString(10));
+				if(scoreSim.yCoordinates !== this.yCoordinates)
+				{
+					this.line.setAttribute("y1", yCoordinates.top.toString(10));
+					this.line.setAttribute("y2", yCoordinates.bottom.toString(10));
+				}
+
+				this.line.setAttribute("x1", alignment.toString(10));
+				this.line.setAttribute("x2", alignment.toString(10));
+			}
 		}
 
 		public yCoordinates: YCoordinates;

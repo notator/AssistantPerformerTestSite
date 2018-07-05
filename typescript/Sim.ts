@@ -19,12 +19,12 @@ namespace _AP
 	// all sims except the final barline have at least one performing output track
 	export class Sim
 	{
-		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates, outputTrackIndex:number)
+		constructor(msPosInScore: number, alignment: number|undefined, yCoordinates: YCoordinates|undefined, outputTrackIndex:number|undefined)
 		{
 			this.msPositionInScore = msPosInScore;
 			this.alignment = alignment;
 			this.yCoordinates = yCoordinates;
-			if(outputTrackIndex >= 0) // -1 is the final barline sim (that has no tracks)
+			if(outputTrackIndex !== undefined)
 			{
 				this.outputTrackIndices.push(outputTrackIndex);
 			}
@@ -46,8 +46,8 @@ namespace _AP
 		}
 
 		public readonly msPositionInScore: number;
-		public alignment: number;
-		public readonly yCoordinates: YCoordinates;
+		public alignment: number|undefined;
+		public readonly yCoordinates: YCoordinates|undefined;
 		private outputTrackIndices: number[] = [];
 	}
 }
