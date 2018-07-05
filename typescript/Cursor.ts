@@ -6,7 +6,7 @@ namespace _AP
 {
 	export class Cursor
 	{
-		outputTrackIsOnArray: boolean[];
+
 		constructor(
 			systems: SvgSystem[],
 			markersLayer: SVGGElement,
@@ -21,20 +21,18 @@ namespace _AP
 			this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 			this.nOutputTracks = nOutputTracks;
 			this.regionDefs = regionDefs;
-			this.regionSequence = regionSequence; 
+			this.regionSequence = regionSequence;
 
-			this.outputTrackIsOnArray = this.allTracksOnArray(nOutputTracks);
-
-			this.sims = this.getScoreSims(systems);	// includes the Sim for the final barline.
 			this.line = this.newCursorLine();
 			markersLayer.appendChild(this.line);
 
+			this.outputTrackIsOnArray = this.allTracksOnArray(nOutputTracks);
 
-			this.yCoordinates = this.sims[0].yCoordinates;
+			this.scoreSims = this.getScoreSims(systems);	// includes the Sim for the final barline.
 
-			// This sequence goes backwards if regions are repeated in the region sequence.
-			// In other words, the msPosInScore values are in performed sequence, but they are not unique.
-			this.msPosInScoreSequence = this.getMsPosInScoreSequence(regionDefs, regionSequence);
+			this.scoreSimIndexTrajectory = this.setScoreSimIndexTrajectory(regionDefs, regionSequence);
+
+			this.yCoordinates = this.scoreSims[0].yCoordinates;
 		}
 
 		private allTracksOnArray(nOutputTracks: number): boolean[]
@@ -47,6 +45,12 @@ namespace _AP
 			return array;
 		}
 
+		// scoreSims are constructed, between the start- and endMarkers, at msPositions where
+		// at least one track is performing. More precisely:
+		// 1. startMarker.msPos <= scoreSim.msPos <= endMarker.msPos
+		// 2. if(scoreSim.msPos < endMarker.msPos)
+		//        scoreSim.trackIndices[] is not empty, and contains the indices of performing tracks
+		//    if(scoreSim.msPos === endMarker.msPos) scoreSim.trackIndices[] is empty and the scoreSim's alignment and yCoordinates are invalid).
 		private getScoreSims(systems: SvgSystem[]): Sim[]
 		{
 			let scoreSims: Sim[] = [];
@@ -54,13 +58,17 @@ namespace _AP
 			{
 				let systemSims = this.getSystemSims(system);
 
-				for(let sim of systemSims)
+				for(let scoreSim of systemSims)
 				{
-					scoreSims.push(sim);
+					scoreSims.push(scoreSim);
 				}
 			}
-			let finalBarlineSim: Sim = this.getFinalBarlineSim(systems);
-			scoreSims.push(finalBarlineSim);
+
+			// The (-1) alignment and the yCoordinates are dummy values that should never need to be accessed.
+			// The (-1) trackIndex argument means that sim.tracks will be empty.
+			let endMarkerSim = new Sim(this.endMarkerMsPosInScore, -1, this.yCoordinates, -1);
+
+			scoreSims.push(endMarkerSim);
 
 			return scoreSims;
 		}
@@ -72,6 +80,7 @@ namespace _AP
 				nStaves = system.staves.length, 
 				outputTrackIndex = 0,
 				isFirstPlayingTrack = true,
+				systemOutOfRange = false, // depends on start- and endMarker msPositions
 				outputTrackIsOnArray = this.outputTrackIsOnArray;
 
 			for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
@@ -90,60 +99,57 @@ namespace _AP
 						}
 
 						let timeObjects = staff.voices[voiceIndex].timeObjects,
-							nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline (don't use it here)
+							nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline in the voice (=system) (don't use it here)
 
 						if(isFirstPlayingTrack)
 						{
+							let firstTimeObjectMsPos = timeObjects[0].msPositionInScore,
+								lastTimeObjectMsPos = timeObjects[timeObjects.length - 1].msPositionInScore;
+
+							if(firstTimeObjectMsPos > this.endMarkerMsPosInScore || lastTimeObjectMsPos < this.startMarkerMsPosInScore)
+							{
+								systemOutOfRange = true;
+								break;
+							}
 							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
 								let tObj = timeObjects[ti],
 									msPos = tObj.msPositionInScore;
-								if(msPos >= this.startMarkerMsPosInScore && msPos <= this.endMarkerMsPosInScore)
+								if(msPos >= this.startMarkerMsPosInScore && msPos < this.endMarkerMsPosInScore)
 								{
-									let sim = new Sim(tObj.msPositionInScore, tObj.alignment, yCoordinates, outputTrackIndex);
-									systemSims.push(sim);
+									let scoreSim = new Sim(msPos, tObj.alignment, yCoordinates, outputTrackIndex);
+									systemSims.push(scoreSim);
 								}
 							}
 							isFirstPlayingTrack = false;
 						}
 						else
 						{
-							let maxPos = Number.MAX_VALUE,
-								simIndex = systemSims.length - 1;
+							let simIndex = systemSims.length - 1;
 							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
 								let tObj = timeObjects[ti],
-									tObjPos = tObj.msPositionInScore,
-									sim = systemSims[simIndex],
-									simPos = sim.msPositionInScore;
-
-								while(simPos >= tObjPos && simIndex > 0)
+									tObjPos = tObj.msPositionInScore;
+								if(tObjPos >= this.startMarkerMsPosInScore && tObjPos < this.endMarkerMsPosInScore)
 								{
-									maxPos = simPos;
-									simIndex--;
-									sim = systemSims[simIndex];
-									simPos = sim.msPositionInScore;
-								}
+									let scoreSim = systemSims[simIndex],
+										simPos = scoreSim.msPositionInScore;
 
-								if(simPos >= this.startMarkerMsPosInScore && simPos <= this.endMarkerMsPosInScore)
-								{
-									if(maxPos > tObjPos)
+									while(simPos > tObjPos && simIndex > 0)
 									{
-										maxPos = tObjPos;
-										if(simPos === tObjPos)
-										{
-											sim.pushOutputTrackIndex(outputTrackIndex);
-										}
-										else if(simPos < tObjPos)
-										{
-											let sim = new Sim(tObjPos, tObj.alignment, yCoordinates, outputTrackIndex);
-											systemSims.splice(simIndex + 1, 0, sim);
-										}
-										else if(simPos > tObjPos)
-										{
-											let sim = new Sim(tObjPos, tObj.alignment, yCoordinates, outputTrackIndex);
-											systemSims.splice(0, 0, sim);
-										}
+										simIndex--;
+										scoreSim = systemSims[simIndex];
+										simPos = scoreSim.msPositionInScore;
+									}
+									// simPos <= tObjPos
+									if(simPos === tObjPos)
+									{
+										scoreSim.pushOutputTrackIndex(outputTrackIndex);
+									}
+									else // simPos < tObjPos
+									{
+										let scoreSim = new Sim(tObjPos, tObj.alignment, yCoordinates, outputTrackIndex);
+										systemSims.splice(simIndex + 1, 0, scoreSim);
 									}
 								}
 							}
@@ -153,26 +159,13 @@ namespace _AP
 					outputTrackIndex++;
 				}
 
-				if(outputTrackIndex === this.nOutputTracks)
+				if(outputTrackIndex === this.nOutputTracks || systemOutOfRange)
 				{
 					break;
 				}
 			}
 
 			return systemSims;
-		}
-
-		private getFinalBarlineSim(systems: SvgSystem[]): Sim
-		{
-			let system = systems[systems.length - 1],
-				yCoordinates = new YCoordinates(system.startMarker),
-				timeObjects = system.staves[0].voices[0].timeObjects,
-				finalBarlineTimeObject = timeObjects[timeObjects.length - 1],
-				msPos = finalBarlineTimeObject.msPositionInScore,
-				alignment = finalBarlineTimeObject.alignment,
-				finalBarlineSim = new Sim(msPos, alignment, yCoordinates, -1);
-
-			return finalBarlineSim;
 		}
 
 		private newCursorLine(): SVGLineElement
@@ -189,33 +182,38 @@ namespace _AP
 			return cursorLine;
 		}
 
-		private getMsPosInScoreSequence(regionDefs: RegionDef[], regionSequence: string): number[]
+		// The trajectory is in performed order of the scoreSims. The indices are not unique in this array.
+		// These values are calculated using the current this.scoreSims, so all the values
+		// have performing tracks.
+		// Trajectories have no terminating value. When the final sim has been completely performed,
+		// the player simply calls endOfPerformance().
+		private setScoreSimIndexTrajectory(regionDefs: RegionDef[], regionSequence: string): number[]
 		{
-			let msPosInScoreSequence: number[] = [];
+			let scoreSimIndexTrajectory: number[] = [];
 
 			for(let i = 0; i < regionSequence.length; ++i)
 			{
 				let regionDef = this.getRegionDef(regionDefs, regionSequence[i]);
-				let startSimIndex = this.getStartSimIndex(regionDef.startMsPositionInScore);
-				let endSimIndex = this.getEndSimIndex(regionDef.endMsPositionInScore);
-				for(let simIndex = startSimIndex; simIndex < endSimIndex; ++simIndex)
+				let startScoreSimIndex = this.getStartScoreSimIndex(regionDef.startMsPositionInScore);
+				let endScoreSimIndex = this.getEndScoreSimIndex(regionDef.endMsPositionInScore);
+				for(let simIndex = startScoreSimIndex; simIndex < endScoreSimIndex; ++simIndex)
 				{
-					msPosInScoreSequence.push(this.sims[simIndex].msPositionInScore);
+					scoreSimIndexTrajectory.push(simIndex);					
 				}
 			}
 
-			return msPosInScoreSequence;
+			return scoreSimIndexTrajectory;
 		}
 
-		// returns the simIndex of the earliest sim whose msPosition is >= msPosInScore
-		// msPosInScore may not be in the sims if tracks have been turned off
-		private getStartSimIndex(msPosInScore: number): number
+		// returns the simIndex of the earliest scoreSim whose msPosition is >= msPosInScore
+		// msPosInScore may not be in the scoreSims if tracks have been turned off
+		private getStartScoreSimIndex(msPosInScore: number): number
 		{
 			let simIndex = -1;
-			for(let i = 0; i < this.sims.length; ++i)
+			for(let i = 0; i < this.scoreSims.length; ++i)
 			{
-				let sim = this.sims[i];
-				if(sim.msPositionInScore >= msPosInScore)
+				let scoreSim = this.scoreSims[i];
+				if(scoreSim.msPositionInScore >= msPosInScore)
 				{
 					simIndex = i;
 					break;
@@ -224,15 +222,15 @@ namespace _AP
 			return simIndex;
 		}
 
-		// returns the simIndex of the latest sim whose msPosition is <= msPosInScore
-		// msPosInScore may not be in the sims if tracks have been turned off
-		private getEndSimIndex(msPosInScore: number): number
+		// returns the simIndex of the latest scoreSim whose msPosition is <= msPosInScore
+		// msPosInScore may not be in the scoreSims if tracks have been turned off
+		private getEndScoreSimIndex(msPosInScore: number): number
 		{
 			let simIndex = -1;
-			for(let i = this.sims.length - 1 ; i >= 0; --i)
+			for(let i = this.scoreSims.length - 1 ; i >= 0; --i)
 			{
-				let sim = this.sims[i];
-				if(sim.msPositionInScore <= msPosInScore)
+				let scoreSim = this.scoreSims[i];
+				if(scoreSim.msPositionInScore <= msPosInScore)
 				{
 					simIndex = i;
 					break;
@@ -265,13 +263,13 @@ namespace _AP
 		public updateStartMarkerMsPos(startMarkerMsPositionInScore: number): void
 		{
 			this.startMarkerMsPosInScore = startMarkerMsPositionInScore;
-			this.updateMsPosInScoreSequence(this.outputTrackIsOnArray);
+			this.updateScoreSimsAndScoreSimIndexTrajectory(this.outputTrackIsOnArray);
 		}
 
 		public updateEndMarkerMsPos(endMarkerMsPositionInScore: number): void
 		{
-			this.startMarkerMsPosInScore = endMarkerMsPositionInScore;
-			this.updateMsPosInScoreSequence(this.outputTrackIsOnArray);
+			this.endMarkerMsPosInScore = endMarkerMsPositionInScore;
+			this.updateScoreSimsAndScoreSimIndexTrajectory(this.outputTrackIsOnArray);
 		}
 
 		public setVisible(setToVisible: boolean): void
@@ -302,25 +300,25 @@ namespace _AP
 		}
 
 		// called when a track is toggled on or off or when the startMarker or endMarker is moved
-		public updateMsPosInScoreSequence(trackIsOnArray: boolean[]): void
+		public updateScoreSimsAndScoreSimIndexTrajectory(trackIsOnArray: boolean[]): void
 		{
-			this.outputTrackIsOnArray = trackIsOnArray;
 			if(trackIsOnArray !== undefined)
 			{
-				this.sims = this.getScoreSims(this.systems);
-				this.msPosInScoreSequence = this.getMsPosInScoreSequence(this.regionDefs, this.regionSequence);
+				this.outputTrackIsOnArray = trackIsOnArray;
+				this.scoreSims = this.getScoreSims(this.systems);
+				this.setScoreSimIndexTrajectory(this.regionDefs, this.regionSequence);
 			}
 		}
 
 		// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
         // sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
         // all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-		private setForOutputSpan(outputTracks: Track[], trackIsOnArray: boolean[])
+		public setOutputTracksForOutputSpan(outputTracks: Track[])
 		{
-			for(let i = 0; i < outputTracks.length; ++i)
+			for(let i = 0; i < this.nOutputTracks; ++i)
 			{
 				let track = outputTracks[i];
-				track.isOn = trackIsOnArray[i]; 
+				track.isOn = this.outputTrackIsOnArray[i]; 
 				if(track.isOn)
 				{
 					track.setForOutputSpan(this.startMarkerMsPosInScore, this.endMarkerMsPosInScore);
@@ -328,67 +326,29 @@ namespace _AP
 			}
 		}
 
-		//private setSimIsOnAttributes(trackIsOnArray: boolean[])
-		//{
-			//for(let sim of this.sims)
-			//{
-			//	let inputTrackIndex = 0;
-			//	for(let trackIndex = 0; trackIndex < trackIsOnArray.length; ++trackIndex)
-			//	{
-			//		let bool = trackIsOnArray[trackIndex]; // both input and output tracks
-			//		if(trackIndex < this.nOutputTracks)
-			//		{
-			//			let midiObject = sim.midiObjects[trackIndex];
-			//			if(midiObject !== undefined)
-			//			{
-			//				midiObject.isOn = bool;
-			//			}
-			//		}
-			//		else
-			//		{
-			//			let inputObject = sim.inputObjects[inputTrackIndex];
-			//			if(inputObject !== undefined)
-			//			{
-			//				inputObject.isOn = bool;
-			//			}
-			//		}
-			//		if(trackIndex >= this.nOutputTracks)
-			//		{
-			//			inputTrackIndex++;
-			//		}
-			//	}
-			//}
-		//}
-
 		/*--- end setup ------------------------*/
 		/*--- begin runtime --------------------*/
 
-		public incrementPosition()
+		// The returned numbers should not be changed by the caller.
+		// I should have returned this.scoreSimIndexTrajectory.slice() (a copy)
+		// but decided to save some memory by not doing so.
+		public getScoreSimIndexTrajectory() : number[]
 		{
-			let sims = this.sims;
-
-			this.positionIndex++;
-
-			if(this.sims[this.positionIndex].msPositionInScore < this.endMarkerMsPosInScore)
-			{
-				this.moveLineToSim(sims[this.positionIndex]);
-			}
-			else
-			{
-				throw "Temp exception: (end of performance)"
-			}
+			return this.scoreSimIndexTrajectory;
 		}
 
-		moveLineToSim(sim: Sim)
+		public updateCursorLine(indexInScoreSims: number): void
 		{
-			if(sim.yCoordinates !== this.yCoordinates)
+			let scoreSim = this.scoreSims[indexInScoreSims];
+
+			if(scoreSim.yCoordinates !== this.yCoordinates)
 			{
-				this.line.setAttribute("y1", sim.yCoordinates.top.toString(10));
-				this.line.setAttribute("y2", sim.yCoordinates.bottom.toString(10));
+				this.line.setAttribute("y1", scoreSim.yCoordinates.top.toString(10));
+				this.line.setAttribute("y2", scoreSim.yCoordinates.bottom.toString(10));
 			}
 
-			this.line.setAttribute("x1", sim.alignment.toString(10));
-			this.line.setAttribute("x2", sim.alignment.toString(10));
+			this.line.setAttribute("x1", scoreSim.alignment.toString(10));
+			this.line.setAttribute("x2", scoreSim.alignment.toString(10));
 		}
 
 		public yCoordinates: YCoordinates;
@@ -399,13 +359,11 @@ namespace _AP
 		private readonly line: SVGLineElement;
 		private readonly nOutputTracks: number;
 
-		private sims: Sim[];
-		private msPosInScoreSequence: number[];
 		private startMarkerMsPosInScore: number;
 		private endMarkerMsPosInScore: number;
+		private outputTrackIsOnArray: boolean[];
 
-		private positionIndex: number = 0;
-		private nextMsPosition: number = 0;
-
+		private scoreSims: Sim[];
+		private scoreSimIndexTrajectory!: number[]; // the ! prevents Typescript from signalling an error.
 	}
 }

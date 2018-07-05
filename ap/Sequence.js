@@ -34,7 +34,8 @@ _AP.sequence = (function(window)
     outputDevice,
     timer, // performance or conductor (use performance.now() or conductor.now())
 	tracks,
-	cursor,
+	simIndexTrajectory,
+	updateCursorLine, // this function takes the current simIndex in the simIndexTrajectory as its argument
 
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
@@ -429,7 +430,10 @@ _AP.sequence = (function(window)
 
         timer = timerArg; // performance or score.timePointer
 		tracks = this.outputTracks;
-		cursor = this.cursor;
+
+		simIndexTrajectory = this.simIndexTrajectory; // The simIndexTrajectory should be treated as a readonly array.
+		updateCursorLine = this.updateCursorLine;  // this function takes the current simIndex in the simIndexTrajectory as its argument
+
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;

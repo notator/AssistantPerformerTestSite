@@ -1071,11 +1071,13 @@ _AP.controls = (function(document, window)
 		// (live) during other performances (normal Sequence and Keyboard1).
 		initializePlayer = function(score, options)
 		{
-			var timer, speed;
+			var timer, speed,
+				cursor = score.getCursor();
 
 			player = sequence; // sequence is a namespace, not a class.
 			player.outputTracks = score.getTracksData().outputTracks; // public player.outputTracks is needed for sending track initialization messages
-			player.cursor = score.getCursor();
+			player.simIndexTrajectory = cursor.getScoreSimIndexTrajectory(); // The simIndexTrajectory should be treated as a readonly array.
+			player.updateCursorLine = cursor.updateCursorLine; // this function takes the current simIndex in the simIndexTrajectory as its argument
 
 			if(options.isConducting)
 			{

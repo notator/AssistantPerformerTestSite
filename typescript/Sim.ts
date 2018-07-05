@@ -16,6 +16,7 @@ namespace _AP
 		}
 	}
 
+	// all sims except the final barline have at least one performing output track
 	export class Sim
 	{
 		constructor(msPosInScore: number, alignment: number, yCoordinates: YCoordinates, outputTrackIndex:number)
@@ -47,7 +48,6 @@ namespace _AP
 		public readonly msPositionInScore: number;
 		public alignment: number;
 		public readonly yCoordinates: YCoordinates;
-		public isOn: boolean = true; // will be set to false, if the sim has no performing midiObjects
 		private outputTrackIndices: number[] = [];
 	}
 }
