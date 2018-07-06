@@ -11,33 +11,35 @@ namespace _AP
 			regionDefs: RegionDef[],
 			regionSequence: string,
 			endMarkerMsPosInScore: number,
-			systems: SvgSystem[])
+			systems: SvgSystem[],
+			viewBoxScale:number)
 		{
-			this.line = this.newCursorLine();
-			markersLayer.appendChild(this.line);
-
 			this.setMsPosMap(regionDefs, regionSequence);
 
 			this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 
-			this.setScoreCursorCoordinates(systems);	// does not include the endMarkerMsPosInScore.
+			this.setScoreCursorCoordinates(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
 
 			let firstCursorCoordinates = this.scoreCursorCoordinatesMap.get(0);
 			if(firstCursorCoordinates !== undefined)
 			{
 				this.yCoordinates = firstCursorCoordinates.yCoordinates;
+				this.line = this.newCursorLine(firstCursorCoordinates, viewBoxScale);
+				markersLayer.appendChild(this.line);
 			}
+
+			this.viewBoxScale = viewBoxScale;
 		}
 
 		// returns a Map that relates every msPositionInScore to a CursorCoordinates object.
 		// the map does not contain an entry for the final barline
-		private setScoreCursorCoordinates(systems: SvgSystem[]): void
+		private setScoreCursorCoordinates(systems: SvgSystem[], viewBoxScale:number): void
 		{
 			let scoreCCs = this.scoreCursorCoordinatesMap; // currently empty
 
 			for(let system of systems)
 			{
-				let systemSims = this.getSystemCursorCoordinates(system);
+				let systemSims = this.getSystemCursorCoordinates(system, viewBoxScale);
 
 				for(let entry of systemSims.entries())
 				{
@@ -46,7 +48,7 @@ namespace _AP
 			}
 		}
 
-		private getSystemCursorCoordinates(system: SvgSystem): Map<number, CursorCoordinates>
+		private getSystemCursorCoordinates(system: SvgSystem, viewBoxScale: number): Map<number, CursorCoordinates>
 		{
 			let systemCCMap = new Map<number, CursorCoordinates>(),
 				nStaves = system.staves.length,
@@ -75,7 +77,7 @@ namespace _AP
 							let tObj = timeObjects[ti],	msPos = tObj.msPositionInScore;
 							if(msPos < this.endMarkerMsPosInScore)
 							{
-								let cursorCoordinates = new CursorCoordinates(yCoordinates, tObj.alignment);
+								let cursorCoordinates = new CursorCoordinates(yCoordinates, tObj.alignment * viewBoxScale);
 								systemCCMap.set(msPos, cursorCoordinates);
 							}
 						}
@@ -89,7 +91,7 @@ namespace _AP
 
 							if(systemCCMap.get(tObjPos) === undefined)
 							{
-								let cursorCoordinates = new CursorCoordinates(yCoordinates, tObj.alignment);
+								let cursorCoordinates = new CursorCoordinates(yCoordinates, tObj.alignment * viewBoxScale);
 								systemCCMap.set(tObjPos, cursorCoordinates);
 							}
 						}
@@ -100,16 +102,18 @@ namespace _AP
 			return systemCCMap;
 		}
 
-		private newCursorLine(): SVGLineElement
+		private newCursorLine(firstCursorCoordinates: CursorCoordinates, viewBoxScale:number): SVGLineElement
 		{
-			var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+			var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+				yCoordinates = firstCursorCoordinates.yCoordinates,
+				alignment = firstCursorCoordinates.alignment;
 
 			cursorLine.setAttribute("class", "cursorLine");
-			cursorLine.setAttribute("x1", "0");
-			cursorLine.setAttribute("y1", "0");
-			cursorLine.setAttribute("x2", "0");
-			cursorLine.setAttribute("y2", "0");
-			cursorLine.setAttribute("style", "stroke:#0000FF; stroke-width:1px; visibility:hidden");
+			cursorLine.setAttribute("x1", alignment.toString(10));
+			cursorLine.setAttribute("y1", yCoordinates.top.toString(10));
+			cursorLine.setAttribute("x2", alignment.toString(10));
+			cursorLine.setAttribute("y2", yCoordinates.bottom.toString(10));
+			cursorLine.setAttribute("style", "stroke:#999999; stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
 
 			return cursorLine;
 		}
@@ -135,6 +139,7 @@ namespace _AP
 			this.logMsPosMap();
 		}
 
+		// temporary function (just testing)
 		private logMsPosMap()
 		{
 			for(let entry of this.msPosMap.entries())
@@ -179,7 +184,7 @@ namespace _AP
 		/*--- end setup ------------------------*/
 		/*--- begin runtime --------------------*/
 
-		public moveCursorLine(msPositionInScore: number): void
+		public moveCursorLineTo(msPositionInScore: number, systemChanged: Function): void
 		{
 			if(msPositionInScore === this.endMarkerMsPosInScore)
 			{
@@ -195,6 +200,8 @@ namespace _AP
 						this.yCoordinates = cursorCoordinates.yCoordinates;
 						this.line.setAttribute("y1", this.yCoordinates.top.toString(10));
 						this.line.setAttribute("y2", this.yCoordinates.bottom.toString(10));
+						let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
+						systemChanged(yCoordinates);
 					}
 
 					this.line.setAttribute("x1", cursorCoordinates.alignment.toString(10));
@@ -208,8 +215,8 @@ namespace _AP
 		private scoreCursorCoordinatesMap = new Map<number, CursorCoordinates>(); // msPositionInScore, cursorCoordinates
 		private yCoordinates: YCoordinates = {top: 0, bottom: 0};
 		private endMarkerMsPosInScore: number;
-		
 
-		private readonly line: SVGLineElement;
+		private readonly viewBoxScale: number;
+		private readonly line!: SVGLineElement;
 	}
 }

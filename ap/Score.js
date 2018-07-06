@@ -65,7 +65,7 @@ _AP.score = (function(document)
 		runningMarker,
 		endMarker,
 		conductor, // an object that has a now() function).
-		runningMarkerHeightChanged, // callback, called when runningMarker changes systems
+		systemChanged, // callback, called when running cursor changes systems
 
 		finalBarlineInScore,
 
@@ -348,8 +348,6 @@ _AP.score = (function(document)
 			{
 				updateStartMarker(timeObjectsArray, timeObject);
 			}
-
-			cursor.updateScoreSimsAndScoreSimIndexTrajectory(trackIsOnArrayArg);
 		},
 
 		// this function is called only when state is 'settingStart' or 'settingEnd'.
@@ -547,7 +545,7 @@ _AP.score = (function(document)
 				systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
 			}
 
-			cursor.moveToStartMarker(startMarker);
+			cursor.moveCursorLineTo(systems[0].startMarker.msPositionInScore);
 		},
 
 		// Called when the go button or the startConducting button is clicked.
@@ -560,10 +558,13 @@ _AP.score = (function(document)
 				system = systems[sysIndex];
 				system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
 			}
-			hideRunningMarkers();
-			moveRunningMarkersToStartMarkers();
-			runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
-			runningMarker.setVisible(true);
+			//hideRunningMarkers();
+			//moveRunningMarkersToStartMarkers();
+			//runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
+			//runningMarker.setVisible(true);
+
+			cursor.moveCursorLineTo(startMarker.msPositionInScore);
+			cursor.setVisible(true);
 		},
 
 		// Called when the start conducting button is clicked on or off.
@@ -1194,6 +1195,11 @@ _AP.score = (function(document)
 			endMarker.moveTo(lastTimeObjects[lastTimeObjects.length - 1]);
 		},
 
+		startMarkerMsPosition = function()
+		{
+			return startMarker.msPositionInScore;
+		},
+
 		endMarkerMsPosition = function()
 		{
 			return endMarker.msPositionInScore;
@@ -1230,39 +1236,35 @@ _AP.score = (function(document)
 		// Does nothing when the end of the score is reached.
 		advanceRunningMarker = function(msPosition, systemIndexInScore)
 		{
-			if(systemIndexInScore > runningMarker.systemIndexInScore)
-			{
-				systemIndexInScore = runningMarker.systemIndexInScore + 1; // just to be sure!
+			//if(systemIndexInScore > runningMarker.systemIndexInScore)
+			//{
+			//	systemIndexInScore = runningMarker.systemIndexInScore + 1; // just to be sure!
 
-				// Move runningMarker and timePointer to msPosition in the next system.
-				runningMarker.setVisible(false);
-				if(runningMarker.systemIndexInScore < endMarker.systemIndexInScore)
-				{
-					runningMarker = systems[systemIndexInScore].runningMarker;
-					runningMarker.moveTo(msPosition);
-					runningMarker.setVisible(true);
-					if(isConducting)
-					{
-						conductor.setTimePointer(systems[systemIndexInScore].timePointer);
-					}
-					// callback for auto scroll
-					runningMarkerHeightChanged(runningMarker.yCoordinates, systems[systemIndexInScore].pageOffsetTop);
-				}
-			}
-			else
-			{
-				while(msPosition >= runningMarker.nextMsPosition)
-				{
-					// this function can assume that the runningMarker's currentPosition can simply be incremented
-					runningMarker.incrementPosition();
-				}
+			//	// Move runningMarker and timePointer to msPosition in the next system.
+			//	runningMarker.setVisible(false);
+			//	if(runningMarker.systemIndexInScore < endMarker.systemIndexInScore)
+			//	{
+			//		runningMarker = systems[systemIndexInScore].runningMarker;
+			//		runningMarker.moveTo(msPosition);
+			//		runningMarker.setVisible(true);
+			//		if(isConducting)
+			//		{
+			//			conductor.setTimePointer(systems[systemIndexInScore].timePointer);
+			//		}
+			//		// callback for auto scroll
+			//		systemChanged(runningMarker.yCoordinates, systems[systemIndexInScore].pageOffsetTop);
+			//	}
+			//}
+			//else
+			//{
+			//	while(msPosition >= runningMarker.nextMsPosition)
+			//	{
+			//		// this function can assume that the runningMarker's currentPosition can simply be incremented
+			//		runningMarker.incrementPosition();
+			//	}
 
-				//while(msPosition >= cursor.nextMsPosition)
-				//{
-				//	// this function can assume that the runningMarker's currentPosition can simply be incremented
-				//	cursor.incrementPosition();
-				//}
-			}
+			//}
+			cursor.moveCursorLineTo(msPosition, systemChanged, systems[systemIndexInScore].pageOffsetTop);
 		},
 
 		// tracksData has the following defined attributes:
@@ -1882,7 +1884,7 @@ _AP.score = (function(document)
 			setMarkers(systems, isLivePerformance);
 
 			// cursor is accessed outside the score using a getter function
-			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems); 
+			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, viewBoxScale); 
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 			//        inputKeyRange.bottomKey
@@ -1923,7 +1925,7 @@ _AP.score = (function(document)
 
 			systems = [];
 
-			runningMarkerHeightChanged = callback;
+			systemChanged = callback;
 
 			// functions called when setting the start or end marker
 			this.setStartMarkerClick = setStartMarkerClick;
@@ -1933,6 +1935,7 @@ _AP.score = (function(document)
 			this.sendStartMarkerToStart = sendStartMarkerToStart;
 			this.sendEndMarkerToEnd = sendEndMarkerToEnd;
 
+			this.startMarkerMsPosition = startMarkerMsPosition;
 			this.endMarkerMsPosition = endMarkerMsPosition;
 			this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
 

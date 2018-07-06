@@ -266,7 +266,7 @@ _AP.controls = (function(document, window)
 			}
 		},
 
-		setCursorAndEventListener = function(svgControlsState)
+		setEventListenersAndConductorsMouseCursor = function(svgControlsState)
 		{
 			var s = score, markersLayer = s.getMarkersLayer();
 
@@ -316,7 +316,7 @@ _AP.controls = (function(document, window)
 				//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 				options.isConducting = false;
 				score.setConducting(false);
-				initializePlayer(score.getCursor(), options);
+				initializePlayer(score, options);
 			}
 
 			score.hideRunningMarkers();
@@ -326,7 +326,7 @@ _AP.controls = (function(document, window)
 
 			setMainOptionsState("toBack");
 
-			setCursorAndEventListener('stopped');
+			setEventListenersAndConductorsMouseCursor('stopped');
 
 			svgControlsState = 'stopped';
 
@@ -482,6 +482,7 @@ _AP.controls = (function(document, window)
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 				score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
+				startMarkerMsPosition = score.startMarkerMsPosition();
 				endMarkerMsPosition = score.endMarkerMsPosition();
 
 				if(options.isConducting === true)
@@ -493,7 +494,7 @@ _AP.controls = (function(document, window)
 					baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 				}
 
-				player.play(startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
+				player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
 			}
 
 			if(options.isConducting === false)
@@ -546,7 +547,7 @@ _AP.controls = (function(document, window)
 
 				// The tracksControl is only initialised after a specific score is loaded.
 
-				setCursorAndEventListener('stopped');
+				setEventListenersAndConductorsMouseCursor('stopped');
 			}
 
 			// setStopped is outer function
@@ -603,7 +604,7 @@ _AP.controls = (function(document, window)
 				cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 				cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-				setCursorAndEventListener('settingStart');
+				setEventListenersAndConductorsMouseCursor('settingStart');
 			}
 
 			function setSettingEnd()
@@ -627,7 +628,7 @@ _AP.controls = (function(document, window)
 				cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 				cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-				setCursorAndEventListener('settingEnd');
+				setEventListenersAndConductorsMouseCursor('settingEnd');
 			}
 
 			function toggleConducting()
@@ -658,14 +659,14 @@ _AP.controls = (function(document, window)
 
 					cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
-					setCursorAndEventListener('conducting');
+					setEventListenersAndConductorsMouseCursor('conducting');
 
 					score.setConducting(true);
 					score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
 					options.isConducting = true;
 
-					initializePlayer(score.getCursor(), options);
+					initializePlayer(score, options);
 				}
 
 			}
@@ -834,7 +835,7 @@ _AP.controls = (function(document, window)
 			}
 
 			// resets the score selector in case the browser has cached the last value
-			function initScoreSelector(runningMarkerHeightChanged)
+			function initScoreSelector(systemChanged)
 			{
 				// There is one soundFont per score type.
 				// The soundFont is added as an attribute to the scoreSelect option for the score.
@@ -953,7 +954,7 @@ _AP.controls = (function(document, window)
 				}
 
 				globalElements.scoreSelect.selectedIndex = 0;
-				score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
+				score = new Score(systemChanged); // an empty score, with callback function
 				loadSoundFonts(globalElements.scoreSelect);
 			}
 
@@ -986,15 +987,15 @@ _AP.controls = (function(document, window)
 				cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
 			}
 
-			// callback passed to score. Called when the running marker moves to a new system.
-			function runningMarkerHeightChanged(runningMarkerYCoordinates, pageOffsetTop)
+			// callback passed to score. Called when the running cursor moves to a new system.
+			function systemChanged(runningMarkerYCoordinates)
 			{
 				var div = globalElements.svgPagesFrame,
 					height = Math.round(parseFloat(div.style.height));
 
-				if((runningMarkerYCoordinates.bottom + pageOffsetTop) > (height + div.scrollTop))
+				if((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
 				{
-					div.scrollTop = runningMarkerYCoordinates.top + pageOffsetTop - 10;
+					div.scrollTop = runningMarkerYCoordinates.top - 10;
 				}
 			}
 
@@ -1014,7 +1015,7 @@ _AP.controls = (function(document, window)
 				midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 			}
 
-			initScoreSelector(runningMarkerHeightChanged);
+			initScoreSelector(systemChanged);
 
 			getControlLayers(document);
 
@@ -1063,19 +1064,46 @@ _AP.controls = (function(document, window)
 			return Math.exp(minv + scale * (position - minp));
 		},
 
+
+		//initializePlayer = function(score, options)
+		//{
+		//	var timer, speed, tracksData = score.getTracksData();
+
+		//	player = sequence; // sequence is a namespace, not a class.
+		//	player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+
+		//	if(options.isConducting)
+		//	{
+		//		speed = speedSliderValue(globalElements.speedControlInput.value);
+		//		timer = score.getConductor(speed); // use conductor.now()
+		//	}
+		//	else
+		//	{
+		//		timer = performance; // use performance.now()           
+		//	}
+		//	player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
+		//},
+
 		// Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
 		// Called again with options.isConducting===true if the conduct performance button is toggled on.
 		// If this is a live-conducted performance, sets the now() function to be the conductor's now().
 		// Otherwise performance.now() is used (for normal and Keyboard1 performances).
 		// Note that the performance's basic speed is always 1 for conducted performances, but that it can change
 		// (live) during other performances (normal Sequence and Keyboard1).
-		initializePlayer = function(cursor, options)
+		initializePlayer = function(score, options)
 		{
-			var timer, speed;
+			var timer, speed,
+				outputTracks = score.getTracksData().outputTracks,
+				cursor = score.getCursor();
 
-			player = sequence; // sequence is a namespace, not a class.
-			player.msPosMap = cursor.msPosMap; // map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
-			player.updateCursorLine = cursor.updateCursorLine; // this function takes the current simIndex in the simIndexTrajectory as its argument
+			// sequence is a namespace, not a class.
+			player = sequence;
+			// public player.outputTracks is needed for sending track initialization messages
+			player.outputTracks = outputTracks;
+			// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
+			player.msPosMap = cursor.msPosMap;
+			// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
+			player.moveCursorLineTo = cursor.moveCursorLineTo; 
 
 			if(options.isConducting)
 			{
@@ -1758,7 +1786,7 @@ _AP.controls = (function(document, window)
 			else
 			{
 				// can be called again for conducted performance
-				initializePlayer(score.getCursor(), options);
+				initializePlayer(score, options);
 			}
 
 			setSpeedControl(tracksControl.width());
