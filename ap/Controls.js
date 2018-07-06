@@ -316,7 +316,7 @@ _AP.controls = (function(document, window)
 				//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 				options.isConducting = false;
 				score.setConducting(false);
-				initializePlayer(score, options);
+				initializePlayer(score.getCursor(), options);
 			}
 
 			score.hideRunningMarkers();
@@ -665,7 +665,7 @@ _AP.controls = (function(document, window)
 
 					options.isConducting = true;
 
-					initializePlayer(score, options);
+					initializePlayer(score.getCursor(), options);
 				}
 
 			}
@@ -1069,14 +1069,12 @@ _AP.controls = (function(document, window)
 		// Otherwise performance.now() is used (for normal and Keyboard1 performances).
 		// Note that the performance's basic speed is always 1 for conducted performances, but that it can change
 		// (live) during other performances (normal Sequence and Keyboard1).
-		initializePlayer = function(score, options)
+		initializePlayer = function(cursor, options)
 		{
-			var timer, speed,
-				cursor = score.getCursor();
+			var timer, speed;
 
 			player = sequence; // sequence is a namespace, not a class.
-			player.outputTracks = score.getTracksData().outputTracks; // public player.outputTracks is needed for sending track initialization messages
-			player.simIndexTrajectory = cursor.getScoreSimIndexTrajectory(); // The simIndexTrajectory should be treated as a readonly array.
+			player.msPosMap = cursor.msPosMap; // map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
 			player.updateCursorLine = cursor.updateCursorLine; // this function takes the current simIndex in the simIndexTrajectory as its argument
 
 			if(options.isConducting)
@@ -1760,7 +1758,7 @@ _AP.controls = (function(document, window)
 			else
 			{
 				// can be called again for conducted performance
-				initializePlayer(score, options);
+				initializePlayer(score.getCursor(), options);
 			}
 
 			setSpeedControl(tracksControl.width());
