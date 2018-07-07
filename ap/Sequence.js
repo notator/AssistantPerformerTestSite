@@ -403,9 +403,9 @@ _AP.sequence = (function(window)
 		// msPositionInScore and systemIndex back to the GUI while performing.
 		// It is called here as:
 		//      reportNextMIDIObject(msPositionToReport, systemIndexToReport);
-		// The msPosition it passes back is the original number of milliseconds from the start of
-		// the score (taking the global speed option into account). This value is used to identify
-		// chord and rest symbols in the score, and so to synchronize the running cursor.
+		// The msPosition it passes back is the original number of milliseconds from the start of the score
+		// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
+		// and so to synchronize the running cursor.
 		// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 		// attributes before play() is called.
 		init = function(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
