@@ -369,8 +369,9 @@ _AP.score = (function(document)
 				}
 				else
 				{
+					systemIndex = systems.length - 1; 
 					topLimit = -1;
-					for(i = 0; i < systems.length; ++i)
+					for(i = 0; i < systems.length - 1; ++i)
 					{
 						system = systems[i];
 						bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
@@ -502,7 +503,6 @@ _AP.score = (function(document)
 							startMarker = system.startMarker;
 							hideStartMarkersExcept(startMarker);
 							updateStartMarker(timeObjectsArray, timeObject);
-							cursor.updateStartMarkerMsPos(startMarker.msPositionInScore);
 						}
 						break;
 					case 'settingEnd':
@@ -511,7 +511,6 @@ _AP.score = (function(document)
 							endMarker = system.endMarker;
 							hideEndMarkersExcept(endMarker);
 							endMarker.moveTo(timeObject);
-							cursor.updateEndMarkerMsPos(endMarker.msPositionInScore);
 						}
 						break;
 					default:
@@ -1264,7 +1263,7 @@ _AP.score = (function(document)
 			//	}
 
 			//}
-			cursor.moveCursorLineTo(msPosition, systemChanged, systems[systemIndexInScore].pageOffsetTop);
+			cursor.moveCursorLineTo(msPosition);
 		},
 
 		// tracksData has the following defined attributes:
@@ -1884,7 +1883,7 @@ _AP.score = (function(document)
 			setMarkers(systems, isLivePerformance);
 
 			// cursor is accessed outside the score using a getter function
-			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, viewBoxScale); 
+			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, viewBoxScale, systemChanged); 
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 			//        inputKeyRange.bottomKey

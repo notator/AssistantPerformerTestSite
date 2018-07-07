@@ -987,7 +987,7 @@ _AP.controls = (function(document, window)
 				cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
 			}
 
-			// callback passed to score. Called when the running cursor moves to a new system.
+			// callback passed to score, which passes it to cursor. Called when the running cursor moves to a new system.
 			function systemChanged(runningMarkerYCoordinates)
 			{
 				var div = globalElements.svgPagesFrame,
@@ -1103,7 +1103,7 @@ _AP.controls = (function(document, window)
 			// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
 			player.msPosMap = cursor.msPosMap;
 			// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
-			player.moveCursorLineTo = cursor.moveCursorLineTo; 
+			player.moveCursorLineTo = cursor.moveCursorLineTo;
 
 			if(options.isConducting)
 			{

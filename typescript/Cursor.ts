@@ -12,7 +12,9 @@ namespace _AP
 			regionSequence: string,
 			endMarkerMsPosInScore: number,
 			systems: SvgSystem[],
-			viewBoxScale:number)
+			viewBoxScale: number,
+			systemChanged: Function
+		)
 		{
 			this.setMsPosMap(regionDefs, regionSequence);
 
@@ -29,6 +31,7 @@ namespace _AP
 			}
 
 			this.viewBoxScale = viewBoxScale;
+			this.systemChanged = systemChanged;
 		}
 
 		// returns a Map that relates every msPositionInScore to a CursorCoordinates object.
@@ -184,7 +187,7 @@ namespace _AP
 		/*--- end setup ------------------------*/
 		/*--- begin runtime --------------------*/
 
-		public moveCursorLineTo(msPositionInScore: number, systemChanged: Function): void
+		public moveCursorLineTo(msPositionInScore: number): void
 		{
 			if(msPositionInScore === this.endMarkerMsPosInScore)
 			{
@@ -201,7 +204,7 @@ namespace _AP
 						this.line.setAttribute("y1", this.yCoordinates.top.toString(10));
 						this.line.setAttribute("y2", this.yCoordinates.bottom.toString(10));
 						let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-						systemChanged(yCoordinates);
+						this.systemChanged(yCoordinates);
 					}
 
 					this.line.setAttribute("x1", cursorCoordinates.alignment.toString(10));
@@ -218,5 +221,6 @@ namespace _AP
 
 		private readonly viewBoxScale: number;
 		private readonly line!: SVGLineElement;
+		private readonly systemChanged: Function;
 	}
 }
