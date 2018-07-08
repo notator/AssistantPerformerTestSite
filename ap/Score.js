@@ -1883,7 +1883,7 @@ _AP.score = (function(document)
 			setMarkers(systems, isLivePerformance);
 
 			// cursor is accessed outside the score using a getter function
-			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, viewBoxScale, systemChanged); 
+			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, tracksData.outputTracks, viewBoxScale, systemChanged); 
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 			//        inputKeyRange.bottomKey

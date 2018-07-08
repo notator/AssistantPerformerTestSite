@@ -1,6 +1,7 @@
 ﻿
 /// <reference path="Interface.ts" />
 /// <reference path="CursorCoordinates.ts" />
+/// <reference path="RegionLink.ts" />
 
 namespace _AP
 {
@@ -12,11 +13,15 @@ namespace _AP
 			regionSequence: string,
 			endMarkerMsPosInScore: number,
 			systems: SvgSystem[],
+			tracks: Track[],
 			viewBoxScale: number,
 			systemChanged: Function
 		)
 		{
-			this.setMsPosMap(regionDefs, regionSequence);
+			this.setRegionLinks(tracks, regionDefs, regionSequence);
+
+			// Add the current ContinuousController state commands to the the first moment in each region. (Outside cursor?)
+
 
 			this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 
@@ -121,33 +126,24 @@ namespace _AP
 			return cursorLine;
 		}
 
-		private setMsPosMap(regionDefs: RegionDef[], regionSequence: string): void
+		private setRegionLinks(tracks: Track[], regionDefs: RegionDef[], regionNameSequence: string): void
 		{
-			let performanceTime: number = 0;
-
-			for(let i = 0; i < regionSequence.length; ++i)
+			for(let t = 0; t < tracks.length; ++t)
 			{
-				let name = regionSequence[i];
-				let regionDef = this.getRegionDef(regionDefs, name);
-				let scoreTime = regionDef.startMsPositionInScore;
-				let timeDelta = scoreTime + performanceTime;
+				let track = tracks[t],
+					trackRegionLinks: RegionLink[] = [],
+					prevRegionLink: RegionLink | undefined = undefined;
 
-				// at runTime: timeDelta - perfomanceTime = scoreTime
-				this.msPosMap.set(performanceTime, timeDelta);
+				for(let i = 0; i < regionNameSequence.length; ++i)
+				{
+					let regionName = regionNameSequence[i];
+					let regionDef = this.getRegionDef(regionDefs, regionName);
+					let regionLink: RegionLink = new RegionLink(track, regionDef, prevRegionLink);
+					prevRegionLink = regionLink;
+					trackRegionLinks.push(regionLink);
+				}
 
-				// when this region has completed:
-				performanceTime += (regionDef.endMsPositionInScore - regionDef.startMsPositionInScore);
-			}
-
-			this.logMsPosMap();
-		}
-
-		// temporary function (just testing)
-		private logMsPosMap()
-		{
-			for(let entry of this.msPosMap.entries())
-			{
-				console.log(entry[0].toString() + " - " + entry[1].toString());
+				this.regionLinksPerTrack.push(trackRegionLinks);
 			}
 		}
 
@@ -213,7 +209,7 @@ namespace _AP
 			}
 		}
 
-		public msPosMap: Map<number, number> = new Map<number, number>();
+		public regionLinksPerTrack: RegionLink[][] = [];
 
 		private scoreCursorCoordinatesMap = new Map<number, CursorCoordinates>(); // msPositionInScore, cursorCoordinates
 		private yCoordinates: YCoordinates = {top: 0, bottom: 0};

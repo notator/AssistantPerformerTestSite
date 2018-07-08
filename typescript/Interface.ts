@@ -70,27 +70,18 @@ namespace _AP
 
 	/*******************************************************/
 
-	// the following can be deleted when the running marker is deleted!
-	export class MidiChord
+	export interface Moment
 	{
-		constructor()
-		{ }
+		readonly msPositionInChord: number;
 	}
-
-	export class MidiRest
+	export interface TimeObject
 	{
-		constructor()
-		{ }
+		readonly msPositionInScore: number;
+		readonly moments: Moment[] | undefined;
 	}
-
-	export class midiObject
+	export interface MidiObject extends TimeObject
 	{
-		static MidiChord: any = MidiChord.constructor;
-		static MidiRest: any = MidiRest.constructor;
-		constructor()
-		{
-
-		}
+		readonly moments: Moment[];
 	}
 
 	/*******************************************************/

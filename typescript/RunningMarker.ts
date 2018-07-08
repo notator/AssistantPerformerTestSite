@@ -1,5 +1,4 @@
-﻿
-/// <reference path="Interface.ts" />
+﻿/// <reference path="Interface.ts" />
 
 namespace _AP
 {
@@ -89,12 +88,7 @@ namespace _AP
 		// otherwise the timeObjects are midiObjects from outputVoices.
 		public setTimeObjects(system: SvgSystem, isLivePerformance: boolean, trackIsOnArray: boolean[]): void
 		{
-			var
-				MidiChord = _AP.midiObject.MidiChord,
-				MidiRest = _AP.midiObject.MidiRest,
-				InputChordDef = _AP.inputObjectDef.InputChordDef,
-				InputRestDef = _AP.inputObjectDef.InputRestDef,
-				timeObject;
+			var	timeObject;
 
 			function findFollowingTimeObject(system: SvgSystem, msPositionInScore: number, isLivePerformance: boolean, trackIsOnArray: boolean[]) : any
 			{
@@ -156,7 +150,7 @@ namespace _AP
 			}
 
 			timeObject = findFollowingTimeObject(system, -1, isLivePerformance, trackIsOnArray);
-			while(timeObject instanceof MidiChord || timeObject instanceof MidiRest || timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+			while(timeObject as TimeObject !== undefined)
 			{
 				this.timeObjects.push(timeObject);
 				timeObject = findFollowingTimeObject(system, timeObject.msPositionInScore, isLivePerformance, trackIsOnArray);
