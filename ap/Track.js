@@ -228,100 +228,135 @@ _AP.track = (function()
     // If a MidiRest straddles the startMarker, track._currentMidiObject is set to the following MidiChord, and
     // track.currentMoment is set to the its first moment.
     // track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
-    Track.prototype.setForOutputSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
-    {
-        var i, index, midiObject, midiObjects, midiChord, midiRest, nMidiObjects,
-            MidiChord = _AP.midiObject.MidiChord;
+	Track.prototype.setForOutputSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
+	{
+		var i, index, midiObject, midiObjects, midiChord, midiRest, nMidiObjects,
+			MidiChord = _AP.midiObject.MidiChord;
 
-        if(this.midiObjects === undefined)
-        {
-            throw "Can't set OutputSpan!";
-        }
+		if(this.midiObjects === undefined)
+		{
+			throw "Can't set OutputSpan!";
+		}
 
-        midiObjects = this.midiObjects;
-        nMidiObjects = midiObjects.length;
+		midiObjects = this.midiObjects;
+		nMidiObjects = midiObjects.length;
 
-        for(i = 0; i < nMidiObjects; ++i)
-        {
-            index = i;
-            // find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
-            // or the index of the MidiChord that starts after the startMarkerMsPositionInScore
-            // or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
-            if(midiObjects[i] instanceof MidiChord)
-            {
-                midiChord = midiObjects[i];
-                if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
-                && (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
-                {
-                    // if the MidiChord is at or straddles the startMarkerMsPositionInScore
-                    // set its moment pointers to startMarkerMsPositionInScore
-                    // midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
-                    midiChord.setToStartMarker(startMarkerMsPositionInScore);
-                    if(midiChord.currentMoment !== undefined)
-                    {
-                        break;
-                    }
-                }
+		for(i = 0; i < nMidiObjects; ++i)
+		{
+			index = i;
+			// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
+			// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
+			// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
+			if(midiObjects[i] instanceof MidiChord)
+			{
+				midiChord = midiObjects[i];
+				if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
+					&& (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
+				{
+					// if the MidiChord is at or straddles the startMarkerMsPositionInScore
+					// set its moment pointers to startMarkerMsPositionInScore
+					// midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
+					midiChord.setToStartMarker(startMarkerMsPositionInScore);
+					if(midiChord.currentMoment !== undefined)
+					{
+						break;
+					}
+				}
 
-                if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
-                {
-                    // a MidiRest straddles the startMarker. 
-                    midiChord.setToStartAtBeginning();
-                    break;
-                }
-            }
-            else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
-            {
-                midiRest = midiObjects[i];
-                midiRest.setToStartAtBeginning();
-                break;
-            }
-        }
+				if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
+				{
+					// a MidiRest straddles the startMarker. 
+					midiChord.setToStartAtBeginning();
+					break;
+				}
+			}
+			else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
+			{
+				midiRest = midiObjects[i];
+				midiRest.setToStartAtBeginning();
+				break;
+			}
+		}
 
-        // Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
-        for(i = index + 1; i < nMidiObjects; ++i)
-        {
-            midiObject = midiObjects[i];
+		// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
+		for(i = index + 1; i < nMidiObjects; ++i)
+		{
+			midiObject = midiObjects[i];
 
-            if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
-            {
-                break;
-            }
+			if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
+			{
+				break;
+			}
 
-            midiObject.setToStartAtBeginning();
-        }
+			midiObject.setToStartAtBeginning();
+		}
 
-        this._currentMidiObjectIndex = index;
-        this._currentMidiObject = midiObjects[index];
-        this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
-        this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
-        // this.currentMoment is the first moment that is going to be played in this track.
-        // (If the performance is set to start inside a rest, this.currentMoment will be at a
-        // position later than the startMarker.)
-        // this.currentMoment will be null if there are no more moments to play in the track.
-        // (i.e. if last midiObject in the track is a rest, and the performance is set to start
-        // after its beginning.  
-        if(this.currentMoment !== null)
-        {
-            // this.startStateMessages will be an empty array when the performance starts at the beginning of the score.
-            this.setStartStateMessages (startMarkerMsPositionInScore);
-        }
-    };
+		this._currentMidiObjectIndex = index;
+		this._currentMidiObject = midiObjects[index];
+		this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
+		this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+		// this.currentMoment is the first moment that is going to be played in this track.
+		// (If the performance is set to start inside a rest, this.currentMoment will be at a
+		// position later than the startMarker.)
+		// this.currentMoment will be null if there are no more moments to play in the track.
+		// (i.e. if last midiObject in the track is a rest, and the performance is set to start
+		// after its beginning.  
+		if(this.currentMoment !== null)
+		{
+			// this.startStateMessages will be an empty array when the performance starts at the beginning of the score.
+			this.setStartStateMessages(startMarkerMsPositionInScore);
+		}
+	};
 
-    // Returns Number.MAX_VALUE at end of track.
-    Track.prototype.currentMsPosition = function()
-    {
-        var msPos = Number.MAX_VALUE,
-            cmObj = this._currentMidiObject,
-            cMom = this.currentMoment;
+	// ** Compare this code with setForOutputSpan() above. **
+	// When this function returns:
+	// this.currentMoment is the first moment that is going to be played in this track.
+	// (If the performance is set to start inside a rest, this.currentMoment will be in
+	// a midiChord that starts after the beginning of the region.)
+	// this.currentMoment will be null if there are no more moments to play in the track
+	// (i.e. if last midiObject in the track is a rest, and the performance is set to start
+	// after its beginning).
+	Track.prototype.setNextRegion = function(regionLink)
+	{
+		var i, midiObjects = this.midiObjects,
+			startMidiObjectIndex = regionLink.nextRegionMidiObjectIndex,
+			momentIndex = regionLink.nextRegionMomentIndex,
+			nMidiObjectsInRegion = regionLink.nextRegionMidiObjectsCount, 
+			moIndex = startMidiObjectIndex + 1;
 
-        if(cmObj !== null && cMom !== null)
-        {
-            msPos = cmObj.msPositionInScore + cMom.msPositionInChord;
-        }
+		// set all midiObjects in the region except the first (which is set by setting the 'current' values below)
+		for(i = 1; i < nMidiObjectsInRegion; ++i)
+		{
+			midiObjects[moIndex++].setToStartAtBeginning();
+		}
 
-        return msPos;
-    };
+		this._currentMidiObjectIndex = startMidiObjectIndex;
+		this._currentMidiObject = midiObjects[startMidiObjectIndex]; // a MidiChord or MidiRest
+		this.currentMoment = this._currentMidiObject.moments[momentIndex];// in a MidiChord or MidiRest
+		this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+
+		// The current ContinuousController state commands must be added
+		// to the the first moment in each region before the performance begins.
+	};
+
+	// Returns Number.MAX_VALUE at end of track.
+	Track.prototype.currentMsPosition = function()
+	{
+		let msPos = Number.MAX_VALUE;
+
+		if(this._currentMidiObject !== null)
+		{
+			msPos = this._currentMidiObject.msPositionInScore;
+			if(this.currentMoment !== null)
+			{
+				msPos += this.currentMoment.msPositionInChord;
+			}
+		}
+
+		return msPos;
+	};
+
+
 
     Track.prototype.advanceCurrentMoment = function()
     {
@@ -332,12 +367,30 @@ _AP.track = (function()
             throw "Can't advance currentMoment!";
         }
 
-        this.currentMoment = this._currentMidiObject.advanceCurrentMoment();
+		this.currentMoment = this._currentMidiObject.advanceCurrentMoment();
+
+		/* track.regionLinks is an array of regionLink objects that have the following attributes:
+		 *     .endOfRegionMsPositionInScore
+		 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
+		 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
+		 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries. 
+		 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
+		 * 
+		 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
+		 */
+
+		// let regionLink = this.regionLinks[this.regionIndex];
+		// if(this.currentMsPosition() >= regionLink.endOfRegionMsPositionInScore)
+		// {
+		//     this.setNextRegion(regionLink);
+		//     this.regionIndex++
+		// }
 
         // MidiRests, and MidiChords that have ended, return null.
         if(this.currentMoment === null)
-        {
-            this._currentMidiObjectIndex++;
+		{
+			this._currentMidiObjectIndex++;
+
             currentIndex = this._currentMidiObjectIndex;
             if(currentIndex < this.midiObjects.length)
             {
