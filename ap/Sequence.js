@@ -165,7 +165,7 @@ _AP.sequence = (function(window)
 				for(i = 0; i < nTracks; ++i)
 				{
 					track = tracks[i];
-					if(track.isPerforming)
+					if(track.isOn)
 					{
 						trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
 
@@ -269,7 +269,7 @@ _AP.sequence = (function(window)
 		// The following variables are initialised in play() to start playing the span:
 		//      currentMoment // the first moment in the sequence
 		//      track attributes:
-		//          isPerforming // set by referring to the track control
+		//          isOn // set by referring to the track control
 		//          fromIndex // the index of the first moment in the track to play
 		//          toIndex // the index of the final moment in the track (which does not play)
 		//          currentIndex // = fromIndex
@@ -445,7 +445,7 @@ _AP.sequence = (function(window)
 		// of tracks as this (calling) sequence.
 		play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
 		{
-			// Sets each (output) track's isPerforming attribute.
+			// Sets each (output) track's isOn attribute.
 			// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
 			// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
 			// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
@@ -460,9 +460,9 @@ _AP.sequence = (function(window)
 				for(i = 0; i < nTracks; ++i)
 				{
 					track = tracks[i];
-					track.isPerforming = trackIsOnArray[i];
+					track.isOn = trackIsOnArray[i];
 
-					if(track.isPerforming)
+					if(track.isOn)
 					{
 						track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
 					}
