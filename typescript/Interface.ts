@@ -22,13 +22,6 @@ namespace _AP
 		readonly timeObjects: TimeObject[];
 	}
 
-	export interface Track
-	{
-		midiObjects: TimeObject[];
-		setForOutputSpan(a: number, b: number): void;
-		isOn: boolean;
-	}
-
 	export interface TimeObject
 	{
 		readonly msPositionInScore: number;
@@ -70,9 +63,21 @@ namespace _AP
 
 	/*******************************************************/
 
+	export interface Message
+	{
+		readonly data: number[];
+		command():number;
+		channel(): number;
+		clone(): Message;
+		toString(): string;
+		_getDataValues(argsLength: number, data1Arg:number, data2Arg:number): {data1:number, data2:number}
+		_checkArgSizes(status: number, data1: number, data2: number): void;
+		_getLength(status: number): number;
+	}
 	export interface Moment
 	{
 		readonly msPositionInChord: number;
+		readonly messages: Message[];
 	}
 	export interface TimeObject
 	{
@@ -82,6 +87,11 @@ namespace _AP
 	export interface MidiObject extends TimeObject
 	{
 		readonly moments: Moment[];
+		setToStartAtBeginning(): void;
+		setToStartMarker(startMarkerMsPositionInScore: number): void;
+		advanceCurrentMoment(): Moment;
+		isMidiChord(): boolean;
+		currentMoment: Moment;
 	}
 
 	/*******************************************************/

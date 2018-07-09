@@ -56,7 +56,7 @@ _AP.midiObject = (function()
 
     // public MidiRest constructor
     // A MidiRest is functionally identical to a MidiChord.
-    // The only way to distinguish between the two is by using the instanceof operator.
+    // Use the isMidiChord function to distinguish between the two.
     MidiRest = function(scoreMidiElem, systemIndex)
     {
         if(!(this instanceof MidiRest))

@@ -26,7 +26,7 @@ _AP.score = (function(document)
 
 		MidiChord = _AP.midiObject.MidiChord,
 		MidiRest = _AP.midiObject.MidiRest,
-		Track = _AP.track.Track,
+		Track = _AP.Track,
 
 		InputChordDef = _AP.inputObjectDef.InputChordDef,
 		InputRestDef = _AP.inputObjectDef.InputRestDef,
