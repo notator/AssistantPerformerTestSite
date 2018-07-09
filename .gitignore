@@ -5,6 +5,7 @@
 *[1-9].svg
 # ji typescript generated .js files
 ts_out/*.js
+ts_out/*.map
 
 # User-specific files
 *.suo
