@@ -25,6 +25,39 @@ namespace _AP
 			return finalBarlineMsPos;
 		}
 
+		// Add the current ContinuousController state commands to the the first moment in each region.
+		public setRegionLinks(regionDefs: RegionDef[], regionNameSequence: string): void
+		{
+			let prevRegionLink: RegionLink | undefined = undefined;
+
+			for(let i = 0; i < regionNameSequence.length; ++i)
+			{
+				let regionName = regionNameSequence[i];
+				let regionDef = this.getRegionDef(regionDefs, regionName);
+				let regionLink: RegionLink = new RegionLink(this, regionDef, prevRegionLink);
+				prevRegionLink = regionLink;
+				this._regionLinks.push(regionLink);
+			}
+		}
+
+		private getRegionDef(regionDefs: RegionDef[], name: string): RegionDef
+		{
+			let regionDef: RegionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
+			for(let j = 0; j < regionDefs.length; ++j)
+			{
+				if(name.localeCompare(regionDefs[j].name) === 0)
+				{
+					regionDef = regionDefs[j];
+					break;
+				}
+			}
+			if(regionDef.name.length === 0)
+			{
+				throw "regionDef is not defined";
+			}
+			return regionDef;
+		}
+
 		// Sets the this.startStateMessages array containing messages that have been shunted from the start of the score.
 		// The array will be empty when the performance starts at the beginning of the score.
 		public setStartStateMessages(startMarkerMsPositionInScore: number)
@@ -341,6 +374,8 @@ namespace _AP
 		public startStateMessages: Message[] = [];
 		public midiObjects: MidiObject[] = [];
 		public isOn: boolean = true;
+
+		private _regionLinks: RegionLink[] = [];
 
 		private _currentMidiObjectIndex: number = -1;
 		private _currentMidiObject: MidiObject | null = null;

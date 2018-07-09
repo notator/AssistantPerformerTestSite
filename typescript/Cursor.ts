@@ -9,20 +9,12 @@ namespace _AP
 	{
 		constructor(
 			markersLayer: SVGGElement,
-			regionDefs: RegionDef[],
-			regionSequence: string,
 			endMarkerMsPosInScore: number,
 			systems: SvgSystem[],
-			tracks: Track[],
 			viewBoxScale: number,
 			systemChanged: Function
 		)
 		{
-			this.setRegionLinks(tracks, regionDefs, regionSequence);
-
-			// Add the current ContinuousController state commands to the the first moment in each region. (Outside cursor?)
-
-
 			this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 
 			this.setScoreCursorCoordinates(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
@@ -126,45 +118,6 @@ namespace _AP
 			return cursorLine;
 		}
 
-		private setRegionLinks(tracks: Track[], regionDefs: RegionDef[], regionNameSequence: string): void
-		{
-			for(let t = 0; t < tracks.length; ++t)
-			{
-				let track = tracks[t],
-					trackRegionLinks: RegionLink[] = [],
-					prevRegionLink: RegionLink | undefined = undefined;
-
-				for(let i = 0; i < regionNameSequence.length; ++i)
-				{
-					let regionName = regionNameSequence[i];
-					let regionDef = this.getRegionDef(regionDefs, regionName);
-					let regionLink: RegionLink = new RegionLink(track, regionDef, prevRegionLink);
-					prevRegionLink = regionLink;
-					trackRegionLinks.push(regionLink);
-				}
-
-				this.regionLinksPerTrack.push(trackRegionLinks);
-			}
-		}
-
-		private getRegionDef(regionDefs: RegionDef[], name: string): RegionDef
-		{
-			let regionDef: RegionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
-			for(let j = 0; j < regionDefs.length; ++j)
-			{
-				if(name.localeCompare(regionDefs[j].name) === 0)
-				{
-					regionDef = regionDefs[j];
-					break;
-				}
-			}
-			if(regionDef.name.length === 0)
-			{
-				throw "regionDef is not defined";
-			}
-			return regionDef;
-		}
-
 		/*--- end of constructor --------------------*/
 		/*--- begin setup ---------------------------*/
 
@@ -208,8 +161,6 @@ namespace _AP
 				}
 			}
 		}
-
-		public regionLinksPerTrack: RegionLink[][] = [];
 
 		private scoreCursorCoordinatesMap = new Map<number, CursorCoordinates>(); // msPositionInScore, cursorCoordinates
 		private yCoordinates: YCoordinates = {top: 0, bottom: 0};

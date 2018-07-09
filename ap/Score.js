@@ -1805,6 +1805,16 @@ _AP.score = (function(document)
 				return "aaba";
 			}
 
+			function setOutputTrackRegionLinks(outputTracks)
+			{
+				let regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
+				let regionNameSequence = getRegionSequence(); // a string such as "aabada"
+				for(let outputTrack of outputTracks)
+				{
+					outputTrack.setRegionLinks(regionDefs, regionNameSequence);
+				}
+			}
+
 			getVoiceObjects();
 
 			setTrackAttributes(outputTracks, inputTracks, systems[0].staves);
@@ -1877,13 +1887,12 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
-			regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
-			regionSequence = getRegionSequence(); // a string such as "aabada"
+			setOutputTrackRegionLinks(outputTracks);
 
 			setMarkers(systems, isLivePerformance);
 
 			// cursor is accessed outside the score using a getter function
-			cursor = new _AP.Cursor(markersLayer, regionDefs, regionSequence, endMarker.msPositionInScore, systems, tracksData.outputTracks, viewBoxScale, systemChanged); 
+			cursor = new _AP.Cursor(markersLayer, endMarker.msPositionInScore, systems, viewBoxScale, systemChanged); 
 
 			//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 			//        inputKeyRange.bottomKey
