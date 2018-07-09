@@ -293,6 +293,7 @@ namespace _AP
 			nMidiObjectsInRegion = regionLink.nextRegionMidiObjectsCount;
 
 			// set all midiObjects in the region except the first (which is set by setting the 'current' values below)
+			moIndex = startMidiObjectIndex + 1;
 			for(i = 1; i < nMidiObjectsInRegion; ++i)
 			{
 				midiObjects[moIndex++].setToStartAtBeginning();
