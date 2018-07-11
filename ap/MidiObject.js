@@ -40,8 +40,10 @@ _AP.midiObject = (function()
         Object.defineProperty(that, "_currentMomentIndex", { value: -1, writable: true });
     },
 
-    // public MidiChord constructor
-    // A MidiChord contains all the midi messages required for playing an (ornamented) chord. 
+	// public MidiChord constructor
+	// A MidiChord contains a private array of Moments containing all
+	// the midi messages required for playing an (ornamented) chord.
+	// A Moment is a collection of logically synchronous MIDI Messages.
     MidiChord = function(scoreMidiElem, systemIndex)
     {
         if(!(this instanceof MidiChord))
@@ -71,14 +73,7 @@ _AP.midiObject = (function()
 
     publicMidiObjectAPI =
     {
-        // public MidiChord constructor
-        // A MidiChord contains a private array of Moments containing all
-        // the midi messages required for playing an (ornamented) chord.
-        // A Moment is a collection of logically synchronous MIDI Messages.
         MidiChord: MidiChord,
-        // public MidiRest constructor
-        // A MidiRest is functionally identical to a MidiChord.
-        // The only way to distinguish between the two is by using the instanceof operator.
         MidiRest: MidiRest
     };
     // end var
@@ -774,27 +769,30 @@ _AP.midiObject = (function()
 		this.currentMoment = this.moments[0];
 		for(let moment of this.moments)
 		{
-			moment.timestamp = undefined;
+			moment.timestamp = _AP.moment.UNDEFINED_TIMESTAMP;
 		}
     };
 
-    // Returns true if this is a MidiChord, false if this is a MidiRest
-    // Both types can contain any number of moments, but MidiRests can contain no NoteOn messages.
+    // Returns true if the first moment in the MidiObject contains a NOTE_ON message with velocity > 0, false otherwise.
     MidiChord.prototype.isMidiChord = function ()
     {
-        var i, j, nMoments = this.moments.length, msgs, nMsgs, rval = false;
+		let nMoments = this.moments.length;
 
-        for(i = 0; i < nMoments; ++i)
-        {
-            msgs = this.moments[i].messages;
-            nMsgs = msgs.length;
-            for(j = 0; j < nMsgs; ++j)
+		if(nMoments === undefined || nMoments < 1)
+		{
+			throw "midiObject must have at least one moment.";
+		}
+
+		let msgs, nMsgs, rval = false;
+
+        msgs = this.moments[0].messages;
+        nMsgs = msgs.length;
+		for(let msg of msgs)
+		{ 
+			if(msg.command() === _AP.constants.COMMAND.NOTE_ON && msg.data[2] > 0)
             {
-                if(msgs[j].command() === _AP.constants.COMMAND.NOTE_ON)
-                {
-                    rval = true;
-                    break;
-                }
+                rval = true;
+                break;
             }
         }
 

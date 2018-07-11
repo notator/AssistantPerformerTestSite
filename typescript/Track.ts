@@ -188,7 +188,7 @@ namespace _AP
 		public setForOutputSpan(startMarkerMsPositionInScore: number, endMarkerMsPositionInScore:number)
 		{
 			var i: number, index: number = 0,
-				midiObject: MidiObject, midiObjects: MidiObject[],
+				midiObject: MidiObject,
 				midiChord: MidiObject, midiRest: MidiObject,
 				nMidiObjects: number;
 
@@ -197,8 +197,7 @@ namespace _AP
 				throw "Can't set OutputSpan!";
 			}
 
-			midiObjects = this.midiObjects;
-			nMidiObjects = midiObjects.length;
+			nMidiObjects = this.midiObjects.length;
 
 			for(i = 0; i < nMidiObjects; ++i)
 			{
@@ -206,9 +205,9 @@ namespace _AP
 				// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
 				// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
 				// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
-				if(midiObjects[i].isMidiChord())
+				if(this.midiObjects[i].isMidiChord())
 				{
-					midiChord = midiObjects[i];
+					midiChord = this.midiObjects[i];
 					if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
 						&& (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
 					{
@@ -229,9 +228,9 @@ namespace _AP
 						break;
 					}
 				}
-				else if(midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
+				else if(this.midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
 				{
-					midiRest = midiObjects[i];
+					midiRest = this.midiObjects[i];
 					midiRest.setToStartAtBeginning();
 					break;
 				}
@@ -240,7 +239,7 @@ namespace _AP
 			// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
 			for(i = index + 1; i < nMidiObjects; ++i)
 			{
-				midiObject = midiObjects[i];
+				midiObject = this.midiObjects[i];
 
 				if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
 				{
@@ -251,7 +250,7 @@ namespace _AP
 			}
 
 			this._currentMidiObjectIndex = index;
-			this._currentMidiObject = midiObjects[index];
+			this._currentMidiObject = this.midiObjects[index];
 			this.currentMoment = this._currentMidiObject.currentMoment;// a MidiChord or MidiRest
 			this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
 			// this.currentMoment is the first moment that is going to be played in this track.
@@ -265,21 +264,7 @@ namespace _AP
 				// this.startStateMessages will be an empty array when the performance starts at the beginning of the score.
 				this.setStartStateMessages(startMarkerMsPositionInScore);
 			}
-		}
-
-		public moveToNextRegion(regionIndexInPerformance:number): void
-		{
-			/* track.regionLinks is an array of regionLink objects that have the following attributes:
-			 *     .endOfRegionMsPositionInScore
-			 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
-			 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
-			 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries. 
-			 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
-			 * 
-			 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
-			 */
-			let currentRegionLink = this._regionLinks[regionIndexInPerformance];
-			this._setNextRegion(currentRegionLink);				
+			this.hasEndedRegion = false;
 		}
 
 		// ** Compare this code with setForOutputSpan() above. **
@@ -292,8 +277,7 @@ namespace _AP
 		// after its beginning).
 		private _setNextRegion(regionLink: RegionLink)
 		{
-			let i, midiObjects = this.midiObjects,
-				startMidiObjectIndex = -1, momentIndex = -1,
+			let i, startMidiObjectIndex = -1, momentIndex = -1,
 				nMidiObjectsInRegion = -1, moIndex = -1;
 
 			if(regionLink.nextRegionMidiObjectIndex === undefined
@@ -311,21 +295,53 @@ namespace _AP
 			moIndex = startMidiObjectIndex + 1;
 			for(i = 1; i < nMidiObjectsInRegion; ++i)
 			{
-				midiObjects[moIndex++].setToStartAtBeginning();
+				this.midiObjects[moIndex++].setToStartAtBeginning();
 			}
 
-			this._currentMidiObjectIndex = startMidiObjectIndex;
-			this._currentMidiObject = midiObjects[startMidiObjectIndex]; // a MidiChord or MidiRest
-			this.currentMoment = this._currentMidiObject.moments[momentIndex];// in a MidiChord or MidiRest
-			this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
-			this.hasEndedRegion = false; // is temporarily set to true when the track comes to the end of a region during a performance
+			this._setState(startMidiObjectIndex, momentIndex);
 
 			// The current ContinuousController state commands must be added
 			// to the the first moment in each region before the performance begins.
 		}
 
+		public moveToNextRegion(regionIndexInPerformance: number): void
+		{
+			/* track.regionLinks is an array of regionLink objects that have the following attributes:
+			 *     .endOfRegionMsPositionInScore
+			 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
+			 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
+			 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries. 
+			 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
+			 * 
+			 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
+			 */
+			let currentRegionLink = this._regionLinks[regionIndexInPerformance];
+			this._setNextRegion(currentRegionLink);
+		}
+
+		// Called at the end of a performance to reset the initial state (for further performances).
+		public setToFirstRegion(): void
+		{
+			let regionLink = this._regionLinks[0],
+				endMsPos = regionLink.endOfRegionMsPositionInScore; 
+
+			for(let midiObject of this.midiObjects)
+			{
+				if(midiObject.msPositionInScore < endMsPos)
+				{
+					midiObject.setToStartAtBeginning();
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			this._setState(0, 0);
+		}
+
 		// Returns Number.MAX_VALUE at end of track.
-		public currentMsPosition():number
+		public currentMsPosition(): number
 		{
 			let msPos = Number.MAX_VALUE;
 
@@ -341,7 +357,7 @@ namespace _AP
 			return msPos;
 		}
 
-		advanceCurrentMoment()
+		public advanceCurrentMoment(): void
 		{
 			if(this._currentMidiObject === null)
 			{
@@ -369,6 +385,15 @@ namespace _AP
 				}
 			}
 		};
+
+		private _setState(midiObjectIndex:number, momentIndexInChord:number)
+		{
+			this._currentMidiObjectIndex = midiObjectIndex;
+			this._currentMidiObject = this.midiObjects[midiObjectIndex]; // a MidiChord or MidiRest
+			this.currentMoment = this._currentMidiObject.moments[momentIndexInChord]; // in a MidiChord or MidiRest
+			this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+			this.hasEndedRegion = false; // is temporarily set to true when the track comes to the end of a region during a performance
+		}
 
 		public currentMoment: Moment | null = null;		
 		public startStateMessages: Message[] = [];

@@ -54,7 +54,7 @@ _AP.moment = (function ()
             return new Moment(msPositionInChord);
         }
 
-        if(msPositionInChord === undefined || msPositionInChord < UNDEFINED_TIMESTAMP)
+        if(msPositionInChord === undefined || msPositionInChord < 0)
         {
             throw "Error: Moment.msPositionInChord must be defined.";
         }
@@ -94,23 +94,20 @@ _AP.moment = (function ()
         }
 
         this.messages = this.messages.concat(moment2.messages);
-    };
+	};
 
-    // return a deep clone of this moment at a new msPositionReChord
-    Moment.prototype.getCloneAtOffset = function(offset)
-    {
-        var
-        i, originalMsg,
-        msPositionReChord = this.msPositionInChord + offset,
-        clone = new Moment(msPositionReChord);
+	// returns an object having a timestamp and a clone of this.messages[]
+	Moment.prototype.recordingData = function()
+	{
+		let rval = { timestamp: this.timestamp, messages: [] },
+			rvalMessages = rval.messages;
 
-        for(i = 0; i < this.messages.length; ++i)
-        {
-            originalMsg = this.messages[i];
-            clone.messages.push(originalMsg.clone());
-        }
-        return clone;
-    };
+		for(let message of this.messages)
+		{
+			rvalMessages.push(message.clone());
+		}
+		return rval;
+	};
 
     return publicAPI;
 

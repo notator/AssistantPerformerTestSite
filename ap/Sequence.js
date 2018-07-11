@@ -39,9 +39,11 @@ _AP.sequence = (function(window)
 		startOfRegion,
 		previousMomtMsPosInScore, // nextMoment()
 		currentMoment = null, // nextMoment(), resume(), tick()
-		endMarkerMsPosition,
 		endOfConductedPerformance,
 		endOfFinalRegion = false,
+
+		startMarkerMsPositionInScore,
+		endMarkerMsPositionInScore,
 
 		// used by setState()
 		pausedMoment = null, // set by pause(), used by resume()
@@ -156,6 +158,13 @@ _AP.sequence = (function(window)
 				var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 				setState("stopped");
 				reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+				for(let track of tracks)
+				{
+					if(track.isOn)
+					{
+						track.setToFirstRegion();
+					}
+				}
 			}
 
 			// Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
@@ -188,7 +197,7 @@ _AP.sequence = (function(window)
 						}
 						else
 						{
-							if((trackMsPos < endMarkerMsPosition) && (trackMsPos < nextMomtMsPosInScore))
+							if((trackMsPos < endMarkerMsPositionInScore) && (trackMsPos < nextMomtMsPosInScore))
 							{
 								nextTrack = track;
 								nextMomtMsPosInScore = trackMsPos;
@@ -229,7 +238,7 @@ _AP.sequence = (function(window)
 					if(endOfConductedPerformance === false)
 					{
 						nextMomt = new Moment(0, 0);  // dummy moment
-						trackNextMomtMsPos = endMarkerMsPosition;
+						trackNextMomtMsPos = endMarkerMsPositionInScore;
 						endOfConductedPerformance = true;
 					}
 					else
@@ -249,7 +258,7 @@ _AP.sequence = (function(window)
 					else
 					{
 						// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-						delay = (endMarkerMsPosition - previousMomtMsPosInScore) / speed;
+						delay = (endMarkerMsPositionInScore - previousMomtMsPosInScore) / speed;
 					}
 					window.setTimeout(stopAfterDelay, delay);
 				}
@@ -390,7 +399,7 @@ _AP.sequence = (function(window)
 						// subtracted from all the timestamps in the recording)
 
 						//console.log(currentMoment.timestamp.toString());
-						sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
+						sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addMoment(currentMoment);
 					}
 				}
 
@@ -537,7 +546,8 @@ _AP.sequence = (function(window)
 			speed = baseSpeed;
 			sequenceRecording = recording; // can be undefined or null
 
-			endMarkerMsPosition = endMarkerMsPosInScore;
+			startMarkerMsPositionInScore = startMarkerMsPosInScore;
+			endMarkerMsPositionInScore = endMarkerMsPosInScore;
 
 			initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 

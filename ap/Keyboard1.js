@@ -196,7 +196,7 @@ _AP.keyboard1 = (function()
 			// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
 			// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
 			// in the recording before saving the file. 
-			recording.addLiveMessage(uint8array, timestamp);
+			recording.addMessage(uint8array, timestamp);
 		}
 	},
 
