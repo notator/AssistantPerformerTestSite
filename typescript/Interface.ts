@@ -78,6 +78,7 @@ namespace _AP
 	{
 		readonly msPositionInChord: number;
 		readonly messages: Message[];
+		timestamp: number | undefined;
 	}
 	export interface TimeObject
 	{

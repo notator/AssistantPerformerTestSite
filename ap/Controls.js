@@ -1114,7 +1114,7 @@ _AP.controls = (function(document, window)
 			{
 				timer = performance; // use performance.now()           
 			}
-			player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
+			player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionLimits());
 		},
 
 		// called when the user clicks a control in the GUI

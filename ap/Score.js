@@ -44,8 +44,6 @@ _AP.score = (function(document)
 		// and reset when the tracksControl calls refreshDisplay().
 		trackIsOnArray = [], // all tracks, including input tracks
 
-		cursor, // The cursor that is going to replace all the RunningMarkers
-
 		viewBoxScale,
 
 		// The frame containing the cursorLine and the start- and end-markers
@@ -65,8 +63,10 @@ _AP.score = (function(document)
 		runningMarker,
 		endMarker,
 		conductor, // an object that has a now() function).
+		cursor, // The cursor that is going to replace all the RunningMarkers
 		systemChanged, // callback, called when running cursor changes systems
 
+		regionLimits,
 		finalBarlineInScore,
 
 		getConductor = function(speed)
@@ -1282,7 +1282,6 @@ _AP.score = (function(document)
 				voiceIndex, nVoices, voice,
 				staffIndex, nStaves, staff,
 				sysIndex, nSystems = systems.length, system, systemElem,
-				regionDefs, regionSequence,
 				inputChord;
 
 			// Gets the timeObjects for both input and output voices. 
@@ -1805,14 +1804,48 @@ _AP.score = (function(document)
 				return "aaba";
 			}
 
-			function setOutputTrackRegionLinks(outputTracks)
+			function setRegionData(outputTracks)
 			{
+				function setGlobalRegionLimits(regionDefs, regionNameSequence)
+				{
+					function getRegionDef(regionDefs, name)
+					{
+						let regionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
+						for(let j = 0; j < regionDefs.length; ++j)
+						{
+							if(name.localeCompare(regionDefs[j].name) === 0)
+							{
+								regionDef = regionDefs[j];
+								break;
+							}
+						}
+						if(regionDef.name.length === 0)
+						{
+							throw "regionDef is not defined";
+						}
+						return regionDef;
+					}
+
+					regionLimits = []; // global in score
+					for(let i = 0; i < regionNameSequence.length; ++i)
+					{
+						let regionName = regionNameSequence[i];
+						let regionDef = getRegionDef(regionDefs, regionName);
+						let regionData = {};
+						regionData.startMsPosInScore = regionDef.startMsPositionInScore;
+						regionData.endMsPosInScore = regionDef.endMsPositionInScore;						
+						regionLimits.push(regionData); // global in score
+					}
+				}
+
 				let regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
 				let regionNameSequence = getRegionSequence(); // a string such as "aabada"
 				for(let outputTrack of outputTracks)
 				{
 					outputTrack.setRegionLinks(regionDefs, regionNameSequence);
 				}
+
+				setGlobalRegionLimits(regionDefs, regionNameSequence);
 			}
 
 			getVoiceObjects();
@@ -1887,7 +1920,7 @@ _AP.score = (function(document)
 			tracksData.inputTracks = inputTracks;
 			tracksData.outputTracks = outputTracks;
 
-			setOutputTrackRegionLinks(outputTracks);
+			setRegionData(outputTracks);
 
 			setMarkers(systems, isLivePerformance);
 
@@ -1921,6 +1954,11 @@ _AP.score = (function(document)
 		getStartMarker = function()
 		{
 			return startMarker; // is undefined before a score is loaded
+		},
+
+		getRegionLimits = function()
+		{
+			return regionLimits; // is undefined before a score is loaded
 		},
 
 		// an empty score
@@ -1984,6 +2022,7 @@ _AP.score = (function(document)
 			this.getMarkersLayer = getMarkersLayer;
 			this.getCursor = getCursor;
 			this.getStartMarker = getStartMarker;
+			this.getRegionLimits = getRegionLimits;
 
 			// The TracksControl controls the display, and should be the only module to call this function.
 			this.refreshDisplay = refreshDisplay;

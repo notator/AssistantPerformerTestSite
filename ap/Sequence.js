@@ -36,10 +36,12 @@ _AP.sequence = (function(window)
 		tracks,
 
 		previousTimestamp = null, // nextMoment()
-		previousMomtMsPos, // nextMoment()
+		startOfRegion,
+		previousMomtMsPosInScore, // nextMoment()
 		currentMoment = null, // nextMoment(), resume(), tick()
 		endMarkerMsPosition,
 		endOfConductedPerformance,
+		endOfFinalRegion = false,
 
 		// used by setState()
 		pausedMoment = null, // set by pause(), used by resume()
@@ -51,6 +53,9 @@ _AP.sequence = (function(window)
 		lastReportedMsPosition = -1, // set by tick() used by nextMoment()
 		msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 		systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
+
+		regionLimits, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
+		currentRegionIndex, // the index in the regionLimits array
 
 		// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 		performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -144,10 +149,7 @@ _AP.sequence = (function(window)
 		nextMoment = function()
 		{
 			var
-				track, nTracks = tracks.length,
-				nextMomtMsPos, trackNextMomtMsPos,
-				nextMomt = null,
-				delay;
+				track, nextMomtMsPosInScore, trackNextMomtMsPos, nextMomt = null, delay;
 
 			function stopAfterDelay()
 			{
@@ -158,29 +160,63 @@ _AP.sequence = (function(window)
 
 			// Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
 			// or null if the earliest nextMsPosition is >= endMarkerMsPosition.
-			function getNextTrack(tracks, nTracks)
+			function getNextTrack(tracks)
 			{
-				var track, i, nextTrack = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
+				let nextTrack = null, trackMsPos, nextMomtMsPosInScore = Number.MAX_VALUE;
 
-				for(i = 0; i < nTracks; ++i)
+				function moveToNextRegion(tracks)
 				{
-					track = tracks[i];
-					if(track.isOn)
+					for(let track of tracks)
+					{
+						track.moveToNextRegion(currentRegionIndex);
+					}
+					currentRegionIndex++; // the (global) index in the regionLimits array
+				}
+
+				let nTracks = tracks.length;
+				let endOfRegion = true;
+
+				for(let t = 0; t < nTracks; ++t)
+				{
+					let track = tracks[t];
+					if(track.isOn && track.hasEndedRegion === false)
 					{
 						trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-
-						if((trackMsPos < endMarkerMsPosition) && (trackMsPos < nextMomtMsPos))
+						if(trackMsPos >= regionLimits[currentRegionIndex].endMsPosInScore)
 						{
-							nextTrack = track;
-							nextMomtMsPos = trackMsPos;
+							track.hasEndedRegion = true;
 						}
+						else
+						{
+							if((trackMsPos < endMarkerMsPosition) && (trackMsPos < nextMomtMsPosInScore))
+							{
+								nextTrack = track;
+								nextMomtMsPosInScore = trackMsPos;
+							}
+							endOfRegion = false;
+						}
+					}
+				}
+
+				if(endOfRegion)
+				{
+					if(currentRegionIndex === regionLimits.length - 1)
+					{
+						nextTrack = null; // end of performance
+						endOfFinalRegion = true;
+					}
+					else
+					{
+						moveToNextRegion(tracks);
+						nextTrack = getNextTrack(tracks); // recursive call
+						startOfRegion = true;
 					}
 				}
 
 				return nextTrack;
 			}
 
-			track = getNextTrack(tracks, nTracks);
+			track = getNextTrack(tracks);
 
 			if(document.hidden === true)
 			{
@@ -205,8 +241,16 @@ _AP.sequence = (function(window)
 				{
 					// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
 					setState("stopped");
-					// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-					delay = (endMarkerMsPosition - previousMomtMsPos) / speed;
+					if(endOfFinalRegion)
+					{
+						// ignore endMarkerMsPosition
+						delay = 100;
+					}
+					else
+					{
+						// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
+						delay = (endMarkerMsPosition - previousMomtMsPosInScore) / speed;
+					}
 					window.setTimeout(stopAfterDelay, delay);
 				}
 			}
@@ -219,13 +263,20 @@ _AP.sequence = (function(window)
 
 			if(!stopped && !paused)
 			{
-				nextMomtMsPos = trackNextMomtMsPos;
+				if(startOfRegion)
+				{
+					nextMomtMsPosInScore = regionLimits[currentRegionIndex].startMsPosInScore;
+				}
+				else
+				{
+					nextMomtMsPosInScore = trackNextMomtMsPos;
+				}
 
 				if((nextMomt.systemIndex !== undefined)
-					&& (nextMomtMsPos > lastReportedMsPosition))
+					&& ((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion ))
 				{
 					// the position will be reported by tick() when nextMomt is sent.
-					msPositionToReport = nextMomtMsPos;
+					msPositionToReport = nextMomtMsPosInScore;
 					systemIndexToReport = nextMomt.systemIndex;
 					//console.log("msPositionToReport=%i", msPositionToReport);
 				}
@@ -234,13 +285,22 @@ _AP.sequence = (function(window)
 				{
 					nextMomt.timestamp = startTimeAdjustedForPauses;
 				}
+				else if(startOfRegion)
+				{
+					let duration = (regionLimits[currentRegionIndex - 1].endMsPosInScore - previousMomtMsPosInScore) / speed;
+					//console.log("start of region moment duration: " + duration.toString());
+					nextMomt.timestamp = duration + previousTimestamp;
+					startOfRegion = false;
+				}
 				else
 				{
-					nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) / speed) + previousTimestamp;
+					let duration = (nextMomtMsPosInScore - previousMomtMsPosInScore) / speed;
+					//console.log("moment duration: " + duration.toString());
+					nextMomt.timestamp = duration + previousTimestamp;
 				}
 
 				previousTimestamp = nextMomt.timestamp;
-				previousMomtMsPos = nextMomtMsPos;
+				previousMomtMsPosInScore = nextMomtMsPosInScore;
 			}
 
 			return nextMomt; // null stops tick().
@@ -328,6 +388,8 @@ _AP.sequence = (function(window)
 						// before saving them in a Standard MIDI File.
 						// (i.e. the value of the earliest timestamp in the recording is
 						// subtracted from all the timestamps in the recording)
+
+						//console.log(currentMoment.timestamp.toString());
 						sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
 					}
 				}
@@ -408,7 +470,7 @@ _AP.sequence = (function(window)
 		// and so to synchronize the running cursor.
 		// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 		// attributes before play() is called.
-		init = function(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
+		init = function(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionLimitsArg)
 		{
 			if(timerArg === undefined || timerArg === null)
 			{
@@ -429,6 +491,7 @@ _AP.sequence = (function(window)
 			timer = timerArg; // performance or score.timePointer
 			tracks = this.outputTracks;
 			outputDevice = outputDeviceArg;
+			regionLimits = regionLimitsArg;
 			reportEndOfPerformance = reportEndOfPerfCallback;
 			reportNextMIDIObject = reportNextMIDIObjectCallback;
 
@@ -484,13 +547,17 @@ _AP.sequence = (function(window)
 			pausedMoment = null;
 			pauseStartTime = -1;
 			previousTimestamp = null;
-			previousMomtMsPos = startMarkerMsPosInScore;
+			previousMomtMsPosInScore = startMarkerMsPosInScore;
 			msPositionToReport = -1;
 			lastReportedMsPosition = -1;
 			endOfConductedPerformance = false;
 
 			performanceStartTime = timer.now();
 			startTimeAdjustedForPauses = performanceStartTime;
+			startOfRegion = false;
+
+			currentRegionIndex = 0;
+			endOfFinalRegion = false;
 
 			run();
 		},

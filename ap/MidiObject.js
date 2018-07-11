@@ -771,7 +771,11 @@ _AP.midiObject = (function()
     MidiChord.prototype.setToStartAtBeginning = function()
     {
         this._currentMomentIndex = 0;
-        this.currentMoment = this.moments[0];
+		this.currentMoment = this.moments[0];
+		for(let moment of this.moments)
+		{
+			moment.timestamp = undefined;
+		}
     };
 
     // Returns true if this is a MidiChord, false if this is a MidiRest

@@ -267,6 +267,21 @@ namespace _AP
 			}
 		}
 
+		public moveToNextRegion(regionIndexInPerformance:number): void
+		{
+			/* track.regionLinks is an array of regionLink objects that have the following attributes:
+			 *     .endOfRegionMsPositionInScore
+			 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
+			 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
+			 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries. 
+			 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
+			 * 
+			 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
+			 */
+			let currentRegionLink = this._regionLinks[regionIndexInPerformance];
+			this._setNextRegion(currentRegionLink);				
+		}
+
 		// ** Compare this code with setForOutputSpan() above. **
 		// When this function returns:
 		// this.currentMoment is the first moment that is going to be played in this track.
@@ -275,15 +290,15 @@ namespace _AP
 		// this.currentMoment will be null if there are no more moments to play in the track
 		// (i.e. if last midiObject in the track is a rest, and the performance is set to start
 		// after its beginning).
-		public setNextRegion(regionLink:RegionLink)
+		private _setNextRegion(regionLink: RegionLink)
 		{
 			let i, midiObjects = this.midiObjects,
 				startMidiObjectIndex = -1, momentIndex = -1,
 				nMidiObjectsInRegion = -1, moIndex = -1;
 
 			if(regionLink.nextRegionMidiObjectIndex === undefined
-			|| regionLink.nextRegionMomentIndex === undefined
-			|| regionLink.nextRegionMidiObjectsCount === undefined)
+				|| regionLink.nextRegionMomentIndex === undefined
+				|| regionLink.nextRegionMidiObjectsCount === undefined)
 			{
 				throw "Can't set next region.";
 			}
@@ -303,6 +318,7 @@ namespace _AP
 			this._currentMidiObject = midiObjects[startMidiObjectIndex]; // a MidiChord or MidiRest
 			this.currentMoment = this._currentMidiObject.moments[momentIndex];// in a MidiChord or MidiRest
 			this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+			this.hasEndedRegion = false; // is temporarily set to true when the track comes to the end of a region during a performance
 
 			// The current ContinuousController state commands must be added
 			// to the the first moment in each region before the performance begins.
@@ -335,23 +351,6 @@ namespace _AP
 
 			this.currentMoment = this._currentMidiObject.advanceCurrentMoment();
 
-			/* track.regionLinks is an array of regionLink objects that have the following attributes:
-			 *     .endOfRegionMsPositionInScore
-			 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
-			 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
-			 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries. 
-			 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
-			 * 
-			 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
-			 */
-
-			// let regionLink = this.regionLinks[this.regionIndex];
-			// if(this.currentMsPosition() >= regionLink.endOfRegionMsPositionInScore)
-			// {
-			//     this.setNextRegion(regionLink);
-			//     this.regionIndex++
-			// }
-
 			// MidiRests, and MidiChords that have ended, return null.
 			if(this.currentMoment === null)
 			{
@@ -375,6 +374,7 @@ namespace _AP
 		public startStateMessages: Message[] = [];
 		public midiObjects: MidiObject[] = [];
 		public isOn: boolean = true;
+		public hasEndedRegion: boolean = false;
 
 		private _regionLinks: RegionLink[] = [];
 
