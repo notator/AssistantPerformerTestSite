@@ -1,4 +1,7 @@
-﻿namespace _AP
+﻿
+/// <reference path="YCoordinates.ts" />
+
+namespace _AP
 {
 	export interface SvgSystem
 	{
