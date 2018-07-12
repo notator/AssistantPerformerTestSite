@@ -1,5 +1,4 @@
-﻿
-namespace _AP
+﻿namespace _AP
 {
 	export interface SvgSystem
 	{
@@ -66,25 +65,29 @@ namespace _AP
 	export interface Message
 	{
 		readonly data: number[];
-		command():number;
+		command(): number;
 		channel(): number;
 		clone(): Message;
 		toString(): string;
-		_getDataValues(argsLength: number, data1Arg:number, data2Arg:number): {data1:number, data2:number}
+		_getDataValues(argsLength: number, data1Arg: number, data2Arg: number): { data1: number, data2: number }
 		_checkArgSizes(status: number, data1: number, data2: number): void;
 		_getLength(status: number): number;
 	}
+
 	export interface Moment
 	{
 		readonly msPositionInChord: number;
 		readonly messages: Message[];
 		timestamp: number | undefined;
 	}
+
 	export interface TimeObject
 	{
 		readonly msPositionInScore: number;
 		readonly moments: Moment[] | undefined;
 	}
+
+	// implemented by both MidiChordDef and MidiRestDef
 	export interface MidiObject extends TimeObject
 	{
 		readonly moments: Moment[];
@@ -95,28 +98,97 @@ namespace _AP
 		currentMoment: Moment;
 	}
 
-	/*******************************************************/
+	/****************************************************/
 
-	export class InputChordDef
+	/*
+	 * ji 12.07.2018
+	 * The following definitions of the Input interfaces have not yet been checked or tested.
+	 * The authoritative version can be found in (the comments to) the corresponding javascript files.
+	 */
+
+	export interface CCSettings
 	{
-		constructor()
-		{ }
+		trackIndex: number;
+
+		// "disabled", "aftertouch", "channelPressure", "modulation", "volume", "expression",
+		// "timbre","brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
+		pressure?: string;
+
+		// "disabled", "pitch", "speed" or "pan"
+		pitchWheel?: string;
+
+		// possible values: same as pressure
+		modWheel?: string;  // see also maxVolume and minVolume
+
+		minVolume?: number; // an integer in range [1..127]. Is set if either pressure, or modulation messages are set to control volume
+		maxVolume?: number; // an integer in range [1..127]. Is set if either pressure, or modulation messages are set to control volume
+		pitchWheelDeviation?: number; // the number of semitones deviation when pitchWheel="pitch"
+		speedDeviation?: number; // the speed factor when pitchWheel="speed"
+		panOrigin?: number; // if defined, is in range [0..127] (centre is 64)
 	}
 
-	export class InputRestDef
+	// class defined in TrkOptions.js
+	export interface TrkOptions
 	{
-		constructor()
-		{ }
+		pedal?: string; // "holdAll" or "holdLast" or undefined
+		velocity: string; // "scaled" or "shared" or "overridden" or undefined
+		minVelocity: number; // an integer value in range[1..127]. Defined if velocity is defined.
+		speed: number; // undefined or a float value greater than 0. Higher values mean higher speed. This is the value by which to divide output durations in the trk.  
+		trkOff: string; // "stopChord", "stopNow", "fade" or undefined 
 	}
 
-	export class inputObjectDef
+	export interface Trk
 	{
-		static InputChordDef: any = InputChordDef.constructor;
-		static InputRestDef: any = InputRestDef.constructor;
-		constructor()
-		{
-
-		}
+		trkOptions: TrkOptions;
+		trackIndex: number;
+		midiObjectIndex: number;
+		midiObjects: MidiObject[];
 	}
- }
+
+	export interface SeqDef
+	{
+		trkOptions?: TrkOptions; // if defined is onSeq.trkOptions
+		trks: Trk[];
+	}
+
+	export interface NoteOnOrOff
+	{
+		seqDef: SeqDef;
+		trkOffs: number[];
+	}
+
+	export interface InputNote 
+	{
+		trkOptions: TrkOptions;
+		noteOn: NoteOnOrOff;
+		noteOff: NoteOnOrOff;
+	}
+
+	// implemented by both InputChordDef and InputRestDef
+	export interface InputObjectDef extends TimeObject
+	{
+		getOutputTrackPerMidiChannel(midiChannelPerOutputTrack: number[]): number[];
+		getCCSettings(ccSettingsNode: SVGElement, outputTrackPerMidiChannel: number[], nOutputTracks: number): CCSettings[];
+		getInputNotes(inputNotesNode: SVGElement, outputTrackPerMidiChannel: number[]): SVGElement[];
+		referencedOutputTrackIndices(): number[];
+
+		// The SVG file is read into the following fields using the above functions.
+		msDurationInScore: number;
+		ccSettings: CCSettings[]; // one value per output track
+		trkOptions?: TrkOptions[]; // undefined or an array of TrkOptions object (some of which can be undefined?)
+		inputNotes: InputNote[]; // an array of inputNote.
+	}
+
+	export interface InputChord
+	{
+		InputChord(inputChordDef: InputObjectDef, outputTrks: MidiObject[][], systemIndex:number): void
+		readonly msPositionInScore: number;
+		readonly msDurationInScore: number;
+		readonly alignment: number;
+		readonly systemIndex: number;
+		readonly ccSettings: number;
+		readonly trkOptions: TrkOptions;
+		readonly inputNotes: InputNote[];
+	}
+}
 
