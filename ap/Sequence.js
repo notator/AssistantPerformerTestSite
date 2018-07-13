@@ -42,8 +42,12 @@ _AP.sequence = (function(window)
 		endOfConductedPerformance,
 		endOfFinalRegion = false,
 
-		startMarkerMsPositionInScore,
+		//startMarkerMsPositionInScore,
 		endMarkerMsPositionInScore,
+
+		outputTracks,
+		//msPosMap,
+		//moveCursorLineTo,
 
 		// used by setState()
 		pausedMoment = null, // set by pause(), used by resume()
@@ -282,7 +286,7 @@ _AP.sequence = (function(window)
 				}
 
 				if((nextMomt.systemIndex !== undefined)
-					&& ((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion ))
+					&& ((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion))
 				{
 					// the position will be reported by tick() when nextMomt is sent.
 					msPositionToReport = nextMomtMsPosInScore;
@@ -498,9 +502,9 @@ _AP.sequence = (function(window)
 			}
 
 			timer = timerArg; // performance or score.timePointer
-			tracks = this.outputTracks;
+			tracks = outputTracks;
 			outputDevice = outputDeviceArg;
-			regionLimits = regionLimitsArg;
+			regionLimits = regionLimitsArg.slice(); // clone the array
 			reportEndOfPerformance = reportEndOfPerfCallback;
 			reportNextMIDIObject = reportNextMIDIObjectCallback;
 
@@ -523,11 +527,25 @@ _AP.sequence = (function(window)
 			// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
 			function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
-				var i,
-					// Note that the trackIsOnArray will also include input tracks if the score has any,
-					// but that these are ignored here because _tracks_ only contains the _output_ tracks.
-					nTracks = tracks.length,
-					track;
+				function getRegionStartMsPositionsInScore()
+				{
+					let rval = [];
+					rval.push(0); // always include the beginning of the score
+					for(let i = 0; i < regionLimits.length; ++i)
+					{
+						let rl = regionLimits[i];
+						if(rval.indexOf(rl.startMsPosInScore) < 0)
+						{
+							rval.push(rl.startMsPosInScore);
+						}
+					}
+					return rval;
+				}
+
+				let regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(),
+					i, nTracks = tracks.length, track;
+				// Note that the trackIsOnArray will also include input tracks if the score has any,
+				// but that these are ignored here because _tracks_ only contains the _output_ tracks.
 
 				for(i = 0; i < nTracks; ++i)
 				{
@@ -536,7 +554,7 @@ _AP.sequence = (function(window)
 
 					if(track.isOn)
 					{
-						track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
+						track.setOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
 					}
 				}
 			}
@@ -546,13 +564,11 @@ _AP.sequence = (function(window)
 			speed = baseSpeed;
 			sequenceRecording = recording; // can be undefined or null
 
-			startMarkerMsPositionInScore = startMarkerMsPosInScore;
+			//startMarkerMsPositionInScore = startMarkerMsPosInScore;
 			endMarkerMsPositionInScore = endMarkerMsPosInScore;
 
-			initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
-
 			outputDevice.reset();
-			outputDevice.sendStartStateMessages(tracks);
+			//outputDevice.sendStartStateMessages(tracks);
 
 			pausedMoment = null;
 			pauseStartTime = -1;
@@ -561,6 +577,8 @@ _AP.sequence = (function(window)
 			msPositionToReport = -1;
 			lastReportedMsPosition = -1;
 			endOfConductedPerformance = false;
+
+			initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 			performanceStartTime = timer.now();
 			startTimeAdjustedForPauses = performanceStartTime;
@@ -572,19 +590,50 @@ _AP.sequence = (function(window)
 			run();
 		},
 
+		setOutputTracks = function(outputTracksArg)
+		{
+			outputTracks = outputTracksArg;
+		},
+
+		//setMsPosMap = function(msPosMapArg)
+		//{
+		//	msPosMap = msPosMapArg;
+		//},
+
+		//setMoveCursorLineTo = function(moveCursorLineToArg)
+		//{
+		//	moveCursorLineTo = moveCursorLineToArg;
+		//},
+
+		getOutputTracks = function()
+		{
+			return tracks;
+		},
+
+		Sequence = function()
+		{
+			this.setOutputTracks = setOutputTracks;
+			//this.setMsPosMap = setMsPosMap;
+			//this.setMoveCursorLineTo = setMoveCursorLineTo;
+
+			this.getOutputTracks = getOutputTracks;
+
+			this.init = init;
+
+			this.setSpeed = setSpeed;
+
+			this.play = play;
+			this.pause = pause;
+			this.resume = resume;
+			this.stop = stop;
+			this.isStopped = isStopped;
+			this.isPaused = isPaused;
+			this.isRunning = isRunning;
+		},
+
 		publicAPI =
 		{
-			init: init,
-
-			setSpeed: setSpeed,
-
-			play: play,
-			pause: pause,
-			resume: resume,
-			stop: stop,
-			isStopped: isStopped,
-			isPaused: isPaused,
-			isRunning: isRunning
+			Sequence: Sequence
 		};
 	// end var
 

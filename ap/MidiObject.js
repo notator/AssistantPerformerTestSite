@@ -17,9 +17,9 @@ _AP.midiObject = (function()
 {
     "use strict";
     // begin var
-    var
-    Message = _AP.message.Message,
-    SysExMessage = _AP.message.SysExMessage,
+	var
+	Message = _AP.Message,
+	SysExMessage = _AP.SysExMessage,
     Moment = _AP.moment.Moment, // constructor
 
     // The rate (milliseconds) at which slider messages are sent.
@@ -776,17 +776,15 @@ _AP.midiObject = (function()
     // Returns true if the first moment in the MidiObject contains a NOTE_ON message with velocity > 0, false otherwise.
     MidiChord.prototype.isMidiChord = function ()
     {
-		let nMoments = this.moments.length;
+		let nMoments = this.moments.length,
+			msgs = this.moments[0].messages,
+			rval = false;
 
 		if(nMoments === undefined || nMoments < 1)
 		{
 			throw "midiObject must have at least one moment.";
 		}
 
-		let msgs, nMsgs, rval = false;
-
-        msgs = this.moments[0].messages;
-        nMsgs = msgs.length;
 		for(let msg of msgs)
 		{ 
 			if(msg.command() === _AP.constants.COMMAND.NOTE_ON && msg.data[2] > 0)

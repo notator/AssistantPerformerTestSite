@@ -21,7 +21,7 @@ _AP.controls = (function(document, window)
 
 		tracksControl = _AP.tracksControl,
 		Score = _AP.score.Score,
-		sequence = _AP.sequence,
+		Sequence = _AP.sequence.Sequence,
 		player, // player can be set to sequence, or to MIDI input event handlers such as _AP.mono1 or _AP.keyboard1.
 		SequenceRecording = _AP.sequenceRecording.SequenceRecording,
 		sequenceToSMF = _AP.standardMidiFile.sequenceToSMF,
@@ -473,7 +473,7 @@ _AP.controls = (function(document, window)
 			}
 			else if(player.isStopped())
 			{
-				sequenceRecording = new SequenceRecording(player.outputTracks);
+				sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
 				// the running marker is at its correct position:
 				// either at the start marker, or somewhere paused.
@@ -1093,17 +1093,16 @@ _AP.controls = (function(document, window)
 		initializePlayer = function(score, options)
 		{
 			var timer, speed,
-				outputTracks = score.getTracksData().outputTracks,
-				cursor = score.getCursor();
+				outputTracks = score.getTracksData().outputTracks;
+				//cursor = score.getCursor();
 
-			// sequence is a namespace, not a class.
-			player = sequence;
+			player = new Sequence();
 			// public player.outputTracks is needed for sending track initialization messages
-			player.outputTracks = outputTracks;
-			// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
-			player.msPosMap = cursor.msPosMap;
-			// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
-			player.moveCursorLineTo = cursor.moveCursorLineTo;
+			player.setOutputTracks(outputTracks);
+			//// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
+			//player.setMsPosMap(cursor.msPosMap);
+			//// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
+			//player.setMoveCursorLineTo(cursor.moveCursorLineTo);
 
 			if(options.isConducting)
 			{

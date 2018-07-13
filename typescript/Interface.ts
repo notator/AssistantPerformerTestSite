@@ -1,5 +1,6 @@
 ﻿
 /// <reference path="YCoordinates.ts" />
+/// <reference path="Message.ts" />
 
 namespace _AP
 {
@@ -65,17 +66,17 @@ namespace _AP
 
 	/*******************************************************/
 
-	export interface Message
-	{
-		readonly data: number[];
-		command(): number;
-		channel(): number;
-		clone(): Message;
-		toString(): string;
-		_getDataValues(argsLength: number, data1Arg: number, data2Arg: number): { data1: number, data2: number }
-		_checkArgSizes(status: number, data1: number, data2: number): void;
-		_getLength(status: number): number;
-	}
+	//export interface Message
+	//{
+	//	readonly data: number[];
+	//	command(): number;
+	//	channel(): number;
+	//	clone(): Message;
+	//	toString(): string;
+	//	_getDataValues(argsLength: number, data1Arg: number, data2Arg: number): { data1: number, data2: number }
+	//	_checkArgSizes(status: number, data1: number, data2: number): void;
+	//	_getLength(status: number): number;
+	//}
 
 	export interface Moment
 	{

@@ -45,6 +45,7 @@ namespace _AP
 	{
 		public readonly MODWHEEL = 1;
 		public readonly DATA_ENTRY_COARSE = 6;
+		public readonly DATA_ENTRY_FINE = 38;
 		public readonly VOLUME = 7;
 		public readonly PAN = 10;
 		public readonly EXPRESSION = 11;
