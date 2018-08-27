@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--file created: Monday 08.01.2018, 13:07:24-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
+	xsi:noNamespaceSchemaLocation="https://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
 		<websiteLink
 			aboutLinkText="About Study 3 sketch"
-			aboutLinkURL="http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html" />
+			aboutLinkURL="https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html" />
 	</metadata>
 	<dimensions>
 		<paper
