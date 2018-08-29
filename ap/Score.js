@@ -60,7 +60,6 @@ _AP.score = (function(document)
 		isConducting = false,
 
 		startMarker,
-		runningMarker,
 		endMarker,
 		conductor, // an object that has a now() function).
 		cursor, // The cursor that is going to replace all the RunningMarkers
