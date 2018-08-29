@@ -1229,41 +1229,9 @@ _AP.score = (function(document)
 		},
 
 		// Advances the running marker to msPosition (in any channel)
-		// if msPosition is >= that object's msPosition.
-		// If isConducting is true, and the runningMarker is moved to
-		// the next system, the timePointer is also moved to the next system.
 		// Does nothing when the end of the score is reached.
-		/*advanceRunningMarker = function(msPosition, systemIndexInScore)*/
 		advanceRunningMarker = function(msPosition)
 		{
-			//if(systemIndexInScore > runningMarker.systemIndexInScore)
-			//{
-			//	systemIndexInScore = runningMarker.systemIndexInScore + 1; // just to be sure!
-
-			//	// Move runningMarker and timePointer to msPosition in the next system.
-			//	runningMarker.setVisible(false);
-			//	if(runningMarker.systemIndexInScore < endMarker.systemIndexInScore)
-			//	{
-			//		runningMarker = systems[systemIndexInScore].runningMarker;
-			//		runningMarker.moveTo(msPosition);
-			//		runningMarker.setVisible(true);
-			//		if(isConducting)
-			//		{
-			//			conductor.setTimePointer(systems[systemIndexInScore].timePointer);
-			//		}
-			//		// callback for auto scroll
-			//		systemChanged(runningMarker.yCoordinates, systems[systemIndexInScore].pageOffsetTop);
-			//	}
-			//}
-			//else
-			//{
-			//	while(msPosition >= runningMarker.nextMsPosition)
-			//	{
-			//		// this function can assume that the runningMarker's currentPosition can simply be incremented
-			//		runningMarker.incrementPosition();
-			//	}
-
-			//}
 			cursor.moveCursorLineTo(msPosition);
 		},
 
