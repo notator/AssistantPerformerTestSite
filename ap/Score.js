@@ -521,28 +521,28 @@ _AP.score = (function(document)
 
 		hideRunningMarkers = function()
 		{
-			var i, nSystems = systems.length;
+			//var i, nSystems = systems.length;
 
-			for(i = 0; i < nSystems; ++i)
-			{
-				systems[i].runningMarker.setVisible(false);
-				if(isConducting)
-				{
-					systems[i].timePointer.setVisible(false);
-				}
-			}
+			//for(i = 0; i < nSystems; ++i)
+			//{
+			//	systems[i].runningMarker.setVisible(false);
+			//	if(isConducting)
+			//	{
+			//		systems[i].timePointer.setVisible(false);
+			//	}
+			//}
 
 			cursor.setVisible(false);
 		},
 
 		moveRunningMarkersToStartMarkers = function()
 		{
-			var i, nSystems = systems.length;
+			//var i, nSystems = systems.length;
 
-			for(i = 0; i < nSystems; ++i)
-			{
-				systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
-			}
+			//for(i = 0; i < nSystems; ++i)
+			//{
+			//	systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
+			//}
 
 			cursor.moveCursorLineTo(systems[0].startMarker.msPositionInScore);
 		},
