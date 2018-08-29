@@ -1233,7 +1233,8 @@ _AP.score = (function(document)
 		// If isConducting is true, and the runningMarker is moved to
 		// the next system, the timePointer is also moved to the next system.
 		// Does nothing when the end of the score is reached.
-		advanceRunningMarker = function(msPosition, systemIndexInScore)
+		/*advanceRunningMarker = function(msPosition, systemIndexInScore)*/
+		advanceRunningMarker = function(msPosition)
 		{
 			//if(systemIndexInScore > runningMarker.systemIndexInScore)
 			//{

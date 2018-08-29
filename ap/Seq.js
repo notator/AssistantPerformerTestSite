@@ -63,10 +63,6 @@ _AP.seq = (function()
 					if(moment.messages.length > 0)
 					{
 						trkMoment = {};
-						if(moment.systemIndex !== undefined)
-						{
-						    trkMoment.systemIndex = moment.systemIndex;
-						}
 					    // all moments have an msPositionInChord attribute (even in midiRests)
 						trkMoment.isFirstMomentInMidiObject = (moment.msPositionInChord === 0);
 						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;

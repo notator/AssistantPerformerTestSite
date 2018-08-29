@@ -30,7 +30,7 @@ _AP.timePointer = (function()
         /*** private interface */
         Object.defineProperty(this, "_originYinViewBox", { value: originY * viewBoxScale, writable: false });
         Object.defineProperty(this, "_viewBoxScale", { value: viewBoxScale, writable: false });
-        // The score.advanceRunningMarker(msPosition, systemIndex) function
+        // The score.advanceRunningMarker(msPosition) function
         Object.defineProperty(this, "_advanceRunningMarker", { value: advanceRunningMarker, writable: false });
 
         // Will be set to the system's startMarker
@@ -130,7 +130,6 @@ _AP.timePointer = (function()
         leftTimeObject, rightTimeObject,
         leftMsPos, rightMsPos, leftAlignment, rightAlignment,
         msOffset, pixelsPerMs, localAlignment,
-        systemIndex = this._runningMarker.systemIndex,
         moveToNextSystem = false;
 
         this.msPositionInScore += msIncrement;
@@ -151,7 +150,7 @@ _AP.timePointer = (function()
                 break;
             }
 
-            this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
+            this._advanceRunningMarker(rightTimeObject.msPositionInScore);
 
             leftTimeObject = this._runningMarker.currentTimeObject();
             rightTimeObject = this._runningMarker.nextTimeObject();
@@ -180,8 +179,7 @@ _AP.timePointer = (function()
             localAlignment = this._startMarker.alignment;
             this.setVisible(false);
 
-            systemIndex++;
-            this._advanceRunningMarker(rightTimeObject.msPositionInScore, systemIndex);
+            this._advanceRunningMarker(rightTimeObject.msPositionInScore);
 
         }
         this.graphicElement.setAttribute('transform', 'translate(' + localAlignment * this._viewBoxScale + ',' + this._originYinViewBox + ')');

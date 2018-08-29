@@ -47,7 +47,7 @@ _AP.moment = (function ()
     // it is initially set to the value sored in the score, but changes if the performance speed is not 100%.
     // During performances (when the absolute DOMHRT time is known) moment.msPositionInChord is used, with
     // the msPosition of the containing MidiChord or MidiRest, to set moment.timestamp. 
-    Moment = function (msPositionInChord, systemIndex)
+    Moment = function (msPositionInChord)
     {
         if (!(this instanceof Moment))
         {
@@ -60,7 +60,6 @@ _AP.moment = (function ()
         }
 
         Object.defineProperty(this, "msPositionInChord", { value: msPositionInChord, writable: true });
-        Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
 
         // The absolute time (DOMHRT) at which this moment is sent to the output device.
         // This value is always set in Sequence.nextMoment().
@@ -80,18 +79,12 @@ _AP.moment = (function ()
 
     // Adds the moment2.messages to the end of the current messages using
     // msPositionInChord attributes to check synchronousness.
-    // Sets this.systemIndex if necessary to flag that this is a possible place to align a runningMarker.
     // Throws an exception if moment2.msPositionInChord !== this.msPositionInChord.
     Moment.prototype.mergeMoment = function (moment2)
     {
         var msPositionInChord = this.msPositionInChord;
 
         console.assert(msPositionInChord === moment2.msPositionInChord, "Attempt to merge moments having different msPositionInChord values.");
-
-        if (moment2.systemIndex !== undefined)
-        {
-            Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
-        }
 
         this.messages = this.messages.concat(moment2.messages);
 	};

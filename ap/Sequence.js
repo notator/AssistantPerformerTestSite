@@ -58,7 +58,6 @@ _AP.sequence = (function(window)
 		reportNextMIDIObject,  // callback. Can be null or undefined. Set in play().
 		lastReportedMsPosition = -1, // set by tick() used by nextMoment()
 		msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
-		systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
 
 		regionLimits, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 		currentRegionIndex, // the index in the regionLimits array
@@ -285,12 +284,10 @@ _AP.sequence = (function(window)
 					nextMomtMsPosInScore = trackNextMomtMsPos;
 				}
 
-				if((nextMomt.systemIndex !== undefined)
-					&& ((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion))
+				if((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion)
 				{
 					// the position will be reported by tick() when nextMomt is sent.
 					msPositionToReport = nextMomtMsPosInScore;
-					systemIndexToReport = nextMomt.systemIndex;
 					//console.log("msPositionToReport=%i", msPositionToReport);
 				}
 
@@ -385,7 +382,7 @@ _AP.sequence = (function(window)
 			{
 				if(msPositionToReport >= 0)
 				{
-					reportNextMIDIObject(msPositionToReport, systemIndexToReport);
+					reportNextMIDIObject(msPositionToReport);
 					lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
 					msPositionToReport = -1;
 				}
@@ -475,9 +472,9 @@ _AP.sequence = (function(window)
 		// It is called in this file as:
 		//      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 		// The reportNextMIDIObjectCallback argument is a callback function which reports the current
-		// msPositionInScore and systemIndex back to the GUI while performing.
+		// msPositionInScore back to the GUI while performing.
 		// It is called here as:
-		//      reportNextMIDIObject(msPositionToReport, systemIndexToReport);
+		//      reportNextMIDIObject(msPositionToReport);
 		// The msPosition it passes back is the original number of milliseconds from the start of the score
 		// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 		// and so to synchronize the running cursor.
