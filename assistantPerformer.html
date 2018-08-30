@@ -375,18 +375,24 @@
 
     <script src="ap/Namespace.js"></script>
 
-    <script src="ts_out/Constants.js"></script>
-    <script src="ap/Utilities.js"></script>
+    <!--
+        <script type="module">
+            import constants from "./js6/Constants.js";
+            let c = constants.COMMAND.NOTE_OFF;
+        </script>
+     -->
 
-    <script src="ts_out/Message.js"></script>
+    <script type="module" src="./js6/Constants.js"></script>
+    <script type="module" src="./js6/Utilities.js"></script>
+    <script type="module" src="./js6/Message.js"></script>
 
     <script src="ap/Moment.js"></script>
     <script src="ap/MidiObject.js"></script>
-    <script src="ts_out/RegionLink.js"></script>
 
-    <script src="ts_out/MidiControls.js"></script>
+    <script type="module" src="./js6/RegionLink.js"></script>
+    <script type="module" src="./js6/MidiControls.js"></script>
+    <script type="module" src="./js6/Track.js"></script>
 
-    <script src="ts_out/Track.js"></script>
     <script src="ap/Conductor.js"></script>
     <script src="ap/Sequence.js"></script>
     <script src="ap/Seq.js"></script>
@@ -399,10 +405,10 @@
     <script src="ap/StartMarker.js"></script>
     <script src="ap/EndMarker.js"></script>
 
-    <script src="ts_out/RunningMarker.js"></script>
-    <script src="ts_out/YCoordinates.js"></script>
-    <script src="ts_out/CursorCoordinates.js"></script>
-    <script src="ts_out/Cursor.js"></script>
+    <script type="module" src="./js6/RunningMarker.js"></script>
+    <script type="module" src="./js6/YCoordinates.js"></script>
+    <script type="module" src="./js6/CursorCoordinates.js"></script>
+    <script type="module" src="./js6/Cursor.js"></script>
 
     <script src="ap/TimePointer.js"></script>
     <script src="ap/Score.js"></script>
@@ -411,6 +417,8 @@
 
     <script src="ap/Keyboard1.js"></script>
 
-    <script src="ap/Main.js"></script>
+    <script type="module" src="./js6/TestModule.js"></script>
+
+    <script src="ap/Main.js"></script> 
 </body>
 </html>

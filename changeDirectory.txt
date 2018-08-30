@@ -19,3 +19,5 @@ The typescript compiler (tsc) can also be executed from any other (external) com
 (e.g. "Eingabeaufforderung") by first changing the current directory with the following command:
 
 CD /D "D:\Visual Studio\Projects\MyWebsite\james-ingram-act-two\open-source\assistantPerformerTestSite"
+
+********************************************************************************************
