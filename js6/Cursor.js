@@ -1,7 +1,6 @@
 
-/// <reference path="Interface.ts" />
-/// <reference path="CursorCoordinates.ts" />
-/// <reference path="RegionLink.ts" />
+import { YCoordinates } from "./YCoordinates.js";
+import { CursorCoordinates } from "./CursorCoordinates.js";
 
 export class Cursor
 {
@@ -21,6 +20,7 @@ export class Cursor
 		this.viewBoxScale = viewBoxScale;
 		this.systemChanged = systemChanged;
 	}
+
 	// returns a Map that relates every msPositionInScore to a CursorCoordinates object.
 	// the map does not contain an entry for the final barline
 	setScoreCursorCoordinates(systems, viewBoxScale)
@@ -35,9 +35,10 @@ export class Cursor
 			}
 		}
 	}
+
 	getSystemCursorCoordinates(system, viewBoxScale)
 	{
-		let systemCCMap = new Map(), nStaves = system.staves.length, yCoordinates = new _AP.YCoordinates(system.startMarker);
+		let systemCCMap = new Map(), nStaves = system.staves.length, yCoordinates = new YCoordinates(system.startMarker);
 		for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 		{
 			let staff = system.staves[staffIndex], nVoices = staff.voices.length;
@@ -56,7 +57,7 @@ export class Cursor
 						let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
 						if(msPos < this.endMarkerMsPosInScore)
 						{
-							let cursorCoordinates = new _AP.CursorCoordinates(yCoordinates, tObj.alignment * viewBoxScale);
+							let cursorCoordinates = new CursorCoordinates(tObj.alignment * viewBoxScale, yCoordinates);
 							systemCCMap.set(msPos, cursorCoordinates);
 						}
 					}
@@ -68,7 +69,7 @@ export class Cursor
 						let tObj = timeObjects[ti], tObjPos = tObj.msPositionInScore;
 						if(systemCCMap.get(tObjPos) === undefined)
 						{
-							let cursorCoordinates = new _AP.CursorCoordinates(yCoordinates, tObj.alignment * viewBoxScale);
+							let cursorCoordinates = new CursorCoordinates(tObj.alignment * viewBoxScale, yCoordinates);
 							systemCCMap.set(tObjPos, cursorCoordinates);
 						}
 					}
@@ -77,6 +78,7 @@ export class Cursor
 		}
 		return systemCCMap;
 	}
+
 	newCursorLine(firstCursorCoordinates, viewBoxScale)
 	{
 		var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'), yCoordinates = firstCursorCoordinates.yCoordinates, alignment = firstCursorCoordinates.alignment;
@@ -89,6 +91,7 @@ export class Cursor
 		return cursorLine;
 	}
 	/*--- end of constructor --------------------*/
+
 	/*--- begin setup ---------------------------*/
 	setVisible(setToVisible)
 	{

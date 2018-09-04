@@ -1,17 +1,21 @@
 
 export class RegionLink
 {
-	constructor(track, regionDef, prevRegionLink)
+	constructor(trackMidiObjects, regionDef, prevRegionLink)
 	{
 		this.endOfRegionMsPositionInScore = regionDef.endMsPositionInScore;
 
-		let startMsPos = regionDef.startMsPositionInScore;
-		let midiObjects = track.midiObjects;
+		this.nextRegionMidiObjectIndex = null;
+		this.nextRegionMomentIndex = null;
+		this.nextRegionMidiObjectsCount = null;
+
+		let startMsPos = (prevRegionLink === undefined) ? 0 : regionDef.startMsPositionInScore;
+
 		let startMidiObjectIndex = -1;
 		let startMidiObjectMomentIndex = 0;
-		for(let midiObjectIndex = 0; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
+		for(let midiObjectIndex = 0; midiObjectIndex < trackMidiObjects.length; ++midiObjectIndex)
 		{
-			let midiObject = midiObjects[midiObjectIndex];
+			let midiObject = trackMidiObjects[midiObjectIndex];
 			let moments = midiObject.moments;
 			for(let momentIndex = 0; momentIndex < moments.length; ++momentIndex)
 			{
@@ -28,10 +32,11 @@ export class RegionLink
 				break;
 			}
 		}
+
 		let midiObjectsCount = 0;
-		for(let midiObjectIndex = startMidiObjectIndex; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
+		for(let midiObjectIndex = startMidiObjectIndex; midiObjectIndex < trackMidiObjects.length; ++midiObjectIndex)
 		{
-			let midiObject = midiObjects[midiObjectIndex];
+			let midiObject = trackMidiObjects[midiObjectIndex];
 			if(midiObject.msPositionInScore < regionDef.endMsPositionInScore)
 			{
 				midiObjectsCount++;
