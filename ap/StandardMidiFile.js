@@ -1,6 +1,6 @@
 ﻿/*
  *  copyright 2013 James Ingram
- *  http://james-ingram-act-two.de/
+ *  https://james-ingram-act-two.de/
  *
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
@@ -205,8 +205,7 @@ _AP.standardMidiFile = (function ()
                 // The recorded Sequence should never contain MIDI realTime messages.
                 function createMessageTimestamps(trackMoments)
                 {
-                    var
-                    isRealTimeStatus = _AP.constants.isRealTimeStatus,
+                    let
                     i, nMoments = trackMoments.length, moment,
                     j, nMessages, timestamp, message;
 
@@ -218,7 +217,7 @@ _AP.standardMidiFile = (function ()
                         for (j = 0; j < nMessages; ++j)
                         {
                             message = moment.messages[j];
-                            if(isRealTimeStatus(message.data[0]))
+							if(_AP.constants.isRealTimeStatus(message.data[0]))
                             {
                                 throw "Error: MIDI realTime messages should never be recorded in the Sequence.";
                             }

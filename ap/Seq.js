@@ -1,6 +1,6 @@
 /*
 * Copyright 2012 James Ingram
-* http://james-ingram-act-two.de/
+* https://james-ingram-act-two.de/
 *
 * Code licensed under MIT
 * https://github.com/notator/assistant-performer/blob/master/License.md
@@ -63,10 +63,6 @@ _AP.seq = (function()
 					if(moment.messages.length > 0)
 					{
 						trkMoment = {};
-						if(moment.systemIndex !== undefined)
-						{
-						    trkMoment.systemIndex = moment.systemIndex;
-						}
 					    // all moments have an msPositionInChord attribute (even in midiRests)
 						trkMoment.isFirstMomentInMidiObject = (moment.msPositionInChord === 0);
 						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;

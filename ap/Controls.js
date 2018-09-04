@@ -1,6 +1,6 @@
 /*
 *  copyright 2012 James Ingram
-*  http://james-ingram-act-two.de/
+*  https://james-ingram-act-two.de/
 *
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
@@ -21,7 +21,7 @@ _AP.controls = (function(document, window)
 
 		tracksControl = _AP.tracksControl,
 		Score = _AP.score.Score,
-		sequence = _AP.sequence,
+		Sequence = _AP.sequence.Sequence,
 		player, // player can be set to sequence, or to MIDI input event handlers such as _AP.mono1 or _AP.keyboard1.
 		SequenceRecording = _AP.sequenceRecording.SequenceRecording,
 		sequenceToSMF = _AP.standardMidiFile.sequenceToSMF,
@@ -43,10 +43,9 @@ _AP.controls = (function(document, window)
 		STUDY2_SCORE_INDEX = 4,
 		STUDY2_2STAVES_SCORE_INDEX = 5,
 		STUDY3_SKETCH1_SCORE_INDEX = 6,
-		STUDY3_SKETCH1_PAGES_SCORE_INDEX = 7,
-		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 8,
-		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 9,
-		TOMBEAU1_SCORE_INDEX = 10,
+		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
+		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 8,
+		TOMBEAU1_SCORE_INDEX = 9,
 
 		RESIDENT_SYNTH_INDEX = 1,
 
@@ -267,46 +266,36 @@ _AP.controls = (function(document, window)
 			}
 		},
 
-		setCursorAndEventListener = function(svgControlsState)
+		setEventListenersAndConductorsMouseCursor = function(svgControlsState)
 		{
-			var i,
-				s = score;
+			var s = score, markersLayer = s.getMarkersLayer();
 
-			if(s.markersLayers !== undefined)
+			if(markersLayer !== undefined)
 			{
 				switch(svgControlsState)
 				{
 					case 'settingStart':
-						for(i = 0; i < s.markersLayers.length; ++i)
-						{
-							s.markersLayers[i].addEventListener('click', s.setStartMarkerClick, false);
-							s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
-						}
+						markersLayer.addEventListener('click', s.setStartMarkerClick, false);
+						markersLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
 						break;
 					case 'settingEnd':
-						for(i = 0; i < s.markersLayers.length; ++i)
-						{
-							s.markersLayers[i].addEventListener('click', s.setEndMarkerClick, false);
-							s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
-						}
+						markersLayer.addEventListener('click', s.setEndMarkerClick, false);
+						markersLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
 						break;
 					case 'conducting':
 						globalElements.conductingLayer.style.visibility = "visible";
 						globalElements.conductingLayer.addEventListener('mousemove', s.conduct, false);
 						globalElements.conductingLayer.addEventListener('click', setConductorControlClicked, false);
-						globalElements.conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+						globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
 						break;
 					case 'stopped':
 						// According to
 						// https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
 						// "Calling removeEventListener() with arguments which do not identify any currently 
 						//  registered EventListener on the EventTarget has no effect."
-						for(i = 0; i < s.markersLayers.length; ++i)
-						{
-							s.markersLayers[i].removeEventListener('click', s.setStartMarkerClick, false);
-							s.markersLayers[i].removeEventListener('click', s.setEndMarkerClick, false);
-							s.markersLayers[i].style.cursor = 'auto';
-						}
+						markersLayer.removeEventListener('click', s.setStartMarkerClick, false);
+						markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
+						markersLayer.style.cursor = 'auto';
 						globalElements.conductingLayer.style.visibility = "hidden";
 						globalElements.conductingLayer.removeEventListener('mousemove', s.conduct, false);
 						globalElements.conductingLayer.removeEventListener('click', setConductorControlClicked, false);
@@ -337,7 +326,7 @@ _AP.controls = (function(document, window)
 
 			setMainOptionsState("toBack");
 
-			setCursorAndEventListener('stopped');
+			setEventListenersAndConductorsMouseCursor('stopped');
 
 			svgControlsState = 'stopped';
 
@@ -463,12 +452,12 @@ _AP.controls = (function(document, window)
 		// callback called by a performing sequence. Reports the msPositionInScore of the
 		// Moment curently being sent. When all the events in the span have been played,
 		// reportEndOfPerformance() is called (see above).
-		reportMsPos = function(msPositionInScore, systemIndex)
+		reportMsPos = function(msPositionInScore)
 		{
 			//console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
 			// If there is a graphic object in the score having msPositionInScore,
 			// the running cursor is aligned to that object.
-			score.advanceRunningMarker(msPositionInScore, systemIndex);
+			score.advanceRunningMarker(msPositionInScore);
 		},
 
 		startPlaying = function(isLivePerformance)
@@ -484,16 +473,18 @@ _AP.controls = (function(document, window)
 			}
 			else if(player.isStopped())
 			{
-				sequenceRecording = new SequenceRecording(player.outputTracks);
+				sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
 				// the running marker is at its correct position:
 				// either at the start marker, or somewhere paused.
 				score.setRunningMarkers();
+
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 				score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
 				startMarkerMsPosition = score.startMarkerMsPosition();
 				endMarkerMsPosition = score.endMarkerMsPosition();
+
 				if(options.isConducting === true)
 				{
 					baseSpeed = 1;
@@ -556,7 +547,7 @@ _AP.controls = (function(document, window)
 
 				// The tracksControl is only initialised after a specific score is loaded.
 
-				setCursorAndEventListener('stopped');
+				setEventListenersAndConductorsMouseCursor('stopped');
 			}
 
 			// setStopped is outer function
@@ -613,7 +604,7 @@ _AP.controls = (function(document, window)
 				cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 				cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-				setCursorAndEventListener('settingStart');
+				setEventListenersAndConductorsMouseCursor('settingStart');
 			}
 
 			function setSettingEnd()
@@ -637,7 +628,7 @@ _AP.controls = (function(document, window)
 				cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 				cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-				setCursorAndEventListener('settingEnd');
+				setEventListenersAndConductorsMouseCursor('settingEnd');
 			}
 
 			function toggleConducting()
@@ -668,7 +659,7 @@ _AP.controls = (function(document, window)
 
 					cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
 
-					setCursorAndEventListener('conducting');
+					setEventListenersAndConductorsMouseCursor('conducting');
 
 					score.setConducting(true);
 					score.moveStartMarkerToTop(globalElements.svgPagesFrame);
@@ -844,7 +835,7 @@ _AP.controls = (function(document, window)
 			}
 
 			// resets the score selector in case the browser has cached the last value
-			function initScoreSelector(runningMarkerHeightChanged)
+			function initScoreSelector(systemChanged)
 			{
 				// There is one soundFont per score type.
 				// The soundFont is added as an attribute to the scoreSelect option for the score.
@@ -857,25 +848,25 @@ _AP.controls = (function(document, window)
 							[
 								//{
 								//    name: "SongSix",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
 								//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
 								//    scoreSelectIndices: [1]
 								//},
 								//{
 								//    name: "Study2",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
 								//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
 								//    scoreSelectIndices: [2]
 								//},
 								//{
 								//    name: "Study3Sketch",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
 								//    presetIndices: [72, 78, 79, 113, 115, 117, 118],
 								//    scoreSelectIndices: [3, 4, 5, 6]
 								//},
 								{
 									name: "Grand Piano",
-									url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+									url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 									presetIndices: [0],
 									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
 								}
@@ -963,7 +954,7 @@ _AP.controls = (function(document, window)
 				}
 
 				globalElements.scoreSelect.selectedIndex = 0;
-				score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
+				score = new Score(systemChanged); // an empty score, with callback function
 				loadSoundFonts(globalElements.scoreSelect);
 			}
 
@@ -996,15 +987,15 @@ _AP.controls = (function(document, window)
 				cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
 			}
 
-			// callback passed to score. Called when the running marker moves to a new system.
-			function runningMarkerHeightChanged(runningMarkerYCoordinates, pageOffsetTop)
+			// callback passed to score, which passes it to cursor. Called when the running cursor moves to a new system.
+			function systemChanged(runningMarkerYCoordinates)
 			{
 				var div = globalElements.svgPagesFrame,
 					height = Math.round(parseFloat(div.style.height));
 
-				if((runningMarkerYCoordinates.bottom + pageOffsetTop) > (height + div.scrollTop))
+				if((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
 				{
-					div.scrollTop = runningMarkerYCoordinates.top + pageOffsetTop - 10;
+					div.scrollTop = runningMarkerYCoordinates.top - 10;
 				}
 			}
 
@@ -1024,7 +1015,7 @@ _AP.controls = (function(document, window)
 				midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 			}
 
-			initScoreSelector(runningMarkerHeightChanged);
+			initScoreSelector(systemChanged);
 
 			getControlLayers(document);
 
@@ -1073,6 +1064,26 @@ _AP.controls = (function(document, window)
 			return Math.exp(minv + scale * (position - minp));
 		},
 
+
+		//initializePlayer = function(score, options)
+		//{
+		//	var timer, speed, tracksData = score.getTracksData();
+
+		//	player = sequence; // sequence is a namespace, not a class.
+		//	player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+
+		//	if(options.isConducting)
+		//	{
+		//		speed = speedSliderValue(globalElements.speedControlInput.value);
+		//		timer = score.getConductor(speed); // use conductor.now()
+		//	}
+		//	else
+		//	{
+		//		timer = performance; // use performance.now()           
+		//	}
+		//	player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
+		//},
+
 		// Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
 		// Called again with options.isConducting===true if the conduct performance button is toggled on.
 		// If this is a live-conducted performance, sets the now() function to be the conductor's now().
@@ -1081,10 +1092,17 @@ _AP.controls = (function(document, window)
 		// (live) during other performances (normal Sequence and Keyboard1).
 		initializePlayer = function(score, options)
 		{
-			var timer, speed, tracksData = score.getTracksData();
+			var timer, speed,
+				outputTracks = score.getTracksData().outputTracks;
+				//cursor = score.getCursor();
 
-			player = sequence; // sequence is a namespace, not a class.
-			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+			player = new Sequence();
+			// public player.outputTracks is needed for sending track initialization messages
+			player.setOutputTracks(outputTracks);
+			//// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
+			//player.setMsPosMap(cursor.msPosMap);
+			//// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
+			//player.setMoveCursorLineTo(cursor.moveCursorLineTo);
 
 			if(options.isConducting)
 			{
@@ -1095,7 +1113,7 @@ _AP.controls = (function(document, window)
 			{
 				timer = performance; // use performance.now()           
 			}
-			player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
+			player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionLimits());
 		},
 
 		// called when the user clicks a control in the GUI
@@ -1132,61 +1150,55 @@ _AP.controls = (function(document, window)
 							scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Pianola Music";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
 						case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
 							scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Pianola Music";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
 						case STUDY1_SCORE_INDEX:
 							scoreInfo.path = "Study 1/Study 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 1";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
 							break;
 						case STUDY2_SCORE_INDEX:
 							scoreInfo.path = "Study 2/Study 2 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 2";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 							break;
 						case STUDY2_2STAVES_SCORE_INDEX:
 							scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 2";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 							break;
 						case STUDY3_SKETCH1_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-							break;
-						case STUDY3_SKETCH1_PAGES_SCORE_INDEX:
-							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
-							scoreInfo.inputHandler = "none";
-							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX:
 							scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
 							scoreInfo.inputHandler = "keyboard1";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case TOMBEAU1_SCORE_INDEX:
 							scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Tombeau 1";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
 							break;
 						default:
 							break;
@@ -1272,7 +1284,7 @@ _AP.controls = (function(document, window)
 				// served from IIS:
 				// e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
 				// or on the web:
-				// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+				// e.g. "https://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
 				// Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
 				function getScoresURL()
 				{
@@ -1589,7 +1601,7 @@ _AP.controls = (function(document, window)
 		// It does not require a MIDI input.
 		beginRuntime = function()
 		{
-			var tracksData;
+			let tracksData;
 
 			function setMIDIDevices(options)
 			{
@@ -1699,7 +1711,7 @@ _AP.controls = (function(document, window)
 					for(i = 0; i < nTracks; ++i)
 					{
 						track = tracks[i];
-						if(track.isPerforming)
+						if(track.isOn)
 						{
 							msgs = tracks[i].startStateMessages;
 							nMsgs = msgs.length;
@@ -1767,6 +1779,7 @@ _AP.controls = (function(document, window)
 			{
 				player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
 				player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+				player.cursor = score.getCursor(); // contains sims
 				player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
 			else

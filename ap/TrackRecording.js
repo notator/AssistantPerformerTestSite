@@ -1,6 +1,6 @@
 /*
  *  copyright 2012 James Ingram
- *  http://james-ingram-act-two.de/
+ *  https://james-ingram-act-two.de/
  *
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
@@ -8,35 +8,29 @@
  *  ap/TrackRecording.js
  *  The _AP.trackRecording namespace which defines the
  *      TrackRecording() empty TrackRecording constructor.
+ *      
+ *  Note that messages are recorded with their current (absolute DOMHRT) timestamp values.
+ *	These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
+ *	In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
+ *	in the recording before saving the file.
  *
  *  Public Interface:
- *      moments             // a temporally sorted array of Moments
- *
- *      The following public attributes should not need to be used by this
- *      library's clients. They are used by Sequence while performing:
- *          fromIndex
- *          currentIndex
- *          toIndex
- *
- *      // functions (defined on the prototype):
- *
- *          // Adds a moment to the trackRecording.
- *          // Used when constructing a trackRecording from information in a file
- *          // (such as a score or standard MIDI file).
- *          addMoment(moment)   
+ *  
+ *		// a temporally sorted array of moments, each of which has .timestamp and .message[] attributes
+ *      moments 
  *          
- *          // Adds a moment to the trackRecording.
- *          // Used in Sequence.tick() to record a moment (originally in the
- *          // score) being played live by the Performer.
- *          addLiveScoreMoment(moment)
- *          
- *          // Adds a moment to the trackRecording.
- *          // Used to record a moment (not originally in the score) containing
- *          // control information being added by the live performer.
- *          // Currently (1st March 2013), it is not possible to add noteOns
- *          // and/or noteOffs. That is something that could be developed...
- *          addLivePerformersControlMoment(moment)
- *      
+ *		// Adds moment data to the end of this TrackRecording using the moment's (absolute) timestamp
+ *		// field to determine whether or not to concatenate the messages with the current last moment's messages.
+ *		// The moment.recordingData() function returns a timestamped clone of the moment's messages.
+ *		// An exception is thrown if either the current last moment's or the new moment's
+ *		// timestamp has the value UNDEFINED_TIMESTAMP.		
+ *		addMoment(moment)
+ *		
+ *		// Called by SequenceRecording.addMessage() being called from Keyboard1.sendMIDIMessage()
+ *		// Adds the message(a Message object) to a moment at the end of this TrackRecording
+ *		// using the (absolute) timestamp to determine whether to add the message to the last (existing)
+ *		// moment or to create a new moment.
+ *		addMessage(message, timestamp)      
  */
 
 _AP.namespace('_AP.trackRecording');
@@ -56,10 +50,7 @@ _AP.trackRecording = (function ()
             return new TrackRecording();
         }
 
-        this.moments = []; // an array of Moments
-        this.fromIndex = -1;
-        this.currentIndex = -1;
-        this.toIndex = -1;
+        this.moments = []; // an array of {timestamp, Message[]} objects
     },
     
     // Add a moment to the end of this TrackRecording using the moment's (absolute) timestamp
@@ -104,118 +95,65 @@ _AP.trackRecording = (function ()
     };
     // end var
 
-    // Add a moment to the end of this TrackRecording using the moment's msPositionInScore
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the trackRecording.
-    // An exception is thrown if the new moment's msPositionInScore is
-    // UNDEFINED_TIMESTAMP or less than that of the current last moment in the TrackRecording.
-    TrackRecording.prototype.addMoment = function (moment)
-    {
-        var
-        moments = this.moments,
-        lastMoment = null,
-        lastMomentMsPos,
-        msPos = moment.msPositionInScore;
-
-        if (msPos === UNDEFINED_TIMESTAMP)
-        {
-            throw "Error: msPositionInScore error.";
-        }
-
-        if (moments.length === 0)
-        {
-            moments.push(moment); // can be a rest, containing one 'empty message'
-        }
-        else
-        {
-            lastMoment = moments[moments.length - 1];
-            lastMomentMsPos = lastMoment.msPositionInScore;
-
-            if ((lastMomentMsPos === UNDEFINED_TIMESTAMP)
-            || (msPos < lastMomentMsPos))
-            {
-                throw "Error: msPos error.";
-            }
-
-            if (msPos > lastMomentMsPos)
-            {
-                moments.push(moment); // can be a rest, containing one 'empty message'
-            }
-            else if (msPos === lastMomentMsPos)
-            {
-                lastMoment.mergeMoment(moment);
-            }
-        }
-    };
-
-    // Add a moment to the end of this TrackRecording using the moment's (absolute) timestamp
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the trackRecording.
+    // Adds moment data to the end of this TrackRecording using the moment's (absolute) timestamp
+    // field to determine whether or not to concatenate the messages with the current last moment's messages.
+	// The moment.recordingData() function returns a timestamped clone of the moment's messages.
     // An exception is thrown if either the current last moment's or the new moment's
     // timestamp has the value UNDEFINED_TIMESTAMP.
-    TrackRecording.prototype.addLiveScoreMoment = function (moment)
+    TrackRecording.prototype.addMoment = function (moment)
     {
         var moments = this.moments;
 
         if (moments.length === 0)
         {
-            moments.push(moment); // can be a rest, containing one 'empty message'
+            moments.push(moment.recordingData()); // can be a rest, containing one 'empty message'
         }
         else
         {
-            _addLiveMoment(moment, moments);
-        }
-    };
+			_addLiveMoment(moment.recordingData(), moments);
+		}
+	};
 
-	// Add the message (a Message object) to a moment at the end of this TrackRecording
-	// using the (absolute) timestamp to determine whether to add the message
-	// to the last (existing) moment or to create a new moment.
+	// Called by SequenceRecording.addMessage() being called from Keyboard1.sendMIDIMessage()
+	// Adds the message(a Message object) to a moment at the end of this TrackRecording
+	// using the (absolute) timestamp to determine whether to add the message to the last (existing)
+	// moment or to create a new moment.
 	// Note that messages are recorded with their current (absolute DOMHRT) timestamp values.
 	// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
 	// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
 	// in the recording before saving the file. 
-    TrackRecording.prototype.addLiveMessage = function(message, timestamp)
-    {
-    	var moments = this.moments, lastMoment, lastMomentTimestamp;
+	TrackRecording.prototype.addMessage = function(message, timestamp)
+	{
+		var moments = this.moments, lastMoment, lastMomentTimestamp;
 
-    	function addNewMoment(moments, message, timestamp)
-    	{
-    		var newMoment = new _AP.moment.Moment(0); // msPositionInScore is irrelevant here
+		function addNewMoment(moments, message, timestamp)
+		{
+			var newMoment = new _AP.moment.Moment(0); // msPositionInScore is irrelevant here
 
-    		newMoment.timestamp = timestamp;
-    		newMoment.messages.push(message);
-    		moments.push(newMoment);
-    	}
+			newMoment.timestamp = timestamp;
+			newMoment.messages.push(message);
+			moments.push(newMoment);
+		}
 
-    	if(moments.length === 0)
-    	{
-    		addNewMoment(moments, message, timestamp);
-    	}
-    	else
-    	{
-    		lastMoment = moments[moments.length - 1];
-    		lastMomentTimestamp = lastMoment.timestamp;
+		if(moments.length === 0)
+		{
+			addNewMoment(moments, message, timestamp);
+		}
+		else
+		{
+			lastMoment = moments[moments.length - 1];
+			lastMomentTimestamp = lastMoment.timestamp;
 
-    		if(timestamp > lastMomentTimestamp)
-    		{
-    			addNewMoment(moments, message, timestamp);
-    		}
-    		else if(timestamp <= lastMomentTimestamp)
-    		{
-    			// See the comment above.
-    			lastMoment.messages.push(message);
-    		}
-    	}
-    };
-
-    // Add a moment to the end of this TrackRecording using the moment's (absolute) timestamp
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the trackRecording.
-    // An exception is thrown if either the current last moment's or the new
-    // moment's timestamp has the value UNDEFINED_TIMESTAMP.
-    TrackRecording.prototype.addLivePerformersControlMoment = function (moment)
-    {
-        _addLiveMoment(moment, this.moments);
+			if(timestamp > lastMomentTimestamp)
+			{
+				addNewMoment(moments, message, timestamp);
+			}
+			else if(timestamp <= lastMomentTimestamp)
+			{
+				// See the comment above.
+				lastMoment.messages.push(message);
+			}
+       }
     };
 
     return publicTrackRecordingAPI;
