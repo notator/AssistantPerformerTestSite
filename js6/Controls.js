@@ -22,6 +22,7 @@ const
 	STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
 	STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 8,
 	TOMBEAU1_SCORE_INDEX = 9,
+	STUDY2_SCORE_WITH_REGIONS_INDEX = 10,
 
 	RESIDENT_SYNTH_INDEX = 1,
 
@@ -1190,6 +1191,12 @@ export class Controls
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Tombeau 1";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+						break;
+					case STUDY2_SCORE_WITH_REGIONS_INDEX:
+						scoreInfo.path = "Study 2 - with regions/Study 2 (scroll)";
+						scoreInfo.inputHandler = "none";
+						scoreInfo.aboutText = "about Study 2";
+						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 						break;
 					default:
 						break;
