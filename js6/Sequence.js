@@ -116,7 +116,7 @@ let
 				if(track.isOn && track.hasEndedRegion === false)
 				{
 					trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-					if(trackMsPos >= regionLimits[currentRegionIndex].endMsPosInScore)
+					if(trackMsPos >= regionLimits[currentRegionIndex].endMsPos)
 					{
 						track.hasEndedRegion = true;
 					}
@@ -199,7 +199,7 @@ let
 		{
 			if(startOfRegion)
 			{
-				nextMomtMsPosInScore = regionLimits[currentRegionIndex].startMsPosInScore;
+				nextMomtMsPosInScore = regionLimits[currentRegionIndex].startMsPos;
 			}
 			else
 			{
@@ -219,7 +219,7 @@ let
 			}
 			else if(startOfRegion)
 			{
-				let duration = (regionLimits[currentRegionIndex - 1].endMsPosInScore - previousMomtMsPosInScore) / speed;
+				let duration = (regionLimits[currentRegionIndex - 1].endMsPos - previousMomtMsPosInScore) / speed;
 				//console.log("start of region moment duration: " + duration.toString());
 				nextMomt.timestamp = duration + previousTimestamp;
 				startOfRegion = false;
@@ -496,9 +496,9 @@ export class Sequence
 				for(let i = 0; i < regionLimits.length; ++i)
 				{
 					let rl = regionLimits[i];
-					if(rval.indexOf(rl.startMsPosInScore) < 0)
+					if(rval.indexOf(rl.startMsPos) < 0)
 					{
-						rval.push(rl.startMsPosInScore);
+						rval.push(rl.startMsPos);
 					}
 				}
 				return rval;

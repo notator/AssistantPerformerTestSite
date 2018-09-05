@@ -253,14 +253,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 	</defs>
 	
-	<score:regionData>
-		<defs>
-			<regionDef name="a" startMsPosInScore="0" endMsPosInScore="4447" />
-			<regionDef name="b" startMsPosInScore="1234" endMsPosInScore="4447" />
-			<regionDef name="c" startMsPosInScore="2769" endMsPosInScore="7338" />
-		</defs>
-		<sequence>abcb</sequence>
-	</score:regionData>
+	<score:scoreData>
+		<regions>
+			<defs>
+				<!--
+					Each name must be a (any) single character.
+					The first regionDef must have startMsPos="0".
+					"msPosFinalBarline" can be used to indicate the msPos of the final barline in the score.
+				-->
+				<regionDef class="regionDef" name="a" startMsPos="0" endMsPos="4447" />
+				<regionDef class="regionDef" name="b" startMsPos="1234" endMsPos="4447" />
+				<regionDef class="regionDef" name="c" startMsPos="2769" endMsPos="7338" />
+				<regionDef class="regionDef" name="d" startMsPos="2769" endMsPos="msPosFinalBarline" />
+			</defs>
+			<!-- Not all the defined regions have to be present in the sequence (d is missing here). -->
+			<regionSequence class="regionSequence" sequence="abcbd" />
+		</regions>		
+	</score:scoreData>
 	
 	<g
 		class="systems">

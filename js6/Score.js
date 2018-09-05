@@ -26,6 +26,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The frame containing the cursorLine and the start- and end-markers
 	markersLayer,
 
+	regionDefs, // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
+	regionNameSequence, // a string such as "aabada"
+	regionLimits, 
+	finalBarlineInScore,
+
 	// See comments in the publicAPI definition at the bottom of this file.
 	systemElems = [], // an array of all the systemElems
 	systems = [], // an array of all the systems
@@ -42,9 +47,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	conductor, // an object that has a now() function).
 	cursor, // The cursor that is going to replace all the RunningMarkers
 	systemChanged, // callback, called when running cursor changes systems
-
-	regionLimits,
-	finalBarlineInScore,
 
 	getConductor = function(speed)
 	{
@@ -924,6 +926,62 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return markersLayer;
 		}
 
+		// returns the content of the svg <score:scoreData> element
+		function getScoreData(svgElem)
+		{
+			// returns the content of the <regions> element
+			function getRegionData(svgElem)
+			{
+				let	regionDefsElems = svgElem.getElementsByClassName("regionDef"),
+					regionDefs = [],
+					regionNameSequenceElem = svgElem.getElementsByClassName("regionSequence")[0],
+					regionNameSequence;
+
+				if(regionDefsElems.length === 0)
+				{
+					// default is to define a region that contains the whole score
+					regionDefs.push({ name: "a", startMsPos: 0, endMsPos: Number.MAX_VALUE });
+					regionNameSequence = "a";
+				}
+				else
+				{
+					for(let regionDefElem of regionDefsElems)
+					{
+						let regionDef = {},
+							name = regionDefElem.getAttribute("name"),
+							startMsPos = parseInt(regionDefElem.getAttribute("startMsPos"), 10),
+							endMsPosAttr = regionDefElem.getAttribute("endMsPos"), 
+							endMsPos = (endMsPosAttr === "msPosFinalBarline") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10);
+
+						//Each name must be a (any) single character.
+						console.assert(name.length === 1);
+						console.assert(!isNaN(startMsPos));
+						console.assert(!isNaN(endMsPos));
+
+						regionDef.name = name;
+						regionDef.startMsPos = startMsPos;
+						regionDef.endMsPos = endMsPos;
+						regionDefs.push(regionDef);
+					}
+
+					//The first regionDef must have startMsPos = "0".
+					console.assert(regionDefs[0].startMsPos === 0);
+
+					regionNameSequence = regionNameSequenceElem.getAttribute("sequence");
+				}
+
+				return { regionDefs, regionNameSequence };
+			}
+
+			let scoreData = {},
+				regionData = getRegionData(svgElem);
+
+			scoreData.regionDefs = regionData.regionDefs;
+			scoreData.regionNameSequence = regionData.regionNameSequence;
+				
+			return scoreData;
+		}
+
 		// Appends the markers and timePointers to the markerslayer.
 		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore)
 		{
@@ -1122,7 +1180,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
 		pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
-		localMarkersLayer = createMarkersLayer(svgElem); // markersLayer is global inside the score namespace  
+		localMarkersLayer = createMarkersLayer(svgElem); // markersLayer is global inside the score namespace
+
+		let scoreData = getScoreData(svgElem);
+		// module variables
+		regionDefs = scoreData.regionDefs;
+		regionNameSequence = scoreData.regionNameSequence;
 
 		pageSystems = [];
 		for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
@@ -1727,42 +1790,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return inputKeyRange;
 		}
 
-		function getRegionDefs()
-		{
-			// demo values (for Study 2 score)
-			let regionDefs =
-				[
-					// These regionDefs can be played more than once and in any order,
-					// according to a control string that is defined elsewhere.
-					// _Performances_ always begin at the beginning of the score. In other words,
-					// the startMsPositionInScore attribute of the first region actually to
-					// be performed is always overridden by the value 0.
-
-					// start: beginning of bar 2, 
-					// end:   top track, bar 3, midiObjectIndex 1(0 is a rest)
-					{ name: "a", startMsPositionInScore: 1234, endMsPositionInScore: 4447 },
-
-					// start: top track, bar 2, last three chords,
-					// end:   start of bar 4
-					{ name: "b", startMsPositionInScore: 2769, endMsPositionInScore: 7338 }
-				];
-
-			return regionDefs;
-		}
-
-		// demo function
-		function getRegionSequence()
-		{
-			return "aaba";
-		}
-
 		function setRegionData(outputTracks)
 		{
 			function setGlobalRegionLimits(regionDefs, regionNameSequence)
 			{
 				function getRegionDef(regionDefs, name)
 				{
-					let regionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
+					let regionDef = { name: "", startMsPos: -1, endMsPos: -1 };
 					for(let j = 0; j < regionDefs.length; ++j)
 					{
 						if(name.localeCompare(regionDefs[j].name) === 0)
@@ -1784,14 +1818,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					let regionName = regionNameSequence[i];
 					let regionDef = getRegionDef(regionDefs, regionName);
 					let regionData = {};
-					regionData.startMsPosInScore = regionDef.startMsPositionInScore;
-					regionData.endMsPosInScore = regionDef.endMsPositionInScore;
+					regionData.startMsPos = regionDef.startMsPos;
+					regionData.endMsPos = regionDef.endMsPos;
 					regionLimits.push(regionData); // global in score
 				}
 			}
 
-			let regionDefs = getRegionDefs(); // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
-			let regionNameSequence = getRegionSequence(); // a string such as "aabada"
 			for(let outputTrack of outputTracks)
 			{
 				outputTrack.setRegionLinks(regionDefs, regionNameSequence);

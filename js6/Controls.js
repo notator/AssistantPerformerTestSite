@@ -1345,18 +1345,6 @@ export class Controls
 
 					if(scoreInfoInputHandler === "keyboard1")
 					{
-//						let msg = `
-//Support for the Keyboard input device has been discontinued until
-//a solution for starting Workers from ES6 Modules has been found.
-//The files Keyboard1.js and TrackWorker.js have not been changed
-//since I discovered the problem (01.09.2018), but I've left them
-//in the AssistantPerformer/js6 folder in case they ever need to be
-//resurrected.
-//--
-//ji 01.09.2018`;
-
-//						alert(msg);
-//						throw new Error(msg);
 						options.inputHandler = new Keyboard1();
 					}
 					else
@@ -1816,20 +1804,7 @@ export class Controls
 		{
 			goControlClicked();
 		}
-		//}
-		//catch(e)
-		//{
-		//    window.alert(e);
-		//}
 	}
 }
-			//{
-			//	init: init,
 
-			//	doControl: doControl,
-			//	showOverRect: showOverRect,
-			//	hideOverRect: hideOverRect,
-
-			//	beginRuntime: beginRuntime
-			//};
 

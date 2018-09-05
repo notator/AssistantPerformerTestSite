@@ -3,13 +3,13 @@ export class RegionLink
 {
 	constructor(trackMidiObjects, regionDef, prevRegionLink)
 	{
-		this.endOfRegionMsPositionInScore = regionDef.endMsPositionInScore;
+		this.endOfRegionMsPositionInScore = regionDef.endMsPos;
 
 		this.nextRegionMidiObjectIndex = null;
 		this.nextRegionMomentIndex = null;
 		this.nextRegionMidiObjectsCount = null;
 
-		let startMsPos = (prevRegionLink === undefined) ? 0 : regionDef.startMsPositionInScore;
+		let startMsPos = (prevRegionLink === undefined) ? 0 : regionDef.startMsPos;
 
 		let startMidiObjectIndex = -1;
 		let startMidiObjectMomentIndex = 0;
@@ -37,7 +37,7 @@ export class RegionLink
 		for(let midiObjectIndex = startMidiObjectIndex; midiObjectIndex < trackMidiObjects.length; ++midiObjectIndex)
 		{
 			let midiObject = trackMidiObjects[midiObjectIndex];
-			if(midiObject.msPositionInScore < regionDef.endMsPositionInScore)
+			if(midiObject.msPositionInScore < regionDef.endMsPos)
 			{
 				midiObjectsCount++;
 			}
