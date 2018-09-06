@@ -14,8 +14,8 @@ export class RegionControls
 	constructor(channelIndex)
 	{
 		let status = Cmd.CONTROL_CHANGE + channelIndex,
-			allControllersOffMessage = new Message(status, CtlALL_CONTROLLERS_OFF),
-			allSoundOffMessage = new Message(status, CtlALL_SOUND_OFF);
+			allSoundOffMessage = new Message(status, CtlALL_SOUND_OFF),
+			allControllersOffMessage = new Message(status, CtlALL_CONTROLLERS_OFF);
 
 		Object.defineProperty(this, "aftertouchMessage", { value: null, writable: true });
 		Object.defineProperty(this, "programChangeMessage", { value: null, writable: true });
