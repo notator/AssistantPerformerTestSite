@@ -1079,7 +1079,8 @@ export class Controls
 			var div = globalElements.svgPagesFrame,
 				height = Math.round(parseFloat(div.style.height));
 
-			if((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
+			if(((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
+			|| ((runningMarkerYCoordinates.top) < (div.scrollTop)))
 			{
 				div.scrollTop = runningMarkerYCoordinates.top - 10;
 			}
