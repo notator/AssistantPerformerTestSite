@@ -4,7 +4,8 @@ import { Message } from "./Message.js";
 const
 	Cmd = constants.COMMAND,
 
-	CtlALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF;
+	CtlALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
+	CtlALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
 
 // This class is used when setting the inital control commands for each region.
 // These commands are sent whenever a performance of the region begins. 
@@ -13,14 +14,14 @@ export class RegionControls
 	constructor(channelIndex)
 	{
 		let status = Cmd.CONTROL_CHANGE + channelIndex,
-			data1 = CtlALL_CONTROLLERS_OFF,
-			allControllersOffMessage = new Message(status, data1);
+			allControllersOffMessage = new Message(status, CtlALL_CONTROLLERS_OFF),
+			allSoundOffMessage = new Message(status, CtlALL_SOUND_OFF);
 
 		Object.defineProperty(this, "aftertouchMessage", { value: null, writable: true });
 		Object.defineProperty(this, "programChangeMessage", { value: null, writable: true });
 		Object.defineProperty(this, "channelPressureMessage", { value: null, writable: true });
 		Object.defineProperty(this, "pitchWheelMessage", { value: null, writable: true });
-		Object.defineProperty(this, "controlMessages", { value: [allControllersOffMessage], writable: false });
+		Object.defineProperty(this, "controlMessages", { value: [allControllersOffMessage, allSoundOffMessage], writable: false });
 	}
 
 	// Set the corresponding currentControls values to the specific values in the moment messages.
