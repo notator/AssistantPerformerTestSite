@@ -884,7 +884,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionLimits());
+		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionDefSequence());
 	};
 
 export class Controls

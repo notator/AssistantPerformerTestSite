@@ -26,9 +26,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The frame containing the cursorLine and the start- and end-markers
 	markersLayer,
 
-	regionDefs, // each regionDef has .name, .startMsPositionInScore, .endMsPositioninScore
+	regionDefs, // each regionDef has .name, .fromStartOfBar, .startMsPos, .toEndofBar, .endMsPos
 	regionNameSequence, // a string such as "aabada"
-	regionLimits, 
+	regionDefSequence, 
 	finalBarlineInScore,
 
 	// See comments in the publicAPI definition at the bottom of this file.
@@ -940,7 +940,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				if(regionDefsElems.length === 0)
 				{
 					// default is to define a region that contains the whole score
-					regionDefs.push({ name: "a", startMsPos: 0, endMsPos: Number.MAX_VALUE });
+					regionDefs.push({ name: "a", fromStartOfBar:1, startMsPos: 0, toEndOfBar:"last", endMsPos: Number.MAX_VALUE });
 					regionNameSequence = "a";
 				}
 				else
@@ -949,17 +949,24 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					{
 						let regionDef = {},
 							name = regionDefElem.getAttribute("name"),
+							fromStartOfBar = parseInt(regionDefElem.getAttribute("fromStartOfBar"), 10),
 							startMsPos = parseInt(regionDefElem.getAttribute("startMsPos"), 10),
+							toEndOfBarAttr = regionDefElem.getAttribute("toEndOfBar"),
+							toEndOfBar = (toEndOfBarAttr === "final") ? "final" : parseInt(toEndOfBarAttr, 10), 
 							endMsPosAttr = regionDefElem.getAttribute("endMsPos"), 
-							endMsPos = (endMsPosAttr === "msPosFinalBarline") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10);
+							endMsPos = (toEndOfBarAttr === "final") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10);
 
 						//Each name must be a (any) single character.
 						console.assert(name.length === 1);
 						console.assert(!isNaN(startMsPos));
 						console.assert(!isNaN(endMsPos));
 
+						// fromStartOfBar and toEndOfBar correspond correctly to the msPos values,
+						// but they are currently just used as comments while debugging.
 						regionDef.name = name;
+						regionDef.fromStartOfBar = fromStartOfBar;
 						regionDef.startMsPos = startMsPos;
+						regionDef.toEndOfBar = toEndOfBar;
 						regionDef.endMsPos = endMsPos;
 						regionDefs.push(regionDef);
 					}
@@ -1792,11 +1799,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		function setRegionData(outputTracks)
 		{
-			function setGlobalRegionLimits(regionDefs, regionNameSequence)
+			function setGlobalRegionDefSequence(regionDefs, regionNameSequence)
 			{
 				function getRegionDef(regionDefs, name)
 				{
-					let regionDef = { name: "", startMsPos: -1, endMsPos: -1 };
+					let regionDef = { name: "" };
 					for(let j = 0; j < regionDefs.length; ++j)
 					{
 						if(name.localeCompare(regionDefs[j].name) === 0)
@@ -1812,15 +1819,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					return regionDef;
 				}
 
-				regionLimits = []; // global in score
+				regionDefSequence = []; // global in score
 				for(let i = 0; i < regionNameSequence.length; ++i)
 				{
 					let regionName = regionNameSequence[i];
 					let regionDef = getRegionDef(regionDefs, regionName);
-					let regionData = {};
-					regionData.startMsPos = regionDef.startMsPos;
-					regionData.endMsPos = regionDef.endMsPos;
-					regionLimits.push(regionData); // global in score
+					regionDefSequence.push(regionDef); // global in score
 				}
 			}
 
@@ -1829,7 +1833,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				outputTrack.setRegionLinks(regionDefs, regionNameSequence);
 			}
 
-			setGlobalRegionLimits(regionDefs, regionNameSequence);
+			setGlobalRegionDefSequence(regionDefs, regionNameSequence);
 		}
 
 		getVoiceObjects();
@@ -1940,9 +1944,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return startMarker; // is undefined before a score is loaded
 	},
 
-	getRegionLimits = function()
+	getRegionDefSequence = function()
 	{
-		return regionLimits; // is undefined before a score is loaded
+		return regionDefSequence; // is undefined before a score is loaded
 	};
 
 export class Score
@@ -2003,7 +2007,7 @@ export class Score
 		this.getMarkersLayer = getMarkersLayer;
 		this.getCursor = getCursor;
 		this.getStartMarker = getStartMarker;
-		this.getRegionLimits = getRegionLimits;
+		this.getRegionDefSequence = getRegionDefSequence;
 
 		// The TracksControl controls the display, and should be the only module to call this function.
 		this.refreshDisplay = refreshDisplay;

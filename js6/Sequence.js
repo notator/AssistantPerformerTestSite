@@ -28,7 +28,8 @@ let
 	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
 	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 
-	regionLimits, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
+	regionDefSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
+	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
 	currentRegionIndex, // the index in the regionLimits array
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
@@ -116,7 +117,7 @@ let
 				if(track.isOn && track.hasEndedRegion === false)
 				{
 					trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-					if(trackMsPos >= regionLimits[currentRegionIndex].endMsPos)
+					if(trackMsPos >= regionDefSequence[currentRegionIndex].endMsPos)
 					{
 						track.hasEndedRegion = true;
 					}
@@ -134,7 +135,7 @@ let
 
 			if(endOfRegion)
 			{
-				if(currentRegionIndex === regionLimits.length - 1)
+				if(currentRegionIndex === regionDefSequence.length - 1)
 				{
 					nextTrack = null; // end of performance
 					endOfFinalRegion = true;
@@ -199,7 +200,7 @@ let
 		{
 			if(startOfRegion)
 			{
-				nextMomtMsPosInScore = regionLimits[currentRegionIndex].startMsPos;
+				nextMomtMsPosInScore = regionDefSequence[currentRegionIndex].startMsPos;
 			}
 			else
 			{
@@ -219,7 +220,7 @@ let
 			}
 			else if(startOfRegion)
 			{
-				let duration = (regionLimits[currentRegionIndex - 1].endMsPos - previousMomtMsPosInScore) / speed;
+				let duration = (regionDefSequence[currentRegionIndex - 1].endMsPos - previousMomtMsPosInScore) / speed;
 				//console.log("start of region moment duration: " + duration.toString());
 				nextMomt.timestamp = duration + previousTimestamp;
 				startOfRegion = false;
@@ -440,8 +441,24 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionLimitsArg)
+	init(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionDefSequenceArg)
 	{
+		function getRegionStartMsPositionsInScore(regionDefSequence)
+		{
+			let rval = [];
+			rval.push(0); // always include the beginning of the score
+			for(let i = 0; i < regionDefSequence.length; ++i)
+			{
+				let rl = regionDefSequence[i];
+				if(rval.indexOf(rl.startMsPos) < 0)
+				{
+					rval.push(rl.startMsPos);
+				}
+			}
+			rval.sort(function(a, b) { return a - b; });
+			return rval;
+		}
+
 		if(timerArg === undefined || timerArg === null)
 		{
 			throw "The timer must be defined.";
@@ -461,7 +478,9 @@ export class Sequence
 		timer = timerArg; // performance or score.timePointer
 		tracks = outputTracks;
 		outputDevice = outputDeviceArg;
-		regionLimits = regionLimitsArg.slice(); // clone the array
+		regionDefSequence = regionDefSequenceArg.slice(); // clone the array
+		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionDefSequence);
+
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
 
@@ -487,25 +506,9 @@ export class Sequence
 		// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
 		// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
 		// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore)
 		{
-			function getRegionStartMsPositionsInScore()
-			{
-				let rval = [];
-				rval.push(0); // always include the beginning of the score
-				for(let i = 0; i < regionLimits.length; ++i)
-				{
-					let rl = regionLimits[i];
-					if(rval.indexOf(rl.startMsPos) < 0)
-					{
-						rval.push(rl.startMsPos);
-					}
-				}
-				return rval;
-			}
-
-			let regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(),
-				i, nTracks = tracks.length, track;
+			let i, nTracks = tracks.length, track;
 			// Note that the trackIsOnArray will also include input tracks if the score has any,
 			// but that these are ignored here because _tracks_ only contains the _output_ tracks.
 
@@ -540,7 +543,7 @@ export class Sequence
 		lastReportedMsPosition = -1;
 		endOfConductedPerformance = false;
 
-		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
 
 		performanceStartTime = timer.now();
 		startTimeAdjustedForPauses = performanceStartTime;
