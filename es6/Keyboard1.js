@@ -1582,8 +1582,8 @@ var
 					{
 						if(trackIsOnArray[i] === true)
 						{
-							//worker = new window.Worker("./js6/TrackWorker.js", { type: "module" }); Chrome error (1.9.2018): "loading workers as modules is not supported yet"
-							worker = new window.Worker("./js6/TrackWorker.js");
+							//worker = new window.Worker("./es6/TrackWorker.js", { type: "module" }); Chrome error (1.9.2018): "loading workers as modules is not supported yet"
+							worker = new window.Worker("./es6/TrackWorker.js");
 							worker.onerror = function()
 							{
 								console.log('worker.onerror called!');

@@ -9,7 +9,7 @@
 *  The utilities module which defines generally useful functions.   
 */
 
-import { constants } from "../js6/Constants.js";
+import { constants } from "../es6/Constants.js";
 
 let INPUT_ERROR_COLOR = constants.INPUT_ERROR_COLOR;
 

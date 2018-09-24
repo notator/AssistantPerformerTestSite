@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 2 (scroll)</dc:title>
-				<dc:date>Monday 27.08.2018, 20:09:02</dc:date>
+				<dc:date>Friday 14.09.2018, 22:15:25</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -152,7 +152,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
             {
                 stroke:black;
                 stroke-width:4.8px;
-                fill:none
+                fill:#EEEEFF
             }
             .opaqueBeam
             {
@@ -252,7 +252,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="72">Study 2 (scroll), Monday 27.08.2018, 20:08:56</text>
+			y="72">Study 2 (scroll), Friday 14.09.2018, 22:15:25</text>
 		<g
 			class="titles">
 			<text
@@ -307,10 +307,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="889.6">1</text>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -322,6 +318,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="800"
 						x2="503.2"
 						y2="928" />
+					<text
+						class="staffName"
+						x="232"
+						y="889.6">1</text>
 					<g
 						class="rest"
 						score:alignment="576.1384">
@@ -2578,10 +2578,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="1401.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -2593,6 +2589,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="1312"
 						x2="503.2"
 						y2="1440" />
+					<text
+						class="staffName"
+						x="232"
+						y="1401.6">2</text>
 					<g
 						class="chord"
 						score:alignment="576.1384">
@@ -5496,10 +5496,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="1881.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -5511,6 +5507,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="1792"
 						x2="503.2"
 						y2="1920" />
+					<text
+						class="staffName"
+						x="232"
+						y="1881.6">3</text>
 					<g
 						class="chord"
 						score:alignment="576.1384">
@@ -17907,23 +17907,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="2777.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="2496">7</text>
-						<rect
-							class="barNumberFrame"
-							x="457.456"
-							y="2428.56"
-							width="91.488"
-							height="89.4399" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -17935,6 +17918,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="2688"
 						x2="503.2"
 						y2="2816" />
+					<text
+						class="staffName"
+						x="232"
+						y="2777.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="457.456"
+							y="2428.56"
+							width="91.488"
+							height="89.4399" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="2496">7</text>
+					</g>
 					<g
 						class="beamBlock">
 						<path
@@ -20637,10 +20637,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="3289.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -20652,6 +20648,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="3200"
 						x2="503.2"
 						y2="3328" />
+					<text
+						class="staffName"
+						x="232"
+						y="3289.6">2</text>
 					<g
 						class="chord"
 						score:alignment="610.4473">
@@ -23569,10 +23569,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="3929.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -23584,6 +23580,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="3840"
 						x2="503.2"
 						y2="3968" />
+					<text
+						class="staffName"
+						x="232"
+						y="3929.6">3</text>
 					<g
 						class="chord"
 						score:alignment="610.4473">
@@ -35531,23 +35531,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="4857.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="4576">13</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="4508.56"
-							width="114.976"
-							height="89.4399" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -35559,6 +35542,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="4768"
 						x2="503.2"
 						y2="4896" />
+					<text
+						class="staffName"
+						x="232"
+						y="4857.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="4508.56"
+							width="114.976"
+							height="89.4399" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="4576">13</text>
+					</g>
 					<g
 						class="beamBlock">
 						<path
@@ -38242,10 +38242,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="5305.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -38257,6 +38253,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="5216"
 						x2="503.2"
 						y2="5344" />
+					<text
+						class="staffName"
+						x="232"
+						y="5305.6">2</text>
 					<g
 						class="beamBlock">
 						<path
@@ -41144,10 +41144,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="5881.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -41159,6 +41155,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="5792"
 						x2="503.2"
 						y2="5920" />
+					<text
+						class="staffName"
+						x="232"
+						y="5881.6">3</text>
 					<g
 						class="beamBlock">
 						<path
@@ -55183,23 +55183,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="6809.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="6528">19</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="6460.56"
-							width="114.976"
-							height="89.4399" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -55211,6 +55194,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="6720"
 						x2="503.2"
 						y2="6848" />
+					<text
+						class="staffName"
+						x="232"
+						y="6809.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="6460.56"
+							width="114.976"
+							height="89.4399" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="6528">19</text>
+					</g>
 					<g
 						class="chord"
 						score:alignment="563.6685">
@@ -57833,10 +57833,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="7353.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -57848,6 +57844,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="7264"
 						x2="503.2"
 						y2="7392" />
+					<text
+						class="staffName"
+						x="232"
+						y="7353.6">2</text>
 					<g
 						class="rest"
 						score:alignment="563.6685">
@@ -60650,10 +60650,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="7993.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -60665,6 +60661,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="7904"
 						x2="503.2"
 						y2="8032" />
+					<text
+						class="staffName"
+						x="232"
+						y="7993.6">3</text>
 					<g
 						class="chord"
 						score:alignment="563.6685">
@@ -72718,23 +72718,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="8857.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="8576">25</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="8508.56"
-							width="114.976"
-							height="89.4404" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -72746,6 +72729,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="8768"
 						x2="503.2"
 						y2="8896" />
+					<text
+						class="staffName"
+						x="232"
+						y="8857.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="8508.56"
+							width="114.976"
+							height="89.4404" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="8576">25</text>
+					</g>
 					<g
 						class="chord"
 						score:alignment="610.4473">
@@ -75725,10 +75725,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="9369.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -75740,6 +75736,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="9280"
 						x2="503.2"
 						y2="9408" />
+					<text
+						class="staffName"
+						x="232"
+						y="9369.6">2</text>
 					<g
 						class="chord"
 						score:alignment="610.4473">
@@ -78480,10 +78480,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="9913.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -78495,6 +78491,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="9824"
 						x2="503.2"
 						y2="9952" />
+					<text
+						class="staffName"
+						x="232"
+						y="9913.6">3</text>
 					<g
 						class="beamBlock">
 						<path
@@ -88985,23 +88985,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="10777.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="10496">31</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="10428.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -89013,6 +88996,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="10688"
 						x2="503.2"
 						y2="10816" />
+					<text
+						class="staffName"
+						x="232"
+						y="10777.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="10428.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="10496">31</text>
+					</g>
 					<g
 						class="rest"
 						score:alignment="589.2645">
@@ -92643,10 +92643,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="11225.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -92658,6 +92654,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="11136"
 						x2="503.2"
 						y2="11264" />
+					<text
+						class="staffName"
+						x="232"
+						y="11225.6">2</text>
 					<g
 						class="rest"
 						score:alignment="589.2645">
@@ -95745,10 +95745,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="11929.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -95760,6 +95756,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="11840"
 						x2="503.2"
 						y2="11968" />
+					<text
+						class="staffName"
+						x="232"
+						y="11929.6">3</text>
 					<g
 						class="beamBlock">
 						<path
@@ -107751,23 +107751,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="12729.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="12448">38</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="12380.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -107779,6 +107762,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="12640"
 						x2="503.2"
 						y2="12768" />
+					<text
+						class="staffName"
+						x="232"
+						y="12729.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="12380.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="12448">38</text>
+					</g>
 					<g
 						class="rest"
 						score:alignment="681.7703">
@@ -110878,10 +110878,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="13145.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -110893,6 +110889,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="13056"
 						x2="503.2"
 						y2="13184" />
+					<text
+						class="staffName"
+						x="232"
+						y="13145.6">2</text>
 					<g
 						class="chord"
 						score:alignment="681.7703">
@@ -113290,10 +113290,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="13753.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -113305,6 +113301,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="13664"
 						x2="503.2"
 						y2="13792" />
+					<text
+						class="staffName"
+						x="232"
+						y="13753.6">3</text>
 					<g
 						class="chord"
 						score:alignment="681.7703">
@@ -124342,23 +124342,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="14553.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="14272">44</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="14204.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -124370,6 +124353,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="14464"
 						x2="503.2"
 						y2="14592" />
+					<text
+						class="staffName"
+						x="232"
+						y="14553.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="14204.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="14272">44</text>
+					</g>
 					<g
 						class="beamBlock">
 						<path
@@ -127661,10 +127661,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="15001.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -127676,6 +127672,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="14912"
 						x2="503.2"
 						y2="15040" />
+					<text
+						class="staffName"
+						x="232"
+						y="15001.6">2</text>
 					<g
 						class="beamBlock">
 						<path
@@ -129806,10 +129806,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="15481.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -129821,6 +129817,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="15392"
 						x2="503.2"
 						y2="15520" />
+					<text
+						class="staffName"
+						x="232"
+						y="15481.6">3</text>
 					<g
 						class="beamBlock">
 						<path
@@ -137160,23 +137160,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="16249.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="15968">50</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="15900.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -137188,6 +137171,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="16160"
 						x2="503.2"
 						y2="16288" />
+					<text
+						class="staffName"
+						x="232"
+						y="16249.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="15900.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="15968">50</text>
+					</g>
 					<g
 						class="beamBlock">
 						<path
@@ -140471,10 +140471,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="16665.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -140486,6 +140482,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="16576"
 						x2="503.2"
 						y2="16704" />
+					<text
+						class="staffName"
+						x="232"
+						y="16665.6">2</text>
 					<g
 						class="chord"
 						score:alignment="622.86">
@@ -142602,10 +142602,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="17113.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -142617,6 +142613,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="17024"
 						x2="503.2"
 						y2="17152" />
+					<text
+						class="staffName"
+						x="232"
+						y="17113.6">3</text>
 					<g
 						class="beamBlock">
 						<path
@@ -151469,23 +151469,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="17977.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="17696">56</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="17628.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -151497,6 +151480,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="17888"
 						x2="503.2"
 						y2="18016" />
+					<text
+						class="staffName"
+						x="232"
+						y="17977.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="17628.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="17696">56</text>
+					</g>
 					<g
 						class="rest"
 						score:alignment="576.1384">
@@ -154693,10 +154693,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="18457.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -154708,6 +154704,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="18368"
 						x2="503.2"
 						y2="18496" />
+					<text
+						class="staffName"
+						x="232"
+						y="18457.6">2</text>
 					<g
 						class="beamBlock">
 						<path
@@ -156625,10 +156625,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="18873.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -156640,6 +156636,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="18784"
 						x2="503.2"
 						y2="18912" />
+					<text
+						class="staffName"
+						x="232"
+						y="18873.6">3</text>
 					<g
 						class="chord"
 						score:alignment="576.1384">
@@ -162765,23 +162765,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="19641.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="19360">62</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="19292.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -162793,6 +162776,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="19552"
 						x2="503.2"
 						y2="19680" />
+					<text
+						class="staffName"
+						x="232"
+						y="19641.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="19292.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="19360">62</text>
+					</g>
 					<g
 						class="chord"
 						score:alignment="609.465">
@@ -166048,10 +166048,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="20153.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -166063,6 +166059,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="20064"
 						x2="503.2"
 						y2="20192" />
+					<text
+						class="staffName"
+						x="232"
+						y="20153.6">2</text>
 					<g
 						class="beamBlock">
 						<path
@@ -168054,10 +168054,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="20537.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -168069,6 +168065,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="20448"
 						x2="503.2"
 						y2="20576" />
+					<text
+						class="staffName"
+						x="232"
+						y="20537.6">3</text>
 					<g
 						class="chord"
 						score:alignment="609.465">
@@ -172365,23 +172365,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="21305.6">1</text>
-					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="503.2"
-							y="21024">68</text>
-						<rect
-							class="barNumberFrame"
-							x="445.712"
-							y="20956.56"
-							width="114.976"
-							height="89.4395" />
-					</g>
 					<use
 						class="clef"
 						href="#trebleClef3x8"
@@ -172393,6 +172376,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="21216"
 						x2="503.2"
 						y2="21344" />
+					<text
+						class="staffName"
+						x="232"
+						y="21305.6">1</text>
+					<g
+						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="445.712"
+							y="20956.56"
+							width="114.976"
+							height="89.4395" />
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="21024">68</text>
+					</g>
 					<g
 						class="rest"
 						score:alignment="580.0385">
@@ -176080,10 +176080,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="21657.6">2</text>
 					<use
 						class="clef"
 						href="#trebleClef8"
@@ -176095,6 +176091,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="21568"
 						x2="503.2"
 						y2="21696" />
+					<text
+						class="staffName"
+						x="232"
+						y="21657.6">2</text>
 					<g
 						class="beamBlock">
 						<path
@@ -178339,10 +178339,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				</g>
 				<g
 					class="voice">
-					<text
-						class="staffName"
-						x="232"
-						y="21945.6">3</text>
 					<use
 						class="clef"
 						href="#trebleClef"
@@ -178354,6 +178350,10 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y1="21856"
 						x2="503.2"
 						y2="21984" />
+					<text
+						class="staffName"
+						x="232"
+						y="21945.6">3</text>
 					<g
 						class="chord"
 						score:alignment="580.0385">
