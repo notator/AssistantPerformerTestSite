@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Tombeau 1 (scroll)</dc:title>
-				<dc:date>Friday 28.09.2018, 11:21:42</dc:date>
+				<dc:date>Monday 01.10.2018, 11:39:47</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -229,30 +229,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					class="regionDef"
 					name="A"
 					fromStartOfBar="1"
-					startMsPos="0"
+					startMsPosInScore="0"
 					toEndOfBar="7"
-					endMsPos="11626" />
+					endMsPosInScore="11626" />
 				<regionDef
 					class="regionDef"
 					name="B"
 					fromStartOfBar="7"
-					startMsPos="11626"
+					startMsPosInScore="11626"
 					toEndOfBar="32"
-					endMsPos="70334" />
+					endMsPosInScore="70334" />
 				<regionDef
 					class="regionDef"
 					name="C"
 					fromStartOfBar="7"
-					startMsPos="11626"
+					startMsPosInScore="11626"
 					toEndOfBar="17"
-					endMsPos="31727" />
+					endMsPosInScore="31727" />
 				<regionDef
 					class="regionDef"
 					name="D"
 					fromStartOfBar="32"
-					startMsPos="70334"
+					startMsPosInScore="70334"
 					toEndOfBar="72"
-					endMsPos="286210" />
+					endMsPosInScore="286210" />
 			</defs>
 			<regionSequence
 				class="regionSequence"
@@ -264,7 +264,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="63">Tombeau 1 (scroll), Friday 28.09.2018, 11:21:40</text>
+			y="63">Tombeau 1 (scroll), Monday 01.10.2018, 11:39:44</text>
 		<g
 			class="titles">
 			<text

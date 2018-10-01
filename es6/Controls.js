@@ -883,7 +883,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionDefSequence());
+		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getPerformanceRegionDefSequence());
 	};
 
 export class Controls

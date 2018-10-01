@@ -287,10 +287,10 @@ index, even if there are no NoteOn messages in the channel.`
 	// Called at the end of a performance to reset the initial state (for further performances).
 	setToFirstRegion()
 	{
-		let regionLink = this._regionLinks[0], endMsPos = regionLink.endOfRegionMsPositionInScore;
+		let regionLink = this._regionLinks[0], endMsPosInScore = regionLink.endOfRegionMsPositionInScore;
 		for(let midiObject of this.midiObjects)
 		{
-			if(midiObject.msPositionInScore < endMsPos)
+			if(midiObject.msPositionInScore < endMsPosInScore)
 			{
 				midiObject.setToStartAtBeginning();
 			}
