@@ -27,10 +27,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The frame containing the cursorLine and the start- and end-markers
 	markersLayer,
 
-	regionDefs, // each regionDef has .name, .fromStartOfBar, .startMsPosInScore, .toEndOfBar, .endMsPosInScore
-	regionNameSequence, // a string such as "aabada"
-	regionDefSequence, // used at runtime by tracks, and to calculate regionInstanceNamesPerMsPosInScore.
-	regionInstanceNamesPerMsPosInScore, // used by SetStartMarker and SetEndMarker tools 
+	regionSequence, // a list of unique region definitions. Used at runtime by tracks, and to calculate regionInstanceNamesPerMsPosInScore.
+	regionNamesPerMsPosInScore,
+	startRegionIndex,
+	endRegionIndex,
 	finalBarlineInScore,
 
 	// See comments in the publicAPI definition at the bottom of this file.
@@ -928,48 +928,33 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return markersLayer;
 		}
 
-		// returns the content of the svg <score:scoreData> element
-		function getScoreData(svgElem)
+		// uses the <regionSequence> element to set the following values (global inside Score.js):
+		// 	   startRegionIndex, endRegionIndex, regionSequence.
+		function getRegionData(svgElem)
 		{
-			// returns the content of the <regions> element
-			function getRegionData(svgElem)
+			let regionSeq = [],
+				regionDefElems = svgElem.getElementsByClassName("regionDef");
+
+			if(regionDefElems.length === 0)
 			{
-				let regionDefsElems = svgElem.getElementsByClassName("regionDef"),
-					regionDefs = [],
-					regionNameSequenceElem = svgElem.getElementsByClassName("regionSequence")[0],
-					regionNameSequence;
-
-				if(regionDefsElems.length === 0)
+				// default is to define a region that contains the whole score
+				regionSeq.push({ name: "a", fromStartOfBar: 1, startMsPosInScore: 0, toEndOfBar: "last", endMsPosInScore: Number.MAX_VALUE });
+			}
+			else
+			{
+				for(let regionDefElem of regionDefElems)
 				{
-					// default is to define a region that contains the whole score
-					regionDefs.push({ name: "a", fromStartOfBar: 1, startMsPosInScore: 0, toEndOfBar: "last", endMsPosInScore: Number.MAX_VALUE });
-					regionNameSequence = "a";
-				}
-				else
-				{
-					for(let regionDefElem of regionDefsElems)
-					{
-						let regionDef = new RegionDef(regionDefElem);
-
-						regionDefs.push(regionDef);
-					}
-
-					//The first regionDef must have startMsPosInScore = "0".
-					console.assert(regionDefs[0].startMsPosInScore === 0);
-
-					regionNameSequence = regionNameSequenceElem.getAttribute("sequence");
+					let regionDef = new RegionDef(regionDefElem);
+					regionSeq.push(regionDef);
 				}
 
-				return { regionDefs, regionNameSequence };
+				//The first regionDef must have startMsPosInScore = "0".
+				console.assert(regionSeq[0].startMsPosInScore === 0);
 			}
 
-			let scoreData = {},
-				regionData = getRegionData(svgElem);
-
-			scoreData.regionDefs = regionData.regionDefs;
-			scoreData.regionNameSequence = regionData.regionNameSequence;
-
-			return scoreData;
+			startRegionIndex = 0;
+			endRegionIndex = regionSeq.length - 1;
+			regionSequence = regionSeq;
 		}
 
 		// Appends the markers and timePointers to the markerslayer.
@@ -1172,10 +1157,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		localMarkersLayer = createMarkersLayer(svgElem); // markersLayer is global inside the score namespace
 
-		let scoreData = getScoreData(svgElem);
-		// module variables
-		regionDefs = scoreData.regionDefs;
-		regionNameSequence = scoreData.regionNameSequence;
+		getRegionData(svgElem); // sets regionSequence and default values for startRegionIndex, endRegionIndex. 
 
 		pageSystems = [];
 		for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
@@ -1782,79 +1764,33 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		function setRegionData(outputTracks)
 		{
-			// regionDefSequence is global in this module.
-			function setRegionDefSequence(regionDefs, regionNameSequence)
-			{
-				function getRegionDef(regionDefs, name)
-				{
-					let regionDef = { name: "" };
-					for(let j = 0; j < regionDefs.length; ++j)
-					{
-						if(name.localeCompare(regionDefs[j].name) === 0)
-						{
-							regionDef = regionDefs[j];
-							break;
-						}
-					}
-					if(regionDef.name.length === 0)
-					{
-						throw "regionDef is not defined";
-					}
-					return regionDef;
-				}
-
-				regionDefSequence = []; // Global in this module.
-				for(let i = 0; i < regionNameSequence.length; ++i)
-				{
-					let regionName = regionNameSequence[i],
-						regionDef = getRegionDef(regionDefs, regionName);
-
-					regionDefSequence.push(regionDef);
-				}
-			}
-
-			// Sets regionInstanceNamesPerMsPosInScore (global in score),
+			// Sets regionNamesPerMsPosInScore (global in score),
 			// which is used by the SetStartMarker and SetEndMarker tools.
-			function setRegionInstanceNamesPerMsPosInScore(regionDefs, regionNameSequence, regionDefSequence)
+			function setRegionNamesPerMsPosInScore(regionSequence)
 			{
 				// Returns an array containing one unique name per performed region.
 				// Uses Moritz' algorithm (A, A1, A2 etc.).
-				function getRegionInstanceNameSequence(regionDefs, regionNameSequence)
+				function getRegionNameSequence(regionSequence)
 				{
-					let baseNames = [], baseNameCounts = [];
-					for(let regionDef of regionDefs)
+					let names = [];
+					for(let region of regionSequence)
 					{
-						baseNames.push(regionDef.name);
-						baseNameCounts.push(0);
+						names.push(region.name);
 					}
-
-					let instanceNames = [];
-					for(let baseName of regionNameSequence)
-					{
-						let baseNameIndex = baseNames.indexOf(baseName);
-						let instanceName = baseName;
-						if(baseNameCounts[baseNameIndex] > 0)
-						{
-							instanceName += baseNameCounts[baseNameIndex].toString();
-						}
-
-						instanceNames.push(instanceName);
-						baseNameCounts[baseNameIndex]++;
-					}
-					return instanceNames;
+					return names;
 				}
 
-				function getRegionMsPosBounds(regionDefs)
+				function getRegionMsPosBounds(regionSequence)
 				{
 					let regionMsPosBounds = [];
-					for(let regionDef of regionDefs)
+					for(let region of regionSequence)
 					{
-						let msPositionInScore = regionDef.startMsPosInScore;
+						let msPositionInScore = region.startMsPosInScore;
 						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
 						{
 							regionMsPosBounds.push(msPositionInScore);
 						}
-						msPositionInScore = regionDef.endMsPosInScore;
+						msPositionInScore = region.endMsPosInScore;
 						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
 						{
 							regionMsPosBounds.push(msPositionInScore);
@@ -1862,21 +1798,21 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					}
 					regionMsPosBounds.sort((a, b) => (a - b));
 
-					return regionMsPosBounds; 
+					return regionMsPosBounds;
 				}
 
-				let regionInstanceNameSequence = getRegionInstanceNameSequence(regionDefs, regionNameSequence);
-				let regionMsPosBoundsInScore = getRegionMsPosBounds(regionDefs);
+				let regionNameSequence = getRegionNameSequence(regionSequence);
+				let regionMsPosBoundsInScore = getRegionMsPosBounds(regionSequence);
 
 				// global in Score.js: will contain objects of the form {startMsPosInScore, array of regionInstanceName}
-				regionInstanceNamesPerMsPosInScore = [];
+				regionNamesPerMsPosInScore = [];
 				for(let msPosInScore of regionMsPosBoundsInScore)
 				{
 					let regionInstanceNamesPerMsPos = [];
-					for(let i = 0; i < regionDefSequence.length; ++i)
+					for(let i = 0; i < regionSequence.length; ++i)
 					{
-						let regionDef = regionDefSequence[i],
-							instanceName = regionInstanceNameSequence[i],
+						let regionDef = regionSequence[i],
+							instanceName = regionNameSequence[i],
 							duration = regionDef.endMsPosInScore - regionDef.startMsPosInScore;
 
 						if(msPosInScore >= regionDef.startMsPosInScore && msPosInScore < (regionDef.startMsPosInScore + duration))
@@ -1885,16 +1821,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						}
 					}
 					let entry = { msPosInScore, regionInstanceNamesPerMsPos };
-					regionInstanceNamesPerMsPosInScore.push(entry); 
+					regionNamesPerMsPosInScore.push(entry);
 				}
 			}
 
-			setRegionDefSequence(regionDefs, regionNameSequence);
-			setRegionInstanceNamesPerMsPosInScore(regionDefs, regionNameSequence, regionDefSequence);
+			setRegionNamesPerMsPosInScore(regionSequence);
 
 			for(let outputTrack of outputTracks)
 			{
-				outputTrack.setRegionLinks(regionDefs, regionNameSequence);
+				outputTrack.setRegionLinks(regionSequence);
 			}
 		}
 
@@ -2006,14 +1941,24 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return startMarker; // is undefined before a score is loaded
 	},
 
-	getRegionDefSequence = function()
+	getRegionSequence = function()
 	{
-		return regionDefSequence; // is undefined before a score is loaded (used at runtime)
+		return regionSequence; // is undefined before a score is loaded (used at runtime)
 	},
 
-	getRegionInstanceNamesPerMsPosInScore = function()
+	getRegionNamesPerMsPosInScore = function()
 	{
-		return regionInstanceNamesPerMsPosInScore; // is undefined before a score is loaded (used at runtime)
+		return regionNamesPerMsPosInScore; // is undefined before a score is loaded (used at runtime)
+	},
+
+	getStartRegionIndex = function()
+	{
+		return startRegionIndex;
+	},
+
+	getEndRegionIndex = function()
+	{
+		return endRegionIndex;
 	};
 
 export class Score
@@ -2074,8 +2019,10 @@ export class Score
 		this.getMarkersLayer = getMarkersLayer;
 		this.getCursor = getCursor;
 		this.getStartMarker = getStartMarker;
-		this.getRegionDefSequence = getRegionDefSequence;
-		this.getRegionInstanceNamesPerMsPosInScore = getRegionInstanceNamesPerMsPosInScore;
+		this.getRegionSequence = getRegionSequence;
+		this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
+		this.getStartRegionIndex = getStartRegionIndex;
+		this.getEndRegionIndex = getEndRegionIndex;
 
 		// The TracksControl controls the display, and should be the only module to call this function.
 		this.refreshDisplay = refreshDisplay;

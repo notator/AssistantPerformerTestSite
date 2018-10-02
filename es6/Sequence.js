@@ -500,7 +500,7 @@ export class Sequence
 	// recording is a Sequence to which timestamped moments are added as they are performed.
 	// Can be undefined or null. If used, it should be an empty Sequence having the same number
 	// of tracks as this (calling) sequence.
-	play(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
+	play(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndex, endMarkerMsPosInScore, baseSpeed, recording)
 	{
 		// Sets each (output) track's isOn attribute.
 		// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),

@@ -29,32 +29,14 @@ export class Track
 		return finalBarlineMsPos;
 	}
 
-	setRegionLinks(regionDefs, regionNameSequence)
+	setRegionLinks(regionSequence)
 	{
-		function getRegionDef(regionDefs, name)
-		{
-			let regionDef = { name: "", startMsPositionInScore: -1, endMsPositionInScore: -1 };
-			for(let j = 0; j < regionDefs.length; ++j)
-			{
-				if(name.localeCompare(regionDefs[j].name) === 0)
-				{
-					regionDef = regionDefs[j];
-					break;
-				}
-			}
-			if(regionDef.name.length === 0)
-			{
-				throw "regionDef is not defined";
-			}
-			return regionDef;
-		}
-
 		let prevRegionLink = undefined;
-		for(let i = 0; i < regionNameSequence.length; ++i)
+		for(let i = 0; i < regionSequence.length; ++i)
 		{
-			let regionName = regionNameSequence[i];
-			let regionDef = getRegionDef(regionDefs, regionName);
-			let regionLink = new RegionLink(this.midiObjects, regionDef, prevRegionLink);
+			let regionDef = regionSequence[i],
+				regionLink = new RegionLink(this.midiObjects, regionDef, prevRegionLink);
+
 			prevRegionLink = regionLink;
 			this._regionLinks.push(regionLink);
 		} 

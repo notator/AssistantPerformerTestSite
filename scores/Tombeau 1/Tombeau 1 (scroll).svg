@@ -223,41 +223,43 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 	</defs>
 	<score:scoreData>
-		<regions>
-			<defs>
-				<regionDef
-					class="regionDef"
-					name="A"
-					fromStartOfBar="1"
-					startMsPosInScore="0"
-					toEndOfBar="7"
-					endMsPosInScore="11626" />
-				<regionDef
-					class="regionDef"
-					name="B"
-					fromStartOfBar="7"
-					startMsPosInScore="11626"
-					toEndOfBar="32"
-					endMsPosInScore="70334" />
-				<regionDef
-					class="regionDef"
-					name="C"
-					fromStartOfBar="7"
-					startMsPosInScore="11626"
-					toEndOfBar="17"
-					endMsPosInScore="31727" />
-				<regionDef
-					class="regionDef"
-					name="D"
-					fromStartOfBar="32"
-					startMsPosInScore="70334"
-					toEndOfBar="72"
-					endMsPosInScore="286210" />
-			</defs>
-			<regionSequence
-				class="regionSequence"
-				sequence="ABCAD" />
-		</regions>
+		<regionSequence>
+			<regionDef
+				class="regionDef"
+				name="A"
+				fromStartOfBar="1"
+				startMsPosInScore="0"
+				toEndOfBar="7"
+				endMsPosInScore="11626" />
+			<regionDef
+				class="regionDef"
+				name="B"
+				fromStartOfBar="7"
+				startMsPosInScore="11626"
+				toEndOfBar="32"
+				endMsPosInScore="70334" />
+			<regionDef
+				class="regionDef"
+				name="C"
+				fromStartOfBar="7"
+				startMsPosInScore="11626"
+				toEndOfBar="17"
+				endMsPosInScore="31727" />
+			<regionDef
+				class="regionDef"
+				name="A1"
+				fromStartOfBar="1"
+				startMsPosInScore="0"
+				toEndOfBar="7"
+				endMsPosInScore="11626" />
+			<regionDef
+				class="regionDef"
+				name="D"
+				fromStartOfBar="32"
+				startMsPosInScore="70334"
+				toEndOfBar="72"
+				endMsPosInScore="286210" />
+		</regionSequence>
 	</score:scoreData>
 	<g
 		class="systems">

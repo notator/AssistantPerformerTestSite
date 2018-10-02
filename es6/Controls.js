@@ -449,7 +449,7 @@ var
 
 	startPlaying = function(isLivePerformance)
 	{
-		var startMarkerMsPosition, endMarkerMsPosition, baseSpeed,
+		var startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
 			sequenceRecording, trackIsOnArray = [];
 
 		deleteSaveLink();
@@ -469,7 +469,9 @@ var
 			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
+			startRegionIndex = score.getStartRegionIndex();
 			startMarkerMsPosition = score.startMarkerMsPosition();
+			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
 
 			if(options.isConducting === true)
@@ -481,7 +483,7 @@ var
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 			}
 
-			player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
+			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
 
 		if(options.isConducting === false)
@@ -835,25 +837,6 @@ var
 		return Math.exp(minv + scale * (position - minp));
 	},
 
-	//initializePlayer = function(score, options)
-	//{
-	//	var timer, speed, tracksData = score.getTracksData();
-
-	//	player = sequence; // sequence is a namespace, not a class.
-	//	player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-
-	//	if(options.isConducting)
-	//	{
-	//		speed = speedSliderValue(globalElements.speedControlInput.value);
-	//		timer = score.getConductor(speed); // use conductor.now()
-	//	}
-	//	else
-	//	{
-	//		timer = performance; // use performance.now()           
-	//	}
-	//	player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
-	//},
-
 	// Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
 	// Called again with options.isConducting===true if the conduct performance button is toggled on.
 	// If this is a live-conducted performance, sets the now() function to be the conductor's now().
@@ -883,7 +866,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionDefSequence());
+		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionSequence());
 	};
 
 export class Controls

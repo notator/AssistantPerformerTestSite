@@ -1026,7 +1026,10 @@ var
 	// track will be played or not. This array is read only.
 	// recording is a Sequence to which timestamped instants are added as they are performed.
 	// It should be an empty Sequence having the same number of output tracks as the score.
-	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
+	// *********************************************************************************************************************************
+	// ACHTUNG: the startRegionIndex and endRegionIndex arguments are currently unused. See comment about regions below in this function.
+	// *********************************************************************************************************************************
+	play = function(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndex, endMarkerMsPosInScore, baseSpeed, recording)
 	{
 		function sendTrackStartStateMessages(outputDevice, outputTracks, trackIsOnArray, startMarkerMsPosInScore)
 		{
