@@ -27,12 +27,4 @@ export class RegionDef
 	}
 }
 
-export class RegionInstanceDef
-{
-	constructor(instanceName, regionDef)
-	{
-		Object.defineProperty(this, "instanceName", { value: instanceName, writable: false });
-		Object.defineProperty(this, "regionDef", { value: regionDef, writable: false });
-	}
-}
 
