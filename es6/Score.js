@@ -8,7 +8,7 @@ import { MidiChord, MidiRest } from "./MidiObject.js";
 import { Track } from "./Track.js";
 import { InputChordDef, InputRestDef } from "./InputObjectDef.js";
 import { InputChord } from "./InputChord.js";
-import { RegionDef, PerformanceRegionDef } from "./RegionDef.js";
+import { RegionDef, RegionInstanceDef } from "./RegionDef.js";
 
 const BLACK_COLOR = "#000000",
 	GREY_COLOR = "#7888A0",
@@ -29,8 +29,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	regionDefs, // each regionDef has .name, .fromStartOfBar, .startMsPosInScore, .toEndOfBar, .endMsPosInScore
 	regionNameSequence, // a string such as "aabada"
-	performanceRegionDefSequence, // used at performance time by Track
-	performanceRegionNamesPerMsPosInScore, // used by SetStartMarker and SetEndMarker tools 
+	regionInstanceDefSequence, // used by getRegionDefSequence() and to calculate regionInstanceNamesPerMsPosInScore.
+	regionInstanceNamesPerMsPosInScore, // used by SetStartMarker and SetEndMarker tools 
 	finalBarlineInScore,
 
 	// See comments in the publicAPI definition at the bottom of this file.
@@ -1782,9 +1782,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		function setRegionData(outputTracks)
 		{
-			// Sets performanceRegionDefSequence (global in score)
-			// which is used at performance time.
-			function setPerformanceRegionDefSequence(regionDefs, regionNameSequence)
+			// regionInstanceDefSequence is global in this module
+			function setRegionInstanceDefSequence(regionDefs, regionNameSequence)
 			{
 				function getRegionDef(regionDefs, name)
 				{
@@ -1806,7 +1805,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 				// Returns an array containing one unique name per performed region.
 				// Uses Moritz' algorithm (A, A1, A2 etc.) .
-				function getPerformanceRegionNames(regionDefs, regionNameSequence)
+				function getRegionInstanceNames(regionDefs, regionNameSequence)
 				{
 					let baseNames = [], baseNameCounts = [];
 					for(let regionDef of regionDefs)
@@ -1815,52 +1814,50 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						baseNameCounts.push(0);
 					}
 
-					let performanceNames = [];
+					let instanceNames = [];
 
 					for(let baseName of regionNameSequence)
 					{
 						let baseNameIndex = baseNames.indexOf(baseName);
-						let performanceName = baseName;
+						let instanceName = baseName;
 						if(baseNameCounts[baseNameIndex] > 0)
 						{
-							performanceName += baseNameCounts[baseNameIndex].toString();
+							instanceName += baseNameCounts[baseNameIndex].toString();
 						}
 
-						performanceNames.push(performanceName);
+						instanceNames.push(instanceName);
 						baseNameCounts[baseNameIndex]++;
 					}
-					return performanceNames;
+					return instanceNames;
 				}
 
-				performanceRegionDefSequence = []; // global in score
-				let performanceRegionNames = getPerformanceRegionNames(regionDefs, regionNameSequence);
+				regionInstanceDefSequence = []; // global in score
+				let regionInstanceNames = getRegionInstanceNames(regionDefs, regionNameSequence);
 
-				var msPosInPerformance = 0;
 				for(let i = 0; i < regionNameSequence.length; ++i)
 				{
 					let regionName = regionNameSequence[i];
 					let regionDef = getRegionDef(regionDefs, regionName);
 
-					let performanceRegionDef = new PerformanceRegionDef(performanceRegionNames[i], msPosInPerformance, regionDef);
-					msPosInPerformance += (regionDef.endMsPosInScore - regionDef.startMsPosInScore);
+					let regionInstanceDef = new RegionInstanceDef(regionInstanceNames[i], regionDef);
 
-					performanceRegionDefSequence.push(performanceRegionDef);
+					regionInstanceDefSequence.push(regionInstanceDef);
 				}
 			}
 
-			// Sets performanceRegionNamesPerMsPosInScore (global in score),
+			// Sets regionInstanceNamesPerMsPosInScore (global in score),
 			// which is used by the SetStartMarker and SetEndMarker tools.
-			function setPerformanceRegionNamesPerMsPosInScore(performanceRegionDefSequence)
+			function setRegionInstanceNamesPerMsPosInScore(regionInstanceDefSequence)
 			{
 				let borderMsPositionsInScore = [];
-				for(let performanceRegionDef of performanceRegionDefSequence)
+				for(let regionInstanceDef of regionInstanceDefSequence)
 				{
-					let msPositionInScore = performanceRegionDef.regionDef.startMsPosInScore;
+					let msPositionInScore = regionInstanceDef.regionDef.startMsPosInScore;
 					if(borderMsPositionsInScore.indexOf(msPositionInScore) === -1)
 					{
 						borderMsPositionsInScore.push(msPositionInScore);
 					}
-					msPositionInScore = performanceRegionDef.regionDef.endMsPosInScore;
+					msPositionInScore = regionInstanceDef.regionDef.endMsPosInScore;
 					if(borderMsPositionsInScore.indexOf(msPositionInScore) === -1)
 					{
 						borderMsPositionsInScore.push(msPositionInScore);
@@ -1868,28 +1865,28 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				}
 				borderMsPositionsInScore.sort((a, b) => (a - b));
 
-				// will contain objects of the form {startMsPosInScore, array of performanceRegionName}
-				let performanceRegionNamesPerMsPos = [];
+				// global in Score.js: will contain objects of the form {startMsPosInScore, array of regionInstanceName}
+				regionInstanceNamesPerMsPosInScore = [];
 
 				for(let msPosInScore of borderMsPositionsInScore)
 				{
-					let performanceRegionNames = [];
+					let regionInstanceNames = [];
 
-					for(let prd of performanceRegionDefSequence)
+					for(let prd of regionInstanceDefSequence)
 					{
 						let duration = prd.regionDef.endMsPosInScore - prd.regionDef.startMsPosInScore;
 						if(msPosInScore >= prd.regionDef.startMsPosInScore && msPosInScore < (prd.regionDef.startMsPosInScore + duration))
 						{
-							performanceRegionNames.push(prd.name);
+							regionInstanceNames.push(prd.instanceName);
 						}
 					}
-					let entry = { msPosInScore, performanceRegionNames };
-					performanceRegionNamesPerMsPos.push(entry); 
+					let entry = { msPosInScore, regionInstanceNames };
+					regionInstanceNamesPerMsPosInScore.push(entry); 
 				}
 			}
 
-			setPerformanceRegionDefSequence(regionDefs, regionNameSequence);
-			setPerformanceRegionNamesPerMsPosInScore(performanceRegionDefSequence);
+			setRegionInstanceDefSequence(regionDefs, regionNameSequence);
+			setRegionInstanceNamesPerMsPosInScore(regionInstanceDefSequence);
 
 			for(let outputTrack of outputTracks)
 			{
@@ -2005,14 +2002,20 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return startMarker; // is undefined before a score is loaded
 	},
 
-	getPerformanceRegionDefSequence = function()
+	getRegionDefSequence = function()
 	{
-		return performanceRegionDefSequence; // is undefined before a score is loaded (used at runtime)
+		let regionDefSequence = [];
+		for(let riDef of regionInstanceDefSequence)
+		{
+			regionDefSequence.push(riDef.regionDef);
+		}
+			
+		return regionDefSequence; // is undefined before a score is loaded (used at runtime)
 	},
 
-	getPerformanceRegionNamesPerMsPosInScore = function()
+	getRegionInstanceNamesPerMsPosInScore = function()
 	{
-		return performanceRegionNamesPerMsPosInScore; // is undefined before a score is loaded (used at runtime)
+		return regionInstanceNamesPerMsPosInScore; // is undefined before a score is loaded (used at runtime)
 	};
 
 export class Score
@@ -2073,8 +2076,8 @@ export class Score
 		this.getMarkersLayer = getMarkersLayer;
 		this.getCursor = getCursor;
 		this.getStartMarker = getStartMarker;
-		this.getPerformanceRegionDefSequence = getPerformanceRegionDefSequence;
-		this.getPerformanceRegionNamesPerMsPosInScore = getPerformanceRegionNamesPerMsPosInScore;
+		this.getRegionDefSequence = getRegionDefSequence;
+		this.getRegionInstanceNamesPerMsPosInScore = getRegionInstanceNamesPerMsPosInScore;
 
 		// The TracksControl controls the display, and should be the only module to call this function.
 		this.refreshDisplay = refreshDisplay;

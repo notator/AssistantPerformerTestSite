@@ -27,12 +27,11 @@ export class RegionDef
 	}
 }
 
-export class PerformanceRegionDef
+export class RegionInstanceDef
 {
-	constructor(name, startMsPosInPerformance, regionDef)
+	constructor(instanceName, regionDef)
 	{
-		Object.defineProperty(this, "name", { value: name, writable: false });
-		Object.defineProperty(this, "startMsPosInPerformance", { value: startMsPosInPerformance, writable: false });
+		Object.defineProperty(this, "instanceName", { value: instanceName, writable: false });
 		Object.defineProperty(this, "regionDef", { value: regionDef, writable: false });
 	}
 }

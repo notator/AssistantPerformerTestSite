@@ -30,7 +30,7 @@ let
 
 	regionDefSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
-	currentRegionIndex, // the index in the regionLimits array
+	currentRegionIndex, // the index in the regionDefSequence and in the track._regionLinks arrays
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -105,7 +105,7 @@ let
 				{
 					track.moveToNextRegion(currentRegionIndex);
 				}
-				currentRegionIndex++; // the (global) index in the regionLimits array
+				currentRegionIndex++; // the (global) index in the regionLinks array
 			}
 
 			let nTracks = tracks.length;
