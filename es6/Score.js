@@ -456,6 +456,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return trackIndex;
 		}
 
+		// Returns -1 if an attempt was made to set the startMarker or endMarker in the wrong order.
 		function findRegionIndex(msPositionInScore, findStartRegionIndex)
 		{
 			function findRegionNamesAtMsPos(msPositionInScore)
@@ -519,15 +520,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 			let regionNames = findRegionNamesAtMsPos(msPositionInScore),
 				possibleRegionNames = getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionIndex),
-				regionName = undefined, regionIndex = undefined;
+				regionIndex = -1;
 
 			if(possibleRegionNames.length > 0)
 			{
-				regionName = selectRegionName(possibleRegionNames, cursorX, cursorY);
+				let regionName = selectRegionName(possibleRegionNames, cursorX, cursorY);
 				regionIndex = findRegionIndex(regionName);
 			}
 
-			return regionIndex; // undefined if an attempt was made to set the startMarker or endmarker in the wrong order. 
+			return regionIndex; 
 		}
 
 		systemIndex = findSystemIndex(cursorY);
@@ -554,7 +555,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			{
 				case 'settingStart':
 					let foundStartRegionIndex = findRegionIndex(timeObject.msPositionInScore, true);
-					if(foundStartRegionIndex !== undefined && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
+					if(foundStartRegionIndex >= 0 && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
 					{
 						startRegionIndex = foundStartRegionIndex;
 						startMarker = system.startMarker;
@@ -568,7 +569,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					break;
 				case 'settingEnd':
 					let foundEndRegionIndex = findRegionIndex(timeObject.msPositionInScore, false);
-					if(foundEndRegionIndex !== undefined && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
+					if(foundEndRegionIndex >= 0 && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
 					{
 						endRegionIndex = foundEndRegionIndex; 
 						endMarker = system.endMarker;
