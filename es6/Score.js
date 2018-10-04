@@ -456,9 +456,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return trackIndex;
 		}
 
-		function findRegionIndex(msPositionInScore)
+		function findRegionIndex(msPositionInScore, findStartRegionIndex)
 		{
-			function findRegionNames(msPositionInScore)
+			function findRegionNamesAtMsPos(msPositionInScore)
 			{
 				let regionNames = undefined;
 				for(let i = 1; i < regionNamesPerMsPosInScore.length; ++i)
@@ -473,7 +473,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return regionNames;
 			}
 
-			function selectRegionName(regionNames, cursorX, cursorY)
+			function selectRegionName(possibleRegionNames, cursorX, cursorY)
 			{
 				return "A1"; // stub function
 			}
@@ -493,11 +493,41 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return index;
 			}
 
-			let regionNames = findRegionNames(msPositionInScore),
-				regionName = selectRegionName(regionNames, cursorX, cursorY),
-				regionIndex = findRegionIndex(regionName);
+			function getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionNames)
+			{
+				let possibleNames = [];
+				for(let name of regionNames)
+				{
+					let index = findRegionIndex(name);
+					if(findStartRegionNames)
+					{
+						if(index <= endRegionIndex && msPositionInScore < endMarker.msPositionInScore)
+						{
+							possibleNames.push(name);
+						}
+					}
+					else // find end region names
+					{
+						if(index >= startRegionIndex && msPositionInScore > startMarker.msPositionInScore)
+						{
+							possibleNames.push(name);
+						}
+					}
+				}
+				return possibleNames;
+			}
 
-			return regionIndex;
+			let regionNames = findRegionNamesAtMsPos(msPositionInScore),
+				possibleRegionNames = getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionIndex),
+				regionName = undefined, regionIndex = undefined;
+
+			if(possibleRegionNames.length > 0)
+			{
+				regionName = selectRegionName(possibleRegionNames, cursorX, cursorY);
+				regionIndex = findRegionIndex(regionName);
+			}
+
+			return regionIndex; // undefined if an attempt was made to set the startMarker or endmarker in the wrong order. 
 		}
 
 		systemIndex = findSystemIndex(cursorY);
@@ -523,8 +553,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			switch(state)
 			{
 				case 'settingStart':
-					let foundStartRegionIndex = findRegionIndex(timeObject.msPositionInScore);
-					if(timeObject.msPositionInScore < endMarker.msPositionInScore && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
+					let foundStartRegionIndex = findRegionIndex(timeObject.msPositionInScore, true);
+					if(foundStartRegionIndex !== undefined && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
 					{
 						startRegionIndex = foundStartRegionIndex;
 						startMarker = system.startMarker;
@@ -537,8 +567,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					}
 					break;
 				case 'settingEnd':
-					let foundEndRegionIndex = findRegionIndex(timeObject.msPositionInScore);
-					if(startMarker.msPositionInScore < timeObject.msPositionInScore && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
+					let foundEndRegionIndex = findRegionIndex(timeObject.msPositionInScore, false);
+					if(foundEndRegionIndex !== undefined && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
 					{
 						endRegionIndex = foundEndRegionIndex; 
 						endMarker = system.endMarker;
