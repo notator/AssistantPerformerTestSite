@@ -456,6 +456,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return trackIndex;
 		}
 
+		function findRegionIndex(msPositionInScore)
+		{
+			return 3; // testing stub (index of A1 in top system)
+		}
+
 		systemIndex = findSystemIndex(cursorY);
 		system = systems[systemIndex];
 
@@ -475,23 +480,35 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
 		// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
 		if(timeObject !== null)
-		{
+		{			
 			switch(state)
 			{
 				case 'settingStart':
-					if(timeObject.msPositionInScore < endMarker.msPositionInScore)
+					let foundStartRegionIndex = findRegionIndex(timeObject.msPositionInScore);
+					if(timeObject.msPositionInScore < endMarker.msPositionInScore && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
 					{
+						startRegionIndex = foundStartRegionIndex;
 						startMarker = system.startMarker;
 						hideStartMarkersExcept(startMarker);
 						updateStartMarker(timeObjectsArray, timeObject);
+						if(regionSequence.length > 1)
+						{
+							startMarker.setName(regionSequence[startRegionIndex].name);
+						}
 					}
 					break;
 				case 'settingEnd':
-					if(startMarker.msPositionInScore < timeObject.msPositionInScore)
+					let foundEndRegionIndex = findRegionIndex(timeObject.msPositionInScore);
+					if(startMarker.msPositionInScore < timeObject.msPositionInScore && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
 					{
+						endRegionIndex = foundEndRegionIndex; 
 						endMarker = system.endMarker;
 						hideEndMarkersExcept(endMarker);
 						endMarker.moveTo(timeObject);
+						if(regionSequence.length > 1)
+						{
+							startMarker.setName(regionSequence[endRegionIndex].name);
+						}
 					}
 					break;
 				default:

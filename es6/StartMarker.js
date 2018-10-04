@@ -95,4 +95,9 @@
 			this.circle.style.visibility = 'hidden';
 		}
 	}
+
+	setName(regionName)
+	{
+		console.log("startMarker.setName(regionName): This function could add the name of the startRegion (in green) to the right of the upper disk.");
+	}
 }
