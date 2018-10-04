@@ -28,9 +28,10 @@ let
 	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
 	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 
-	regionDefSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
+	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
-	currentRegionIndex, // the index in the regionDefSequence and in the track._regionLinks arrays
+	currentRegionIndex, // the index in the regionSequence and in the track._regionLinks arrays
+	endRegionIndex, // the index of the final region that will play (< regionSequence.length)
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -117,7 +118,7 @@ let
 				if(track.isOn && track.hasEndedRegion === false)
 				{
 					trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-					if(trackMsPos >= regionDefSequence[currentRegionIndex].endMsPosInScore)
+					if(trackMsPos >= regionSequence[currentRegionIndex].endMsPosInScore)
 					{
 						track.hasEndedRegion = true;
 					}
@@ -135,7 +136,7 @@ let
 
 			if(endOfRegion)
 			{
-				if(currentRegionIndex === regionDefSequence.length - 1)
+				if(currentRegionIndex === endRegionIndex)
 				{
 					nextTrack = null; // end of performance
 					endOfFinalRegion = true;
@@ -200,7 +201,7 @@ let
 		{
 			if(startOfRegion)
 			{
-				nextMomtMsPosInScore = regionDefSequence[currentRegionIndex].startMsPosInScore;
+				nextMomtMsPosInScore = regionSequence[currentRegionIndex].startMsPosInScore;
 			}
 			else
 			{
@@ -220,7 +221,7 @@ let
 			}
 			else if(startOfRegion)
 			{
-				let duration = (regionDefSequence[currentRegionIndex - 1].endMsPosInScore - previousMomtMsPosInScore) / speed;
+				let duration = (regionSequence[currentRegionIndex - 1].endMsPosInScore - previousMomtMsPosInScore) / speed;
 				//console.log("start of region moment duration: " + duration.toString());
 				nextMomt.timestamp = duration + previousTimestamp;
 				startOfRegion = false;
@@ -441,15 +442,15 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionDefSequenceArg)
+	init(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionSequenceArg)
 	{
-		function getRegionStartMsPositionsInScore(regionDefSequence)
+		function getRegionStartMsPositionsInScore(regionSequence)
 		{
 			let rval = [];
 			rval.push(0); // always include the beginning of the score
-			for(let i = 0; i < regionDefSequence.length; ++i)
+			for(let i = 0; i < regionSequence.length; ++i)
 			{
-				let rl = regionDefSequence[i];
+				let rl = regionSequence[i];
 				if(rval.indexOf(rl.startMsPosInScore) < 0)
 				{
 					rval.push(rl.startMsPosInScore);
@@ -478,8 +479,8 @@ export class Sequence
 		timer = timerArg; // performance or score.timePointer
 		tracks = outputTracks;
 		outputDevice = outputDeviceArg;
-		regionDefSequence = regionDefSequenceArg.slice(); // clone the array
-		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionDefSequence);
+		regionSequence = regionSequenceArg.slice(); // clone the array
+		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionSequence);
 
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
@@ -500,7 +501,7 @@ export class Sequence
 	// recording is a Sequence to which timestamped moments are added as they are performed.
 	// Can be undefined or null. If used, it should be an empty Sequence having the same number
 	// of tracks as this (calling) sequence.
-	play(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndex, endMarkerMsPosInScore, baseSpeed, recording)
+	play(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, baseSpeed, recording)
 	{
 		// Sets each (output) track's isOn attribute.
 		// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
@@ -549,7 +550,8 @@ export class Sequence
 		startTimeAdjustedForPauses = performanceStartTime;
 		startOfRegion = false;
 
-		currentRegionIndex = 0;
+		currentRegionIndex = startRegionIndex;
+		endRegionIndex = endRegionIndexArg; 
 		endOfFinalRegion = false;
 
 		run();
