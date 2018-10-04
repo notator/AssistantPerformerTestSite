@@ -458,7 +458,46 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		function findRegionIndex(msPositionInScore)
 		{
-			return 3; // testing stub (index of A1 in top system)
+			function findRegionNames(msPositionInScore)
+			{
+				let regionNames = undefined;
+				for(let i = 1; i < regionNamesPerMsPosInScore.length; ++i)
+				{
+					if(regionNamesPerMsPosInScore[i - 1].msPosInScore <= msPositionInScore
+						&& regionNamesPerMsPosInScore[i].msPosInScore > msPositionInScore)
+					{
+						regionNames = regionNamesPerMsPosInScore[i - 1].regionNames;
+						break;
+					}
+				}
+				return regionNames;
+			}
+
+			function selectRegionName(regionNames, cursorX, cursorY)
+			{
+				return "A1"; // stub function
+			}
+
+			function findRegionIndex(regionName)
+			{
+				let index = -1;
+				for(let i = 0; i < regionSequence.length; ++i)
+				{
+					let region = regionSequence[i];
+					if(regionName.localeCompare(region.name) === 0)
+					{
+						index = i;
+						break;
+					}
+				}
+				return index;
+			}
+
+			let regionNames = findRegionNames(msPositionInScore),
+				regionName = selectRegionName(regionNames, cursorX, cursorY),
+				regionIndex = findRegionIndex(regionName);
+
+			return regionIndex;
 		}
 
 		systemIndex = findSystemIndex(cursorY);
@@ -1825,19 +1864,19 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				regionNamesPerMsPosInScore = [];
 				for(let msPosInScore of regionMsPosBoundsInScore)
 				{
-					let regionInstanceNamesPerMsPos = [];
+					let regionNames = [];
 					for(let i = 0; i < regionSequence.length; ++i)
 					{
-						let regionDef = regionSequence[i],
-							instanceName = regionNameSequence[i],
-							duration = regionDef.endMsPosInScore - regionDef.startMsPosInScore;
+						let region = regionSequence[i],
+							regionName = regionNameSequence[i],
+							duration = region.endMsPosInScore - region.startMsPosInScore;
 
-						if(msPosInScore >= regionDef.startMsPosInScore && msPosInScore < (regionDef.startMsPosInScore + duration))
+						if(msPosInScore >= region.startMsPosInScore && msPosInScore < (region.startMsPosInScore + duration))
 						{
-							regionInstanceNamesPerMsPos.push(instanceName);
+							regionNames.push(regionName);
 						}
 					}
-					let entry = { msPosInScore, regionInstanceNamesPerMsPos };
+					let entry = { msPosInScore, regionNames };
 					regionNamesPerMsPosInScore.push(entry);
 				}
 			}
