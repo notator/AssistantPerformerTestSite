@@ -22,6 +22,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// and reset when the tracksControl calls refreshDisplay().
 	trackIsOnArray = [], // all tracks, including input tracks
 
+	viewBox,
 	viewBoxScale,
 
 	// The frame containing the cursorLine and the start- and end-markers
@@ -31,6 +32,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	regionNamesPerMsPosInScore,
 	startRegionIndex,
 	endRegionIndex,
+	regionName = "", // used by regionName selector
+
+	setMarkerEvent,
+	setMarkerState,
 	finalBarlineInScore,
 
 	// See comments in the publicAPI definition at the bottom of this file.
@@ -332,6 +337,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	},
 
 	// this function is called only when state is 'settingStart' or 'settingEnd'.
+	// It is called again by regionSelectControlMouseOut (above) after selecting a regionName
 	svgPageClicked = function(e, state)
 	{
 		var cursorX = e.pageX,
@@ -456,8 +462,24 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return trackIndex;
 		}
 
+		// Returns -1 if the regionName is not present in regionSequence
+		function indexInRegionSequence(regionName)
+		{
+			let index = -1;
+			for(let i = 0; i < regionSequence.length; ++i)
+			{
+				let region = regionSequence[i];
+				if(regionName.localeCompare(region.name) === 0)
+				{
+					index = i;
+					break;
+				}
+			}
+			return index;
+		}
+
 		// Returns -1 if an attempt was made to set the startMarker or endMarker in the wrong order.
-		function findRegionIndex(msPositionInScore, findStartRegionIndex)
+		function selectRegionIndex(msPositionInScore, findStartRegionIndex)
 		{
 			function findRegionNamesAtMsPos(msPositionInScore)
 			{
@@ -474,24 +496,82 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return regionNames;
 			}
 
-			function selectRegionName(possibleRegionNames, cursorX, cursorY)
+			// Creates the regionSelectElem and its containing div (=layer).
+			// Populates the regionSelectElem's options, and adds the div to the document.
+			function openRegionSelectControl(possibleRegionNames, cursorX, cursorY)
 			{
-				return "A1"; // stub function
-			}
-
-			function findRegionIndex(regionName)
-			{
-				let index = -1;
-				for(let i = 0; i < regionSequence.length; ++i)
+				function makeSelectElem(possibleRegionNames, cursorX, cursorY)
 				{
-					let region = regionSequence[i];
-					if(regionName.localeCompare(region.name) === 0)
+					// sets the global regionName variable to the select's current value,
+					// then deletes the tempSelectRegionLayer (together with its 'select' element).
+					function regionSelectControlMouseLeave()
 					{
-						index = i;
-						break;
+						let selectElem = document.getElementById("tempRegionSelectElem");
+
+						if(selectElem.selectedIndex > 0)
+						{
+							regionName = selectElem.options[selectElem.selectedIndex].text.slice(0);
+
+							selectElem.removeEventListener('mouseleave', regionSelectControlMouseLeave, false);
+
+							let selectRegionLayer = document.getElementById("tempSelectRegionLayer");
+							selectRegionLayer.removeChild(selectElem);
+							document.body.removeChild(selectRegionLayer);
+
+							svgPageClicked(setMarkerEvent, setMarkerState);
+
+							regionName = "";
+						}
 					}
+
+					let selectElem = document.createElement("select"),
+						svgPagesFrame = document.getElementById("svgPagesFrame"),
+						scrollTop = svgPagesFrame.scrollTop;
+
+					selectElem.id = "tempRegionSelectElem";
+					selectElem.style.position = "absolute";
+					selectElem.style.top = (cursorY - scrollTop).toString(10) + "px";
+					selectElem.style.left = cursorX.toString(10) + "px";
+					selectElem.style.width = "65px";
+					selectElem.addEventListener('mouseleave', regionSelectControlMouseLeave);
+
+					var option = document.createElement("option");
+					option.text = "region:";
+					selectElem.add(option);
+
+					for(let name of possibleRegionNames)
+					{
+						var option = document.createElement("option");
+						option.text = name;
+						selectElem.add(option);
+					}
+
+					return selectElem;
 				}
-				return index;
+
+				function makeSelectRegionLayer(selectElem)
+				{
+					let svgPagesFrame = document.getElementById("svgPagesFrame"),
+						layer = document.createElement("div");
+
+					layer.id = "tempSelectRegionLayer"; // used when deleting this div.
+					layer.style.position = "absolute";
+					layer.style.margin = "0";
+					layer.style.padding = "0";
+					layer.style.top = svgPagesFrame.style.top;
+					layer.style.left = svgPagesFrame.style.left;
+					layer.style.width = svgPagesFrame.style.width;
+					layer.style.height = svgPagesFrame.style.height;
+
+					layer.appendChild(selectElem);
+
+					return layer;
+				}
+
+				let selectElem = makeSelectElem(possibleRegionNames, cursorX, cursorY),
+					selectRegionLayer = makeSelectRegionLayer(selectElem);
+
+				document.body.appendChild(selectRegionLayer);
 			}
 
 			function getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionNames)
@@ -499,7 +579,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				let possibleNames = [];
 				for(let name of regionNames)
 				{
-					let index = findRegionIndex(name);
+					let index = indexInRegionSequence(name);
 					if(findStartRegionNames)
 					{
 						if(index <= endRegionIndex && msPositionInScore < endMarker.msPositionInScore)
@@ -515,6 +595,19 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						}
 					}
 				}
+
+				if(possibleNames.length === 0)
+				{
+					if(findStartRegionIndex)
+					{
+						alert("Can't position the startMarker on or after the endMarker.");
+					}
+					else
+					{
+						alert("Can't position the endMarker on or before the startMarker.");
+					}
+				}
+
 				return possibleNames;
 			}
 
@@ -522,14 +615,22 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				possibleRegionNames = getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionIndex),
 				regionIndex = -1;
 
-			if(possibleRegionNames.length > 0)
+			if(possibleRegionNames.length > 1)
 			{
-				let regionName = selectRegionName(possibleRegionNames, cursorX, cursorY);
-				regionIndex = findRegionIndex(regionName);
+				openRegionSelectControl(possibleRegionNames, cursorX, cursorY);
+			}
+			else if(possibleRegionNames.length === 1)
+			{
+				regionName = possibleRegionNames[0];
+				regionIndex = indexInRegionSequence(regionName);
+				regionName = "";
 			}
 
 			return regionIndex; 
 		}
+
+		setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
+		setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 
 		systemIndex = findSystemIndex(cursorY);
 		system = systems[systemIndex];
@@ -550,14 +651,20 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
 		// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
 		if(timeObject !== null)
-		{			
+		{
+			let regionIndex = 0;
 			switch(state)
 			{
 				case 'settingStart':
-					let foundStartRegionIndex = findRegionIndex(timeObject.msPositionInScore, true);
-					if(foundStartRegionIndex >= 0 && (regionSequence.length === 1 || foundStartRegionIndex <= endRegionIndex))
+					if(regionName.localeCompare("") === 0)
 					{
-						startRegionIndex = foundStartRegionIndex;
+						regionIndex = selectRegionIndex(timeObject.msPositionInScore, true);
+					}
+					else regionIndex = indexInRegionSequence(regionName);
+
+					if(regionIndex >= 0 && (regionSequence.length === 1 || regionIndex <= endRegionIndex))
+					{
+						startRegionIndex = regionIndex;
 						startMarker = system.startMarker;
 						hideStartMarkersExcept(startMarker);
 						updateStartMarker(timeObjectsArray, timeObject);
@@ -568,16 +675,21 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					}
 					break;
 				case 'settingEnd':
-					let foundEndRegionIndex = findRegionIndex(timeObject.msPositionInScore, false);
-					if(foundEndRegionIndex >= 0 && (regionSequence.length === 1 || foundEndRegionIndex >= startRegionIndex))
+					if(regionName.localeCompare("") === 0)
 					{
-						endRegionIndex = foundEndRegionIndex; 
+						regionIndex = selectRegionIndex(timeObject.msPositionInScore, false);
+					}
+					else regionIndex = indexInRegionSequence(regionName);
+
+					if(regionIndex >= 0 && (regionSequence.length === 1 || regionIndex >= startRegionIndex))
+					{
+						endRegionIndex = regionIndex; 
 						endMarker = system.endMarker;
 						hideEndMarkersExcept(endMarker);
 						endMarker.moveTo(timeObject);
 						if(regionSequence.length > 1)
 						{
-							startMarker.setName(regionSequence[endRegionIndex].name);
+							endMarker.setName(regionSequence[endRegionIndex].name);
 						}
 					}
 					break;
@@ -601,18 +713,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		//}
 
 		cursor.setVisible(false);
-	},
-
-	moveRunningMarkersToStartMarkers = function()
-	{
-		//var i, nSystems = systems.length;
-
-		//for(i = 0; i < nSystems; ++i)
-		//{
-		//	systems[i].runningMarker.moveTo(systems[i].startMarker.msPositionInScore);
-		//}
-
-		cursor.moveCursorLineTo(systems[0].startMarker.msPositionInScore);
 	},
 
 	// Called when the go button or the startConducting button is clicked.
@@ -691,9 +791,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The score's trackIsOnArray is initialized to all tracks on (=true).
 	// If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-	getEmptySystems = function(isLivePerformanceArg, startPlayingFunction)
+	getEmptySystems = function(isLivePerformanceArg, startConductingCallback)
 	{
-		var system, svgPageEmbeds, viewBox,
+		var system, svgPageEmbeds,
 			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
 			localMarkersLayer, systemIndexOnPage, pageSystems,
 			systemIndexInScore = 0;
@@ -1161,7 +1261,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		function setGraphics()
 		{
 			var
-				i, svgPage, svgElem, viewBox, embedsWidth, pagesFrameWidth,
+				i, svgPage, svgElem, embedsWidth, pagesFrameWidth,
 				svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
 				svgPagesFrameElem = document.getElementById("svgPagesFrame"), svgPagesFrameElemHeight,
 				svgPageEmbeds = svgPagesFrameElem.getElementsByClassName("svgPage"),
@@ -1227,7 +1327,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		resetContent(isLivePerformanceArg);
 
-		conductor = new Conductor(startPlayingFunction);
+		conductor = new Conductor(startConductingCallback);
 
 		viewBox = setGraphics(); // the viewBox is the area in which the score can be seen and is scrolled
 
@@ -2083,7 +2183,6 @@ export class Score
 		// if the msPosition argument is >= that object's msPosition. Otherwise does nothing.
 		this.advanceRunningMarker = advanceRunningMarker;
 		this.hideRunningMarkers = hideRunningMarkers;
-		this.moveRunningMarkersToStartMarkers = moveRunningMarkersToStartMarkers;
 
 		this.setConducting = setConducting;
 		this.getConductor = getConductor;

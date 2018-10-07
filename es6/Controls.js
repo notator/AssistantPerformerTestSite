@@ -307,7 +307,6 @@ var
 		}
 
 		score.hideRunningMarkers();
-		score.moveRunningMarkersToStartMarkers();
 
 		options.outputDevice.reset();
 
@@ -1384,7 +1383,6 @@ export class Controls
 			{
 				setSvgControlsState('stopped');
 				score.hideRunningMarkers();
-				score.moveRunningMarkersToStartMarkers();
 			}
 		}
 
@@ -1407,7 +1405,6 @@ export class Controls
 				toggleBack(cl.sendStartToBeginningControlSelected);
 				score.sendStartMarkerToStart();
 				score.hideRunningMarkers();
-				score.moveRunningMarkersToStartMarkers();
 			}
 		}
 
@@ -1460,8 +1457,7 @@ export class Controls
 		}
 
 		/**** controls in options panel ***/
-		if(controlID === "inputDeviceSelect"
-			|| controlID === "outputDeviceSelect")
+		if(controlID === "inputDeviceSelect" || controlID === "outputDeviceSelect")
 		{
 			setMainOptionsState("toFront"); // enables only the appropriate controls
 		}

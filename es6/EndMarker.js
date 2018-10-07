@@ -103,6 +103,6 @@
 
 	setName(regionName)
 	{
-		console.log("endMarker.setName(regionName): This function could add the name of the endRegion (in red) to the left of the upper rectangle.");
+		console.log("endMarker.setName(regionName): " + regionName + ". This function could add the name of the endRegion (in red) to the left of the upper rectangle.");
 	}
 }

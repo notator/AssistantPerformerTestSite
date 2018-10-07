@@ -98,6 +98,6 @@
 
 	setName(regionName)
 	{
-		console.log("startMarker.setName(regionName): This function could add the name of the startRegion (in green) to the right of the upper disk.");
+		console.log("startMarker.setName(regionName): " + regionName + ". This function could add the name of the startRegion (in green) to the right of the upper disk.");
 	}
 }
