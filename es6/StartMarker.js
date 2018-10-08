@@ -56,10 +56,10 @@
 			if(params.text !== undefined)
 			{
 				params.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.25).toString()); // left edge will be right of x
-				params.text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.9).toString()); // baseline will be below y
+				params.text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.8).toString()); // baseline will be below y
 				params.text.setAttribute('x', '0'); // dx has been set, so will be right of 0
 				params.text.setAttribute('y', top); // dy has been set, so baseline will be below top
-				let styleString = 'fill:' + GREEN + '; font-size:' + (vbScale * CIRCLE_RADIUS * 2.5).toString() + '; font-family:sans-serif; font-weight:bold';
+				let styleString = 'fill:' + GREEN + '; font-size:' + (vbScale * CIRCLE_RADIUS * 2.4).toString() + '; font-family:sans-serif; font-weight:bold';
 				params.text.setAttribute('style', styleString);
 				params.text.setAttribute('display', 'none');
 			}
@@ -129,7 +129,6 @@
 
 	setName(regionName)
 	{
-		console.log("startMarker.setName(regionName): " + regionName + ". This function could add the name of the startRegion (in green) to the right of the upper disk.");
 		if(this.text !== undefined)
 		{
 			this.text.textContent = regionName;

@@ -1210,16 +1210,25 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				endMarkerLine.setAttribute("x2", "0");
 				endMarkerLine.setAttribute("y2", "0");
 				endMarkerLine.setAttribute("style", "stroke-width:1px");
+				endMarkerElem.appendChild(endMarkerLine);
 
 				endMarkerRect.setAttribute("x", "0");
 				endMarkerRect.setAttribute("y", "0");
 				endMarkerRect.setAttribute("width", "0");
 				endMarkerRect.setAttribute("height", "0");
 				endMarkerRect.setAttribute("style", "stroke-width:1px");
-
-				endMarkerElem.setAttribute("class", "endMarkerElem");
-				endMarkerElem.appendChild(endMarkerLine);
 				endMarkerElem.appendChild(endMarkerRect);
+
+				if(regionSequence.length > 1)
+				{
+					let endMarkerText = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+					endMarkerText.setAttribute("x", "0");
+					endMarkerText.setAttribute("y", "0");
+					endMarkerText.textContent = regionSequence[regionSequence.length - 1].name;
+					endMarkerElem.appendChild(endMarkerText);
+				}
+
+				endMarkerElem.setAttribute("class", "endMarkerElem");				
 
 				return endMarkerElem;
 			}

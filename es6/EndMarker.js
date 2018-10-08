@@ -1,7 +1,7 @@
 ﻿export class EndMarker
 {
 	// The svgEndMarkerGroup is an svg group with id='endMarker'.
-	// It contains an svg line and an svg rect element.
+	// It contains an svg line, rect and text element.
 	constructor(system, systemIndexInScore, svgEndMarkerGroup, vbScale)
 	{
 		// returns an object having rect, line, halfRectWidth and viewBoxScale attributes;
@@ -26,6 +26,10 @@
 					if(groupChildren[i].nodeName === 'rect')
 					{
 						params.rect = groupChildren[i];
+					}
+					if(groupChildren[i].nodeName === 'text')
+					{
+						params.text = groupChildren[i];
 					}
 				}
 			}
@@ -56,6 +60,18 @@
 			params.rect.setAttribute('width', widthHeight);
 			params.rect.setAttribute('height', widthHeight);
 
+			if(params.text !== undefined)
+			{
+				params.text.setAttribute("dx", (vbScale * RECT_WIDTH_AND_HEIGHT * -0.7).toString()); // left edge will be right of x
+				params.text.setAttribute("dy", (vbScale * RECT_WIDTH_AND_HEIGHT * 0.5).toString()); // baseline will be below y
+				params.text.setAttribute('text-anchor', 'end');
+				params.text.setAttribute('x', '0'); // dx has been set, so will be right of 0
+				params.text.setAttribute('y', top); // dy has been set, so baseline will be below top
+				let styleString = 'fill:' + RED + '; font-size:' + (vbScale * RECT_WIDTH_AND_HEIGHT * 1.5).toString() + '; font-family:sans-serif; font-weight:bold';
+				params.text.setAttribute('style', styleString);
+				params.text.setAttribute('display', 'none');
+			}
+
 			params.rect.style.strokeWidth = 0;
 			params.rect.style.fill = RED;
 
@@ -65,6 +81,10 @@
 		Object.defineProperty(this, "systemIndexInScore", { value: systemIndexInScore, writable: false });
 
 		let p = getParams(system, svgEndMarkerGroup, vbScale);
+		if(p.text !== undefined)
+		{
+			Object.defineProperty(this, "text", { value: p.text, writable: false });
+		}
 		Object.defineProperty(this, "rect", { value: p.rect, writable: false });
 		Object.defineProperty(this, "halfRectWidth", { value: p.halfRectWidth, writable: false });
 		Object.defineProperty(this, "line", { value: p.line, writable: false });
@@ -85,6 +105,10 @@
 		this.line.setAttribute('x1', x.toString());
 		this.line.setAttribute('x2', x.toString());
 		this.rect.setAttribute('x', (x - this.halfRectWidth).toString());
+		if(this.text !== undefined)
+		{
+			this.text.setAttribute('x', x.toString());
+		}
 	}
 
 	setVisible(setToVisible)
@@ -93,16 +117,27 @@
 		{
 			this.rect.style.visibility = 'visible';
 			this.line.style.visibility = 'visible';
+			if(this.text !== undefined)
+			{
+				this.text.setAttribute('display', 'display');
+			}
 		}
 		else
 		{
 			this.rect.style.visibility = 'hidden';
 			this.line.style.visibility = 'hidden';
+			if(this.text !== undefined)
+			{
+				this.text.setAttribute('display', 'none');
+			}
 		}
 	}
 
 	setName(regionName)
 	{
-		console.log("endMarker.setName(regionName): " + regionName + ". This function could add the name of the endRegion (in red) to the left of the upper rectangle.");
+		if(this.text !== undefined)
+		{
+			this.text.textContent = regionName;
+		}
 	}
 }
