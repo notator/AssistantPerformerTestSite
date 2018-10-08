@@ -122,9 +122,9 @@ let
 					{
 						track.hasEndedRegion = true;
 					}
-					else
+					else if(!(trackMsPos >= endMarkerMsPositionInScore && currentRegionIndex === endRegionIndex))
 					{
-						if((trackMsPos < endMarkerMsPositionInScore) && (trackMsPos < nextMomtMsPosInScore))
+						if(trackMsPos < nextMomtMsPosInScore)
 						{
 							nextTrack = track;
 							nextMomtMsPosInScore = trackMsPos;
