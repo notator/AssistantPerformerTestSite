@@ -1,7 +1,7 @@
 ﻿export class StartMarker
 {
 	// The svgStartMarkerGroup is an svg group with class='startMarker'.
-	// It contains an svg line and an svg circle element.
+	// It contains an svg line, circle and text element.
 	constructor(system, systemIndexInScore, svgStartMarkerGroup, vbScale)
 	{
 		// returns an object having circle, line, viewBoxScale and yCoordinates attributes;
@@ -26,6 +26,10 @@
 					{
 						params.circle = groupChildren[i];
 					}
+					if(groupChildren[i].nodeName === 'text')
+					{
+						params.text = groupChildren[i];
+					}
 				}
 			}
 
@@ -49,6 +53,17 @@
 			params.circle.style.strokeWidth = 0;
 			params.circle.style.fill = GREEN;
 
+			if(params.text !== undefined)
+			{
+				params.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.25).toString()); // left edge will be right of x
+				params.text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.9).toString()); // baseline will be below y
+				params.text.setAttribute('x', '0'); // dx has been set, so will be right of 0
+				params.text.setAttribute('y', top); // dy has been set, so baseline will be below top
+				let styleString = 'fill:' + GREEN + '; font-size:' + (vbScale * CIRCLE_RADIUS * 2.5).toString() + '; font-family:sans-serif; font-weight:bold';
+				params.text.setAttribute('style', styleString);
+				params.text.setAttribute('display', 'none');
+			}
+
 			params.yCoordinates = {};
 			params.yCoordinates.top = Math.round(parseFloat(top) / vbScale);
 			params.yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale);
@@ -59,6 +74,10 @@
 		Object.defineProperty(this, "systemIndexInScore", { value: systemIndexInScore, writable: false });
 
 		let p = getParams(system, svgStartMarkerGroup, vbScale);
+		if(p.text !== undefined)
+		{
+			Object.defineProperty(this, "text", { value: p.text, writable: false });
+		}
 		Object.defineProperty(this, "circle", { value: p.circle, writable: false });
 		Object.defineProperty(this, "line", { value: p.line, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: p.viewBoxScale, writable: false });
@@ -80,6 +99,10 @@
 		this.line.setAttribute('x1', x.toString());
 		this.line.setAttribute('x2', x.toString());
 		this.circle.setAttribute('cx', x.toString());
+		if(this.text !== undefined)
+		{
+			this.text.setAttribute('x', x.toString());
+		}
 	}
 
 	setVisible(setToVisible)
@@ -88,16 +111,28 @@
 		{
 			this.line.style.visibility = 'visible';
 			this.circle.style.visibility = 'visible';
+			if(this.text !== undefined)
+			{
+				this.text.setAttribute('display', 'display');
+			}
 		}
 		else
 		{
 			this.line.style.visibility = 'hidden';
 			this.circle.style.visibility = 'hidden';
+			if(this.text !== undefined)
+			{
+				this.text.setAttribute('display', 'none');
+			}
 		}
 	}
 
 	setName(regionName)
 	{
 		console.log("startMarker.setName(regionName): " + regionName + ". This function could add the name of the startRegion (in green) to the right of the upper disk.");
+		if(this.text !== undefined)
+		{
+			this.text.textContent = regionName;
+		}
 	}
 }

@@ -1145,30 +1145,39 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 
 		// Appends the markers and timePointers to the markerslayer.
-		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore)
+		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore, regionSequence)
 		{
 			var startMarkerElem, runningMarkerElem, endMarkerElem, runningMarkerHeight;
 
-			function newStartMarkerElem()
+			function newStartMarkerElem(regionSequence)
 			{
 				var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 					startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-					startMarkerDisk = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+					startMarkerDisk = document.createElementNS("http://www.w3.org/2000/svg", 'circle');					
 
 				startMarkerLine.setAttribute("x1", "0");
 				startMarkerLine.setAttribute("y1", "0");
 				startMarkerLine.setAttribute("x2", "0");
 				startMarkerLine.setAttribute("y2", "0");
 				startMarkerLine.setAttribute("style", "stroke-width:1px");
+				startMarkerElem.appendChild(startMarkerLine);
 
 				startMarkerDisk.setAttribute("cx", "0");
 				startMarkerDisk.setAttribute("cy", "0");
 				startMarkerDisk.setAttribute("r", "0");
 				startMarkerDisk.setAttribute("style", "stroke-width:1px");
+				startMarkerElem.appendChild(startMarkerDisk);
+
+				if(regionSequence.length > 1)
+				{
+					let startMarkerText = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+					startMarkerText.setAttribute("x", "0");
+					startMarkerText.setAttribute("y", "0");
+					startMarkerText.textContent = regionSequence[0].name;
+					startMarkerElem.appendChild(startMarkerText);
+				}
 
 				startMarkerElem.setAttribute("class", "startMarkerElem");
-				startMarkerElem.appendChild(startMarkerLine);
-				startMarkerElem.appendChild(startMarkerDisk);
 
 				return startMarkerElem;
 			}
@@ -1190,7 +1199,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return runningMarkerElem;
 			}
 
-			function newEndMarkerElem()
+			function newEndMarkerElem(regionSequence)
 			{
 				var endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 					endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
@@ -1215,9 +1224,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return endMarkerElem;
 			}
 
-			startMarkerElem = newStartMarkerElem();
+			startMarkerElem = newStartMarkerElem(regionSequence);
 			runningMarkerElem = newRunningMarkerElem();
-			endMarkerElem = newEndMarkerElem();
+			endMarkerElem = newEndMarkerElem(regionSequence);
 
 			markersLayer.appendChild(startMarkerElem);
 			markersLayer.appendChild(runningMarkerElem);
@@ -1357,7 +1366,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			systems.push(system); // systems is global inside the score namespace
 			pageSystems.push(system);
 
-			createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++);
+			createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++, regionSequence);
 		}
 
 		markersLayer = localMarkersLayer; // markersLayer is accessed outside the score using a getter function
