@@ -306,7 +306,7 @@ var
 			initializePlayer(score, options);
 		}
 
-		score.hideRunningMarkers();
+		score.hideCursor();
 
 		options.outputDevice.reset();
 
@@ -443,7 +443,7 @@ var
 		//console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
 		// If there is a graphic object in the score having msPositionInScore,
 		// the running cursor is aligned to that object.
-		score.advanceRunningMarker(msPositionInScore);
+		score.advanceCursor(msPositionInScore);
 	},
 
 	startPlaying = function(isLivePerformance)
@@ -461,9 +461,9 @@ var
 		{
 			sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-			// the running marker is at its correct position:
+			// the cursor is at its correct position:
 			// either at the start marker, or somewhere paused.
-			score.setRunningMarkers();
+			score.setCursor();
 
 			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
@@ -1382,7 +1382,7 @@ export class Controls
 			else if(svgControlsState === 'settingStart')
 			{
 				setSvgControlsState('stopped');
-				score.hideRunningMarkers();
+				score.hideCursor();
 			}
 		}
 
@@ -1404,7 +1404,7 @@ export class Controls
 			{
 				toggleBack(cl.sendStartToBeginningControlSelected);
 				score.sendStartMarkerToStart();
-				score.hideRunningMarkers();
+				score.hideCursor();
 			}
 		}
 

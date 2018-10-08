@@ -699,24 +699,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
-	hideRunningMarkers = function()
+	hideCursor = function()
 	{
-		//var i, nSystems = systems.length;
-
-		//for(i = 0; i < nSystems; ++i)
-		//{
-		//	systems[i].runningMarker.setVisible(false);
-		//	if(isConducting)
-		//	{
-		//		systems[i].timePointer.setVisible(false);
-		//	}
-		//}
-
 		cursor.setVisible(false);
 	},
 
 	// Called when the go button or the startConducting button is clicked.
-	setRunningMarkers = function()
+	setCursor = function()
 	{
 		var sysIndex, nSystems = systems.length, system;
 
@@ -725,10 +714,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			system = systems[sysIndex];
 			system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
 		}
-		//hideRunningMarkers();
-		//moveRunningMarkersToStartMarkers();
-		//runningMarker = systems[startMarker.systemIndexInScore].runningMarker;
-		//runningMarker.setVisible(true);
 
 		cursor.moveCursorLineTo(startMarker.msPositionInScore);
 		cursor.setVisible(true);
@@ -750,7 +735,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return endOfSystemTimeObject;
 		}
 
-		setRunningMarkers();
+		setCursor();
 
 		isConducting = boolean; // score.isConducting!
 		if(isConducting)
@@ -1247,7 +1232,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 			runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
 
-			system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, runningMarkerHeight, viewBoxScale, advanceRunningMarker);
+			system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, runningMarkerHeight, viewBoxScale, advanceCursor);
 
 			markersLayer.appendChild(system.timePointer.graphicElement);
 		}
@@ -1447,7 +1432,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// Advances the running marker to msPosition (in any channel)
 	// Does nothing when the end of the score is reached.
-	advanceRunningMarker = function(msPosition)
+	advanceCursor = function(msPosition)
 	{
 		cursor.moveCursorLineTo(msPosition);
 	},
@@ -2193,14 +2178,14 @@ export class Score
 		// it to the top of the div.
 		this.moveStartMarkerToTop = moveStartMarkerToTop;
 
-		// Recalculates the timeObject lists for the runningMarkers (1 marker per system),
-		// using trackIsOnArray (tracksControl.trackIsOnArray) to take into account which tracks are actually performing.
+		// Recalculates the timeObject lists for the cursor using trackIsOnArray
+		// (tracksControl.trackIsOnArray) to take into account which tracks are actually performing.
 		// When the score is first read, all tracks perform by default.
-		this.setRunningMarkers = setRunningMarkers;
-		// Advances the running marker to the following timeObject (in any channel)
+		this.setCursor = setCursor;
+		// Advances the cursor to the following timeObject (in any channel)
 		// if the msPosition argument is >= that object's msPosition. Otherwise does nothing.
-		this.advanceRunningMarker = advanceRunningMarker;
-		this.hideRunningMarkers = hideRunningMarkers;
+		this.advanceCursor = advanceCursor;
+		this.hideCursor = hideCursor;
 
 		this.setConducting = setConducting;
 		this.getConductor = getConductor;
