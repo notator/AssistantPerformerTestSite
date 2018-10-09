@@ -626,7 +626,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				regionName = "";
 			}
 
-			return regionIndex; 
+			return regionIndex;
 		}
 
 		setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
@@ -683,7 +683,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 					if(regionIndex >= 0 && (regionSequence.length === 1 || regionIndex >= startRegionIndex))
 					{
-						endRegionIndex = regionIndex; 
+						endRegionIndex = regionIndex;
 						endMarker = system.endMarker;
 						hideEndMarkersExcept(endMarker);
 						endMarker.moveTo(timeObject);
@@ -702,6 +702,24 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	hideCursor = function()
 	{
 		cursor.setVisible(false);
+	},
+
+	leaveRegion = function(regionIndex)
+	{
+		if(regionSequence.length > 1)
+		{
+			// regionIndex is -1 when starting in the first region.
+			if(regionIndex >= 0)  
+			{
+				regionSequence[regionIndex].setActiveInfoStringsStyle(false);
+			}
+
+			let nextRegionIndex = regionIndex + 1;
+			if(nextRegionIndex < regionSequence.length)
+			{
+				regionSequence[nextRegionIndex].setActiveInfoStringsStyle(true);
+			}
+		}
 	},
 
 	// Called when the go button or the startConducting button is clicked.
@@ -2187,6 +2205,8 @@ export class Score
 		// if the msPosition argument is >= that object's msPosition. Otherwise does nothing.
 		this.advanceCursor = advanceCursor;
 		this.hideCursor = hideCursor;
+
+		this.leaveRegion = leaveRegion;
 
 		this.setConducting = setConducting;
 		this.getConductor = getConductor;

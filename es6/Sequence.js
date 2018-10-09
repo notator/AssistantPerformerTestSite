@@ -23,6 +23,7 @@ let
 	stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
 	paused = false, // nextMoment(), pause(), isPaused()
 
+	reportEndOfRegion, // callback
 	reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
 	reportNextMIDIObject,  // callback. Can be null or undefined. Set in play().
 	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
@@ -84,6 +85,7 @@ let
 		{
 			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
+			reportEndOfRegion(currentRegionIndex);
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 			for(let track of tracks)
 			{
@@ -106,6 +108,8 @@ let
 				{
 					track.moveToNextRegion(currentRegionIndex);
 				}
+
+				reportEndOfRegion(currentRegionIndex);
 				currentRegionIndex++; // the (global) index in the regionLinks array
 			}
 
@@ -442,7 +446,7 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionSequenceArg)
+	init(timerArg, outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionSequenceArg)
 	{
 		function getRegionStartMsPositionsInScore(regionSequence)
 		{
@@ -482,6 +486,7 @@ export class Sequence
 		regionSequence = regionSequenceArg.slice(); // clone the array
 		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionSequence);
 
+		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
 
@@ -581,6 +586,7 @@ export class Sequence
 			setState("stopped");
 			performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			outputDevice.reset();
+			reportEndOfRegion(currentRegionIndex);
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 		}
 	}

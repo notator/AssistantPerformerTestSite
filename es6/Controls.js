@@ -354,6 +354,11 @@ var
 		globalElements.speedControlSmokeDiv.style.display = "none";
 	},
 
+	reportEndOfRegion = function(regionIndex)
+	{
+		score.leaveRegion(regionIndex);
+	},
+
 	// callback called when a performing sequenceRecording is stopped or has played its last message,
 	// or when the player is stopped or has played its last subsequence.
 	reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
@@ -469,6 +474,7 @@ var
 			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
 			startRegionIndex = score.getStartRegionIndex();
+			score.leaveRegion(startRegionIndex - 1);
 			startMarkerMsPosition = score.startMarkerMsPosition();
 			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
@@ -865,7 +871,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos, score.getRegionSequence());
+		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.getRegionSequence());
 	};
 
 export class Controls

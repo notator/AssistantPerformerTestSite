@@ -32,7 +32,7 @@ export class RegionDef
 			if(t.indexOf(name) === 0 && t.length > name.length)
 			{
 				let char = t.slice(name.length, name.length + 1);
-				if(isNaN(char))
+				if(char.localeCompare(' ') === 0 || isNaN(char))
 				{
 					_endRegionInfoStringElem = textElem;
 					break;
@@ -40,10 +40,23 @@ export class RegionDef
 			}
 		}
 
-		function setInfoStringsColor(colorString)
+		function setActiveInfoStringsStyle(isActive)
 		{
+			let colorString, weightString;
+			if(isActive)
+			{
+				colorString = '#FF0000';
+				weightString = 'bold';
+			}
+			else
+			{
+				colorString = 'black';
+				weightString = 'normal';
+			} 
 			_startRegionInfoStringElem.setAttribute('fill', colorString);
+			_startRegionInfoStringElem.setAttribute('font-weight', weightString);
 			_endRegionInfoStringElem.setAttribute('fill', colorString);
+			_endRegionInfoStringElem.setAttribute('font-weight', weightString);
 		}
 
 		// fromStartOfBar and toEndOfBar correspond correctly to the msPos values,
@@ -53,7 +66,7 @@ export class RegionDef
 		Object.defineProperty(this, "startMsPosInScore", { value: startMsPosInScore, writable: false });
 		Object.defineProperty(this, "toEndOfBar", { value: toEndOfBar, writable: false });
 		Object.defineProperty(this, "endMsPosInScore", { value: endMsPosInScore, writable: false });
-		Object.defineProperty(this, "setInfoStringsColor", { value: setInfoStringsColor, writable: false });
+		Object.defineProperty(this, "setActiveInfoStringsStyle", { value: setActiveInfoStringsStyle, writable: false });
 
 		// startMarkerMsPosInScore can be different from startMsPosInScore only in the first regionDef that is going to be performed.
 		Object.defineProperty(this, "startMarkerMsPosInScore", { value: startMsPosInScore, writable: true });
