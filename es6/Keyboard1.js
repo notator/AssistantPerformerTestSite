@@ -931,9 +931,9 @@ var
 				for(j = 0; j < nMidiObjects; ++j)
 				{
 					midiObject = midiObjects[j];
-					if(midiObject.moments[0].systemIndex !== undefined)
+					if(midiObject.systemIndex !== undefined)
 					{
-						systemIndex = midiObject.moments[0].systemIndex;
+						systemIndex = midiObject.systemIndex;
 						msPosition = midiObject.msPositionInScore;
 						if(sysMsPositions[systemIndex] === undefined || sysMsPositions[systemIndex] > msPosition)
 						{

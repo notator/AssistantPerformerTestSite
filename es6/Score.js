@@ -2068,6 +2068,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 							timeObject = voice.timeObjects[timeObjectIndex];
 							if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
 							{
+								if(isLivePerformance)
+								{
+									timeObject.systemIndex = sysIndex; // currently used used only in live performances with Keyboard1 (09.10.2018)
+								}
 								outputTrack.midiObjects.push(timeObject);
 							}
 						}
