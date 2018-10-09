@@ -85,7 +85,6 @@ let
 		{
 			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
-			reportEndOfRegion(currentRegionIndex);
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 			for(let track of tracks)
 			{
@@ -586,7 +585,6 @@ export class Sequence
 			setState("stopped");
 			performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			outputDevice.reset();
-			reportEndOfRegion(currentRegionIndex);
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 		}
 	}

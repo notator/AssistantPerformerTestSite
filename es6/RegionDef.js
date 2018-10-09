@@ -42,20 +42,22 @@ export class RegionDef
 
 		function setActiveInfoStringsStyle(isActive)
 		{
-			let colorString, weightString;
+			let startColorString, endColorString, weightString;
 			if(isActive)
 			{
-				colorString = '#FF0000';
-				weightString = 'bold';
+				startColorString = '#EE0000'; //'#00CC00'; // marker is '#009900'
+				endColorString = '#EE0000'; //'#DD0000'; // marker is '#EE0000'
+				weightString = 'normal';
 			}
 			else
 			{
-				colorString = 'black';
+				startColorString = 'black';
+				endColorString = 'black';
 				weightString = 'normal';
 			} 
-			_startRegionInfoStringElem.setAttribute('fill', colorString);
+			_startRegionInfoStringElem.setAttribute('fill', startColorString);
 			_startRegionInfoStringElem.setAttribute('font-weight', weightString);
-			_endRegionInfoStringElem.setAttribute('fill', colorString);
+			_endRegionInfoStringElem.setAttribute('fill', endColorString);
 			_endRegionInfoStringElem.setAttribute('font-weight', weightString);
 		}
 

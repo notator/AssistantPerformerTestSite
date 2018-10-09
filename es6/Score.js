@@ -1,6 +1,6 @@
-import { StartMarker } from "./StartMarker.js";
+import { StartMarker } from "./Markers.js";
+import { EndMarker } from "./Markers.js";
 import { RunningMarker } from "./RunningMarker.js";
-import { EndMarker } from "./EndMarker.js";
 import { TimePointer } from "./TimePointer.js";
 import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";
@@ -706,6 +706,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	leaveRegion = function(regionIndex)
 	{
+		// There are no regionInfo boxes if there is only one region.
 		if(regionSequence.length > 1)
 		{
 			// regionIndex is -1 when starting in the first region.
@@ -718,6 +719,18 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			if(nextRegionIndex < regionSequence.length)
 			{
 				regionSequence[nextRegionIndex].setActiveInfoStringsStyle(true);
+			}
+		}
+	},
+
+	resetRegionInfoStrings = function()
+	{
+		// There are no regionInfo boxes if there is only one region.
+		if(regionSequence.length > 1)
+		{
+			for(let regionDef of regionSequence)
+			{
+				regionDef.setActiveInfoStringsStyle(false);
 			}
 		}
 	},
@@ -1151,40 +1164,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// Appends the markers and timePointers to the markerslayer.
 		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore, regionSequence)
 		{
-			var startMarkerElem, runningMarkerElem, endMarkerElem, runningMarkerHeight;
-
-			function newStartMarkerElem(regionSequence)
-			{
-				var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-					startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-					startMarkerDisk = document.createElementNS("http://www.w3.org/2000/svg", 'circle');					
-
-				startMarkerLine.setAttribute("x1", "0");
-				startMarkerLine.setAttribute("y1", "0");
-				startMarkerLine.setAttribute("x2", "0");
-				startMarkerLine.setAttribute("y2", "0");
-				startMarkerLine.setAttribute("style", "stroke-width:1px");
-				startMarkerElem.appendChild(startMarkerLine);
-
-				startMarkerDisk.setAttribute("cx", "0");
-				startMarkerDisk.setAttribute("cy", "0");
-				startMarkerDisk.setAttribute("r", "0");
-				startMarkerDisk.setAttribute("style", "stroke-width:1px");
-				startMarkerElem.appendChild(startMarkerDisk);
-
-				if(regionSequence.length > 1)
-				{
-					let startMarkerText = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-					startMarkerText.setAttribute("x", "0");
-					startMarkerText.setAttribute("y", "0");
-					startMarkerText.textContent = regionSequence[0].name;
-					startMarkerElem.appendChild(startMarkerText);
-				}
-
-				startMarkerElem.setAttribute("class", "startMarkerElem");
-
-				return startMarkerElem;
-			}
+			var runningMarkerElem, runningMarkerHeight;
 
 			function newRunningMarkerElem()
 			{
@@ -1203,51 +1183,16 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return runningMarkerElem;
 			}
 
-			function newEndMarkerElem(regionSequence)
-			{
-				var endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-					endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-					endMarkerRect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-
-				endMarkerLine.setAttribute("x1", "0");
-				endMarkerLine.setAttribute("y1", "0");
-				endMarkerLine.setAttribute("x2", "0");
-				endMarkerLine.setAttribute("y2", "0");
-				endMarkerLine.setAttribute("style", "stroke-width:1px");
-				endMarkerElem.appendChild(endMarkerLine);
-
-				endMarkerRect.setAttribute("x", "0");
-				endMarkerRect.setAttribute("y", "0");
-				endMarkerRect.setAttribute("width", "0");
-				endMarkerRect.setAttribute("height", "0");
-				endMarkerRect.setAttribute("style", "stroke-width:1px");
-				endMarkerElem.appendChild(endMarkerRect);
-
-				if(regionSequence.length > 1)
-				{
-					let endMarkerText = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-					endMarkerText.setAttribute("x", "0");
-					endMarkerText.setAttribute("y", "0");
-					endMarkerText.textContent = regionSequence[regionSequence.length - 1].name;
-					endMarkerElem.appendChild(endMarkerText);
-				}
-
-				endMarkerElem.setAttribute("class", "endMarkerElem");				
-
-				return endMarkerElem;
-			}
-
-			startMarkerElem = newStartMarkerElem(regionSequence);
 			runningMarkerElem = newRunningMarkerElem();
-			endMarkerElem = newEndMarkerElem(regionSequence);
-
-			markersLayer.appendChild(startMarkerElem);
 			markersLayer.appendChild(runningMarkerElem);
-			markersLayer.appendChild(endMarkerElem);
 
-			system.startMarker = new StartMarker(system, systemIndexInScore, startMarkerElem, viewBoxScale);
+			system.startMarker = new StartMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
+			markersLayer.appendChild(system.startMarker.element);
+
 			system.runningMarker = new RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
-			system.endMarker = new EndMarker(system, systemIndexInScore, endMarkerElem, viewBoxScale);
+
+			system.endMarker = new EndMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
+			markersLayer.appendChild(system.endMarker.element);
 
 			runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
 
@@ -1404,6 +1349,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		startMarker = systems[0].startMarker;
 		hideStartMarkersExcept(startMarker);
 		startMarker.moveTo(systems[0].staves[0].voices[0].timeObjects[0]);
+		startRegionIndex = 0;
 	},
 
 	sendEndMarkerToEnd = function()
@@ -1413,6 +1359,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		endMarker = systems[systems.length - 1].endMarker;
 		hideEndMarkersExcept(endMarker);
 		endMarker.moveTo(lastTimeObjects[lastTimeObjects.length - 1]);
+		endRegionIndex = regionSequence.length - 1;
 	},
 
 	startMarkerMsPosition = function()
@@ -2211,6 +2158,7 @@ export class Score
 		this.hideCursor = hideCursor;
 
 		this.leaveRegion = leaveRegion;
+		this.resetRegionInfoStrings = resetRegionInfoStrings; 
 
 		this.setConducting = setConducting;
 		this.getConductor = getConductor;

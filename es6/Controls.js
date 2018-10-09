@@ -307,6 +307,7 @@ var
 		}
 
 		score.hideCursor();
+		score.resetRegionInfoStrings();
 
 		options.outputDevice.reset();
 
