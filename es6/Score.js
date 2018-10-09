@@ -1105,7 +1105,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		function getRegionData(svgElem)
 		{
 			let regionSeq = [],
-				regionDefElems = svgElem.getElementsByClassName("regionDef");
+				regionDefElems = svgElem.getElementsByClassName("regionDef"),
+				regionInfoStringElems = svgElem.getElementsByClassName("regionInfoString");
 
 			if(regionDefElems.length === 0)
 			{
@@ -1116,7 +1117,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			{
 				for(let regionDefElem of regionDefElems)
 				{
-					let regionDef = new RegionDef(regionDefElem);
+					let regionDef = new RegionDef(regionDefElem, regionInfoStringElems);
 					regionSeq.push(regionDef);
 				}
 

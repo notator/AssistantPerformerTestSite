@@ -1,7 +1,7 @@
 
 export class RegionDef
 {
-	constructor(regionDefElem)
+	constructor(regionDefElem, regionInfoStringElems)
 	{
 		var
 			name = regionDefElem.getAttribute("name"),
@@ -10,10 +10,41 @@ export class RegionDef
 			toEndOfBarAttr = regionDefElem.getAttribute("toEndOfBar"),
 			toEndOfBar = (toEndOfBarAttr === "final") ? "final" : parseInt(toEndOfBarAttr, 10),
 			endMsPosAttr = regionDefElem.getAttribute("endMsPosInScore"),
-			endMsPosInScore = (toEndOfBarAttr === "final") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10);
+			endMsPosInScore = (toEndOfBarAttr === "final") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10),
+			_startRegionInfoStringElem,
+			_endRegionInfoStringElem;
 
 		console.assert(!isNaN(startMsPosInScore));
 		console.assert(!isNaN(endMsPosInScore));
+
+		for(let textElem of regionInfoStringElems)
+		{
+			let t = textElem.innerHTML;
+			if(t.localeCompare(name) === 0)
+			{
+				_startRegionInfoStringElem = textElem;
+				break;
+			}
+		}
+		for(let textElem of regionInfoStringElems)
+		{
+			let t = textElem.innerHTML;
+			if(t.indexOf(name) === 0 && t.length > name.length)
+			{
+				let char = t.slice(name.length, name.length + 1);
+				if(isNaN(char))
+				{
+					_endRegionInfoStringElem = textElem;
+					break;
+				}
+			}
+		}
+
+		function setInfoStringsColor(colorString)
+		{
+			_startRegionInfoStringElem.setAttribute('fill', colorString);
+			_endRegionInfoStringElem.setAttribute('fill', colorString);
+		}
 
 		// fromStartOfBar and toEndOfBar correspond correctly to the msPos values,
 		// but they are currently just used as comments while debugging.		
@@ -22,6 +53,7 @@ export class RegionDef
 		Object.defineProperty(this, "startMsPosInScore", { value: startMsPosInScore, writable: false });
 		Object.defineProperty(this, "toEndOfBar", { value: toEndOfBar, writable: false });
 		Object.defineProperty(this, "endMsPosInScore", { value: endMsPosInScore, writable: false });
+		Object.defineProperty(this, "setInfoStringsColor", { value: setInfoStringsColor, writable: false });
 
 		// startMarkerMsPosInScore can be different from startMsPosInScore only in the first regionDef that is going to be performed.
 		Object.defineProperty(this, "startMarkerMsPosInScore", { value: startMsPosInScore, writable: true });
