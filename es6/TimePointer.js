@@ -1,6 +1,6 @@
 ﻿export class TimePointer
 {
-	constructor(originY, height, viewBoxScale, advanceRunningMarker)
+	constructor(originY, height, viewBoxScale, advanceCursor)
 	{
 		function graphicElem(that, height, viewBoxScale)
 		{
@@ -57,25 +57,25 @@
         Object.defineProperty(this, "_originYinViewBox", { value: originY * viewBoxScale, writable: false });
         Object.defineProperty(this, "_viewBoxScale", { value: viewBoxScale, writable: false });
         // The score.advanceRunningMarker(msPosition) function
-        Object.defineProperty(this, "_advanceRunningMarker", { value: advanceRunningMarker, writable: false });
-
+        Object.defineProperty(this, "_advanceCursor", { value: advanceCursor, writable: false });
+		 
         // Will be set to the system's startMarker
         Object.defineProperty(this, "_startMarker", { value: undefined, writable: true });
         // Will be set to the system's runningMarker
-        Object.defineProperty(this, "_runningMarker", { value: undefined, writable: true });
+        Object.defineProperty(this, "_cursor", { value: undefined, writable: true });
         // Will be set to a stand-in for the final barline at the end of the system
         Object.defineProperty(this, "_endOfSystemTimeObject", { value: undefined, writable: true });
     }
 
-    init(startMarker, runningMarker, endOfSystemTimeObject)
+    init(startMarker, cursor, endOfSystemTimeObject)
     {
         var currentTimeObject;
 
         this._startMarker = startMarker;
-        this._runningMarker = runningMarker;
+        this._cursor = cursor;
         this._endOfSystemTimeObject = endOfSystemTimeObject;
 
-        currentTimeObject = runningMarker.timeObjects[runningMarker.positionIndex];
+        currentTimeObject = cursor.timeObjects[cursor.positionIndex];
         this.graphicElement.setAttribute('transform', 'translate(' + (currentTimeObject.alignment * this._viewBoxScale) + ',' + this._originYinViewBox + ')');
         this.msPositionInScore = currentTimeObject.msPositionInScore;        
     }
@@ -84,8 +84,8 @@
     {
         var
         ms, px,
-        leftTimeObject = this._runningMarker.currentTimeObject(),
-        rightTimeObject = this._runningMarker.nextTimeObject();
+        leftTimeObject = this._cursor.currentTimeObject(),
+        rightTimeObject = this._cursor.nextTimeObject();
 
         if(rightTimeObject === undefined)
         {
@@ -107,8 +107,8 @@
 
         this.msPositionInScore += msIncrement;
 
-        leftTimeObject = this._runningMarker.currentTimeObject(); 
-        rightTimeObject = this._runningMarker.nextTimeObject();
+        leftTimeObject = this._cursor.currentTimeObject(); 
+        rightTimeObject = this._cursor.nextTimeObject();
         if(rightTimeObject === undefined)
         {
             rightTimeObject = this._endOfSystemTimeObject;
@@ -125,8 +125,8 @@
 
             this._advanceRunningMarker(rightTimeObject.msPositionInScore);
 
-            leftTimeObject = this._runningMarker.currentTimeObject();
-            rightTimeObject = this._runningMarker.nextTimeObject();
+            leftTimeObject = this._cursor.currentTimeObject();
+            rightTimeObject = this._cursor.nextTimeObject();
             if(rightTimeObject === undefined)
             {
                 rightTimeObject = this._endOfSystemTimeObject;
@@ -147,8 +147,8 @@
         }
         else
         {
-            this._runningMarker.setVisible(false);
-            this._runningMarker.moveTo(this._startMarker.msPositionInScore);
+            this._cursor.setVisible(false);
+            this._cursor.moveTo(this._startMarker.msPositionInScore);
             localAlignment = this._startMarker.alignment;
             this.setVisible(false);
 

@@ -76,6 +76,20 @@ class Marker
 
 	}
 
+	// the top of the line (excluding the disk)
+	top()
+	{
+		let top = parseFloat(this.line.getAttribute('y1')) / this.viewBoxScale;
+		return top;
+	}
+
+	// the height of the line (excluding the disk)
+	height()
+	{
+		let bottom = parseFloat(this.line.getAttribute('y2')) / this.viewBoxScale;
+		return bottom - this.top();
+	}
+
 	moveTo(timeObject)
 	{
 		var x = timeObject.alignment * this.viewBoxScale;

@@ -49,7 +49,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	isConducting = false,
 
 	startMarker,
-	runningMarker,
 	endMarker,
 	conductor, // an object that has a now() function).
 	cursor, // The cursor that is going to replace all the RunningMarkers
@@ -738,14 +737,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Called when the go button or the startConducting button is clicked.
 	setCursor = function()
 	{
-		var sysIndex, nSystems = systems.length, system;
-
-		for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
-		{
-			system = systems[sysIndex];
-			system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
-		}
-
 		cursor.moveCursorLineTo(startMarker.msPositionInScore);
 		cursor.setVisible(true);
 	},
@@ -776,7 +767,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				system = systems[sysIndex];
 
 				endOfSystemTimeObject = getEndOfSystemTimeObject(system);
-				system.timePointer.init(system.startMarker, system.runningMarker, endOfSystemTimeObject);
+				system.timePointer.init(system.startMarker, cursor, endOfSystemTimeObject);
 
 				timePointers.push(system.timePointer);
 
@@ -1136,40 +1127,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// Appends the markers and timePointers to the markerslayer.
 		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore, regionSequence)
 		{
-			var runningMarkerElem, runningMarkerHeight;
-
-			function newRunningMarkerElem()
-			{
-				var runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-					runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line');
-
-				runningMarkerLine.setAttribute("x1", "0");
-				runningMarkerLine.setAttribute("y1", "0");
-				runningMarkerLine.setAttribute("x2", "0");
-				runningMarkerLine.setAttribute("y2", "0");
-				runningMarkerLine.setAttribute("style", "stroke-width:1px");
-
-				runningMarkerElem.setAttribute("class", "runningMarkerElem");
-				runningMarkerElem.appendChild(runningMarkerLine);
-
-				return runningMarkerElem;
-			}
-
-			runningMarkerElem = newRunningMarkerElem();
-			markersLayer.appendChild(runningMarkerElem);
-
 			system.startMarker = new StartMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
 			markersLayer.appendChild(system.startMarker.element);
-
-			system.runningMarker = new RunningMarker(system, systemIndexInScore, runningMarkerElem, viewBoxScale);
 
 			system.endMarker = new EndMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
 			markersLayer.appendChild(system.endMarker.element);
 
-			runningMarkerHeight = system.runningMarker.yCoordinates.bottom - system.runningMarker.yCoordinates.top;
-
-			system.timePointer = new TimePointer(system.runningMarker.yCoordinates.top, runningMarkerHeight, viewBoxScale, advanceCursor);
-
+			system.timePointer = new TimePointer(system.startMarker.top(), system.startMarker.height(), viewBoxScale, advanceCursor);
 			markersLayer.appendChild(system.timePointer.graphicElement);
 		}
 
@@ -1807,11 +1771,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			{
 				system = systems[i];
 				system.startMarker.setVisible(false);
-				system.runningMarker.setVisible(false);
 				system.endMarker.setVisible(false);
 				system.timePointer.setVisible(false);
 
-				system.runningMarker.setTimeObjects(system, isLivePerformance, trackIsOnArray);
 				for(j = 0; j < system.staves.length; ++j)
 				{
 					if(!isNaN(system.staves[j].voices[0].timeObjects[0].alignment))
@@ -1820,15 +1782,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						break;
 					}
 				}
-
-				system.runningMarker.moveTo(system.startMarker.msPositionInScore); // system.startMarker is system.runningMarker.startMarker 
 			}
 
 			startMarker = systems[0].startMarker;
 			startMarker.setVisible(true);
-
-			runningMarker = systems[0].runningMarker;
-			// runningMarker (and maybe timePointer) will be set visible later.
 
 			endMarker = systems[systems.length - 1].endMarker;
 			endMarker.moveTo(finalBarlineInScore);
