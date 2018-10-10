@@ -5,33 +5,13 @@ const CIRCLE_RADIUS = 5; // user html pixels;
 class Marker
 {
 	// Contains a line, a disk and (possibly) a text element.
-	constructor(system, systemIndexInScore, regionSequence, vbScale)
+	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
 	{
-		function getUserYCoordinates(system)
-		{
-			const dTopGaps = 16; // length of marker above system.topLineY in gaps
-			const dBottomGaps = 12; // length of marker below system.bottomLineY in gaps
-
-			let yCoordinates = {},
-				staff = system.staves[0],
-				bottomLineY = staff.bottomLineY,
-				topLineY = staff.topLineY,
-				nGaps = staff.stafflines.length - 1,
-				gap = (bottomLineY - topLineY) / nGaps;
-
-			yCoordinates.top = (system.topLineY - (dTopGaps * gap));
-			yCoordinates.bottom = (system.bottomLineY + (dBottomGaps * gap));
-
-			return yCoordinates;
-		}
-
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			line = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
 			circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
-			yCoordinates, svgTop, svgBottom,
-			text;
+			svgTop, svgBottom, text;
 
-		yCoordinates = getUserYCoordinates(system);
 		svgTop = (yCoordinates.top * vbScale).toString();
 		svgBottom = (yCoordinates.bottom * vbScale).toString(); 
 
@@ -72,7 +52,7 @@ class Marker
 			Object.defineProperty(this, "text", { value: text, writable: false });
 		}
 		Object.defineProperty(this, "yCoordinates", { value: yCoordinates, writable: false });
-		Object.defineProperty(this, "systemIndexInScore", { value: systemIndexInScore, writable: false });
+		Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
 
 	}
 
@@ -139,9 +119,10 @@ class Marker
 
 export class StartMarker extends Marker
 {
-	constructor(system, systemIndexInScore, regionSequence, vbScale)
+
+	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
 	{
-		super(system, systemIndexInScore, regionSequence, vbScale);
+		super(yCoordinates, systemIndex, regionSequence, vbScale);
 
 		this.line.style.stroke = GREEN;
 		this.circle.style.fill = GREEN;
@@ -158,9 +139,9 @@ export class StartMarker extends Marker
 
 export class EndMarker extends Marker
 {
-	constructor(system, systemIndexInScore, regionSequence, vbScale)
+	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
 	{
-		super(system, systemIndexInScore, regionSequence, vbScale);
+		super(yCoordinates, systemIndex, regionSequence, vbScale);
 
 		this.line.style.stroke = RED;
 		this.circle.style.fill = RED;

@@ -235,7 +235,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
 	refreshDisplay = function(trackIsOnArrayArg)
 	{
-		var i, system = systems[startMarker.systemIndexInScore],
+		var i, system = systems[startMarker.systemIndex],
 			startMarkerAlignment = startMarker.alignment,
 			timeObjectsArray = getTimeObjectsArray(system), timeObject,
 			nOutputTracks = midiChannelPerOutputTrack.length;
@@ -761,24 +761,18 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		isConducting = boolean; // score.isConducting!
 		if(isConducting)
 		{
-			for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
-			{
-				system = systems[sysIndex];
 
-				endOfSystemTimeObject = getEndOfSystemTimeObject(system);
-				system.timePointer.init(system.startMarker, cursor, endOfSystemTimeObject);
-
-				timePointers.push(system.timePointer);
-
-				if(sysIndex === startMarker.systemIndexInScore)
-				{
-					conductor.setTimePointer(system.timePointer);
-				}
-			}
+			let timePointer = new TimePointer(cursor); // TimePointer uses the Cursor attributes to implement its own...
+			markersLayer.appendChild(timePointer.graphicElement);
+			conductor.setTimePointer(timePointer);
 		}
 		else
 		{
-			conductor.setTimePointer(undefined);
+			if(conductor._timePointer !== undefined)
+			{
+				markersLayer.removeChild(conductor._timePointer.graphicElement);
+			}
+			conductor.setTimePointer(undefined);			
 		}
 	},
 
@@ -801,8 +795,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	{
 		var system, svgPageEmbeds,
 			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-			localMarkersLayer, systemIndexOnPage, pageSystems,
-			systemIndexInScore = 0;
+			localMarkersLayer;
 
 		function resetContent(isLivePerformanceArg)
 		{
@@ -1123,17 +1116,25 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			regionSequence = regionSeq;
 		}
 
-		// Appends the markers and timePointers to the markerslayer.
-		function createMarkers(conductor, markersLayer, viewBoxScale, system, systemIndexInScore, regionSequence)
+		// returns an array containing nSystems {top, bottom} objects
+		function getMarkerYLimitsArray(systems, pageTop, pageBottom)
 		{
-			system.startMarker = new StartMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
-			markersLayer.appendChild(system.startMarker.element);
+			let ys = [], nSystems = systems.length;
 
-			system.endMarker = new EndMarker(system, systemIndexInScore, regionSequence, viewBoxScale);
-			markersLayer.appendChild(system.endMarker.element);
+			ys.push(pageTop + ((systems[0].topLineY - pageTop) / 2));
+			for(let i = 1; i < nSystems; ++i)
+			{
+				ys.push(systems[i - 1].bottomLineY + ((systems[i].topLineY - systems[i - 1].bottomLineY) / 2));
+			}
+			ys.push(systems[nSystems - 1].bottomLineY + ((pageBottom - systems[nSystems - 1].bottomLineY) / 2));
 
-			system.timePointer = new TimePointer(system.startMarker.top(), system.startMarker.height(), viewBoxScale, advanceCursor);
-			markersLayer.appendChild(system.timePointer.graphicElement);
+			let returnArray = [];
+			for(let i = 0; i < nSystems; ++i)
+			{
+				returnArray.push({ "top": ys[i], "bottom": ys[i + 1] });
+			}
+
+			return returnArray;
 		}
 
 		function initializeTrackIsOnArray(system)
@@ -1244,25 +1245,32 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
 		pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
-		localMarkersLayer = createMarkersLayer(svgElem); // markersLayer is global inside the score namespace
-
 		getRegionData(svgElem); // sets regionSequence and default values for startRegionIndex, endRegionIndex. 
-
-		pageSystems = [];
-		for(systemIndexOnPage = 0; systemIndexOnPage < pageSystemElems.length; ++systemIndexOnPage)
+ 
+		for(let systemIndex = 0; systemIndex < pageSystemElems.length; ++systemIndex)
 		{
-			systemElem = pageSystemElems[systemIndexOnPage];
+			systemElem = pageSystemElems[systemIndex];
 			systemElems.push(systemElem);
 
 			system = getEmptySystem(viewBox.scale, systemElem);
-			system.pageOffsetTop = svgPage.offsetTop;
 			systems.push(system); // systems is global inside the score namespace
-			pageSystems.push(system);
-
-			createMarkers(conductor, localMarkersLayer, viewBox.scale, system, systemIndexInScore++, regionSequence);
 		}
 
-		markersLayer = localMarkersLayer; // markersLayer is accessed outside the score using a getter function
+		// markersLayer is global inside the score namespace
+		markersLayer = createMarkersLayer(svgElem); 
+		let markerYLimitsArray = getMarkerYLimitsArray(systems, svgPage.clientTop, svgPage.clientTop + svgPage.clientHeight);
+		for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
+		{
+			let yCoordinates = { top: markerYLimitsArray[systemIndex].top, bottom: markerYLimitsArray[systemIndex].bottom };
+
+			system = systems[systemIndex];
+
+			system.startMarker = new StartMarker(yCoordinates, systemIndex, regionSequence, viewBox.scale);
+			markersLayer.appendChild(system.startMarker.element);
+
+			system.endMarker = new EndMarker(yCoordinates, systemIndex, regionSequence, viewBox.scale);
+			markersLayer.appendChild(system.endMarker.element);
+		}
 
 		setConductingLayer(); // just sets its dimensions
 
@@ -1320,7 +1328,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		if((startMarkerYCoordinates.top < scrollTop) || (startMarkerYCoordinates.bottom > (scrollTop + height)))
 		{
-			if(startMarker.systemIndexInScore === 0)
+			if(startMarker.systemIndex === 0)
 			{
 				svgPagesDiv.scrollTop = 0;
 			}
@@ -1771,7 +1779,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				system = systems[i];
 				system.startMarker.setVisible(false);
 				system.endMarker.setVisible(false);
-				system.timePointer.setVisible(false);
 
 				for(j = 0; j < system.staves.length; ++j)
 				{
