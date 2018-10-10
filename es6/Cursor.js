@@ -1,5 +1,5 @@
 
-import { YCoordinates } from "./YCoordinates.js";
+
 import { CursorCoordinates } from "./CursorCoordinates.js";
 
 export class Cursor
@@ -38,7 +38,14 @@ export class Cursor
 
 	getSystemCursorCoordinates(system, viewBoxScale)
 	{
-		let systemCCMap = new Map(), nStaves = system.staves.length, yCoordinates = new YCoordinates(system.startMarker);
+		let systemCCMap = new Map(),
+			nStaves = system.staves.length,
+			line = system.startMarker.line,
+			yCoordinates = {};
+
+		yCoordinates.top = line.y1.baseVal.value;
+		yCoordinates.bottom = line.y2.baseVal.value;
+
 		for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 		{
 			let staff = system.staves[staffIndex], nVoices = staff.voices.length;
