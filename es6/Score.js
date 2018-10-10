@@ -1006,20 +1006,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return dy;
 			}
 
-			function getSystemMarkerLimits(system)
-			{
-				var	dTopGaps = -16,
-					dBottomGaps = 12,
-					staff = system.staves[0],
-					bottomLineY = staff.bottomLineY,
-					topLineY = staff.topLineY,
-					nGaps = staff.stafflines.length - 1,
-					gap = (bottomLineY - topLineY) / nGaps;
-
-				system.markersTop = ((dTopGaps * gap) + system.topLineY) * viewBoxScale;
-				system.markersBottom = ((dBottomGaps * gap) + system.bottomLineY) * viewBoxScale;
-			}
-
 			system = {};
 			systemDy = getDy(systemElem);
 
@@ -1090,8 +1076,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					}
 				}
 			}
-
-			getSystemMarkerLimits(system);
 
 			return system;
 		}

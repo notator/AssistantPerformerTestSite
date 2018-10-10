@@ -7,13 +7,33 @@ class Marker
 	// Contains a line, a disk and (possibly) a text element.
 	constructor(system, systemIndexInScore, regionSequence, vbScale)
 	{
-		let top = system.markersTop.toString(),
-			bottom = system.markersBottom.toString(),
-			element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+		function getUserYCoordinates(system)
+		{
+			const dTopGaps = 16; // length of marker above system.topLineY in gaps
+			const dBottomGaps = 12; // length of marker below system.bottomLineY in gaps
+
+			let yCoordinates = {},
+				staff = system.staves[0],
+				bottomLineY = staff.bottomLineY,
+				topLineY = staff.topLineY,
+				nGaps = staff.stafflines.length - 1,
+				gap = (bottomLineY - topLineY) / nGaps;
+
+			yCoordinates.top = (system.topLineY - (dTopGaps * gap));
+			yCoordinates.bottom = (system.bottomLineY + (dBottomGaps * gap));
+
+			return yCoordinates;
+		}
+
+		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			line = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
 			circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
-			yCoordinates = {},
+			yCoordinates, svgTop, svgBottom,
 			text;
+
+		yCoordinates = getUserYCoordinates(system);
+		svgTop = (yCoordinates.top * vbScale).toString();
+		svgBottom = (yCoordinates.bottom * vbScale).toString(); 
 
 		element.appendChild(line);
 		element.appendChild(circle);
@@ -24,14 +44,14 @@ class Marker
 		}
 
 		line.setAttribute('x1', '0');
-		line.setAttribute('y1', top);
+		line.setAttribute('y1', svgTop);
 		line.setAttribute('x2', '0');
-		line.setAttribute('y2', bottom);
+		line.setAttribute('y2', svgBottom);
 		line.setAttribute("style", "stroke-width:1px");
 		line.style.strokeWidth = 4; // 1/2 pixel
 
 		circle.setAttribute('cx', '0');
-		circle.setAttribute('cy', top);
+		circle.setAttribute('cy', svgTop);
 		circle.setAttribute('r', (vbScale * CIRCLE_RADIUS).toString());
 		circle.style.strokeWidth = 0;
 
@@ -39,12 +59,9 @@ class Marker
 		{
 			text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.8).toString()); // baseline will be below y
 			text.setAttribute('x', '0'); // dx will be set, so origin will not be 0
-			text.setAttribute('y', top); // dy will be set, so baseline will be below top
+			text.setAttribute('y', svgTop); // dy will be set, so baseline will be below top
 			text.setAttribute('style', 'font-size: ' + (vbScale * CIRCLE_RADIUS * 2.4).toString() + '; font-family: sans-serif; font-weight: bold');
 		}
-
-		yCoordinates.top = Math.round(parseFloat(top) / vbScale);
-		yCoordinates.bottom = Math.round(parseFloat(bottom) / vbScale);
 
 		Object.defineProperty(this, "viewBoxScale", { value: vbScale, writable: false });
 		Object.defineProperty(this, "element", { value: element, writable: false });
