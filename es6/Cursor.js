@@ -64,7 +64,7 @@ export class Cursor
 						let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
 						if(msPos < this.endMarkerMsPosInScore)
 						{
-							let cursorCoordinates = new CursorCoordinates(tObj.alignment * viewBoxScale, yCoordinates);
+							let cursorCoordinates = { alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates};
 							systemCCMap.set(msPos, cursorCoordinates);
 						}
 					}
@@ -76,7 +76,7 @@ export class Cursor
 						let tObj = timeObjects[ti], tObjPos = tObj.msPositionInScore;
 						if(systemCCMap.get(tObjPos) === undefined)
 						{
-							let cursorCoordinates = new CursorCoordinates(tObj.alignment * viewBoxScale, yCoordinates);
+							let cursorCoordinates = { alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
 							systemCCMap.set(tObjPos, cursorCoordinates);
 						}
 					}
