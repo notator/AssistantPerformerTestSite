@@ -1,6 +1,5 @@
 import { StartMarker } from "./Markers.js";
 import { EndMarker } from "./Markers.js";
-import { RunningMarker } from "./RunningMarker.js";
 import { TimePointer } from "./TimePointer.js";
 import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";

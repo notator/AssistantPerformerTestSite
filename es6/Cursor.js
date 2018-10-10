@@ -1,7 +1,4 @@
 
-
-import { CursorCoordinates } from "./CursorCoordinates.js";
-
 export class Cursor
 {
 	constructor(markersLayer, endMarkerMsPosInScore, systems, viewBoxScale, systemChanged)
