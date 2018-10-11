@@ -1280,8 +1280,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			systems.push(system); // systems is global inside the score namespace
 		}
 
+		// markersLayer is a new layer in (on top of) the svg of the score
 		setMarkersLayer(svgElem, systems, regionSequence, viewBox.scale);
 
+		// conductingLayer is a div in (on top of) the AssistantPerformer's document
 		setConductingLayer(); // just sets its dimensions
 
 		initializeTrackIsOnArray(systems[0]);
