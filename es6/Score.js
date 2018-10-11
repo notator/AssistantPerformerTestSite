@@ -743,18 +743,18 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Called when the start conducting button is clicked on or off.
 	setConducting = function(boolean)
 	{
-		var sysIndex, nSystems = systems.length, system, timePointers = [], endOfSystemTimeObject;
+		//var sysIndex, nSystems = systems.length, system, timePointers = [], endOfSystemTimeObject;
 
-		function getEndOfSystemTimeObject(system)
-		{
-			var
-				finalIndex = system.staves[0].voices[0].timeObjects.length - 1,
-				endOfSystemTimeObject;
+		//function getEndOfSystemTimeObject(system)
+		//{
+		//	var
+		//		finalIndex = system.staves[0].voices[0].timeObjects.length - 1,
+		//		endOfSystemTimeObject;
 
-			endOfSystemTimeObject = system.staves[0].voices[0].timeObjects[finalIndex];
+		//	endOfSystemTimeObject = system.staves[0].voices[0].timeObjects[finalIndex];
 
-			return endOfSystemTimeObject;
-		}
+		//	return endOfSystemTimeObject;
+		//}
 
 		setCursor();
 
@@ -794,8 +794,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	getEmptySystems = function(isLivePerformanceArg, startConductingCallback)
 	{
 		var system, svgPageEmbeds,
-			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem,
-			localMarkersLayer;
+			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem;
 
 		function resetContent(isLivePerformanceArg)
 		{
@@ -1117,16 +1116,18 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 
 		// returns an array containing nSystems {top, bottom} objects
-		function getMarkerYLimitsArray(systems, pageTop, pageBottom)
+		function getMarkerYLimitsArray(systems)
 		{
-			let ys = [], nSystems = systems.length;
+			let ys = [], nSystems = systems.length,
+				topDelta = 10 + (systems[0].topLineY / 2);
 
-			ys.push(pageTop + ((systems[0].topLineY - pageTop) / 2));
+			ys.push(topDelta);
 			for(let i = 1; i < nSystems; ++i)
 			{
 				ys.push(systems[i - 1].bottomLineY + ((systems[i].topLineY - systems[i - 1].bottomLineY) / 2));
 			}
-			ys.push(systems[nSystems - 1].bottomLineY + ((pageBottom - systems[nSystems - 1].bottomLineY) / 2));
+			let bottomDelta = (nSystems === 1) ? topDelta : ((systems[nSystems - 1].topLineY - systems[nSystems - 2].bottomLineY) / 2);
+			ys.push(systems[nSystems - 1].bottomLineY + bottomDelta);
 
 			let returnArray = [];
 			for(let i = 0; i < nSystems; ++i)
@@ -1258,10 +1259,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// markersLayer is global inside the score namespace
 		markersLayer = createMarkersLayer(svgElem); 
-		let markerYLimitsArray = getMarkerYLimitsArray(systems, svgPage.clientTop, svgPage.clientTop + svgPage.clientHeight);
+		let markerYLimitsArray = getMarkerYLimitsArray(systems);
 		for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
 		{
-			let yCoordinates = { top: markerYLimitsArray[systemIndex].top, bottom: markerYLimitsArray[systemIndex].bottom };
+			let yCoordinates = { top: markerYLimitsArray[systemIndex].top + 5, bottom: markerYLimitsArray[systemIndex].bottom - 5 };
 
 			system = systems[systemIndex];
 
@@ -1771,7 +1772,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 		}
 
-		function setMarkers(systems, isLivePerformance)
+		function setMarkers(systems)
 		{
 			var i, j, nSystems = systems.length, system;
 			for(i = 0; i < nSystems; ++i)
@@ -2002,7 +2003,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		setRegionData(outputTracks);
 
-		setMarkers(systems, isLivePerformance);
+		setMarkers(systems);
 
 		// cursor is accessed outside the score using a getter function
 		cursor = new Cursor(markersLayer, endMarker.msPositionInScore, systems, viewBoxScale, systemChanged);
