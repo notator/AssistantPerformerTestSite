@@ -734,7 +734,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Called when the go button or the startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.moveCursorLineTo(startMarker.msPositionInScore);
+		cursor.moveCursorElementTo(startMarker.msPositionInScore);
 		cursor.setVisible(true);
 	},
 
@@ -1349,11 +1349,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
-	// Advances the running marker to msPosition (in any channel)
+	// Advances the cursor to msPosition (in any channel)
 	// Does nothing when the end of the score is reached.
 	advanceCursor = function(msPosition)
 	{
-		cursor.moveCursorLineTo(msPosition);
+		cursor.moveCursorElementTo(msPosition);
 	},
 
 	// tracksData has the following defined attributes:
@@ -2015,7 +2015,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		setMarkers(systems);
 
 		// cursor is accessed outside the score using a getter function
-		cursor = new Cursor(markersLayer, endMarker.msPositionInScore, systems, viewBoxScale, systemChanged);
+		cursor = new Cursor(endMarker.msPositionInScore, systems, viewBoxScale, systemChanged);
+
+		markersLayer.appendChild(cursor.element);
 
 		//    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
 		//        inputKeyRange.bottomKey
