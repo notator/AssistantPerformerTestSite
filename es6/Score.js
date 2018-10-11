@@ -128,7 +128,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// (in any performing input or output track, depending on findInput).
 	// If trackIndex is defined, the returned timeObject will be in that track.
 	// Returns null if no timeObject can be found that matches the arguments.
-	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex)
+	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex, state)
 	{
 		var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
 			nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
@@ -168,6 +168,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					nTimeObjects = timeObjects.length;
 					for(j = 0; j < nTimeObjects; ++j)
 					{
+						if((j === nTimeObjects - 1) && (state.localeCompare('settingStart') === 0))
+						{
+							break; // ignore the final barline
+						}
+						if((j === 0) && (state.localeCompare('settingEnd') === 0))
+						{
+							continue; // ignore the first timeObject
+						}
 						timeObject = timeObjects[j];
 						if((findInput === false)  // timeObject contains a midiRest or midiChord
 							|| (findInput && // find an inputChord
@@ -195,35 +203,25 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 		if(returnTimeObject === null && (timeObjectBefore !== null || timeObjectAfter !== null))
 		{
-			returnTimeObject = (deltaBefore > deltaAfter) ? timeObjectAfter : timeObjectBefore;
+			returnTimeObject = (deltaAfter < deltaBefore) ? timeObjectAfter : timeObjectBefore;
 		}
 		return returnTimeObject;
 	},
 
-	findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex)
+	findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex, state)
 	{
-		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignment, trackIndex);
+		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignment, trackIndex, state);
 		return returnTimeObject;
 	},
 
-	findPerformingOutputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex)
+	findPerformingOutputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignment, trackIndex, state)
 	{
-		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, false, alignment, trackIndex);
+		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, false, alignment, trackIndex, state);
 		return returnTimeObject;
 	},
 
 	updateStartMarker = function(timeObjectsArray, timeObject)
 	{
-		var nOutputTracks = midiChannelPerOutputTrack.length;
-
-		if(isLivePerformance === false)
-		{
-			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
-		}
-		else
-		{
-			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignment);
-		}
 
 		if(timeObject.msPositionInScore < endMarker.msPositionInScore)
 		{
@@ -320,11 +318,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		if(isLivePerformance)
 		{
-			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment);
+			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, 'settingStart');
 		}
 		else
 		{
-			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment);
+			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, 'settingStart');
 		}
 		// Move the start marker if necessary.
 		// timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
@@ -639,11 +637,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		if(isLivePerformance === true)
 		{
-			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
+			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex, state);
 		}
 		else
 		{
-			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
+			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex, state);
 		}
 
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
