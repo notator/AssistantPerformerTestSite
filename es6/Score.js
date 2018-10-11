@@ -1,8 +1,8 @@
 import { StartMarker } from "./Markers.js";
 import { EndMarker } from "./Markers.js";
-import { TimePointer } from "./TimePointer.js";
 import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";
+import { TimeMarker } from "./Cursor.js";
 import { MidiChord, MidiRest } from "./MidiObject.js";
 import { Track } from "./Track.js";
 import { InputChordDef, InputRestDef } from "./InputObjectDef.js";
@@ -734,43 +734,24 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Called when the go button or the startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.moveCursorElementTo(startMarker.msPositionInScore);
+		cursor.moveElementTo(startMarker.msPositionInScore);
 		cursor.setVisible(true);
 	},
 
 	// Called when the start conducting button is clicked on or off.
-	setConducting = function(boolean)
+	setConducting = function(setToConducting)
 	{
-		//var sysIndex, nSystems = systems.length, system, timePointers = [], endOfSystemTimeObject;
-
-		//function getEndOfSystemTimeObject(system)
-		//{
-		//	var
-		//		finalIndex = system.staves[0].voices[0].timeObjects.length - 1,
-		//		endOfSystemTimeObject;
-
-		//	endOfSystemTimeObject = system.staves[0].voices[0].timeObjects[finalIndex];
-
-		//	return endOfSystemTimeObject;
-		//}
-
 		setCursor();
 
-		isConducting = boolean; // score.isConducting!
-		if(isConducting)
+		if(setToConducting)
 		{
-
-			let timePointer = new TimePointer(cursor); // TimePointer uses the Cursor attributes to implement its own...
-			markersLayer.appendChild(timePointer.graphicElement);
-			conductor.setTimePointer(timePointer);
-		}
-		else
-		{
-			if(conductor._timePointer !== undefined)
+			if(conductor.timeMarker === undefined)
 			{
-				markersLayer.removeChild(conductor._timePointer.graphicElement);
+				let timeMarker = new TimeMarker(cursor); // TimeMarker uses the Cursor attributes to implement its own...
+				markersLayer.appendChild(timeMarker.element);
+				conductor.setTimeMarker(timeMarker);
 			}
-			conductor.setTimePointer(undefined);			
+			conductor.timeMarker.setStartMarker(startMarker);
 		}
 	},
 
@@ -1353,7 +1334,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Does nothing when the end of the score is reached.
 	advanceCursor = function(msPosition)
 	{
-		cursor.moveCursorElementTo(msPosition);
+		cursor.moveElementTo(msPosition);
 	},
 
 	// tracksData has the following defined attributes:
