@@ -1062,28 +1062,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return system;
 		}
 
-		// Creates a new "g" element at the top level of the svg page.
-		// The element contains a transparent, clickable rect.
-		// The markers and timePointer are added to the markersLayer later.
-		function createMarkersLayer(svgElem)
-		{
-			var viewBox = svgElem.viewBox.baseVal,
-				markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-				rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-			markersLayer.setAttribute("style", "display:inline");
-
-			rect.setAttribute("x", viewBox.x.toString(10));
-			rect.setAttribute("y", viewBox.y.toString(10));
-			rect.setAttribute("width", viewBox.width.toString(10));
-			rect.setAttribute("height", viewBox.height.toString(10));
-			rect.setAttribute("style", "stroke:none; fill:#ffffff; fill-opacity:0");
-			markersLayer.appendChild(rect);
-
-			svgElem.appendChild(markersLayer);
-
-			return markersLayer;
-		}
 
 		// uses the <regionSequence> element to set the following values (global inside Score.js):
 		// 	   startRegionIndex, endRegionIndex, regionSequence.
@@ -1115,27 +1094,71 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			regionSequence = regionSeq;
 		}
 
-		// returns an array containing nSystems {top, bottom} objects
-		function getMarkerYLimitsArray(systems)
+		// Creates the global markersLayer and its startMarkers and endMarkers
+		function setMarkersLayer(svgElem, systems, regionSequence, vbScale)
 		{
-			let ys = [], nSystems = systems.length,
-				topDelta = 10 + (systems[0].topLineY / 2);
-
-			ys.push(topDelta);
-			for(let i = 1; i < nSystems; ++i)
+			// Creates a new "g" element at the top level of the svg page.
+			// The element contains a transparent, clickable rect.
+			// The markers and timePointer are added to the markersLayer later.
+			function createMarkersLayer(svgElem)
 			{
-				ys.push(systems[i - 1].bottomLineY + ((systems[i].topLineY - systems[i - 1].bottomLineY) / 2));
-			}
-			let bottomDelta = (nSystems === 1) ? topDelta : ((systems[nSystems - 1].topLineY - systems[nSystems - 2].bottomLineY) / 2);
-			ys.push(systems[nSystems - 1].bottomLineY + bottomDelta);
+				var viewBox = svgElem.viewBox.baseVal,
+					markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+					rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-			let returnArray = [];
-			for(let i = 0; i < nSystems; ++i)
+				markersLayer.setAttribute("style", "display:inline");
+
+				rect.setAttribute("x", viewBox.x.toString(10));
+				rect.setAttribute("y", viewBox.y.toString(10));
+				rect.setAttribute("width", viewBox.width.toString(10));
+				rect.setAttribute("height", viewBox.height.toString(10));
+				rect.setAttribute("style", "stroke:none; fill:#ffffff; fill-opacity:0");
+				markersLayer.appendChild(rect);
+
+				svgElem.appendChild(markersLayer);
+
+				return markersLayer;
+			}
+
+			// returns an array containing nSystems {top, bottom} objects
+			function getMarkerYLimitsArray(systems)
 			{
-				returnArray.push({ "top": ys[i], "bottom": ys[i + 1] });
+				let ys = [], nSystems = systems.length,
+					topDelta = 10 + (systems[0].topLineY / 2);
+
+				ys.push(topDelta);
+				for(let i = 1; i < nSystems; ++i)
+				{
+					ys.push(systems[i - 1].bottomLineY + ((systems[i].topLineY - systems[i - 1].bottomLineY) / 2));
+				}
+				let bottomDelta = (nSystems === 1) ? topDelta : ((systems[nSystems - 1].topLineY - systems[nSystems - 2].bottomLineY) / 2);
+				ys.push(systems[nSystems - 1].bottomLineY + bottomDelta);
+
+				let returnArray = [];
+				for(let i = 0; i < nSystems; ++i)
+				{
+					returnArray.push({ "top": ys[i], "bottom": ys[i + 1] });
+				}
+
+				return returnArray;
 			}
 
-			return returnArray;
+			// markersLayer is global inside the score namespace
+			markersLayer = createMarkersLayer(svgElem);
+
+			let markerYLimitsArray = getMarkerYLimitsArray(systems);
+			for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
+			{
+				let yCoordinates = { top: markerYLimitsArray[systemIndex].top + 5, bottom: markerYLimitsArray[systemIndex].bottom - 5 };
+
+				system = systems[systemIndex];
+
+				system.startMarker = new StartMarker(yCoordinates, systemIndex, regionSequence, vbScale);
+				markersLayer.appendChild(system.startMarker.element);
+
+				system.endMarker = new EndMarker(yCoordinates, systemIndex, regionSequence, vbScale);
+				markersLayer.appendChild(system.endMarker.element);
+			}
 		}
 
 		function initializeTrackIsOnArray(system)
@@ -1257,21 +1280,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			systems.push(system); // systems is global inside the score namespace
 		}
 
-		// markersLayer is global inside the score namespace
-		markersLayer = createMarkersLayer(svgElem); 
-		let markerYLimitsArray = getMarkerYLimitsArray(systems);
-		for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
-		{
-			let yCoordinates = { top: markerYLimitsArray[systemIndex].top + 5, bottom: markerYLimitsArray[systemIndex].bottom - 5 };
-
-			system = systems[systemIndex];
-
-			system.startMarker = new StartMarker(yCoordinates, systemIndex, regionSequence, viewBox.scale);
-			markersLayer.appendChild(system.startMarker.element);
-
-			system.endMarker = new EndMarker(yCoordinates, systemIndex, regionSequence, viewBox.scale);
-			markersLayer.appendChild(system.endMarker.element);
-		}
+		setMarkersLayer(svgElem, systems, regionSequence, viewBox.scale);
 
 		setConductingLayer(); // just sets its dimensions
 
