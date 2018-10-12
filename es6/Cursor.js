@@ -1,14 +1,12 @@
 
 export class CursorBase
 {
-	constructor(element, scoreCursorCoordinatesMap, systemChanged, endMarkerMsPosInScore, viewBoxScale)
+	constructor(element, scoreCursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale)
 	{
 		Object.defineProperty(this, "scoreCursorCoordinatesMap", { value: scoreCursorCoordinatesMap, writable: false });
-		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
 		Object.defineProperty(this, "endMarkerMsPosInScore", { value: endMarkerMsPosInScore, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
-		Object.defineProperty(this, "yCoordinates", { value: this.scoreCursorCoordinatesMap.get(0), writable: true });
 		Object.defineProperty(this, "element", { value: element, writable: true });
 	}
 
@@ -21,31 +19,6 @@ export class CursorBase
 		else
 		{
 			this.element.style.visibility = 'hidden';
-		}
-	}
-
-	moveCursorElementTo(msPositionInScore)
-	{
-		if(msPositionInScore === this.endMarkerMsPosInScore)
-		{
-			this.setVisible(false);
-		}
-		else
-		{
-			let cursorCoordinates = this.scoreCursorCoordinatesMap.get(msPositionInScore);
-			if(cursorCoordinates !== undefined)
-			{
-				if(cursorCoordinates.yCoordinates !== this.yCoordinates)
-				{
-					this.yCoordinates = cursorCoordinates.yCoordinates;
-					this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
-					this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
-					let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-					this.systemChanged(yCoordinates);
-				}
-				this.element.setAttribute("x1", cursorCoordinates.alignment.toString(10));
-				this.element.setAttribute("x2", cursorCoordinates.alignment.toString(10));
-			}
 		}
 	}
 }
@@ -135,7 +108,36 @@ export class Cursor extends CursorBase
 		let scoreCursorCoordinatesMap = getScoreCursorCoordinatesMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
 		let element = newCursorLine(scoreCursorCoordinatesMap.get(0), viewBoxScale);
 
-		super(element, scoreCursorCoordinatesMap, systemChanged, endMarkerMsPosInScore, viewBoxScale);
+		super(element, scoreCursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale);
+
+		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
+		Object.defineProperty(this, "yCoordinates", { value: scoreCursorCoordinatesMap.get(0).yCoordinates, writable: true });
+	}
+
+	moveElementTo(msPositionInScore)
+	{
+		if(msPositionInScore === this.endMarkerMsPosInScore)
+		{
+			this.setVisible(false);
+		}
+		else
+		{
+			let cursorCoordinates = this.scoreCursorCoordinatesMap.get(msPositionInScore);
+			if(cursorCoordinates !== undefined)
+			{
+				if(cursorCoordinates.yCoordinates !== this.yCoordinates)
+				{
+					this.yCoordinates = cursorCoordinates.yCoordinates;
+					this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
+					this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
+					let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
+					this.systemChanged(yCoordinates);
+				}
+				this.element.setAttribute("x1", cursorCoordinates.alignment.toString(10));
+				this.element.setAttribute("x2", cursorCoordinates.alignment.toString(10));
+			}
+		}
 	}
 }
+
 

@@ -2,7 +2,7 @@ import { StartMarker } from "./Markers.js";
 import { EndMarker } from "./Markers.js";
 import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";
-import { TimeMarker } from "./Cursor.js";
+import { TimeMarker } from "./TimeMarker.js";
 import { MidiChord, MidiRest } from "./MidiObject.js";
 import { Track } from "./Track.js";
 import { InputChordDef, InputRestDef } from "./InputObjectDef.js";
