@@ -751,7 +751,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				markersLayer.appendChild(timeMarker.element);
 				conductor.setTimeMarker(timeMarker);
 			}
-			conductor.timeMarker.setStartMarker(startMarker, startRegionIndex, endRegionIndex);
+			conductor.timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
 		}
 	},
 

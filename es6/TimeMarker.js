@@ -110,7 +110,7 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "systemEndMsPositions", { value: systemEndMsPositions, writable: false });
 		Object.defineProperty(this, "currentSystemIndex", { value: 0, writable: true });
 
-		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in setStartMarker()
+		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in init()
 		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // value returned by now()		
 	}
 
@@ -198,7 +198,7 @@ export class TimeMarker extends CursorBase
 		}
 	}
 
-	setStartMarker(startMarker, startRegionIndex, endRegionIndex)
+	init(startMarker, startRegionIndex, endRegionIndex)
 	{
 		this.startMarker = startMarker;
 		this.msPositionInScore = startMarker.msPositionInScore;
