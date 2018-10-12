@@ -48,17 +48,13 @@
 
 	setTimeMarker(timeMarker)
 	{
-		if(this.timeMarker !== undefined)
-		{
-			this.timeMarker.setVisible(false);
-		}
+		//if(this.timeMarker !== undefined)
+		//{
+		//	this.timeMarker.setVisible(false);
+		//}
 
 		this.timeMarker = timeMarker;
-		if(timeMarker !== undefined)
-		{
-			this.timeMarker.setVisible(true);
-			this._prevX = -1;
-		}
+		this._prevX = -1;
 	}
 
 	now()

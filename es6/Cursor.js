@@ -1,13 +1,14 @@
 
 export class CursorBase
 {
-	constructor(element, scoreCursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale)
+	constructor(systemChanged, cursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale)
 	{
-		Object.defineProperty(this, "scoreCursorCoordinatesMap", { value: scoreCursorCoordinatesMap, writable: false });
+		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
+		Object.defineProperty(this, "cursorCoordinatesMap", { value: cursorCoordinatesMap, writable: false });
 		Object.defineProperty(this, "endMarkerMsPosInScore", { value: endMarkerMsPosInScore, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
-		Object.defineProperty(this, "element", { value: element, writable: true });
+		Object.defineProperty(this, "yCoordinates", { value: cursorCoordinatesMap.get(0).yCoordinates, writable: true });
 	}
 
 	setVisible(setToVisible)
@@ -27,16 +28,19 @@ export class Cursor extends CursorBase
 {
 	constructor(endMarkerMsPosInScore, systems, viewBoxScale, systemChanged)
 	{
-		function newCursorLine(firstCursorCoordinates, viewBoxScale)
+		function newElement(firstCursorCoordinates, viewBoxScale)
 		{
-			var cursorLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'), yCoordinates = firstCursorCoordinates.yCoordinates, alignment = firstCursorCoordinates.alignment;
-			cursorLine.setAttribute("class", "cursorLine");
-			cursorLine.setAttribute("x1", alignment.toString(10));
-			cursorLine.setAttribute("y1", yCoordinates.top.toString(10));
-			cursorLine.setAttribute("x2", alignment.toString(10));
-			cursorLine.setAttribute("y2", yCoordinates.bottom.toString(10));
-			cursorLine.setAttribute("style", "stroke:#999999; stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
-			return cursorLine;
+			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+				yCoordinates = firstCursorCoordinates.yCoordinates, alignment = firstCursorCoordinates.alignment;
+
+			element.setAttribute("class", "cursorLine");
+			element.setAttribute("x1", alignment.toString(10));
+			element.setAttribute("y1", yCoordinates.top.toString(10));
+			element.setAttribute("x2", alignment.toString(10));
+			element.setAttribute("y2", yCoordinates.bottom.toString(10));
+			element.setAttribute("style", "stroke:#999999; stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
+
+			return element;
 		}
 
 		// returns a Map that relates every msPositionInScore to a CursorCoordinates object.
@@ -93,25 +97,23 @@ export class Cursor extends CursorBase
 				return systemCCMap;
 			}
 
-			let scoreCursorCoordinatesMap = new Map();
+			let cursorCoordinatesMap = new Map();
 			for(let system of systems)
 			{
 				let systemSims = getSystemCursorCoordinatesMap(system, viewBoxScale);
 				for(let entry of systemSims.entries())
 				{
-					scoreCursorCoordinatesMap.set(entry[0], entry[1]);
+					cursorCoordinatesMap.set(entry[0], entry[1]);
 				}
 			}
-			return scoreCursorCoordinatesMap;
+			return cursorCoordinatesMap;
 		}
 
-		let scoreCursorCoordinatesMap = getScoreCursorCoordinatesMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
-		let element = newCursorLine(scoreCursorCoordinatesMap.get(0), viewBoxScale);
+		let cursorCoordinatesMap = getScoreCursorCoordinatesMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
+		super(systemChanged, cursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale);
 
-		super(element, scoreCursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale);
-
-		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
-		Object.defineProperty(this, "yCoordinates", { value: scoreCursorCoordinatesMap.get(0).yCoordinates, writable: true });
+		let element = newElement(cursorCoordinatesMap.get(0), viewBoxScale);
+		Object.defineProperty(this, "element", { value: element, writable: false });
 	}
 
 	moveElementTo(msPositionInScore)
@@ -122,7 +124,7 @@ export class Cursor extends CursorBase
 		}
 		else
 		{
-			let cursorCoordinates = this.scoreCursorCoordinatesMap.get(msPositionInScore);
+			let cursorCoordinates = this.cursorCoordinatesMap.get(msPositionInScore);
 			if(cursorCoordinates !== undefined)
 			{
 				if(cursorCoordinates.yCoordinates !== this.yCoordinates)

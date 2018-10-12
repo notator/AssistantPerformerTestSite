@@ -747,11 +747,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		{
 			if(conductor.timeMarker === undefined)
 			{
-				let timeMarker = new TimeMarker(cursor); // TimeMarker uses the Cursor attributes to implement its own...
+				let timeMarker = new TimeMarker(systems, cursor, regionSequence);
 				markersLayer.appendChild(timeMarker.element);
 				conductor.setTimeMarker(timeMarker);
 			}
-			conductor.timeMarker.setStartMarker(startMarker);
+			conductor.timeMarker.setStartMarker(startMarker, startRegionIndex, endRegionIndex);
 		}
 	},
 
