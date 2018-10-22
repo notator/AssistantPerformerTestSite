@@ -85,7 +85,7 @@ export class TimeMarker extends CursorBase
 			return rightAlignment;
 		}
 
-		super(cursor.systemChanged, cursor.cursorCoordinatesMap, cursor.endMarkerMsPosInScore, cursor.viewBoxScale);
+		super(cursor.systemChanged, cursor.msPosDataMap, cursor.endMarkerMsPosInScore, cursor.viewBoxScale);
 
 		let elem = newElement(cursor.viewBoxScale);
 		Object.defineProperty(this, "element", { value: elem.element, writable: false });
@@ -99,8 +99,8 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "endRegionIndex", { value: 0, writable: true });
 		Object.defineProperty(this, "currentRegionIndex", { value: 0, writable: true });
 
-		// An array containing the (sorted) cursorCoordinatesMap keys.
-		let msPositionsArray = getMsPositionsArray(cursor.cursorCoordinatesMap);
+		// An array containing the (sorted) msPosDataMap keys.
+		let msPositionsArray = getMsPositionsArray(cursor.msPosDataMap);
 		Object.defineProperty(this, "msPositions", { value: msPositionsArray, writable: false });
 		Object.defineProperty(this, "currentMsPositionIndex", { value: 0, writable: true });
 
@@ -111,7 +111,9 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "currentSystemIndex", { value: 0, writable: true });
 
 		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in init()
-		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // value returned by now()		
+		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // value returned by now()	
+		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
+		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
 	}
 
 	_setCoordinates(alignment, top, bottom)
@@ -164,40 +166,6 @@ export class TimeMarker extends CursorBase
 		vLine.setAttribute("x2", alignment.toString(10));
 	}
 
-	_moveElementTo(msPositionInScore)
-	{
-		function moveElementToCoordinates(that, coordinates)
-		{
-			if(that.yCoordinates === coordinates.yCoordinates)
-			{
-				that._setAlignment(coordinates.alignment);
-			}
-			else
-			{
-				let alignment = coordinates.alignment,
-					top = coordinates.yCoordinates.top,
-					bottom = coordinates.yCoordinates.bottom;
-
-				that._setCoordinates(alignment, top, bottom);
-				that.yCoordinates = coordinates.yCoordinates;
-			}
-		}
-
-		if(msPositionInScore >= this.endMarkerMsPosInScore)
-		{
-			this.setVisible(false);
-		}
-		else if(this.cursorCoordinatesMap.has(msPositionInScore))
-		{
-			let coordinates = this.cursorCoordinatesMap.get(msPositionInScore);
-
-			this.msPositionInScore = msPositionInScore;
-			this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === msPositionInScore);
-
-			moveElementToCoordinates(this, coordinates);
-		}
-	}
-
 	init(startMarker, startRegionIndex, endRegionIndex)
 	{
 		this.startMarker = startMarker;
@@ -209,7 +177,7 @@ export class TimeMarker extends CursorBase
 		this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === startMarker.msPositionInScore);
 		this.currentSystemIndex = this.systemEndMsPositions.findIndex((a) => a > startMarker.msPositionInScore);
 
-		let coordinates = this.cursorCoordinatesMap.get(this.msPositionInScore),
+		let coordinates = this.msPosDataMap.get(this.msPositionInScore),
 			alignment = coordinates.alignment,
 			top = coordinates.yCoordinates.top,
 			bottom = coordinates.yCoordinates.bottom;
@@ -217,28 +185,10 @@ export class TimeMarker extends CursorBase
 		this._setCoordinates(alignment, top, bottom);
 		this.yCoordinates = coordinates.yCoordinates; // maybe I can delete this.yCoordinates? Use currentSystemIndex instead...
 
+		this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
+		this.currentAlignment = this.msPosData.alignment; 
+
 		this.setVisible(true);
-	}
-
-	msPerPx()
-	{
-		var
-			ms, px,
-			leftMsPos = this.msPositions[this.currentMsPositionIndex],
-			leftAlignment = this.cursorCoordinatesMap.get(leftMsPos).alignment,
-			rightMsPos = this.endMarkerMsPosInScore,
-			rightAlignment;
-
-		if((this.currentMsPositionIndex + 1) < this.msPositions.length)
-		{
-			rightMsPos = this.msPositions[this.currentMsPositionIndex + 1];
-			rightAlignment = this.cursorCoordinatesMap.get(rightMsPos).alignment;
-		}
-
-		ms = rightMsPos - leftMsPos;
-		px = rightAlignment - leftAlignment;
-
-		return (ms / px);
 	}
 
 	now()
@@ -246,26 +196,77 @@ export class TimeMarker extends CursorBase
 		return this.msPositionInScore;
 	}
 
+	_moveElementTo(currentAlignment, msPosData, msIncrement)
+	{
+		let alignment = currentAlignment + (msIncrement * msPosData.pixelsPerMs);
+
+		if(this.yCoordinates !== msPosData.yCoordinates)
+		{
+			this.yCoordinates = msPosData.yCoordinates;
+			this._setCoordinates(alignment, this.yCoordinates.top, this.yCoordinates.bottom);
+			let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
+			this.systemChanged(yCoordinates);
+		}
+		else
+		{
+			this._setAlignment(alignment);
+		}
+
+		this.currentAlignment = alignment;
+	}
+
 	advance(msIncrement)
 	{
-		let leftMsPos = this.msPositions[this.currentMsPositionIndex],
-			leftAlignment = this.cursorCoordinatesMap.get(leftMsPos).alignment,
-			rightMsPos = this.endMarkerMsPosInScore,
-			rightAlignment;
+		let currentRorC_MsPos = this.msPositions[this.currentMsPositionIndex],
+			rightMsPos = this.endMarkerMsPosInScore;
 
-		// error! the timeMarker should advance smoothly, not just to noteObject positions!
 		if((this.currentMsPositionIndex + 1) < this.msPositions.length)
 		{
+			// assumes that this.msPositions contains the position of the final barline. Is this correct?
 			rightMsPos = this.msPositions[this.currentMsPositionIndex + 1];
-			rightAlignment = this.cursorCoordinatesMap.get(rightMsPos).alignment;
 		}
 
+		// The above local variables are for the chords and rests in the score (and the final barline?).
+		// this.msPositionInScore is the accurate current msPosition in the performance (also between chords and rests).
 		this.msPositionInScore += msIncrement;
 
-		if(rightMsPos < this.msPositionInScore)
+		if(this.msPositionInScore >= rightMsPos || this.msPositionInScore >= this.regionSequence[this.currentRegionIndex].endMsPosInScore)
 		{
-			this._moveElementTo(rightMsPos);
+			if(this.regionSequence[this.currentRegionIndex].endMsPosInScore <= rightMsPos)
+			{
+				if(this.currentRegionIndex < this.endRegionIndex)
+				{
+					// move to the next region
+					this.currentRegionIndex++;
+					this.msPositionInScore = this.regionSequence[this.currentRegionIndex].startMsPosInScore;
+					this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
+					this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === this.msPositionInScore);
+					this.currentAlignment = this.msPosData.alignment; 
+					currentRorC_MsPos = this.msPositionInScore; 
+					msIncrement = 0;
+				}
+				else
+				{
+					// end of performance
+					this.setVisible(false);
+				}
+			}
+			else if((this.currentMsPositionIndex + 1) < this.msPositions.length)
+			{
+				this.currentMsPositionIndex++;
+				currentRorC_MsPos = this.msPositions[this.currentMsPositionIndex];
+				this.msPosData = this.msPosDataMap.get(currentRorC_MsPos);
+				this.currentAlignment = this.msPosData.alignment;
+				msIncrement = 0;
+			}
+			else
+			{
+				// end of performance
+				this.setVisible(false);
+			}
 		}
+
+		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
 	}
 }
 

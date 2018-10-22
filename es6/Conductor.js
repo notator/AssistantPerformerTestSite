@@ -35,7 +35,7 @@
 
 			pixelDistance = Math.sqrt((dx * dx) + (dy * dy));
 
-			milliseconds = pixelDistance * this.timeMarker.msPerPx() * this._speed;
+			milliseconds = (pixelDistance / this.timeMarker.msPosData.pixelsPerMs) * this._speed;
 
 			this.timeMarker.advance(milliseconds);
 		}

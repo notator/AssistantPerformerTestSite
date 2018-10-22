@@ -1,14 +1,14 @@
 
 export class CursorBase
 {
-	constructor(systemChanged, cursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale)
+	constructor(systemChanged, msPosDataMap, endMarkerMsPosInScore, viewBoxScale)
 	{
 		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
-		Object.defineProperty(this, "cursorCoordinatesMap", { value: cursorCoordinatesMap, writable: false });
+		Object.defineProperty(this, "msPosDataMap", { value: msPosDataMap, writable: false });
 		Object.defineProperty(this, "endMarkerMsPosInScore", { value: endMarkerMsPosInScore, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
-		Object.defineProperty(this, "yCoordinates", { value: cursorCoordinatesMap.get(0).yCoordinates, writable: true });
+		Object.defineProperty(this, "yCoordinates", { value: msPosDataMap.get(0).yCoordinates, writable: true });
 	}
 
 	setVisible(setToVisible)
@@ -28,10 +28,10 @@ export class Cursor extends CursorBase
 {
 	constructor(endMarkerMsPosInScore, systems, viewBoxScale, systemChanged)
 	{
-		function newElement(firstCursorCoordinates, viewBoxScale)
+		function newElement(firstMsPosData, viewBoxScale)
 		{
 			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-				yCoordinates = firstCursorCoordinates.yCoordinates, alignment = firstCursorCoordinates.alignment;
+				yCoordinates = firstMsPosData.yCoordinates, alignment = firstMsPosData.alignment;
 
 			element.setAttribute("class", "cursorLine");
 			element.setAttribute("x1", alignment.toString(10));
@@ -43,16 +43,32 @@ export class Cursor extends CursorBase
 			return element;
 		}
 
-		// returns a Map that relates every msPositionInScore to a CursorCoordinates object.
+		// returns a Map that relates every msPositionInScore to a MsPosData object.
 		// the map does not contain an entry for the final barline
-		function getScoreCursorCoordinatesMap(systems, viewBoxScale)
+		function getScoreMsPosDataMap(systems, viewBoxScale)
 		{
-			function getSystemCursorCoordinatesMap(system, viewBoxScale)
+			function getSystemMsPosDataMap(system, viewBoxScale)
 			{
-				let systemCCMap = new Map(),
+				function setPixelsPerMs(systemMsPosDataMap, msPositions)
+				{
+					let nMsPositions = msPositions.length - 1; // msPositions include final barline
+					for(let i = 0; i < nMsPositions; ++i)
+					{
+						let pos = msPositions[i],
+							nextPos = msPositions[i + 1]; // can be final barline
+						
+						let msPosData = systemMsPosDataMap.get(pos);
+						let nextMsPosData = systemMsPosDataMap.get(nextPos);
+
+						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextPos - pos);
+					}
+				}
+
+				let systemMsPosDataMap = new Map(),
 					nStaves = system.staves.length,
 					line = system.startMarker.line,
-					yCoordinates = {};
+					yCoordinates = {},
+					msPositions = [];
 
 				yCoordinates.top = line.y1.baseVal.value;
 				yCoordinates.bottom = line.y2.baseVal.value;
@@ -67,52 +83,63 @@ export class Cursor extends CursorBase
 							// this can happen if the voice is an InputVoice, and the input device is not selected.
 							continue;
 						}
-						let timeObjects = staff.voices[voiceIndex].timeObjects, nTimeObjects = timeObjects.length - 1; // timeObjects includes the final barline in the voice (=system) (don't use it here)
+						let timeObjects = staff.voices[voiceIndex].timeObjects,
+							nTimeObjects = timeObjects.length; // timeObjects includes the final barline in the voice
+						
 						if(staffIndex === 0 && voiceIndex === 0)
 						{
 							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
-								if(msPos < endMarkerMsPosInScore)
-								{
-									let cursorCoordinates = { alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
-									systemCCMap.set(msPos, cursorCoordinates);
-								}
+								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore,
+									// pixelsPerMs is set properly later in this functon
+									msPosData = { alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+
+								systemMsPosDataMap.set(msPos, msPosData);
+								msPositions.push(msPos);
 							}
 						}
 						else
 						{
 							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
-								let tObj = timeObjects[ti], tObjPos = tObj.msPositionInScore;
-								if(systemCCMap.get(tObjPos) === undefined)
+								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
+								if(systemMsPosDataMap.get(msPos) === undefined)
 								{
-									let cursorCoordinates = { alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
-									systemCCMap.set(tObjPos, cursorCoordinates);
+									// pixelsPerMs is set properly later in this functon
+									let msPosData = { alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+									systemMsPosDataMap.set(msPos, msPosData);
+									msPositions.push(msPos);
 								}
 							}
 						}
 					}
 				}
-				return systemCCMap;
+
+				msPositions.sort((a, b) => a - b);
+				setPixelsPerMs(systemMsPosDataMap, msPositions);
+
+				let finalBarlineMsPos = msPositions[msPositions.length - 1];
+				systemMsPosDataMap.delete(finalBarlineMsPos);
+
+				return systemMsPosDataMap;
 			}
 
-			let cursorCoordinatesMap = new Map();
+			let msPosDataMap = new Map();
 			for(let system of systems)
 			{
-				let systemSims = getSystemCursorCoordinatesMap(system, viewBoxScale);
-				for(let entry of systemSims.entries())
+				let systemMsPosDataMap = getSystemMsPosDataMap(system, viewBoxScale);
+				for(let entry of systemMsPosDataMap.entries())
 				{
-					cursorCoordinatesMap.set(entry[0], entry[1]);
+					msPosDataMap.set(entry[0], entry[1]);
 				}
 			}
-			return cursorCoordinatesMap;
+			return msPosDataMap;
 		}
 
-		let cursorCoordinatesMap = getScoreCursorCoordinatesMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
-		super(systemChanged, cursorCoordinatesMap, endMarkerMsPosInScore, viewBoxScale);
+		let msPosDataMap = getScoreMsPosDataMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
+		super(systemChanged, msPosDataMap, endMarkerMsPosInScore, viewBoxScale);
 
-		let element = newElement(cursorCoordinatesMap.get(0), viewBoxScale);
+		let element = newElement(msPosDataMap.get(0), viewBoxScale);
 		Object.defineProperty(this, "element", { value: element, writable: false });
 	}
 
@@ -124,19 +151,19 @@ export class Cursor extends CursorBase
 		}
 		else
 		{
-			let cursorCoordinates = this.cursorCoordinatesMap.get(msPositionInScore);
-			if(cursorCoordinates !== undefined)
+			let msPosData = this.msPosDataMap.get(msPositionInScore);
+			if(msPosData !== undefined)
 			{
-				if(cursorCoordinates.yCoordinates !== this.yCoordinates)
+				if(msPosData.yCoordinates !== this.yCoordinates)
 				{
-					this.yCoordinates = cursorCoordinates.yCoordinates;
+					this.yCoordinates = msPosData.yCoordinates;
 					this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
 					this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
 					let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
 					this.systemChanged(yCoordinates);
 				}
-				this.element.setAttribute("x1", cursorCoordinates.alignment.toString(10));
-				this.element.setAttribute("x2", cursorCoordinates.alignment.toString(10));
+				this.element.setAttribute("x1", msPosData.alignment.toString(10));
+				this.element.setAttribute("x2", msPosData.alignment.toString(10));
 			}
 		}
 	}
