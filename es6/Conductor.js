@@ -4,8 +4,7 @@
 	{
 		Object.defineProperty(this, "_startPlaying", { value: startPlayingFunction, writable: false });
 		// The _speed is the value of the speed control when the set conducting button is clicked.
-		// It is the ratio between the total distance travelled by the conductor's cursor and the elapsed time
-		// (according to msPositionInScore) since the beginning of the performance.
+		// It is the ratio between the distance travelled by the conductor's cursor and the elapsed time.
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 		Object.defineProperty(this, "timeMarker", { value: undefined, writable: true });
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
@@ -33,8 +32,11 @@
 			this._prevX = e.clientX;
 			this._prevY = e.clientY;
 
+			// Note that any function could be used to describe the relation
+			// between the conductor's spatial input and its meaning in time.
+			// Example 1: as here, but with the speed factor depending on e.clientY.
+			// Example 2: use performance.now(), but with the speed factor depending on e.clientY.
 			pixelDistance = Math.sqrt((dx * dx) + (dy * dy));
-
 			milliseconds = (pixelDistance / this.timeMarker.msPosData.pixelsPerMs) * this._speed;
 
 			this.timeMarker.advance(milliseconds);
