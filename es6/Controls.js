@@ -244,11 +244,11 @@ var
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(true);
+				setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(speed);
 			}
 			else if(svgControlsState === 'conducting')
 			{
-				setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(false);
+				setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(-1);
 			}
 		}
 	},
@@ -302,7 +302,7 @@ var
 		{
 			//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			options.isConducting = false;
-			score.setConducting(false);
+			score.setConducting(-1);
 			initializePlayer(score, options);
 		}
 
@@ -450,6 +450,21 @@ var
 		// If there is a graphic object in the score having msPositionInScore,
 		// the running cursor is aligned to that object.
 		score.advanceCursor(msPositionInScore);
+	},
+
+	// see: http://stackoverflow.com/questions/846221/logarithmic-slider
+	// Returns the speed from the (logarithmic) speed slider control.
+	speedSliderValue = function (position)
+	{
+		var
+			// the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
+			minp = 0, maxp = 180, // The slider has width 180px
+			// The result will be between 1/10 and 9.99, the middle value is 1.
+			minv = Math.log(0.1), maxv = Math.log(9.99),
+			// the adjustment factor
+			scale = (maxv - minv) / (maxp - minp);
+
+		return Math.exp(minv + scale * (position - minp));
 	},
 
 	startPlaying = function(isLivePerformance)
@@ -631,7 +646,7 @@ var
 			if(options.isConducting)
 			{
 				setStopped();
-				score.setConducting(false);
+				score.setConducting(-1);
 				options.isConducting = false;
 			}
 			else
@@ -656,7 +671,9 @@ var
 
 				setEventListenersAndConductorsMouseCursor('conducting');
 
-				score.setConducting(true);
+				let speed = speedSliderValue(globalElements.speedControlInput.value);
+				score.setConducting(speed);
+
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
 				options.isConducting = true;
@@ -828,21 +845,6 @@ var
 		globalElements.speedControlLabel2.innerHTML = "100%";
 	},
 
-	// see: http://stackoverflow.com/questions/846221/logarithmic-slider
-	// Returns the speed from the (logarithmic) speed slider control.
-	speedSliderValue = function(position)
-	{
-		var
-			// the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
-			minp = 0, maxp = 180, // The slider has width 180px
-			// The result will be between 1/10 and 9.99, the middle value is 1.
-			minv = Math.log(0.1), maxv = Math.log(9.99),
-			// the adjustment factor
-			scale = (maxv - minv) / (maxp - minp);
-
-		return Math.exp(minv + scale * (position - minp));
-	},
-
 	// Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
 	// Called again with options.isConducting===true if the conduct performance button is toggled on.
 	// If this is a live-conducted performance, sets the now() function to be the conductor's now().
@@ -865,8 +867,7 @@ var
 
 		if(options.isConducting)
 		{
-			speed = speedSliderValue(globalElements.speedControlInput.value);
-			timer = score.getConductor(speed); // use conductor.now()
+			timer = score.getConductor(); // use conductor.now()
 		}
 		else
 		{

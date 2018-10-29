@@ -51,9 +51,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	cursor, // The cursor that is going to replace all the RunningMarkers
 	systemChanged, // callback, called when running cursor changes systems
 
-	getConductor = function(speed)
+	getConductor = function()
 	{
-		conductor.setSpeed(speed);
 		return conductor;
 	},
 
@@ -737,7 +736,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	},
 
 	// Called when the start conducting button is clicked on or off.
-	setConducting = function(setToConducting)
+	// When the button is clicked off, the speed argument will be -1. 
+	setConducting = function(speed)
 	{
 		setCursor();
 
@@ -747,9 +747,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			conductor.setTimeMarker(timeMarker);
 		}
 
-		if(setToConducting)
+		if(speed > 0)
 		{
-			conductor.init(startMarker, startRegionIndex, endRegionIndex); // calls timeMarker.init()
+			conductor.init(startMarker, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
 			markersLayer.appendChild(conductor.timeMarkerElement());
 		}
 		else

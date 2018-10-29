@@ -22,16 +22,12 @@
 		this._timeMarker = timeMarker;
 	}
 
-	init(startMarker, startRegionIndex, endRegionIndex)
+	init(startMarker, startRegionIndex, endRegionIndex, speed)
 	{
 		this._timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
 		this._prevX = -1;
 		this._prevY = -1;
 		this._msPositionInPerformance = 0;
-	}
-
-	setSpeed(speed)
-	{
 		this._speed = speed;
 	}
 
