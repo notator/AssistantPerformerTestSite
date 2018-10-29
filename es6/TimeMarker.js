@@ -112,7 +112,6 @@ export class TimeMarker extends CursorBase
 
 		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in init()
 		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // value wrt start of score	
-		Object.defineProperty(this, "msPositionInPerformance", { value: 0, writable: true }); // continuously increasing value wrt start of performance returned by now()	
 		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
 		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
 	}
@@ -192,11 +191,6 @@ export class TimeMarker extends CursorBase
 		this.setVisible(true);
 	}
 
-	now()
-	{
-		return this.msPositionInPerformance;
-	}
-
 	_moveElementTo(currentAlignment, msPosData, msIncrement)
 	{
 		let alignment = currentAlignment + (msIncrement * msPosData.pixelsPerMs);
@@ -230,8 +224,6 @@ export class TimeMarker extends CursorBase
 		// The above local variables are for the chords and rests in the score (and the final barline?).
 		// this.msPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
 		this.msPositionInScore += msIncrement;
-		// this.msPositionInPerformance is the current msPosition wrt the start of the performance (returned by this.now()).
-		this.msPositionInPerformance += msIncrement;
 
 		if(this.msPositionInScore >= rightMsPos || this.msPositionInScore >= this.regionSequence[this.currentRegionIndex].endMsPosInScore)
 		{

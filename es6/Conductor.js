@@ -9,6 +9,9 @@
 		Object.defineProperty(this, "timeMarker", { value: undefined, writable: true });
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		Object.defineProperty(this, "_prevY", { value: -1, writable: true });
+
+		 // continuously increasing value wrt start of performance returned by now()
+		Object.defineProperty(this, "msPositionInPerformance", { value: 0, writable: true });
 	}
 
 	// mousemove handler
@@ -39,6 +42,8 @@
 			pixelDistance = Math.sqrt((dx * dx) + (dy * dy));
 			milliseconds = (pixelDistance / this.timeMarker.msPosData.pixelsPerMs) * this._speed;
 
+			// this.msPositionInPerformance is the current msPosition wrt the start of the performance (returned by this.now()).
+			this.msPositionInPerformance += milliseconds;
 			this.timeMarker.advance(milliseconds);
 		}
 	}
@@ -50,18 +55,13 @@
 
 	setTimeMarker(timeMarker)
 	{
-		//if(this.timeMarker !== undefined)
-		//{
-		//	this.timeMarker.setVisible(false);
-		//}
-
 		this.timeMarker = timeMarker;
 		this._prevX = -1;
 	}
 
 	now()
 	{
-		return this.timeMarker.now();
+		return this.msPositionInPerformance;
 	}
 }
 
