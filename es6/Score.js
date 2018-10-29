@@ -44,8 +44,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// This value is changed when the start runtime button is clicked.
 	// It is used when setting the positions of the start and end markers.
 	isLivePerformance = false,
-	// This value is toggled on or off by the conducting performance button.
-	isConducting = false,
 
 	startMarker,
 	endMarker,
@@ -743,15 +741,20 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	{
 		setCursor();
 
+		if(conductor.timeMarkerElement() === undefined)
+		{
+			let timeMarker = new TimeMarker(systems, cursor, regionSequence);
+			conductor.setTimeMarker(timeMarker);
+		}
+
 		if(setToConducting)
 		{
-			if(conductor.timeMarker === undefined)
-			{
-				let timeMarker = new TimeMarker(systems, cursor, regionSequence);
-				markersLayer.appendChild(timeMarker.element);
-				conductor.setTimeMarker(timeMarker);
-			}
-			conductor.timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
+			conductor.init(startMarker, startRegionIndex, endRegionIndex); // calls timeMarker.init()
+			markersLayer.appendChild(conductor.timeMarkerElement());
+		}
+		else
+		{
+			markersLayer.removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
 		}
 	},
 
