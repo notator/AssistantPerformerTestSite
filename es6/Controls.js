@@ -244,11 +244,11 @@ var
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(speed);
+				setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(startPlaying, speed);
 			}
 			else if(svgControlsState === 'conducting')
 			{
-				setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(-1);
+				setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(startPlaying, -1);
 			}
 		}
 	},
@@ -294,6 +294,74 @@ var
 		}
 	},
 
+	startPlaying = function(isLivePerformance)
+	{
+		var startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
+			sequenceRecording, trackIsOnArray = [];
+
+		deleteSaveLink();
+
+		if(isLivePerformance === false && player.isPaused())
+		{
+			player.resume();
+		}
+		else if(player.isStopped())
+		{
+			sequenceRecording = new SequenceRecording(player.getOutputTracks());
+
+			// the cursor is at its correct position:
+			// either at the start marker, or somewhere paused.
+			score.setCursor();
+
+			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
+
+			startRegionIndex = score.getStartRegionIndex();
+			score.leaveRegion(startRegionIndex - 1);
+			startMarkerMsPosition = score.startMarkerMsPosition();
+			endRegionIndex = score.getEndRegionIndex();
+			endMarkerMsPosition = score.endMarkerMsPosition();
+
+			if(options.isConducting === true)
+			{
+				baseSpeed = 1;
+			}
+			else // isLivePerformance == true or false (player is Keyboard1 or normal Sequence)
+			{
+				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+			}
+
+			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
+		}
+
+		if(options.isConducting === false)
+		{
+			if(isLivePerformance === true)
+			{
+				cl.goDisabled.setAttribute("opacity", SMOKE);
+			}
+			else
+			{
+				cl.goDisabled.setAttribute("opacity", GLASS);
+			}
+			cl.pauseUnselected.setAttribute("opacity", METAL);
+			cl.pauseSelected.setAttribute("opacity", GLASS);
+
+			tracksControl.setDisabled(true);
+
+			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+
+			cl.stopControlSelected.setAttribute("opacity", GLASS);
+			cl.stopControlDisabled.setAttribute("opacity", GLASS);
+
+			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
+		}
+	},
+
 	setStopped = function()
 	{
 		player.stop();
@@ -302,7 +370,7 @@ var
 		{
 			//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			options.isConducting = false;
-			score.setConducting(-1);
+			score.setConducting(startPlaying, -1);
 			initializePlayer(score, options);
 		}
 
@@ -467,74 +535,6 @@ var
 		return Math.exp(minv + scale * (position - minp));
 	},
 
-	startPlaying = function(isLivePerformance)
-	{
-		var startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
-			sequenceRecording, trackIsOnArray = [];
-
-		deleteSaveLink();
-
-		if(isLivePerformance === false && player.isPaused())
-		{
-			player.resume();
-		}
-		else if(player.isStopped())
-		{
-			sequenceRecording = new SequenceRecording(player.getOutputTracks());
-
-			// the cursor is at its correct position:
-			// either at the start marker, or somewhere paused.
-			score.setCursor();
-
-			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
-
-			startRegionIndex = score.getStartRegionIndex();
-			score.leaveRegion(startRegionIndex - 1);
-			startMarkerMsPosition = score.startMarkerMsPosition();
-			endRegionIndex = score.getEndRegionIndex();
-			endMarkerMsPosition = score.endMarkerMsPosition();
-
-			if(options.isConducting === true)
-			{
-				baseSpeed = 1;
-			}
-			else // isLivePerformance == true or false (player is Keyboard1 or normal Sequence)
-			{
-				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
-			}
-
-			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
-		}
-
-		if(options.isConducting === false)
-		{
-			if(isLivePerformance === true)
-			{
-				cl.goDisabled.setAttribute("opacity", SMOKE);
-			}
-			else
-			{
-				cl.goDisabled.setAttribute("opacity", GLASS);
-			}
-			cl.pauseUnselected.setAttribute("opacity", METAL);
-			cl.pauseSelected.setAttribute("opacity", GLASS);
-
-			tracksControl.setDisabled(true);
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			cl.stopControlSelected.setAttribute("opacity", GLASS);
-			cl.stopControlDisabled.setAttribute("opacity", GLASS);
-
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-		}
-	},
-
 	//svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
 	setSvgControlsState = function(svgCtlsState)
 	{
@@ -646,7 +646,7 @@ var
 			if(options.isConducting)
 			{
 				setStopped();
-				score.setConducting(-1);
+				score.setConducting(startPlaying, -1);
 				options.isConducting = false;
 			}
 			else
@@ -672,7 +672,7 @@ var
 				setEventListenersAndConductorsMouseCursor('conducting');
 
 				let speed = speedSliderValue(globalElements.speedControlInput.value);
-				score.setConducting(speed);
+				score.setConducting(startPlaying, speed);
 
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
@@ -860,10 +860,6 @@ var
 		player = new Sequence();
 		// public player.outputTracks is needed for sending track initialization messages
 		player.setOutputTracks(outputTracks);
-		//// map entries are [performanceTime, deltaTime], where deltaTime - performanceTime is scoreTime.
-		//player.setMsPosMap(cursor.msPosMap);
-		//// this function takes the current msPositionInScore as its argument. Passing the final barline msPosition ends the performance. 
-		//player.setMoveCursorLineTo(cursor.moveCursorLineTo);
 
 		if(options.isConducting)
 		{

@@ -2,7 +2,6 @@ import { StartMarker } from "./Markers.js";
 import { EndMarker } from "./Markers.js";
 import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";
-import { TimeMarker } from "./TimeMarker.js";
 import { MidiChord, MidiRest } from "./MidiObject.js";
 import { Track } from "./Track.js";
 import { InputChordDef, InputRestDef } from "./InputObjectDef.js";
@@ -737,14 +736,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// Called when the start conducting button is clicked on or off.
 	// When the button is clicked off, the speed argument will be -1. 
-	setConducting = function(speed)
+	setConducting = function(startPlayingFunction, speed)
 	{
 		setCursor();
 
-		if(conductor.timeMarkerElement() === undefined)
+		if(conductor === undefined)
 		{
-			let timeMarker = new TimeMarker(systems, cursor, regionSequence);
-			conductor.setTimeMarker(timeMarker);
+			conductor = new Conductor(startPlayingFunction, systems, cursor, regionSequence);
 		}
 
 		if(speed > 0)
@@ -1235,8 +1233,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		/*************** end of getEmptySystems function definitions *****************************/
 
 		resetContent(isLivePerformanceArg);
-
-		conductor = new Conductor(startConductingCallback);
 
 		viewBox = setGraphics(); // the viewBox is the area in which the score can be seen and is scrolled
 
