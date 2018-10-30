@@ -95,9 +95,9 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "vLine", { value: elem.vLine, writable: false });
 
 		Object.defineProperty(this, "regionSequence", { value: regionSequence, writable: false });
-		Object.defineProperty(this, "startRegionIndex", { value: 0, writable: true });
-		Object.defineProperty(this, "endRegionIndex", { value: 0, writable: true });
-		Object.defineProperty(this, "currentRegionIndex", { value: 0, writable: true });
+		Object.defineProperty(this, "startRegionIndex", { value: 0, writable: true }); // set in init()
+		Object.defineProperty(this, "endRegionIndex", { value: 0, writable: true }); // set in init()
+		Object.defineProperty(this, "currentRegionIndex", { value: 0, writable: true }); // set in init()
 
 		// An array containing the (sorted) msPosDataMap keys.
 		let msPositionsArray = getMsPositionsArray(cursor.msPosDataMap);
@@ -111,7 +111,7 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "currentSystemIndex", { value: 0, writable: true });
 
 		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in init()
-		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // value wrt start of score	
+		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // set in init() - value wrt start of score	
 		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
 		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
 	}
