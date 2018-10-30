@@ -853,9 +853,7 @@ var
 	// (live) during other performances (normal Sequence and Keyboard1).
 	initializePlayer = function(score, options)
 	{
-		var timer, speed,
-			outputTracks = score.getTracksData().outputTracks;
-		//cursor = score.getCursor();
+		var timer, outputTracks = score.getTracksData().outputTracks;
 
 		player = new Sequence();
 		// public player.outputTracks is needed for sending track initialization messages
