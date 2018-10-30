@@ -54,7 +54,7 @@ export class Track
 		// track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
 		function setInitialTrackState(that, startMarkerMsPositionInScore, endMarkerMsPositionInScore)
 		{
-			var i, index = 0, midiObject, midiChord, midiRest, nMidiObjects;
+			var i, index = -1, midiObject, midiChord, midiRest, nMidiObjects;
 			if(that.midiObjects === undefined)
 			{
 				throw "Can't set OutputSpan!";
@@ -62,10 +62,9 @@ export class Track
 			nMidiObjects = that.midiObjects.length;
 			for(i = 0; i < nMidiObjects; ++i)
 			{
-				index = i;
 				// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
 				// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
-				// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
+				// or the index of a MidiRest that starts at or after the startMarkerMsPositionInScore.
 				if(that.midiObjects[i] instanceof MidiChord)
 				{
 					midiChord = that.midiObjects[i];
@@ -78,6 +77,7 @@ export class Track
 						midiChord.setToStartMarker(startMarkerMsPositionInScore);
 						if(midiChord.currentMoment !== undefined)
 						{
+							index = i;
 							break;
 						}
 					}
@@ -85,36 +85,48 @@ export class Track
 					{
 						// a MidiRest straddles the startMarker. 
 						midiChord.setToStartAtBeginning();
+						index = i;
 						break;
 					}
 				}
-				else if(that.midiObjects[i].msPositionInScore === startMarkerMsPositionInScore)
+				else if(that.midiObjects[i].msPositionInScore >= startMarkerMsPositionInScore)
 				{
 					midiRest = that.midiObjects[i];
 					midiRest.setToStartAtBeginning();
+					index = i;
 					break;
 				}
 			}
-			// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
-			for(i = index + 1; i < nMidiObjects; ++i)
+
+			if(index === -1)
 			{
-				midiObject = that.midiObjects[i];
-				if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
-				{
-					break;
-				}
-				midiObject.setToStartAtBeginning();
+				// Set that._currentMidiObject to null if there are no more moments to play in the track.
+				// (The last midiObject in the track has no moments between the start and endMarkers.)
+				that._currentMidiObjectIndex = -1;
+				that._currentMidiObject = null;
+				that.currentMoment = null;
 			}
-			that._currentMidiObjectIndex = index;
-			that._currentMidiObject = that.midiObjects[index];
-			that.currentMoment = that._currentMidiObject.currentMoment; // a MidiChord or MidiRest
-			that.currentMoment = (that.currentMoment === undefined) ? null : that.currentMoment;
-			// that.currentMoment is the first moment that is going to be played in that track.
-			// (If the performance is set to start inside a rest, that.currentMoment will be at a
-			// position later than the startMarker.)
-			// that.currentMoment will be null if there are no more moments to play in the track.
-			// (i.e. if last midiObject in the track is a rest, and the performance is set to start
-			// after its beginning.  
+			else
+			{
+				// that.currentMoment is the first moment that is going to be played in that track.
+				// (If the performance is set to start inside a rest, that.currentMoment will be at a
+				// position later than the startMarker.)
+				// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
+				for(i = index + 1; i < nMidiObjects; ++i)
+				{
+					midiObject = that.midiObjects[i];
+					if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
+					{
+						break;
+					}
+					midiObject.setToStartAtBeginning();
+				}
+				that._currentMidiObjectIndex = index;
+				that._currentMidiObject = that.midiObjects[index];
+				that.currentMoment = that._currentMidiObject.currentMoment; // a MidiChord or MidiRest
+				that.currentMoment = (that.currentMoment === undefined) ? null : that.currentMoment;
+			}
+  
 			that.hasEndedRegion = false;
 		}
 

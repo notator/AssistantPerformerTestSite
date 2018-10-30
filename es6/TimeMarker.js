@@ -85,7 +85,7 @@ export class TimeMarker extends CursorBase
 			return rightAlignment;
 		}
 
-		super(cursor.systemChanged, cursor.msPosDataMap, cursor.endMarkerMsPosInScore, cursor.viewBoxScale);
+		super(cursor.systemChanged, cursor.msPosDataMap, cursor.viewBoxScale);
 
 		let elem = newElement(cursor.viewBoxScale);
 		Object.defineProperty(this, "element", { value: elem.element, writable: false });

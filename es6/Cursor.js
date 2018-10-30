@@ -1,14 +1,15 @@
 
 export class CursorBase
 {
-	constructor(systemChanged, msPosDataMap, endMarkerMsPosInScore, viewBoxScale)
+	constructor(systemChanged, msPosDataMap, viewBoxScale)
 	{
 		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
 		Object.defineProperty(this, "msPosDataMap", { value: msPosDataMap, writable: false });
-		Object.defineProperty(this, "endMarkerMsPosInScore", { value: endMarkerMsPosInScore, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
-		Object.defineProperty(this, "yCoordinates", { value: msPosDataMap.get(0).yCoordinates, writable: true });
+		Object.defineProperty(this, "startMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
+		Object.defineProperty(this, "endMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
+		Object.defineProperty(this, "yCoordinates", { value: msPosDataMap.get(0).yCoordinates, writable: true }); // set in init()
 	}
 
 	setVisible(setToVisible)
@@ -26,7 +27,7 @@ export class CursorBase
 
 export class Cursor extends CursorBase
 {
-	constructor(endMarkerMsPosInScore, systems, viewBoxScale, systemChanged)
+	constructor(systems, viewBoxScale, systemChanged)
 	{
 		function newElement(firstMsPosData, viewBoxScale)
 		{
@@ -137,10 +138,20 @@ export class Cursor extends CursorBase
 		}
 
 		let msPosDataMap = getScoreMsPosDataMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
-		super(systemChanged, msPosDataMap, endMarkerMsPosInScore, viewBoxScale);
+		super(systemChanged, msPosDataMap, viewBoxScale);
 
 		let element = newElement(msPosDataMap.get(0), viewBoxScale);
 		Object.defineProperty(this, "element", { value: element, writable: false });
+	}
+
+	init(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
+	{
+		this.startMarkerMsPosInScore = startMarkerMsPositionInScore;
+		this.endMarkerMsPosInScore = endMarkerMsPositionInScore;
+
+		this.moveElementTo(startMarkerMsPositionInScore); // sets yCoordinates if necessary
+
+		this.setVisible(true);
 	}
 
 	moveElementTo(msPositionInScore)

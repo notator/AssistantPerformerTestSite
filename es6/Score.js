@@ -730,8 +730,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Called when the go button or the startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.moveElementTo(startMarker.msPositionInScore);
-		cursor.setVisible(true);
+		cursor.init(startMarker.msPositionInScore, endMarker.msPositionInScore);
 	},
 
 	// Called when the start conducting button is clicked on or off.
@@ -1995,7 +1994,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		setMarkers(systems);
 
 		// cursor is accessed outside the score using a getter function
-		cursor = new Cursor(endMarker.msPositionInScore, systems, viewBoxScale, systemChanged);
+		cursor = new Cursor(systems, viewBoxScale, systemChanged);
 
 		markersLayer.appendChild(cursor.element);
 
