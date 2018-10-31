@@ -366,7 +366,7 @@ var
 	{
 		player.stop();
 
-		if(options.isConducting === true && options.livePerformance === false)
+		if(options.isConducting === true && options.keyboard1Performance === false)
 		{
 			//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			options.isConducting = false;
@@ -564,7 +564,7 @@ var
 
 		function setPaused()
 		{
-			if(options.livePerformance === true)
+			if(options.keyboard1Performance === true)
 			{
 				throw "Error: Assisted performances are never paused.";
 			}
@@ -694,13 +694,13 @@ var
 				setStopped();
 				break;
 			case 'paused':
-				if(options.livePerformance === false) // live performances cannot be paused
+				if(options.keyboard1Performance === false) // live performances cannot be paused
 				{
 					setPaused();
 				}
 				break;
 			case 'playing':
-				startPlaying(options.livePerformance);
+				startPlaying(options.keyboard1Performance);
 				break;
 			case 'settingStart':
 				setSettingStart();
@@ -1625,7 +1625,7 @@ export class Controls
 			if(scoreHasJustBeenSelected)
 			{
 				// everything except the timeObjects (which have to take account of speed)
-				score.getEmptySystems(options.livePerformance, startPlaying); // startPlaying is a callback for the conductor);
+				score.getEmptySystems(options.keyboard1Performance);
 			}
 
 			score.setTracksData();
@@ -1643,7 +1643,7 @@ export class Controls
 			// score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
 			// Repainting includes using the correct staff colours, but the score may also update the position of
 			// its start marker (which always starts on a chord) if a track is turned off.
-			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.keyboard1Performance, score.refreshDisplay);
 
 			return tracksData;
 		}
@@ -1726,10 +1726,10 @@ export class Controls
 
 		//try
 		//{
-		options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
+		options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
 		options.isConducting = false;
 
-		if(options.livePerformance)
+		if(options.keyboard1Performance)
 		{
 			//disable conductor button
 			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
@@ -1747,9 +1747,9 @@ export class Controls
 		// (e.g. if an attempt is made to create an event that has no duration).
 		tracksData = getTracksData(score, options);
 
-		if(options.livePerformance)
+		if(options.keyboard1Performance)
 		{
-			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
+			player = options.inputHandler; // keyboard1 -- the "prepared piano"
 			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
 			player.cursor = score.getCursor(); // contains sims
 			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
@@ -1775,7 +1775,7 @@ export class Controls
 
 		setSvgControlsState('stopped');
 
-		if(options.livePerformance === true)
+		if(options.keyboard1Performance === true)
 		{
 			goControlClicked();
 		}
