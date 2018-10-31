@@ -227,7 +227,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// This function is called by the tracksControl whenever a track's on/off state is toggled.
 	// It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
-	refreshDisplay = function(trackIsOnArrayArg)
+	// Either argument can be undefined, in which case the corresponding internal attribute is not changed.
+	refreshDisplay = function(isKeyboard1PerformanceArg, trackIsOnArrayArg)
 	{
 		var i, system = systems[startMarker.systemIndex],
 			startMarkerAlignment = startMarker.alignment,
@@ -296,6 +297,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			}
 		}
 
+		if(isKeyboard1PerformanceArg !== undefined)
+		{
+			isKeyboard1Performance = isKeyboard1PerformanceArg;
+		}
+
 		if(trackIsOnArrayArg !== undefined)
 		{
 			trackIsOnArray = trackIsOnArrayArg; // reset by track control
@@ -314,11 +320,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		if(isKeyboard1Performance)
 		{
-			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, 'settingStart');
+			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
 		}
 		else
 		{
-			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, 'settingStart');
+			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
 		}
 		// Move the start marker if necessary.
 		// timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
@@ -757,7 +763,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// Constructs empty systems for all the pages.
 	// Each page has a frame and the correct number of empty systems.
-	// Each system has a startMarker, a runningMarker and an endMarker, but these are left
+	// Each system has a startMarker and an endMarker, but these are left
 	// on the left edge of the page.
 	// Each system has the correct number of staves containing the correct number of voices.
 	// The staves have set boolean isOutput and isVisible attributes.
@@ -765,7 +771,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The score's trackIsOnArray is initialized to all tracks on (=true).
 	// If isKeyboard1Performance === true, then outputStaves are grey, inputStaves are black.
 	// If isKeyboard1Performance === false, then outputStaves are black, inputStaves are pink.
-	getEmptySystems = function(isLivePerformanceArg)
+	getEmptySystems = function(isKeyboard1PerformanceArg)
 	{
 		var system, svgPageEmbeds,
 			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem;
@@ -1036,8 +1042,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return system;
 		}
 
-
-
 		// uses the <regionSequence> element to set the following values (global inside Score.js):
 		// 	   startRegionIndex, endRegionIndex, regionSequence.
 		function getRegionData(svgElem)
@@ -1226,7 +1230,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		/*************** end of getEmptySystems function definitions *****************************/
 
-		resetContent(isLivePerformanceArg);
+		resetContent(isKeyboard1PerformanceArg);
 
 		viewBox = setGraphics(); // the viewBox is the area in which the score can be seen and is scrolled
 

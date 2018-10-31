@@ -84,7 +84,7 @@ export class TracksControl
 			controlPanel = document.getElementById("svgRuntimeControls"),
 			firstControlPanelChild,
 			i, parentElem,
-			nTrackControls, inputIndex,
+			nTrackControls,
 			trackControlsWidth;
 
 		function getTrackControlsMainElem(trackControlsWidth)
@@ -340,7 +340,7 @@ export class TracksControl
 				if(scoreRefresh !== null)
 				{
 					getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray);
-					scoreRefresh(readOnlyTrackIsOnArray);
+					scoreRefresh(undefined, readOnlyTrackIsOnArray);  // arg 1 is undefined so score.isKeyboard1Performance does not change.
 				}
 			}
 		}

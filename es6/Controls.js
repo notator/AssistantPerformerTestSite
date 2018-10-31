@@ -41,8 +41,6 @@ var
 	// options set in the top dialog
 	options = {},
 
-	scoreHasJustBeenSelected = false,
-
 	// deletes the 'save' button created by createSaveMIDIFileLink() 
 	deleteSaveLink = function()
 	{
@@ -294,14 +292,14 @@ var
 		}
 	},
 
-	startPlaying = function(isLivePerformance)
+	startPlaying = function(isKeyboard1Performance)
 	{
 		var startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
 			sequenceRecording, trackIsOnArray = [];
 
 		deleteSaveLink();
 
-		if(isLivePerformance === false && player.isPaused())
+		if(isKeyboard1Performance === false && player.isPaused())
 		{
 			player.resume();
 		}
@@ -326,7 +324,7 @@ var
 			{
 				baseSpeed = 1;
 			}
-			else // isLivePerformance == true or false (player is Keyboard1 or normal Sequence)
+			else // isKeyboard1Performance == true or false (player is Keyboard1 or normal Sequence)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 			}
@@ -336,7 +334,7 @@ var
 
 		if(options.isConducting === false)
 		{
-			if(isLivePerformance === true)
+			if(isKeyboard1Performance === true)
 			{
 				cl.goDisabled.setAttribute("opacity", SMOKE);
 			}
@@ -1343,7 +1341,6 @@ export class Controls
 				setOptionsInputHandler(scoreInfo.inputHandler);
 
 				globalElements.svgPagesFrame.scrollTop = 0;
-				scoreHasJustBeenSelected = true;
 			}
 		}
 
@@ -1518,7 +1515,6 @@ export class Controls
 			{
 				setSvgControlsState('disabled');
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-				scoreHasJustBeenSelected = false;
 			}
 		}
 
@@ -1622,11 +1618,10 @@ export class Controls
 		function getTracksData(score, options)
 		{
 			var tracksData;
-			if(scoreHasJustBeenSelected)
-			{
-				// everything except the timeObjects (which have to take account of speed)
-				score.getEmptySystems(options.keyboard1Performance);
-			}
+
+			// Get everything except the timeObjects (which have to take account of speed)
+			// This function also sets staffline colours depending on options.keyboard1Performance.
+			score.getEmptySystems(options.keyboard1Performance);
 
 			score.setTracksData();
 			// tracksData contains the following attributes:
@@ -1638,9 +1633,10 @@ export class Controls
 			tracksData = score.getTracksData();
 
 			// The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-			// It calls the score.refreshDisplay(isLivePerformance, trackIsOnArray) function as a callback when one
+			// It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
 			// of its track controls is turned on or off.
-			// score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
+			// score.refreshDisplay(undefined, trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray without
+			// changing the value of score.isKeyboard1Performance.
 			// Repainting includes using the correct staff colours, but the score may also update the position of
 			// its start marker (which always starts on a chord) if a track is turned off.
 			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.keyboard1Performance, score.refreshDisplay);
@@ -1724,8 +1720,6 @@ export class Controls
 			globalElements.speedControlSmokeDiv.style.display = "none";
 		}
 
-		//try
-		//{
 		options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
 		options.isConducting = false;
 
@@ -1769,7 +1763,7 @@ export class Controls
 			midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
 		}
 
-		score.refreshDisplay(); // undefined trackIsOnArray
+		score.refreshDisplay(options.keyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
 		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
