@@ -2,12 +2,12 @@
 
 export class Conductor
 {
-	constructor(startPlayingFunction, systems, cursor, regionSequence)
+	constructor(systems, cursor, regionSequence)
 	{
 		let timeMarker = new TimeMarker(systems, cursor, regionSequence);
 
 		// These are all "private" attributes, they should only be changed using the functions provided.
-		Object.defineProperty(this, "_startPlaying", { value: startPlayingFunction, writable: false });
+		Object.defineProperty(this, "_startPlaying", { value: undefined, writable: true });
 		Object.defineProperty(this, "_timeMarker", { value: timeMarker, writable: true });
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		Object.defineProperty(this, "_prevY", { value: -1, writable: true });
@@ -17,9 +17,10 @@ export class Conductor
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 	}
 
-	init(startMarker, startRegionIndex, endRegionIndex, speed)
+	init(startMarker, startPlayingCallback, startRegionIndex, endRegionIndex, speed)
 	{
 		this._timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
+		this._startPlaying = startPlayingCallback; 
 		this._prevX = -1;
 		this._prevY = -1;
 		this._msPositionInPerformance = 0;

@@ -42,7 +42,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// This value is changed when the start runtime button is clicked.
 	// It is used when setting the positions of the start and end markers.
-	isLivePerformance = false,
+	isKeyboard1Performance = false,
 
 	startMarker,
 	endMarker,
@@ -235,7 +235,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			nOutputTracks = midiChannelPerOutputTrack.length;
 
 		// This function sets the opacity of the visible OutputStaves.
-		// (there are no InputStaves in the system, when isLivePerformance === false)
+		// (there are no InputStaves in the system, when isKeyboard1Performance === false)
 		// Staves have either one or two voices (=tracks).
 		// The tracks are 0-indexed channels from top to bottom of the system.
 		// If trackIsOnArray[trackIndex] is true, its stafflines opacity is set to 1.
@@ -312,7 +312,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		setOutputView(trackIsOnArray);
 
-		if(isLivePerformance)
+		if(isKeyboard1Performance)
 		{
 			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignment, 'settingStart');
 		}
@@ -631,7 +631,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		trackIndex = findTrackIndex(cursorY, system);
 
-		if(isLivePerformance === true)
+		if(isKeyboard1Performance === true)
 		{
 			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex, state);
 		}
@@ -739,14 +739,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	{
 		setCursor();
 
-		if(conductor === undefined)
-		{
-			conductor = new Conductor(startPlayingFunction, systems, cursor, regionSequence);
-		}
-
 		if(speed > 0)
 		{
-			conductor.init(startMarker, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
+			conductor.init(startMarker, startPlayingFunction, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
 			markersLayer.appendChild(conductor.timeMarkerElement());
 		}
 		else
@@ -768,16 +763,16 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// The staves have set boolean isOutput and isVisible attributes.
 	// The voices have a set boolean isOutput attribute, but as yet no timeObject arrays.
 	// The score's trackIsOnArray is initialized to all tracks on (=true).
-	// If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
-	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-	getEmptySystems = function(isLivePerformanceArg, startConductingCallback)
+	// If isKeyboard1Performance === true, then outputStaves are grey, inputStaves are black.
+	// If isKeyboard1Performance === false, then outputStaves are black, inputStaves are pink.
+	getEmptySystems = function(isLivePerformanceArg)
 	{
 		var system, svgPageEmbeds,
 			svgPage, svgElem, pageSystemsElem, pageSystemElems, systemElem;
 
-		function resetContent(isLivePerformanceArg)
+		function resetContent(isKeyboard1PerformanceArg)
 		{
-			isLivePerformance = isLivePerformanceArg;
+			isKeyboard1Performance = isKeyboard1PerformanceArg;
 			systemElems.length = 0;
 			systems.length = 0;
 			midiChannelPerOutputTrack.length = 0;
@@ -858,7 +853,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				}
 			}
 
-			function setStaffColours(staff, isLivePerformance)
+			function setStaffColours(staff, isKeyboard1Performance)
 			{
 				function setStaffNameStyle(staff, titleColor)
 				{
@@ -910,7 +905,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 				if(staff.isOutput === true)
 				{
-					if(isLivePerformance)
+					if(isKeyboard1Performance)
 					{
 						setGreyDisplay(staff);
 					}
@@ -921,7 +916,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				}
 				if(staff.isOutput === false)
 				{
-					if(isLivePerformance)
+					if(isKeyboard1Performance)
 					{
 						setLiveInputDisplay(staff);
 					}
@@ -1021,7 +1016,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						staff.topLineY = stafflineInfo.stafflineYs[0];
 						staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
 
-						setStaffColours(staff, isLivePerformance);
+						setStaffColours(staff, isKeyboard1Performance);
 						setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
 
 						if(system.topLineY === undefined)
@@ -1150,7 +1145,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				staff = system.staves[i];
 				for(j = 0; j < staff.voices.length; ++j)
 				{
-					if(staff.voices[j].isOutput === false && isLivePerformance === false)
+					if(staff.voices[j].isOutput === false && isKeyboard1Performance === false)
 					{
 						trackIsOnArray.push(false);
 					}
@@ -1746,7 +1741,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 				getSystemOutputVoiceObjects(i, systemElem, system, viewBoxScale);
 
-				if(isLivePerformance)
+				if(isKeyboard1Performance)
 				{
 					getSystemInputVoiceObjects(i, systemElem, system, viewBoxScale);
 				}
@@ -1939,9 +1934,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 							timeObject = voice.timeObjects[timeObjectIndex];
 							if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
 							{
-								if(isLivePerformance)
+								if(isKeyboard1Performance)
 								{
-									timeObject.systemIndex = sysIndex; // currently used used only in live performances with Keyboard1 (09.10.2018)
+									timeObject.systemIndex = sysIndex; // currently used used only in Keyboard1 performances (09.10.2018)
 								}
 								outputTrack.midiObjects.push(timeObject);
 							}
@@ -1952,7 +1947,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			}
 		}
 
-		if(isLivePerformance)
+		if(isKeyboard1Performance)
 		{
 			for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
 			{
@@ -1995,6 +1990,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// cursor is accessed outside the score using a getter function
 		cursor = new Cursor(systems, viewBoxScale, systemChanged);
+		conductor = new Conductor(systems, cursor, regionSequence);
 
 		markersLayer.appendChild(cursor.element);
 
