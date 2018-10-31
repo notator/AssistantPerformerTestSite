@@ -11,7 +11,6 @@ let
 	previousMomtMsPosInScore, // nextMoment()
 	currentMoment = null, // nextMoment(), resume(), tick()
 	endOfConductedPerformance,
-	endOfFinalRegion = false,
 
 	//startMarkerMsPositionInScore,
 	endMarkerMsPositionInScore,
@@ -142,7 +141,6 @@ let
 				if(currentRegionIndex === endRegionIndex)
 				{
 					nextTrack = null; // end of performance
-					endOfFinalRegion = true;
 				}
 				else
 				{
@@ -180,16 +178,8 @@ let
 			{
 				// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
 				setState("stopped");
-				if(endOfFinalRegion)
-				{
-					// ignore endMarkerMsPosition
-					delay = 100;
-				}
-				else
-				{
-					// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-					delay = (endMarkerMsPositionInScore - previousMomtMsPosInScore) / speed;
-				}
+				// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
+				delay = (endMarkerMsPositionInScore - previousMomtMsPosInScore) / speed;
 				window.setTimeout(stopAfterDelay, delay);
 			}
 		}
@@ -556,7 +546,6 @@ export class Sequence
 
 		currentRegionIndex = startRegionIndex;
 		endRegionIndex = endRegionIndexArg; 
-		endOfFinalRegion = false;
 
 		run();
 	}
