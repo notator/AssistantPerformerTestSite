@@ -277,18 +277,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					nTracksPerStaff = staff.voices.length;
 					for(t = 0; t < nTracksPerStaff; ++t)
 					{
-						if(staff.isVisible)
+						opacity = (trackIsOnArray[trackIndex]) ? 1 : 0.3;
+
+						setStafflinesOpacity(staff.voices[t], trackIsOnArray, trackIndex, nTracksPerStaff, opacity);
+
+						voiceGraphicElements = staff.voices[t].graphicElements;
+						for(g = 0; g < voiceGraphicElements.length; ++g)
 						{
-							opacity = (trackIsOnArray[trackIndex]) ? 1 : 0.3;
-
-							setStafflinesOpacity(staff.voices[t], trackIsOnArray, trackIndex, nTracksPerStaff, opacity);
-
-							voiceGraphicElements = staff.voices[t].graphicElements;
-							for(g = 0; g < voiceGraphicElements.length; ++g)
-							{
-								voiceGraphicElement = voiceGraphicElements[g];
-								voiceGraphicElement.style.opacity = opacity;
-							}
+							voiceGraphicElement = voiceGraphicElements[g];
+							voiceGraphicElement.style.opacity = opacity;
 						}
 
 						++trackIndex;
@@ -766,7 +763,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Each system has a startMarker and an endMarker, but these are left
 	// on the left edge of the page.
 	// Each system has the correct number of staves containing the correct number of voices.
-	// The staves have set boolean isOutput and isVisible attributes.
+	// The staves have a boolean isOutput attribute that is set to true or false.
 	// The voices have a set boolean isOutput attribute, but as yet no timeObject arrays.
 	// The score's trackIsOnArray is initialized to all tracks on (=true).
 	// If isKeyboard1Performance === true, then outputStaves are grey, inputStaves are black.
@@ -981,7 +978,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				staff = {};
 				staffDy = systemDy + getDy(staffElem);
 				staff.isOutput = (staffElem.getAttribute("class") === "staff");
-				staff.isVisible = ((staffElem.getAttribute("score:invisible") === "invisible") === false);
 				staff.voices = [];
 				system.staves.push(staff);
 
@@ -1010,31 +1006,28 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					}
 				}
 
-				if(staff.isVisible)
+				if(stafflinesElem !== undefined)
 				{
-					if(stafflinesElem !== undefined)
+					stafflineInfo = getStafflineInfo(stafflinesElem, staffDy);
+					system.left = stafflineInfo.left;
+					system.right = stafflineInfo.right;
+
+					staff.stafflines = stafflinesElem.children;
+					staff.topLineY = stafflineInfo.stafflineYs[0];
+					staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+
+					setStaffColours(staff, isKeyboard1Performance);
+					setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+
+					if(system.topLineY === undefined)
 					{
-						stafflineInfo = getStafflineInfo(stafflinesElem, staffDy);
-						system.left = stafflineInfo.left;
-						system.right = stafflineInfo.right;
-
-						staff.stafflines = stafflinesElem.children;
-						staff.topLineY = stafflineInfo.stafflineYs[0];
-						staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-
-						setStaffColours(staff, isKeyboard1Performance);
-						setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
-
-						if(system.topLineY === undefined)
-						{
-							system.topLineY = staff.topLineY;
-							system.bottomLineY = staff.bottomLineY;
-						}
-						else
-						{
-							system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
-							system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
-						}
+						system.topLineY = staff.topLineY;
+						system.bottomLineY = staff.bottomLineY;
+					}
+					else
+					{
+						system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
+						system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
 					}
 				}
 			}
