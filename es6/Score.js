@@ -749,6 +749,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 		else
 		{
+			conductor.stop();
 			markersLayer.removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
 		}
 	},
