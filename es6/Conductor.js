@@ -15,8 +15,8 @@ export class Conductor
 		Object.defineProperty(this, "_timeMarker", { value: timeMarker, writable: true });
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		//Object.defineProperty(this, "_prevY", { value: -1, writable: true });
-		// Continuously increasing value wrt start of performance. Returned by now()
-		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
+		// Continuously increasing value wrt start of score. Returned by now()
+		Object.defineProperty(this, "_msPositionInScore", { value: 0, writable: true });
 		// The _speed is the value of the speed control when the set conducting button is clicked.
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 		Object.defineProperty(this, "_setIntervalHandle", { value: undefined, writable: true });
@@ -28,7 +28,7 @@ export class Conductor
 		this._timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
 		this._prevX = -1;
 		//this._prevY = -1;
-		this._msPositionInPerformance = 0;
+		this._msPositionInScore = 0;
 		this._speed = speed;
 		this._setIntervalHandle = undefined;
 	}
@@ -66,10 +66,10 @@ export class Conductor
 	//		console.log("e.clientX=" + e.clientX);
 
 	//		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-	//			milliseconds = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
+	//			msDurationInScore = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
 
-	//		this._msPositionInPerformance += milliseconds;
-	//		this._timeMarker.advance(milliseconds);
+	//		this._msPositionInScore += msDurationInScore;
+	//		this._timeMarker.advance(msDurationInScore);
 	//	}
 	//}
 
@@ -96,13 +96,13 @@ export class Conductor
 			}
 
 			let xFactor = getXFactor(e),
-				milliseconds = that._intervalRate * xFactor / that._timeMarker.msPosData.pixelsPerMs * that._speed;
+				msDurationInScore = that._intervalRate * xFactor / that._speed;
 
-			that._msPositionInPerformance += milliseconds;
-			that._timeMarker.advance(milliseconds);
+			that._msPositionInScore += msDurationInScore;
+			that._timeMarker.advance(msDurationInScore);
 		}
 
-		if(this._msPositionInPerformance === 0)
+		if(this._msPositionInScore === 0)
 		{
 			this._startPlaying(false);
 			this._prevX = e.clientX;
@@ -124,7 +124,7 @@ export class Conductor
 
 	now()
 	{
-		return this._msPositionInPerformance;
+		return this._msPositionInScore;
 	}
 
 	stop()
