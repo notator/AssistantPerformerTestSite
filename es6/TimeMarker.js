@@ -254,7 +254,7 @@ export class TimeMarker extends CursorBase
 				this.currentAlignment = this.msPosData.alignment;
 				msIncrement = 0;
 			}
-			else
+			else if(this.currentMsPositionIndex === this.msPositions.length)
 			{
 				// end of performance
 				this.setVisible(false);
