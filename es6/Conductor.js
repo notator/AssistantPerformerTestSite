@@ -15,8 +15,8 @@ export class Conductor
 		Object.defineProperty(this, "_timeMarker", { value: timeMarker, writable: true });
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		//Object.defineProperty(this, "_prevY", { value: -1, writable: true });
-		// Continuously increasing value wrt start of score. Returned by now()
-		Object.defineProperty(this, "_msPositionInScore", { value: 0, writable: true });
+		// Continuously increasing value wrt start of performance (and recording). Returned by now().
+		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
 		// The _speed is the value of the speed control when the set conducting button is clicked.
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 		Object.defineProperty(this, "_setIntervalHandle", { value: undefined, writable: true });
@@ -28,7 +28,7 @@ export class Conductor
 		this._timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
 		this._prevX = -1;
 		//this._prevY = -1;
-		this._msPositionInScore = 0;
+		this._msPositionInPerformance = 0;
 		this._speed = speed;
 		this._setIntervalHandle = undefined;
 	}
@@ -68,7 +68,7 @@ export class Conductor
 	//		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
 	//			msDurationInScore = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
 
-	//		this._msPositionInScore += msDurationInScore;
+	//		this._msPositionInPerformance += msDurationInScore;
 	//		this._timeMarker.advance(msDurationInScore);
 	//	}
 	//}
@@ -96,16 +96,21 @@ export class Conductor
 			}
 
 			let xFactor = getXFactor(e),
-				msDurationInScore = that._intervalRate * xFactor / that._speed;
+				speedFactor = xFactor * that._speed,
+				now = performance.now(), 
+				timeInterval = now - that._prevPerfNow,
+				msDuration = timeInterval * speedFactor;
 
-			that._msPositionInScore += msDurationInScore;
-			that._timeMarker.advance(msDurationInScore);
+			that._msPositionInPerformance += msDuration; // _msPositionInPerformance includes durations of repeated regions.
+			that._timeMarker.advance(msDuration); // timeMarker positions are relative to msPositionInScore.
+			that._prevPerfNow = now;
 		}
 
-		if(this._msPositionInScore === 0)
+		if(this._msPositionInPerformance === 0)
 		{
 			this._startPlaying(false);
 			this._prevX = e.clientX;
+			this._prevPerfNow = performance.now();
 
 			this._setIntervalHandle = setInterval(doConducting, this._intervalRate, this, e);
 		}
@@ -124,7 +129,7 @@ export class Conductor
 
 	now()
 	{
-		return this._msPositionInScore;
+		return this._msPositionInPerformance;
 	}
 
 	stop()
