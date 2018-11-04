@@ -240,11 +240,11 @@ export class TimeMarker extends CursorBase
 					currentRorC_MsPos = this.msPositionInScore; 
 					msIncrement = 0;
 				}
-				else
-				{
-					// end of performance
-					this.setVisible(false);
-				}
+				//else
+				//{
+				//	// end of performance
+				//	this.setVisible(false);
+				//}
 			}
 			else if((this.currentMsPositionIndex + 1) < this.msPositions.length)
 			{
@@ -254,11 +254,11 @@ export class TimeMarker extends CursorBase
 				this.currentAlignment = this.msPosData.alignment;
 				msIncrement = 0;
 			}
-			else if(this.currentMsPositionIndex === this.msPositions.length)
-			{
-				// end of performance
-				this.setVisible(false);
-			}
+			//else if(this.currentMsPositionIndex === this.msPositions.length)
+			//{
+			//	// end of performance
+			//	this.setVisible(false);
+			//}
 		}
 
 		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
