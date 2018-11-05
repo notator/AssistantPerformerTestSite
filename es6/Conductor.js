@@ -17,6 +17,7 @@ export class Conductor
 		//Object.defineProperty(this, "_prevY", { value: -1, writable: true });
 		// Continuously increasing value wrt start of performance (and recording). Returned by now().
 		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
+		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
 		// The _speed is the value of the speed control when the set conducting button is clicked.
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 		Object.defineProperty(this, "_setIntervalHandle", { value: undefined, writable: true });
@@ -29,6 +30,7 @@ export class Conductor
 		this._prevX = -1;
 		//this._prevY = -1;
 		this._msPositionInPerformance = 0;
+		this._prevPerfNow = 0;
 		this._speed = speed;
 		this._setIntervalHandle = undefined;
 	}
