@@ -114,6 +114,7 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // set in init() - value wrt start of score	
 		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
 		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
+		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true }); // updated at runtime
 	}
 
 	_setCoordinates(alignment, top, bottom)
@@ -186,28 +187,40 @@ export class TimeMarker extends CursorBase
 		this.yCoordinates = coordinates.yCoordinates; // maybe I can delete this.yCoordinates? Use currentSystemIndex instead...
 
 		this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
-		this.currentAlignment = this.msPosData.alignment; 
+		this.currentAlignment = this.msPosData.alignment;
+		this._totalPxIncrement = 0;
 
 		this.setVisible(true);
 	}
 
 	_moveElementTo(currentAlignment, msPosData, msIncrement)
 	{
-		let alignment = currentAlignment + (msIncrement * msPosData.pixelsPerMs);
+		this._totalPxIncrement += (msIncrement * msPosData.pixelsPerMs);
 
-		if(this.yCoordinates !== msPosData.yCoordinates)
+		let alignment = currentAlignment + this._totalPxIncrement;
+
+		// Help to make the the audio output smoother, by reducing the number of times the display is updated.
+		if(Math.floor(alignment) > Math.floor(currentAlignment))
 		{
-			this.yCoordinates = msPosData.yCoordinates;
-			this._setCoordinates(alignment, this.yCoordinates.top, this.yCoordinates.bottom);
-			let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-			this.systemChanged(yCoordinates);
+			if(this.yCoordinates !== msPosData.yCoordinates)
+			{
+				this.yCoordinates = msPosData.yCoordinates;
+				this._setCoordinates(alignment, this.yCoordinates.top, this.yCoordinates.bottom);
+				let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
+				this.systemChanged(yCoordinates);
+			}
+			else
+			{
+				this._setAlignment(alignment);
+			}
+
+			this.currentAlignment = alignment;
+			this._totalPxIncrement = 0;
 		}
 		else
 		{
-			this._setAlignment(alignment);
+			console.log("Skipped a display update.");
 		}
-
-		this.currentAlignment = alignment;
 	}
 
 	advance(msIncrement)
@@ -217,11 +230,11 @@ export class TimeMarker extends CursorBase
 
 		if((this.currentMsPositionIndex + 1) < this.msPositions.length)
 		{
-			// assumes that this.msPositions contains the position of the final barline. Is this correct?
+			// assumes that this.msPositions contains the position of the final barline.
 			rightMsPos = this.msPositions[this.currentMsPositionIndex + 1];
 		}
 
-		// The above local variables are for the chords and rests in the score (and the final barline?).
+		// The above local variables are for the chords, rests and the final barline in the score.
 		// this.msPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
 		this.msPositionInScore += msIncrement;
 
