@@ -28,8 +28,7 @@ let
 	reportTickOverload, // callback. Set in play().
 
 	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
-	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
-	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
+	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick() 
 
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
@@ -236,42 +235,21 @@ let
 		return nextMomt; // null stops tick().
 	},
 
-	// tick() function -- which ows a lot to Chris Wilson of the Web Audio Group
+	// tick() function -- ows a lot to Chris Wilson of the Web Audio Group
 	// Recursive function. Also used by resume(), play()
-	// This function has been tested as far as possible without having "a conformant outputDevice.send() with timestamps".
-	// It needs testing again with the conformant outputDevice.send() and a higher value for PREQUEUE. What would the
-	// ideal value for PREQUEUE be? 
-	// Email correspondence with Chris Wilson (End of Oct. 2012):
-	//      James: "...how do I decide how big PREQUEUE should be?"
-	//      Chris: "Well, you're trading off two things:
-	//          - 'precision' of visual display (though keep in mind that is fundamentally limited to the 16.67ms tick
-	//            of the visual refresh rate (for a 60Hz display) - and that also affects how quickly you can respond
-	//            to tempo changes (or stopping/pausing playback).
-	//          - reliance on how accurate the setTimeout/setInterval clock is (for that reason alone, the lookahead
-	//            probably needs to be >5ms).
-	//          So, in short, you'll just have to test on your target systems."
-	//      James: "Yes, that's more or less what I thought. I'll start testing with PREQUEUE at 16.67ms."
 	//
-	// 16th Nov. 2012: The cursor can only be updated once per tick, so PREQUEUE needs to be small enough for that not
-	// to matter.
-	// 18th Jan. 2013 -- Jazz 1.2 does not support timestamps.
-	//
-	// The following variables are initialised in play() to start playing the span:
+	// The following are initialised in play() before tick() is called for the first time:
 	//      currentMoment // the first moment in the sequence
 	//      track attributes:
 	//          isOn // set by referring to the track control
 	//          fromIndex // the index of the first moment in the track to play
 	//          toIndex // the index of the final moment in the track (which does not play)
 	//          currentIndex // = fromIndex
-	//      reportEndOfPerformance // can be null
-	//      reportMsPosition // can be null    
+	//      reportEndOfPerformance // callback
+	//      reportMsPosition // callback
+	//      reportTickOverflow // callback
 	tick = function()
 	{
-		var
-			PREQUEUE = 0, // Setting this to 20ms leads to dropouts. But does this need to be set to something larger than 0? See above.
-			now = timer.now(),
-			delay;
-
 		// moment.timestamps are always absolute DOMHRT values here.
 		// Note that Jazz 1.2 does not support timestamps. It always sends Messages immediately.
 		function sendMessages(moment)
@@ -286,15 +264,37 @@ let
 			}
 		}
 
+		// Original comment Oct. 2012: This function has been tested as far as possible without having "a conformant outputDevice.send()
+		// with timestamps". It needs testing again with the conformant outputDevice.send() and a higher value for PREQUEUE.
+		// PREQUEUE is currently 0, but what would its ideal value be? (20ms leads to performance glitches.)
+		// Email correspondence with Chris Wilson (End of Oct. 2012):
+		//      James: "...how do I decide how big PREQUEUE should be?"
+		//      Chris: "Well, you're trading off two things:
+		//          - 'precision' of visual display (though keep in mind that is fundamentally limited to the 16.67ms tick
+		//            of the visual refresh rate (for a 60Hz display) - and that also affects how quickly you can respond
+		//            to tempo changes (or stopping/pausing playback).
+		//          - reliance on how accurate the setTimeout/setInterval clock is (for that reason alone, the lookahead
+		//            probably needs to be >5ms).
+		//          So, in short, you'll just have to test on your target systems."
+		//      James: "Yes, that's more or less what I thought. I'll start testing with PREQUEUE at 16.67ms."
+		//
+		// 16th Nov. 2012: The cursor can only be updated once per tick, so PREQUEUE needs to be small enough for that not
+		// to matter.
+		// 18th Jan. 2013: Jazz 1.2 does not support timestamps.
+		// 6th Nov. 2018: I've now added the reportTickOverflow callback and its associated variables (thisTickTimestampLimit and
+		// nAsynchMomentsSentAtOnce). Does this make the value of PREQUEUE less relevant? I've tried some different values, but
+		// without coming to any real conclusion. Decided to leave it at 0 for now. 
+		const PREQUEUE = 0;
+
 		if(currentMoment === null)
 		{
 			return;
 		}
 
-		delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
-		nAsynchMomentsSentAtOnce = 1;
-
-		let thisTickTimestampLimit = currentMoment.timestamp + 16;  // nAsynchMomentsSentAtOnce not counted if the difference is 16ms
+		let now = timer.now(),
+			delay = currentMoment.timestamp - now, // compensates for inaccuracies in setTimeout
+			thisTickTimestampLimit = currentMoment.timestamp + 16,
+			nAsynchMomentsSentAtOnce = 1; // incremented if the timestamp difference is greater than thisTickTimestampLimit				
 
 		// send all messages that are due between now and PREQUEUE ms later. 
 		while(delay <= PREQUEUE)
@@ -306,7 +306,7 @@ let
 				msPositionToReport = -1;
 			}
 
-			if(thisTickTimestampLimit < currentMoment.timestamp)
+			if(currentMoment.timestamp > thisTickTimestampLimit)
 			{
 				nAsynchMomentsSentAtOnce++;
 			}
