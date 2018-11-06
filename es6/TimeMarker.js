@@ -266,5 +266,10 @@ export class TimeMarker extends CursorBase
 
 		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
 	}
+
+	reportTickOverload(nAsynchMomentsSentAtOnce)
+	{
+		console.warn("TimeMarker: sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
+	}
 }
 

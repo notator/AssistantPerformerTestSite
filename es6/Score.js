@@ -55,6 +55,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return conductor;
 	},
 
+	// Called by controls, only if conducting.
+	// This is a callback called by sequence.tick() if it can't keep up with the speed of a performance,
+	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
+	// Reports the number of moments sent synchronously during the overload.
+	reportConductedTickOverload = function(nAsynchMomentsSentAtOnce)
+	{
+		conductor.reportTickOverload(nAsynchMomentsSentAtOnce);
+	},
+
 	// Pushes the values in the trackIsOnArray into the argument (which is an empty array).
 	// The returnArray will be garbage collected when it is finished with.
 	// This rigmarole so that values in the trackIsOnArray can't be changed except by the tracksControl.
@@ -2108,6 +2117,7 @@ export class Score
 
 		// The TracksControl controls the display, and should be the only module to call this function.
 		this.refreshDisplay = refreshDisplay;
+		this.reportConductedTickOverload = reportConductedTickOverload;
 	}
 }
 

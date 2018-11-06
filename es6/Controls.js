@@ -523,7 +523,14 @@ var
 	// Reports the number of moments sent synchronously during the overload.
 	reportTickOverload = function(nAsynchMomentsSentAtOnce)
 	{
-		console.warn("sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
+		if(options.isConducting)
+		{
+			score.reportConductedTickOverload(nAsynchMomentsSentAtOnce);
+		}
+		else
+		{
+			console.warn("Controls: sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
+		}
 	},
 
 	// see: http://stackoverflow.com/questions/846221/logarithmic-slider

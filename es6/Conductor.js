@@ -32,7 +32,7 @@ export class Conductor
 		this._msPositionInPerformance = 0;
 		this._prevPerfNow = 0;
 		this._speed = speed;
-		this._setIntervalHandle = undefined;
+		this.stop(); //_setIntervalHandle = undefined;
 	}
 
 	timeMarkerElement()
@@ -141,6 +141,11 @@ export class Conductor
 			clearInterval(this._setIntervalHandle);
 			this._setIntervalHandle = undefined;
 		}
+	}
+
+	reportTickOverload(nAsynchMomentsSentAtOnce)
+	{
+		this._timeMarker.reportTickOverload(nAsynchMomentsSentAtOnce);
 	}
 }
 
