@@ -426,7 +426,7 @@ var
 		score.leaveRegion(regionIndex);
 	},
 
-	// callback called when a performing sequenceRecording is stopped or has played its last message,
+	// Callback called when a performing sequenceRecording is stopped or has played its last message,
 	// or when the player is stopped or has played its last subsequence.
 	reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
 	{
@@ -507,7 +507,7 @@ var
 		svgControlsState = "stopped";
 	},
 
-	// callback called by a performing sequence. Reports the msPositionInScore of the
+	// Callback called by a performing sequence. Reports the msPositionInScore of the
 	// Moment curently being sent. When all the events in the span have been played,
 	// reportEndOfPerformance() is called (see above).
 	reportMsPos = function(msPositionInScore)
@@ -516,6 +516,14 @@ var
 		// If there is a graphic object in the score having msPositionInScore,
 		// the running cursor is aligned to that object.
 		score.advanceCursor(msPositionInScore);
+	},
+
+	// Callback called by sequence.tick() if it can't keep up with the speed of a performance,
+	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
+	// Reports the number of moments sent synchronously during the overload.
+	reportTickOverload = function(nAsynchMomentsSentAtOnce)
+	{
+		console.warn("sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
 	},
 
 	// see: http://stackoverflow.com/questions/846221/logarithmic-slider
@@ -865,7 +873,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.getRegionSequence());
+		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, reportTickOverload, score.getRegionSequence());
 	};
 
 export class Controls

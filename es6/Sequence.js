@@ -23,10 +23,13 @@ let
 	paused = false, // nextMoment(), pause(), isPaused()
 
 	reportEndOfRegion, // callback
-	reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
-	reportNextMIDIObject,  // callback. Can be null or undefined. Set in play().
+	reportEndOfPerformance, // callback. Set in play().
+	reportNextMIDIObject,  // callback. Set in play().
+	reportTickOverload, // callback. Set in play().
+
 	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
 	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
+	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
 
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
@@ -289,10 +292,9 @@ let
 		}
 
 		delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
+		nAsynchMomentsSentAtOnce = 1;
 
-		////console.log("tick: delay1=%f", delay);
-		////console.log("currentMoment.msPositionInScore=%i", currentMoment.msPositionInScore);
-		////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
+		let thisTickTimestampLimit = currentMoment.timestamp + 16;  // nAsynchMomentsSentAtOnce not counted if the difference is 16ms
 
 		// send all messages that are due between now and PREQUEUE ms later. 
 		while(delay <= PREQUEUE)
@@ -302,6 +304,11 @@ let
 				reportNextMIDIObject(msPositionToReport);
 				lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
 				msPositionToReport = -1;
+			}
+
+			if(thisTickTimestampLimit < currentMoment.timestamp)
+			{
+				nAsynchMomentsSentAtOnce++;
 			}
 
 			if(currentMoment.messages.length > 0) // rest moments can be empty (but should be reported above) 
@@ -333,6 +340,11 @@ let
 			}
 
 			delay = currentMoment.timestamp - now;
+		}
+
+		if(nAsynchMomentsSentAtOnce > 1)
+		{
+			reportTickOverload(nAsynchMomentsSentAtOnce);
 		}
 
 		window.setTimeout(tick, delay);  // that will schedule the next tick.
@@ -435,7 +447,7 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(timerArg, outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, regionSequenceArg)
+	init(timerArg, outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback, regionSequenceArg)
 	{
 		function getRegionStartMsPositionsInScore(regionSequence)
 		{
@@ -478,6 +490,7 @@ export class Sequence
 		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
+		reportTickOverload = reportTickOverloadCallback;
 
 		setState("stopped");
 	}
