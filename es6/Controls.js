@@ -299,6 +299,8 @@ var
 
 		deleteSaveLink();
 
+		score.deleteTickOverloadMarkers();
+
 		if(isKeyboard1Performance === false && player.isPaused())
 		{
 			player.resume();
@@ -516,21 +518,6 @@ var
 		// If there is a graphic object in the score having msPositionInScore,
 		// the running cursor is aligned to that object.
 		score.advanceCursor(msPositionInScore);
-	},
-
-	// Callback called by sequence.tick() if it can't keep up with the speed of a performance,
-	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
-	// Reports the number of moments sent synchronously during the overload.
-	reportTickOverload = function(nAsynchMomentsSentAtOnce)
-	{
-		if(options.isConducting)
-		{
-			score.reportConductedTickOverload(nAsynchMomentsSentAtOnce);
-		}
-		else
-		{
-			console.warn("Controls: sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
-		}
 	},
 
 	// see: http://stackoverflow.com/questions/846221/logarithmic-slider
@@ -880,7 +867,7 @@ var
 		{
 			timer = performance; // use performance.now()           
 		}
-		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, reportTickOverload, score.getRegionSequence());
+		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload, score.getRegionSequence());
 	};
 
 export class Controls

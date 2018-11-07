@@ -46,8 +46,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	startMarker,
 	endMarker,
-	conductor, // an object that has a now() function).
-	cursor, // The cursor that is going to replace all the RunningMarkers
+	conductor, // an object that encapsulates a (blue) TimeMarker and a now() function).
+	cursor, // The (grey) cursor
 	systemChanged, // callback, called when running cursor changes systems
 
 	getConductor = function()
@@ -55,13 +55,31 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return conductor;
 	},
 
-	// Called by controls, only if conducting.
-	// This is a callback called by sequence.tick() if it can't keep up with the speed of a performance,
+	// This callback is called by sequence.tick() if it can't keep up with the speed of a performance,
 	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
-	// Reports the number of moments sent synchronously during the overload.
-	reportConductedTickOverload = function(nAsynchMomentsSentAtOnce)
+	// nAsynchMomentsSentAtOnce is the number of moments sent "synchronously" during the overload.
+	reportTickOverload = function(nAsynchMomentsSentAtOnce)
 	{
-		conductor.reportTickOverload(nAsynchMomentsSentAtOnce);
+		//cursor.reportTickOverload(nAsynchMomentsSentAtOnce);
+		let tickOverloadMarkerElem = cursor.element.cloneNode();
+
+		const DARK_RED = "#BB2222";
+
+		tickOverloadMarkerElem.style.stroke = DARK_RED;
+		tickOverloadMarkerElem.setAttribute("class", "tickOverloadMarker");
+
+		markersLayer.appendChild(tickOverloadMarkerElem);
+
+		console.log("score.reportTickOverload(): %d asynchronous moments sent at the same time", nAsynchMomentsSentAtOnce);
+	},
+
+	deleteTickOverloadMarkers = function()
+	{
+		let markerElems = markersLayer.getElementsByClassName("tickOverloadMarker");
+		for(let i = markerElems.length - 1; i >= 0; --i)
+		{
+			markersLayer.removeChild(markerElems[i]);
+		}
 	},
 
 	// Pushes the values in the trackIsOnArray into the argument (which is an empty array).
@@ -753,6 +771,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		if(speed > 0)
 		{
+			deleteTickOverloadMarkers();
 			conductor.init(startMarker, startPlayingFunction, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
 			markersLayer.appendChild(conductor.timeMarkerElement());
 		}
@@ -1332,9 +1351,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// Advances the cursor to msPosition (in any channel)
 	// Does nothing when the end of the score is reached.
-	advanceCursor = function(msPosition)
+	advanceCursor = function(msPositionInScore)
 	{
-		cursor.moveElementTo(msPosition);
+		cursor.moveElementTo(msPositionInScore);
 	},
 
 	// tracksData has the following defined attributes:
@@ -2117,7 +2136,9 @@ export class Score
 
 		// The TracksControl controls the display, and should be the only module to call this function.
 		this.refreshDisplay = refreshDisplay;
-		this.reportConductedTickOverload = reportConductedTickOverload;
+
+		this.reportTickOverload = reportTickOverload;
+		this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;
 	}
 }
 

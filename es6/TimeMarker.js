@@ -4,7 +4,7 @@ export class TimeMarker extends CursorBase
 {
 	constructor(systems, cursor, regionSequence)
 	{
-		function newElement(viewBoxScale)
+		function newElement(that, viewBoxScale)
 		{
 			let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 				hLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
@@ -13,7 +13,7 @@ export class TimeMarker extends CursorBase
 				vLine = document.createElementNS("http://www.w3.org/2000/svg", "line"),
 				strokeColor, hStyle, dStyle, vStyle;
 
-			strokeColor = "stroke:#5555FF";
+			strokeColor = "stroke:" + that.BLUE;
 			hStyle = strokeColor + "; stroke-width:" + (1.5 * viewBoxScale).toString(10);
 			dStyle = hStyle + "; stroke-linecap:'square'";
 			vStyle = strokeColor + "; stroke-width:" + (1 * viewBoxScale).toString(10);
@@ -23,20 +23,6 @@ export class TimeMarker extends CursorBase
 			bottomDiagLine.setAttribute("style", dStyle);
 			vLine.setAttribute("style", vStyle);
 
-			//hLine.setAttribute("stroke", "#5555FF");
-			//hLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
-
-			//topDiagLine.setAttribute("stroke", "#5555FF");
-			//topDiagLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
-			//topDiagLine.setAttribute("stroke-linecap", "square");
-
-			//bottomDiagLine.setAttribute("stroke", "#5555FF");
-			//bottomDiagLine.setAttribute("stroke-width", (1.5 * viewBoxScale).toString(10));
-			//bottomDiagLine.setAttribute("stroke-linecap", "square");
-
-			//vLine.setAttribute("stroke", "#5555FF");
-			//vLine.setAttribute("stroke-width", (1 * viewBoxScale).toString(10));
-
 			element.appendChild(hLine);
 			element.appendChild(topDiagLine);
 			element.appendChild(bottomDiagLine);
@@ -44,7 +30,7 @@ export class TimeMarker extends CursorBase
 
 			element.setAttribute("visibility", "hidden");
 
-			return { element, hLine, topDiagLine, bottomDiagLine, vLine };
+			return { element, hLine, topDiagLine, bottomDiagLine, vLine};
 		}
 
 		function getMsPositionsArray(theMap)
@@ -87,7 +73,7 @@ export class TimeMarker extends CursorBase
 
 		super(cursor.systemChanged, cursor.msPosDataMap, cursor.viewBoxScale);
 
-		let elem = newElement(cursor.viewBoxScale);
+		let elem = newElement(this, cursor.viewBoxScale);
 		Object.defineProperty(this, "element", { value: elem.element, writable: false });
 		Object.defineProperty(this, "hLine", { value: elem.hLine, writable: false });
 		Object.defineProperty(this, "topDiagLine", { value: elem.topDiagLine, writable: false });
@@ -265,11 +251,6 @@ export class TimeMarker extends CursorBase
 		}
 
 		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
-	}
-
-	reportTickOverload(nAsynchMomentsSentAtOnce)
-	{
-		console.warn("TimeMarker: sequence.tick() overloaded: %d asynch moments sent synchronously", nAsynchMomentsSentAtOnce);
 	}
 }
 

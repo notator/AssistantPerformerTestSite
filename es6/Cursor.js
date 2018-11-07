@@ -3,6 +3,9 @@ export class CursorBase
 {
 	constructor(systemChanged, msPosDataMap, viewBoxScale)
 	{
+		Object.defineProperty(this, "GREY", { value: "#999999", writable: false });
+		Object.defineProperty(this, "BLUE", { value: "#5555FF", writable: false });
+
 		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
 		Object.defineProperty(this, "msPosDataMap", { value: msPosDataMap, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
@@ -29,7 +32,7 @@ export class Cursor extends CursorBase
 {
 	constructor(systems, viewBoxScale, systemChanged)
 	{
-		function newElement(firstMsPosData, viewBoxScale)
+		function newElement(that, firstMsPosData, viewBoxScale)
 		{
 			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
 				yCoordinates = firstMsPosData.yCoordinates, alignment = firstMsPosData.alignment;
@@ -39,7 +42,7 @@ export class Cursor extends CursorBase
 			element.setAttribute("y1", yCoordinates.top.toString(10));
 			element.setAttribute("x2", alignment.toString(10));
 			element.setAttribute("y2", yCoordinates.bottom.toString(10));
-			element.setAttribute("style", "stroke:#999999; stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
+			element.setAttribute("style", "stroke:" + that.GREY + ";stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
 
 			return element;
 		}
@@ -138,9 +141,10 @@ export class Cursor extends CursorBase
 		}
 
 		let msPosDataMap = getScoreMsPosDataMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
+
 		super(systemChanged, msPosDataMap, viewBoxScale);
 
-		let element = newElement(msPosDataMap.get(0), viewBoxScale);
+		let element = newElement(this, msPosDataMap.get(0), viewBoxScale);
 		Object.defineProperty(this, "element", { value: element, writable: false });
 	}
 
