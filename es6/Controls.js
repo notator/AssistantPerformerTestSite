@@ -258,11 +258,18 @@ var
 		score.startConductTimer();
 	},
 
-	conductorMouseDown = function()
+	conductorMouseDown = function(e)
 	{
-		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
-		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
-		score.startConductCreep();
+		if(e.button === 2) // right click
+		{
+			setConductorControlClicked(); // toggles the set conductor control to stop the performance
+		}
+		else
+		{
+			globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
+			globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
+			score.startConductCreep();
+		}
 	},
 
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
