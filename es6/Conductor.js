@@ -60,6 +60,23 @@ export class Conductor
 		return this._timeMarker.element;
 	}
 
+	// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
+	// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
+	// maxVal = 10 when e.clientX = e.target.clientWidth
+	// midVal = 1 when e.clientX = e.target.clientWidth / 2 -- My screen has width 1920px, so the middle value (1) is at 960px.
+	// minVal = 0.1 when e.clientX = e.target.clientLeft
+	_getXFactor(e)
+	{
+		let minp = e.target.clientLeft,
+			maxp = e.target.clientWidth, // The width of the screen in pixels
+			// The result will be between 0.1 and 10, the middle value is 1.
+			minv = Math.log(0.1), maxv = Math.log(10),
+			// the adjustment factor
+			scale = (maxv - minv) / (maxp - minp);
+
+		return Math.exp(minv + scale * (e.clientX - minp));
+	}
+
 	// This mousemove handler sets performance time proportional to the distance travelled by the conductor's cursor,
 	// also taking the value of the global speed control into account.
 	// However, note that _any_ function could be used to describe the relation between the mouse and conductor.now().
@@ -77,14 +94,15 @@ export class Conductor
 		}
 		else
 		{
-			let dx = this._prevX - e.clientX,
+			let xFactor = this._getXFactor(e),
+				dx = this._prevX - e.clientX,
 				dy = this._prevY - e.clientY;
 
 			this._prevX = e.clientX;
 			this._prevY = e.clientY;
 
 			let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-				msDurationInScore = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
+				msDurationInScore = xFactor * (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
 
 			this._msPositionInPerformance += msDurationInScore;
 			this._timeMarker.advance(msDurationInScore);
@@ -100,30 +118,13 @@ export class Conductor
 	{
 		function doConducting(that, e)
 		{
-			// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
-			// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
-			// maxVal = 10 when e.clientX = e.target.clientWidth
-			// midVal = 1 when e.clientX = e.target.clientWidth / 2 -- My screen has width 1920px, so the middle value (1) is at 960px.
-			// minVal = 0.1 when e.clientX = e.target.clientLeft
-			function getXFactor(e)
-			{
-				let	minp = e.target.clientLeft,
-					maxp = e.target.clientWidth, // The width of the screen in pixels
-					// The result will be between 0.1 and 10, the middle value is 1.
-					minv = Math.log(0.1), maxv = Math.log(10),
-					// the adjustment factor
-					scale = (maxv - minv) / (maxp - minp);
-
-				return Math.exp(minv + scale * (e.clientX - minp));
-			}
-
 			if(that._isCreeping)
 			{
 				that.stopTimer();
 			}
 			else
 			{
-				let xFactor = getXFactor(e),
+				let xFactor = that._getXFactor(e),
 					speedFactor = xFactor * that._speed,
 					now = performance.now(),
 					timeInterval = now - that._prevPerfNow,
