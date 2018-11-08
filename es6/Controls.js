@@ -258,18 +258,11 @@ var
 		score.startConductTimer();
 	},
 
-	conductorMouseDown = function(e)
+	conductorMouseDown = function()
 	{
-		if(e.button === 2) // right click
-		{
-			setConductorControlClicked(); // toggles the set conductor control to stop the performance
-		}
-		else
-		{
-			globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
-			globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
-			score.startConductCreep();
-		}
+		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
+		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
+		score.startConductCreep();
 	},
 
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
@@ -546,7 +539,7 @@ var
 
 	// see: http://stackoverflow.com/questions/846221/logarithmic-slider
 	// Returns the speed from the (logarithmic) speed slider control.
-	speedSliderValue = function (position)
+	speedSliderValue = function(position)
 	{
 		var
 			// the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
@@ -1087,7 +1080,7 @@ export class Controls
 				height = Math.round(parseFloat(div.style.height));
 
 			if(((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
-			|| ((runningMarkerYCoordinates.top) < (div.scrollTop)))
+				|| ((runningMarkerYCoordinates.top) < (div.scrollTop)))
 			{
 				div.scrollTop = runningMarkerYCoordinates.top - 10;
 			}
