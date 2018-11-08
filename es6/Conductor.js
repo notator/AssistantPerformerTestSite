@@ -20,6 +20,7 @@ export class Conductor
 		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
 		// The _speed is the value of the speed control when the set conducting button is clicked.
 		Object.defineProperty(this, "_speed", { value: -1, writable: true });
+		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
 		Object.defineProperty(this, "_setIntervalHandle", { value: undefined, writable: true });
 	}
 
@@ -32,7 +33,26 @@ export class Conductor
 		this._msPositionInPerformance = 0;
 		this._prevPerfNow = 0;
 		this._speed = speed;
-		this.stop(); //_setIntervalHandle = undefined;
+		this._isCreeping = false;
+		this.stopTimer(); //_setIntervalHandle = undefined;
+	}
+
+	startConductTimer()
+	{
+		let conductingLayer = document.getElementById("conductingLayer"),
+			dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: conductingLayer, jiDummy: true };
+
+		this._isCreeping = false;
+		this.conductTimer(dummyEvent);
+	}
+
+	startConductCreep()
+	{
+		let conductingLayer = document.getElementById("conductingLayer"),
+			dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: conductingLayer, jiDummy: true };
+
+		this._isCreeping = true;
+		this.conductCreep(dummyEvent);
 	}
 
 	timeMarkerElement()
@@ -40,43 +60,43 @@ export class Conductor
 		return this._timeMarker.element;
 	}
 
-	//// mousemove handler #1
-	//// This handler sets performance time proportional to the distance travelled by the conductor's cursor.
-	//// However, note that _any_ function could be used to describe this relation.
-	//// Example 1: as here, but with the speed factor depending on e.clientY (in the conduct(e) function).
-	//// Example 2: use performance.now(), but with the speed factor depending on e.clientY.
-	//// The information inside the TimeMarker could also be used in such a function, so that, for example,
-	//// the conductor's space/time relation could depend on the currentRegionIndex.
-	//// Functions that change the performance of repeated regions (CC values etc.) could also be implemented
-	//// using the TimeMarker's attributes.
-	//conduct(e)
-	//{
-	//	if(this._prevX < 0)
-	//	{
-	//		this._prevX = e.clientX;
-	//		this._prevY = e.clientY;
-	//		this._startPlaying(false);
-	//	}
-	//	else
-	//	{
-	//		let dx = this._prevX - e.clientX,
-	//			dy = this._prevY - e.clientY;
+	// This mousemove handler sets performance time proportional to the distance travelled by the conductor's cursor,
+	// also taking the value of the global speed control into account.
+	// However, note that _any_ function could be used to describe the relation between the mouse and conductor.now().
+	// See conductTimer() below.
+	// The information inside the TimeMarker could also be used in such a function, so that, for example,
+	// the conductor's space/time relation could depend on the currentRegionIndex. It would, however, be better not to
+	// make the conductor's job too complicated, but instead write such changing relations into the score itself somehow.
+	conductCreep(e)
+	{
+		if(this._prevX < 0 || e.jiDummy !== undefined)
+		{
+			this._startPlaying(false);
+			this._prevX = e.clientX;
+			this._prevY = e.clientY;
+		}
+		else
+		{
+			let dx = this._prevX - e.clientX,
+				dy = this._prevY - e.clientY;
 
-	//		this._prevX = e.clientX;
-	//		this._prevY = e.clientY;
+			this._prevX = e.clientX;
+			this._prevY = e.clientY;
 
-	//		console.log("e.clientX=" + e.clientX);
+			let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
+				msDurationInScore = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
 
-	//		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-	//			msDurationInScore = (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
+			this._msPositionInPerformance += msDurationInScore;
+			this._timeMarker.advance(msDurationInScore);
+		}
+	}
 
-	//		this._msPositionInPerformance += msDurationInScore;
-	//		this._timeMarker.advance(msDurationInScore);
-	//	}
-	//}
-
-	/* mousemove handler #2 */
-	conduct(e)
+	// This mousemove handler uses e.clientX values to control the rate at which conductor.now() changes
+	// with respect to performance.now(), also taking the value of the global speed control into account.
+	// When the cursor is in the centreX of the screen, conductor.now() speed is speedControlValue times performance.now() speed.
+	// When the cursor is on the left of the screen, conductor.now() speed (= TimeMarker speed) is slower.
+	// When the cursor is on the left of the screen, conductor.now() speed (= TimeMarker speed) is faster.
+	conductTimer(e)
 	{
 		function doConducting(that, e)
 		{
@@ -97,21 +117,29 @@ export class Conductor
 				return Math.exp(minv + scale * (e.clientX - minp));
 			}
 
-			let xFactor = getXFactor(e),
-				speedFactor = xFactor * that._speed,
-				now = performance.now(), 
-				timeInterval = now - that._prevPerfNow,
-				msDuration = timeInterval * speedFactor;
+			if(that._isCreeping)
+			{
+				that.stopTimer();
+			}
+			else
+			{
+				let xFactor = getXFactor(e),
+					speedFactor = xFactor * that._speed,
+					now = performance.now(),
+					timeInterval = now - that._prevPerfNow,
+					msDuration = timeInterval * speedFactor;
 
-			that._msPositionInPerformance += msDuration; // _msPositionInPerformance includes durations of repeated regions.
-			that._timeMarker.advance(msDuration); // timeMarker positions are relative to msPositionInScore.
-			that._prevPerfNow = now;
+				that._msPositionInPerformance += msDuration; // _msPositionInPerformance includes durations of repeated regions.
+				that._timeMarker.advance(msDuration); // timeMarker positions are relative to msPositionInScore.
+				that._prevPerfNow = now;
+			}
 		}
 
-		if(this._msPositionInPerformance === 0)
+		if(this._prevX < 0 || e.jiDummy !== undefined)
 		{
 			this._startPlaying(false);
 			this._prevX = e.clientX;
+			this._prevY = e.clientY;  // maintain state for conductCreep() event handler.
 			this._prevPerfNow = performance.now();
 
 			this._setIntervalHandle = setInterval(doConducting, this._intervalRate, this, e);
@@ -126,7 +154,9 @@ export class Conductor
 			this._setIntervalHandle = setInterval(doConducting, this._intervalRate, this, e);
 
 			this._prevX = e.clientX;
+			this._prevY = e.clientY;  // maintain state for conductCreep() event handler.
 		}
+
 	}
 
 	now()
@@ -134,7 +164,7 @@ export class Conductor
 		return this._msPositionInPerformance;
 	}
 
-	stop()
+	stopTimer()
 	{
 		if(this._setIntervalHandle !== undefined)
 		{

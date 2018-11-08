@@ -777,14 +777,29 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 		else
 		{
-			conductor.stop();
+			conductor.stopTimer();
 			markersLayer.removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
 		}
 	},
 
-	conduct = function(e)
+	startConductTimer = function()
 	{
-		conductor.conduct(e);
+		conductor.startConductTimer();
+	},
+
+	startConductCreep = function()
+	{
+		conductor.startConductCreep();
+	},
+
+	conductTimer = function(e)
+	{
+		conductor.conductTimer(e);
+	},
+
+	conductCreep = function(e)
+	{
+		conductor.conductCreep(e);
 	},
 
 	// Constructs empty systems for all the pages.
@@ -2110,7 +2125,10 @@ export class Score
 
 		this.setConducting = setConducting;
 		this.getConductor = getConductor;
-		this.conduct = conduct;
+		this.conductCreep = conductCreep;
+		this.conductTimer = conductTimer;
+		this.startConductCreep = startConductCreep;
+		this.startConductTimer = startConductTimer;
 
 		this.getEmptySystems = getEmptySystems;
 
