@@ -37,19 +37,17 @@ export class Conductor
 		this.stopTimer(); //_setIntervalHandle = undefined;
 	}
 
-	startConductTimer()
+	switchToConductTimer()
 	{
-		let conductingLayer = document.getElementById("conductingLayer"),
-			dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: conductingLayer, jiDummy: true };
+		let dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: this._conductingLayer, jiDummy: true };
 
 		this._isCreeping = false;
 		this.conductTimer(dummyEvent);
 	}
 
-	startConductCreep()
+	switchToConductCreep()
 	{
-		let conductingLayer = document.getElementById("conductingLayer"),
-			dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: conductingLayer, jiDummy: true };
+		let dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: this._conductingLayer, jiDummy: true };
 
 		this._isCreeping = true;
 		this.conductCreep(dummyEvent);
@@ -88,7 +86,6 @@ export class Conductor
 	{
 		if(this._prevX < 0 || e.jiDummy !== undefined)
 		{
-			this._startPlaying(false);
 			this._prevX = e.clientX;
 			this._prevY = e.clientY;
 		}
@@ -136,9 +133,13 @@ export class Conductor
 			}
 		}
 
-		if(this._prevX < 0 || e.jiDummy !== undefined)
+		if(this._prevX < 0)
 		{
 			this._startPlaying(false);
+		}
+
+		if(this._prevX < 0|| e.jiDummy !== undefined)
+		{
 			this._prevX = e.clientX;
 			this._prevY = e.clientY;  // maintain state for conductCreep() event handler.
 			this._prevPerfNow = performance.now();

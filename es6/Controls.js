@@ -255,14 +255,14 @@ var
 	{
 		globalElements.conductingLayer.removeEventListener('mousemove', score.conductCreep, false);
 		globalElements.conductingLayer.addEventListener('mousemove', score.conductTimer, false);
-		score.startConductTimer();
+		score.switchToConductTimer();
 	},
 
 	conductorMouseDown = function()
 	{
 		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
 		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
-		score.startConductCreep();
+		score.switchToConductCreep();
 	},
 
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)

@@ -60,17 +60,16 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// nAsynchMomentsSentAtOnce is the number of moments sent "synchronously" during the overload.
 	reportTickOverload = function(nAsynchMomentsSentAtOnce)
 	{
-		//cursor.reportTickOverload(nAsynchMomentsSentAtOnce);
 		let tickOverloadMarkerElem = cursor.element.cloneNode();
 
-		const DARK_RED = "#BB2222";
+		const LIGHT_BLUE = "#9999FF";
 
-		tickOverloadMarkerElem.style.stroke = DARK_RED;
+		tickOverloadMarkerElem.style.stroke = LIGHT_BLUE;
 		tickOverloadMarkerElem.setAttribute("class", "tickOverloadMarker");
 
 		markersLayer.appendChild(tickOverloadMarkerElem);
 
-		console.log("score.reportTickOverload(): %d asynchronous moments sent at the same time", nAsynchMomentsSentAtOnce);
+		//console.log("score.reportTickOverload(): %d asynchronous moments sent at the same time", nAsynchMomentsSentAtOnce);
 	},
 
 	deleteTickOverloadMarkers = function()
@@ -782,14 +781,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
-	startConductTimer = function()
+	switchToConductTimer = function()
 	{
-		conductor.startConductTimer();
+		conductor.switchToConductTimer();
 	},
 
-	startConductCreep = function()
+	switchToConductCreep = function()
 	{
-		conductor.startConductCreep();
+		conductor.switchToConductCreep();
 	},
 
 	conductTimer = function(e)
@@ -2127,8 +2126,8 @@ export class Score
 		this.getConductor = getConductor;
 		this.conductCreep = conductCreep;
 		this.conductTimer = conductTimer;
-		this.startConductCreep = startConductCreep;
-		this.startConductTimer = startConductTimer;
+		this.switchToConductCreep = switchToConductCreep;
+		this.switchToConductTimer = switchToConductTimer;
 
 		this.getEmptySystems = getEmptySystems;
 
