@@ -74,6 +74,9 @@ export class TimeMarker extends CursorBase
 		super(cursor.systemChanged, cursor.msPosDataMap, cursor.viewBoxScale);
 
 		let elem = newElement(this, cursor.viewBoxScale);
+
+		//Object.defineProperty(this, "cursor", { value: cursor, writable: false });
+
 		Object.defineProperty(this, "element", { value: elem.element, writable: false });
 		Object.defineProperty(this, "hLine", { value: elem.hLine, writable: false });
 		Object.defineProperty(this, "topDiagLine", { value: elem.topDiagLine, writable: false });
@@ -100,7 +103,7 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // set in init() - value wrt start of score	
 		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
 		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
-		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true }); // updated at runtime
+		Object.defineProperty(this, "totalMsIncrement", { value: 0, writable: true }); // set in  init()
 	}
 
 	_setCoordinates(alignment, top, bottom)
@@ -174,38 +177,34 @@ export class TimeMarker extends CursorBase
 
 		this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
 		this.currentAlignment = this.msPosData.alignment;
-		this._totalPxIncrement = 0;
+		this.totalMsIncrement = 0;
 
 		this.setVisible(true);
 	}
 
 	_moveElementTo(currentAlignment, msPosData, msIncrement)
 	{
-		this._totalPxIncrement += (msIncrement * msPosData.pixelsPerMs);
-
-		let alignment = currentAlignment + this._totalPxIncrement;
-
-		// Help to make the the audio output smoother, by reducing the number of times the display is updated.
-		if(Math.floor(alignment) > Math.floor(currentAlignment))
+		this.totalMsIncrement += msIncrement;
+		// Help to improve the audio output by reducing the number of times the display is updated.
+		// Chris Wilson said "keep in mind [...] the 16.67ms tick of the visual refresh rate (for a 60Hz display)".
+		if(this.totalMsIncrement > 8)
 		{
+			let newAlignment = currentAlignment + (this.totalMsIncrement * msPosData.pixelsPerMs);
+			this.totalMsIncrement = 0;
+
 			if(this.yCoordinates !== msPosData.yCoordinates)
 			{
 				this.yCoordinates = msPosData.yCoordinates;
-				this._setCoordinates(alignment, this.yCoordinates.top, this.yCoordinates.bottom);
+				this._setCoordinates(newAlignment, this.yCoordinates.top, this.yCoordinates.bottom);
 				let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
 				this.systemChanged(yCoordinates);
 			}
 			else
 			{
-				this._setAlignment(alignment);
+				this._setAlignment(newAlignment);
 			}
 
-			this.currentAlignment = alignment;
-			this._totalPxIncrement = 0;
-		}
-		else
-		{
-			console.log("Skipped a display update.");
+			this.currentAlignment = newAlignment;
 		}
 	}
 
@@ -251,6 +250,14 @@ export class TimeMarker extends CursorBase
 		}
 
 		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
+
+		// test code (this.cursor should be defined in the constructor -- see above)
+		//let cursorAlignment = parseFloat(this.cursor.element.getAttribute("x1")); 
+		//if(this.currentAlignment < cursorAlignment)
+		//{
+		//	this._setAlignment(cursorAlignment);
+		//	console.log("Aligned timeMarker to cursor.");
+		//}
 	}
 }
 
