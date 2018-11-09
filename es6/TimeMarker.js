@@ -186,8 +186,9 @@ export class TimeMarker extends CursorBase
 	{
 		this.totalMsIncrement += msIncrement;
 		// Help to improve the audio output by reducing the number of times the display is updated.
-		// Chris Wilson said "keep in mind [...] the 16.67ms tick of the visual refresh rate (for a 60Hz display)".
-		if(this.totalMsIncrement > 8)
+		// Chris Wilson said (End of Oct. 2012) "keep in mind [...] the 16.67ms tick of the visual refresh rate (for a 60Hz display)".
+		// But also remember that these are milliseconds notated in the score, not necessarily real milliseconds. 
+		if(this.totalMsIncrement === 0 || this.totalMsIncrement > 6)
 		{
 			let newAlignment = currentAlignment + (this.totalMsIncrement * msPosData.pixelsPerMs);
 			this.totalMsIncrement = 0;
@@ -235,7 +236,8 @@ export class TimeMarker extends CursorBase
 					this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
 					this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === this.msPositionInScore);
 					this.currentAlignment = this.msPosData.alignment; 
-					currentRorC_MsPos = this.msPositionInScore; 
+					currentRorC_MsPos = this.msPositionInScore;
+					this.totalMsIncrement = 0;
 					msIncrement = 0;
 				}
 			}
@@ -245,6 +247,7 @@ export class TimeMarker extends CursorBase
 				currentRorC_MsPos = this.msPositions[this.currentMsPositionIndex];
 				this.msPosData = this.msPosDataMap.get(currentRorC_MsPos);
 				this.currentAlignment = this.msPosData.alignment;
+				this.totalMsIncrement = 0;
 				msIncrement = 0;
 			}
 		}
