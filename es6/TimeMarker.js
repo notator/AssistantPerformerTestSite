@@ -182,12 +182,15 @@ export class TimeMarker extends CursorBase
 	_moveElementTo(currentAlignment, msPosData, msIncrement)
 	{
 		this._totalPxIncrement += (msIncrement * msPosData.pixelsPerMs);
-
-		let alignment = currentAlignment + this._totalPxIncrement;
-
-		// Help to make the the audio output smoother, by reducing the number of times the display is updated.
-		if(Math.floor(alignment) > Math.floor(currentAlignment))
+		
+		// This 0.5 limit helps to improve the audio output by reducing the number of
+		// times the display is updated, but it also means that the grey cursor jumps
+		// 0.5 pixels ahead of the TimeMarker on reaching chords and rests, in both
+		// conductTimer and conductCreep modes.
+		if(this._totalPxIncrement > 0.5)
 		{
+			let alignment = currentAlignment + this._totalPxIncrement;
+
 			if(this.yCoordinates !== msPosData.yCoordinates)
 			{
 				this.yCoordinates = msPosData.yCoordinates;
@@ -203,10 +206,10 @@ export class TimeMarker extends CursorBase
 			this.currentAlignment = alignment;
 			this._totalPxIncrement = 0;
 		}
-		else
-		{
-			console.log("Skipped a display update.");
-		}
+		//else
+		//{
+		//	console.log("Skipped a display update.");
+		//}
 	}
 
 	advance(msIncrement)
