@@ -42,6 +42,7 @@ export class Conductor
 		let dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: this._conductingLayer, jiDummy: true };
 
 		this._isCreeping = false;
+		this._timeMarker.switchToConductTimer();
 		this.conductTimer(dummyEvent);
 	}
 
@@ -50,6 +51,7 @@ export class Conductor
 		let dummyEvent = { clientX: this._prevX, clientY: this._prevY, target: this._conductingLayer, jiDummy: true };
 
 		this._isCreeping = true;
+		this._timeMarker.switchToConductCreep();
 		this.conductCreep(dummyEvent);
 	}
 

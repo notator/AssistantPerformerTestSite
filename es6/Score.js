@@ -2029,7 +2029,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		setMarkers(systems);
 
 		// cursor is accessed outside the score using a getter function
-		cursor = new Cursor(systems, viewBoxScale, systemChanged);
+		cursor = new Cursor(systemChanged, systems, viewBoxScale);
 		conductor = new Conductor(systems, cursor, regionSequence);
 
 		markersLayer.appendChild(cursor.element);

@@ -33,45 +33,7 @@ export class TimeMarker extends CursorBase
 			return { element, hLine, topDiagLine, bottomDiagLine, vLine };
 		}
 
-		function getMsPositionsArray(theMap)
-		{
-			let rval = [];
-
-			for(let key of theMap.keys())
-			{
-				rval.push(key);
-			}
-
-			rval.sort((a, b) => a - b);
-
-			return rval;
-		}
-
-		function getSystemEndMsPositions(systems)
-		{
-			let msPositions = [];
-
-			for(let system of systems)
-			{
-				let voiceTimeObjects = system.staves[0].voices[0].timeObjects,
-					timeObject = voiceTimeObjects[voiceTimeObjects.length - 1];
-
-				msPositions.push(timeObject.msPositionInScore);
-			}
-
-			return msPositions;
-		}
-
-		function getSystemRightAlignment(system)
-		{
-			let voiceTimeObjects = system.staves[0].voices[0].timeObjects,
-				timeObject = voiceTimeObjects[voiceTimeObjects.length - 1],
-				rightAlignment = timeObject.alignment;
-
-			return rightAlignment;
-		}
-
-		super(cursor.systemChanged, cursor.msPosDataMap, cursor.viewBoxScale);
+		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
 
 		let elem = newElement(this, cursor.viewBoxScale);
 		Object.defineProperty(this, "element", { value: elem.element, writable: false });
@@ -84,23 +46,15 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "startRegionIndex", { value: 0, writable: true }); // set in init()
 		Object.defineProperty(this, "endRegionIndex", { value: 0, writable: true }); // set in init()
 		Object.defineProperty(this, "currentRegionIndex", { value: 0, writable: true }); // set in init()
-
-		// An array containing the (sorted) msPosDataMap keys.
-		let msPositionsArray = getMsPositionsArray(cursor.msPosDataMap);
-		Object.defineProperty(this, "msPositions", { value: msPositionsArray, writable: false });
-		Object.defineProperty(this, "currentMsPositionIndex", { value: 0, writable: true });
-
-		let systemRightAlignment = getSystemRightAlignment(systems[0]);
-		Object.defineProperty(this, "systemRightAlignment", { value: systemRightAlignment, writable: false });
-		let systemEndMsPositions = getSystemEndMsPositions(systems);
-		Object.defineProperty(this, "systemEndMsPositions", { value: systemEndMsPositions, writable: false });
-		Object.defineProperty(this, "currentSystemIndex", { value: 0, writable: true });
+		Object.defineProperty(this, "currentMsPositionIndex", { value: 0, writable: true });// set in init()
 
 		Object.defineProperty(this, "startMarker", { value: null, writable: true }); // set in init()
 		Object.defineProperty(this, "msPositionInScore", { value: -1, writable: true }); // set in init() - value wrt start of score	
 		Object.defineProperty(this, "msPosData", { value: null, writable: true }); // set in  init()
 		Object.defineProperty(this, "currentAlignment", { value: 0, writable: true }); // set in  init()
+		Object.defineProperty(this, "nextMsPosInScore", { value: -1, writable: true }); // set in  init()
 		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true }); // updated at runtime
+		Object.defineProperty(this, "_isCreeping", { value: false, writable: true }); // updated at runtime
 	}
 
 	_setCoordinates(alignment, top, bottom)
@@ -161,25 +115,35 @@ export class TimeMarker extends CursorBase
 		this.startRegionIndex = startRegionIndex;
 		this.endRegionIndex = endRegionIndex;
 		this.currentRegionIndex = startRegionIndex;
-		this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === startMarker.msPositionInScore);
-		this.currentSystemIndex = this.systemEndMsPositions.findIndex((a) => a > startMarker.msPositionInScore);
+		this.currentMsPositionIndex = this.msPosDataArray.findIndex((a) => a.msPositionInScore === startMarker.msPositionInScore); // this.msPositions.findIndex((a) => a === startMarker.msPositionInScore);
 
-		let coordinates = this.msPosDataMap.get(this.msPositionInScore),
-			alignment = coordinates.alignment,
-			top = coordinates.yCoordinates.top,
-			bottom = coordinates.yCoordinates.bottom;
+		this.msPosData = this.msPosDataArray[this.currentMsPositionIndex];
 
-		this._setCoordinates(alignment, top, bottom);
-		this.yCoordinates = coordinates.yCoordinates; // maybe I can delete this.yCoordinates? Use currentSystemIndex instead...
+		this._setCoordinates(this.msPosData.alignment, this.msPosData.yCoordinates.top, this.msPosData.yCoordinates.bottom);
+		this.yCoordinates = this.msPosData.yCoordinates;
 
-		this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
 		this.currentAlignment = this.msPosData.alignment;
+
+		// index + 1 should always work, because final barline is in this.msPosDataArray, but regions can't start there.
+		this.nextMsPosInScore = this.msPosDataArray[this.currentMsPositionIndex + 1].msPositionInScore;
+
 		this._totalPxIncrement = 0;
+		this._isCreeping = false;
 
 		this.setVisible(true);
 	}
 
-	_moveElementTo(currentAlignment, msPosData, msIncrement)
+	switchToConductTimer()
+	{
+		this._isCreeping = false;
+	}
+
+	switchToConductCreep()
+	{
+		this._isCreeping = true;
+	}
+
+	_moveElementTo(msPosData, currentAlignment, nextAlignment, msIncrement)
 	{
 		this._totalPxIncrement += (msIncrement * msPosData.pixelsPerMs);
 		
@@ -187,7 +151,9 @@ export class TimeMarker extends CursorBase
 		// times the display is updated, but it also means that the grey cursor jumps
 		// 0.5 pixels ahead of the TimeMarker on reaching chords and rests, in both
 		// conductTimer and conductCreep modes.
-		if(this._totalPxIncrement > 0.5)
+		// TODO:
+		let pxDeltaToCome = nextAlignment - currentAlignment;
+		if((this._isCreeping && pxDeltaToCome < 3) || (this._totalPxIncrement > 0.5) )
 		{
 			let alignment = currentAlignment + this._totalPxIncrement;
 
@@ -196,7 +162,7 @@ export class TimeMarker extends CursorBase
 				this.yCoordinates = msPosData.yCoordinates;
 				this._setCoordinates(alignment, this.yCoordinates.top, this.yCoordinates.bottom);
 				let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-				this.systemChanged(yCoordinates);
+				this.systemChangedCallback(yCoordinates);
 			}
 			else
 			{
@@ -214,46 +180,41 @@ export class TimeMarker extends CursorBase
 
 	advance(msIncrement)
 	{
-		let currentRorC_MsPos = this.msPositions[this.currentMsPositionIndex],
-			rightMsPos = this.endMarkerMsPosInScore;
-
-		if((this.currentMsPositionIndex + 1) < this.msPositions.length)
-		{
-			// assumes that this.msPositions contains the position of the final barline.
-			rightMsPos = this.msPositions[this.currentMsPositionIndex + 1];
-		}
-
-		// The above local variables are for the chords, rests and the final barline in the score.
 		// this.msPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
 		this.msPositionInScore += msIncrement;
 
-		if(this.msPositionInScore >= rightMsPos || this.msPositionInScore >= this.regionSequence[this.currentRegionIndex].endMsPosInScore)
+		if(this.msPositionInScore >= this.nextMsPosInScore)
 		{
-			if(this.regionSequence[this.currentRegionIndex].endMsPosInScore <= rightMsPos)
+			if(this.regionSequence[this.currentRegionIndex].endMsPosInScore <= this.nextMsPosInScore)
 			{
 				if(this.currentRegionIndex < this.endRegionIndex)
 				{
 					// move to the next region
 					this.currentRegionIndex++;
 					this.msPositionInScore = this.regionSequence[this.currentRegionIndex].startMsPosInScore;
-					this.msPosData = this.msPosDataMap.get(this.msPositionInScore);
-					this.currentMsPositionIndex = this.msPositions.findIndex((a) => a === this.msPositionInScore);
+					this.msPosData = this.msPosDataArray.find((a) => a.msPositionInScore === this.msPositionInScore);
+					this.currentMsPositionIndex = this.msPosDataArray.findIndex((e) => e === this.msPosData);
 					this.currentAlignment = this.msPosData.alignment;
-					currentRorC_MsPos = this.msPositionInScore;
+
+					// index + 1 should always work, because the final barline is in this.msPosDataArray, but regions can't start there.
+					this.nextMsPosInScore = this.msPosDataArray[this.currentMsPositionIndex + 1].msPositionInScore;
 					msIncrement = 0;
 				}
 			}
-			else if((this.currentMsPositionIndex + 1) < this.msPositions.length)
+			else
 			{
-				this.currentMsPositionIndex++;
-				currentRorC_MsPos = this.msPositions[this.currentMsPositionIndex];
-				this.msPosData = this.msPosDataMap.get(currentRorC_MsPos);
+				// move to the next chord or rest in the region
+				this.currentMsPositionIndex++;				
+				this.msPosData = this.msPosDataArray[this.currentMsPositionIndex];
 				this.currentAlignment = this.msPosData.alignment;
+
+				// index + 1 should always work, because the final barline is in this.msPosDataArray, but regions end before that.
+				this.nextMsPosInScore = this.msPosDataArray[this.currentMsPositionIndex + 1].msPositionInScore;
 				msIncrement = 0;
 			}
 		}
 
-		this._moveElementTo(this.currentAlignment, this.msPosData, msIncrement);
+		this._moveElementTo(this.msPosData, this.currentAlignment, this.nextMsPosInScore, msIncrement);
 	}
 }
 

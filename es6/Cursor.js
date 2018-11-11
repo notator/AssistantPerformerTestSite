@@ -1,18 +1,18 @@
 
 export class CursorBase
 {
-	constructor(systemChanged, msPosDataMap, viewBoxScale)
+	constructor(systemChangedCallback, msPosDataArray, viewBoxScale)
 	{
 		Object.defineProperty(this, "GREY", { value: "#999999", writable: false });
 		Object.defineProperty(this, "BLUE", { value: "#5555FF", writable: false });
 
-		Object.defineProperty(this, "systemChanged", { value: systemChanged, writable: false });
-		Object.defineProperty(this, "msPosDataMap", { value: msPosDataMap, writable: false });
+		Object.defineProperty(this, "systemChangedCallback", { value: systemChangedCallback, writable: false });
+		Object.defineProperty(this, "msPosDataArray", { value: msPosDataArray, writable: false });
 		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
 
 		Object.defineProperty(this, "startMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
 		Object.defineProperty(this, "endMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
-		Object.defineProperty(this, "yCoordinates", { value: msPosDataMap.get(0).yCoordinates, writable: true }); // set in init()
+		Object.defineProperty(this, "yCoordinates", { value: msPosDataArray[0].yCoordinates, writable: true }); // set in init()
 	}
 
 	setVisible(setToVisible)
@@ -30,7 +30,7 @@ export class CursorBase
 
 export class Cursor extends CursorBase
 {
-	constructor(systems, viewBoxScale, systemChanged)
+	constructor(systemChangedCallback, systems, viewBoxScale)
 	{
 		function newElement(that, firstMsPosData, viewBoxScale)
 		{
@@ -47,32 +47,34 @@ export class Cursor extends CursorBase
 			return element;
 		}
 
-		// returns a Map that relates every msPositionInScore to a MsPosData object.
-		// the map does not contain an entry for the final barline
-		function getScoreMsPosDataMap(systems, viewBoxScale)
+		// Returns an array containing an msPosData object for every distinct msPositionInScore.
+		// An msPosData object contains the following fields:
+		//	.msPositionInScore
+		//	.alignmentX
+		//	.yCoordinates
+		//	.pixelsPerMs
+		// The msPosData objects are sorted in order of .msPositionInscore.
+		// The last entry is an msPosData object for the final barline.
+		function getScoreMsPosDataArray(systems, viewBoxScale)
 		{
-			function getSystemMsPosDataMap(system, viewBoxScale)
+			function getSystemMsPosDataArray(system, viewBoxScale)
 			{
-				function setPixelsPerMs(systemMsPosDataMap, msPositions)
+				function setPixelsPerMs(systemMsPosDataArray)
 				{
-					let nMsPositions = msPositions.length - 1; // msPositions include final barline
+					let nMsPositions = systemMsPosDataArray.length - 1; // systemMsPosDataArray contains an entry for the final barline
 					for(let i = 0; i < nMsPositions; ++i)
 					{
-						let pos = msPositions[i],
-							nextPos = msPositions[i + 1]; // can be final barline
-						
-						let msPosData = systemMsPosDataMap.get(pos);
-						let nextMsPosData = systemMsPosDataMap.get(nextPos);
+						let msPosData = systemMsPosDataArray[i],
+							nextMsPosData = systemMsPosDataArray[i + 1];
 
-						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextPos - pos);
+						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextMsPosData.msPositionInScore - msPosData.msPositionInScore);
 					}
 				}
 
-				let systemMsPosDataMap = new Map(),
+				let systemMsPosDataArray = [],
 					nStaves = system.staves.length,
 					line = system.startMarker.line,
-					yCoordinates = {},
-					msPositions = [];
+					yCoordinates = {};
 
 				yCoordinates.top = line.y1.baseVal.value;
 				yCoordinates.bottom = line.y2.baseVal.value;
@@ -96,10 +98,9 @@ export class Cursor extends CursorBase
 							{
 								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore,
 									// pixelsPerMs is set properly later in this functon
-									msPosData = { alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+									msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 
-								systemMsPosDataMap.set(msPos, msPosData);
-								msPositions.push(msPos);
+								systemMsPosDataArray.push(msPosData);
 							}
 						}
 						else
@@ -107,44 +108,45 @@ export class Cursor extends CursorBase
 							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 							{
 								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
-								if(systemMsPosDataMap.get(msPos) === undefined)
+								if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
 								{
 									// pixelsPerMs is set properly later in this functon
-									let msPosData = { alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
-									systemMsPosDataMap.set(msPos, msPosData);
-									msPositions.push(msPos);
+									let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+									systemMsPosDataArray.push(msPosData);
 								}
 							}
 						}
 					}
 				}
 
-				msPositions.sort((a, b) => a - b);
-				setPixelsPerMs(systemMsPosDataMap, msPositions);
+				systemMsPosDataArray.sort((a, b) => a.msPositionInScore - b.msPositionInScore);
+				setPixelsPerMs(systemMsPosDataArray);
 
-				let finalBarlineMsPos = msPositions[msPositions.length - 1];
-				systemMsPosDataMap.delete(finalBarlineMsPos);
-
-				return systemMsPosDataMap;
+				return systemMsPosDataArray;
 			}
 
-			let msPosDataMap = new Map();
-			for(let system of systems)
+			let msPosDataArray = [];
+			let nSystems = systems.length;
+			for(let i = 0; i < nSystems; ++i)
 			{
-				let systemMsPosDataMap = getSystemMsPosDataMap(system, viewBoxScale);
-				for(let entry of systemMsPosDataMap.entries())
+				let system = systems[i];
+				// The last entry is an msPosData object for the final barline.
+				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale);
+				if(i < nSystems - 1)
 				{
-					msPosDataMap.set(entry[0], entry[1]);
+					systemMsPosDataArray.length = systemMsPosDataArray.length - 1;
 				}
+				msPosDataArray = msPosDataArray.concat(systemMsPosDataArray);
 			}
-			return msPosDataMap;
+			return msPosDataArray;
 		}
 
-		let msPosDataMap = getScoreMsPosDataMap(systems, viewBoxScale); // does not include the endMarkerMsPosInScore.
+		// The last entry is an msPosData object for the final barline.
+		let msPosDataArray = getScoreMsPosDataArray(systems, viewBoxScale);
 
-		super(systemChanged, msPosDataMap, viewBoxScale);
+		super(systemChangedCallback, msPosDataArray, viewBoxScale);
 
-		let element = newElement(this, msPosDataMap.get(0), viewBoxScale);
+		let element = newElement(this, msPosDataArray[0], viewBoxScale);
 		Object.defineProperty(this, "element", { value: element, writable: false });
 	}
 
@@ -158,6 +160,7 @@ export class Cursor extends CursorBase
 		this.setVisible(true);
 	}
 
+	// use running index here if possible...
 	moveElementTo(msPositionInScore)
 	{
 		if(msPositionInScore === this.endMarkerMsPosInScore)
@@ -166,7 +169,7 @@ export class Cursor extends CursorBase
 		}
 		else
 		{
-			let msPosData = this.msPosDataMap.get(msPositionInScore);
+			let msPosData = this.msPosDataArray.find((e) => e.msPositionInScore === msPositionInScore);
 			if(msPosData !== undefined)
 			{
 				if(msPosData.yCoordinates !== this.yCoordinates)
@@ -175,7 +178,7 @@ export class Cursor extends CursorBase
 					this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
 					this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
 					let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-					this.systemChanged(yCoordinates);
+					this.systemChangedCallback(yCoordinates);
 				}
 				this.element.setAttribute("x1", msPosData.alignment.toString(10));
 				this.element.setAttribute("x2", msPosData.alignment.toString(10));
