@@ -764,14 +764,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	// Called when the start conducting button is clicked on or off.
 	// When the button is clicked off, the speed argument will be -1. 
-	setConducting = function(startPlayingFunction, speed)
+	setConducting = function(startPlayingCallback, speed)
 	{
 		setCursor();
 
 		if(speed > 0)
 		{
 			deleteTickOverloadMarkers();
-			conductor.init(startMarker, startPlayingFunction, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
+			conductor.init(startMarker, startPlayingCallback, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
 			markersLayer.appendChild(conductor.timeMarkerElement());
 		}
 		else
@@ -781,14 +781,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
-	switchToConductTimer = function()
+	switchToConductTimer = function(e)
 	{
-		conductor.switchToConductTimer();
+		conductor.switchToConductTimer(e);
 	},
 
-	switchToConductCreep = function()
+	switchToConductCreep = function(e)
 	{
-		conductor.switchToConductCreep();
+		conductor.switchToConductCreep(e);
 	},
 
 	conductTimer = function(e)

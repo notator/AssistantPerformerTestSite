@@ -251,18 +251,18 @@ var
 		}
 	},
 
-	conductorMouseUp = function()
+	conductorMouseUp = function(e)
 	{
-		globalElements.conductingLayer.removeEventListener('mousemove', score.conductCreep, false);
-		globalElements.conductingLayer.addEventListener('mousemove', score.conductTimer, false);
-		score.switchToConductTimer();
+		globalElements.conductingLayer.removeEventListener('mousemove', score.conductCreep, { passive: true });
+		globalElements.conductingLayer.addEventListener('mousemove', score.conductTimer, { passive: true });
+		score.switchToConductTimer(e);
 	},
 
-	conductorMouseDown = function()
+	conductorMouseDown = function(e)
 	{
-		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, false);
-		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, false);
-		score.switchToConductCreep();
+		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, { passive: true });
+		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, { passive: true });
+		score.switchToConductCreep(e);
 	},
 
 	conductTimer = function(e)
@@ -307,7 +307,7 @@ var
 					break;
 				case 'conducting':
 					globalElements.conductingLayer.style.visibility = "visible";
-					globalElements.conductingLayer.addEventListener('mousemove', conductTimer, false);
+					globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
 					globalElements.conductingLayer.addEventListener('mousedown', conductorMouseDown, false);
 					globalElements.conductingLayer.addEventListener('mouseup', conductorMouseUp, false);
 					globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
@@ -321,8 +321,8 @@ var
 					markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
 					markersLayer.style.cursor = 'auto';
 					globalElements.conductingLayer.style.visibility = "hidden";
-					globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, false);
-					globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, false);
+					globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+					globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
 					globalElements.conductingLayer.removeEventListener('mousedown', conductorMouseDown, false);
 					globalElements.conductingLayer.removeEventListener('mouseup', conductorMouseUp, false);
 					globalElements.conductingLayer.style.cursor = 'auto';
