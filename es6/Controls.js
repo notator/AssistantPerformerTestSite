@@ -265,6 +265,30 @@ var
 		score.switchToConductCreep();
 	},
 
+	conductTimer = function(e)
+	{
+		if(e.clientX > 0)
+		{
+			score.conductTimer(e);
+		}
+		else
+		{
+			setStopped();
+		}
+	},
+
+	conductCreep = function(e)
+	{
+		if(e.clientX > 0)
+		{
+			score.conductCreep(e);
+		}
+		else
+		{
+			setStopped();
+		}
+	},
+
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
 	{
 		var s = score, markersLayer = s.getMarkersLayer();
@@ -283,7 +307,7 @@ var
 					break;
 				case 'conducting':
 					globalElements.conductingLayer.style.visibility = "visible";
-					globalElements.conductingLayer.addEventListener('mousemove', s.conductTimer, false);
+					globalElements.conductingLayer.addEventListener('mousemove', conductTimer, false);
 					globalElements.conductingLayer.addEventListener('mousedown', conductorMouseDown, false);
 					globalElements.conductingLayer.addEventListener('mouseup', conductorMouseUp, false);
 					globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
@@ -297,8 +321,8 @@ var
 					markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
 					markersLayer.style.cursor = 'auto';
 					globalElements.conductingLayer.style.visibility = "hidden";
-					globalElements.conductingLayer.removeEventListener('mousemove', s.conductCreep, false);
-					globalElements.conductingLayer.removeEventListener('mousemove', s.conductTimer, false);
+					globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, false);
+					globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, false);
 					globalElements.conductingLayer.removeEventListener('mousedown', conductorMouseDown, false);
 					globalElements.conductingLayer.removeEventListener('mouseup', conductorMouseUp, false);
 					globalElements.conductingLayer.style.cursor = 'auto';
