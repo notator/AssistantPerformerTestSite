@@ -36,6 +36,11 @@ export class Conductor
 		this.stopTimer(); //_setIntervalHandle = undefined;
 	}
 
+	stop()
+	{
+		this.stopTimer();
+	}
+
 	switchToConductTimer(e)
 	{
 		this._isCreeping = false;

@@ -801,6 +801,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		conductor.conductCreep(e);
 	},
 
+	stopConducting = function()
+	{
+		conductor.stop();
+	},
+
 	// Constructs empty systems for all the pages.
 	// Each page has a frame and the correct number of empty systems.
 	// Each system has a startMarker and an endMarker, but these are left
@@ -2128,6 +2133,7 @@ export class Score
 		this.conductTimer = conductTimer;
 		this.switchToConductCreep = switchToConductCreep;
 		this.switchToConductTimer = switchToConductTimer;
+		this.stopConducting = stopConducting;
 
 		this.getEmptySystems = getEmptySystems;
 

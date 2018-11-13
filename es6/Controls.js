@@ -273,6 +273,7 @@ var
 		}
 		else
 		{
+			score.stopConducting();
 			setStopped();
 		}
 	},
@@ -285,6 +286,7 @@ var
 		}
 		else
 		{
+			score.stopConducting();
 			setStopped();
 		}
 	},
