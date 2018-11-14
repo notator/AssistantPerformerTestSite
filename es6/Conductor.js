@@ -2,9 +2,12 @@
 
 export class Conductor
 {
-	constructor(systems, cursor, regionSequence)
+	constructor(score)
 	{
-		let timeMarker = new TimeMarker(systems, cursor, regionSequence);
+		let systems = score.getSystems(),
+			cursor = score.getCursor(),
+			regionSequence = score.getRegionSequence(),
+			timeMarker = new TimeMarker(systems, cursor, regionSequence);
 
 		// These are all "private" attributes, they should only be changed using the public functions provided.
 		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
@@ -33,12 +36,7 @@ export class Conductor
 		this._prevPerfNow = 0;
 		this._speed = speed;
 		this._isCreeping = false;
-		this.stopTimer(); //_setIntervalHandle = undefined;
-	}
-
-	stop()
-	{
-		this.stopTimer();
+		this.stop(); //_setIntervalHandle = undefined;
 	}
 
 	switchToConductTimer(e)
@@ -109,7 +107,7 @@ export class Conductor
 		{
 			if(that._isCreeping)
 			{
-				that.stopTimer();
+				that.stop();
 			}
 			else
 			{
@@ -140,7 +138,7 @@ export class Conductor
 		}
 		else if(this._prevX !== e.clientX)
 		{
-			this.stopTimer();
+			this.stop();
 
 			let handle = setInterval(doConducting, this._INTERVAL_RATE, this, e); 
 			this._setIntervalHandles.push(handle);
@@ -154,7 +152,7 @@ export class Conductor
 		return this._msPositionInPerformance;
 	}
 
-	stopTimer()
+	stop()
 	{
 		for(let handle of this._setIntervalHandles)
 		{

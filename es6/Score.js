@@ -1,6 +1,5 @@
 import { StartMarker } from "./Markers.js";
 import { EndMarker } from "./Markers.js";
-import { Conductor } from "./Conductor.js";
 import { Cursor } from "./Cursor.js";
 import { MidiChord, MidiRest } from "./MidiObject.js";
 import { Track } from "./Track.js";
@@ -46,14 +45,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	startMarker,
 	endMarker,
-	conductor, // an object that encapsulates a (blue) TimeMarker and a now() function).
 	cursor, // The (grey) cursor
 	systemChanged, // callback, called when running cursor changes systems
-
-	getConductor = function()
-	{
-		return conductor;
-	},
 
 	// This callback is called by sequence.tick() if it can't keep up with the speed of a performance,
 	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
@@ -762,50 +755,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		cursor.init(startMarker.msPositionInScore, endMarker.msPositionInScore);
 	},
 
-	// Called when the start conducting button is clicked on or off.
-	// When the button is clicked off, the speed argument will be -1. 
-	setConducting = function(startPlayingCallback, speed)
-	{
-		setCursor();
-
-		if(speed > 0)
-		{
-			deleteTickOverloadMarkers();
-			conductor.init(startMarker, startPlayingCallback, startRegionIndex, endRegionIndex, speed); // calls timeMarker.init()
-			markersLayer.appendChild(conductor.timeMarkerElement());
-		}
-		else
-		{
-			conductor.stopTimer();
-			markersLayer.removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
-		}
-	},
-
-	switchToConductTimer = function(e)
-	{
-		conductor.switchToConductTimer(e);
-	},
-
-	switchToConductCreep = function(e)
-	{
-		conductor.switchToConductCreep(e);
-	},
-
-	conductTimer = function(e)
-	{
-		conductor.conductTimer(e);
-	},
-
-	conductCreep = function(e)
-	{
-		conductor.conductCreep(e);
-	},
-
-	stopConducting = function()
-	{
-		conductor.stop();
-	},
-
 	// Constructs empty systems for all the pages.
 	// Each page has a frame and the correct number of empty systems.
 	// Each system has a startMarker and an endMarker, but these are left
@@ -1113,7 +1062,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			regionSequence = regionSeq;
 		}
 
-		// Creates the global markersLayer and its startMarkers and endMarkers
+		// Creates the internal global markersLayer and its startMarkers and endMarkers
 		function setMarkersLayer(svgElem, systems, regionSequence, vbScale)
 		{
 			// Creates a new "g" element at the top level of the svg page.
@@ -1255,20 +1204,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return viewBox;
 		}
 
-		function setConductingLayer()
-		{
-			var
-				svgPagesFrame = document.getElementById("svgPagesFrame"),
-				conductingLayer = document.getElementById("conductingLayer"),
-				pfLeft = parseInt(svgPagesFrame.style.left, 10),
-				pfWidth = parseInt(svgPagesFrame.style.width, 10);
-
-			conductingLayer.style.top = svgPagesFrame.style.top;
-			conductingLayer.style.left = "0";
-			conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
-			conductingLayer.style.height = svgPagesFrame.style.height;
-		}
-
 		/*************** end of getEmptySystems function definitions *****************************/
 
 		resetContent(isKeyboard1PerformanceArg);
@@ -1299,9 +1234,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// markersLayer is a new layer in (on top of) the svg of the score
 		setMarkersLayer(svgElem, systems, regionSequence, viewBox.scale);
-
-		// conductingLayer is a div in (on top of) the AssistantPerformer's document
-		setConductingLayer(); // just sets its dimensions
 
 		initializeTrackIsOnArray(systems[0]);
 	},
@@ -2035,7 +1967,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// cursor is accessed outside the score using a getter function
 		cursor = new Cursor(systemChanged, systems, viewBoxScale);
-		conductor = new Conductor(systems, cursor, regionSequence);
 
 		markersLayer.appendChild(cursor.element);
 
@@ -2048,6 +1979,21 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
+	getSystems = function()
+	{
+		return systems;
+	},
+
+	getCursor = function()
+	{
+		return cursor;
+	},
+
+	getRegionSequence = function()
+	{
+		return regionSequence;
+	},
+
 	getTracksData = function()
 	{
 		return tracksData;
@@ -2058,19 +2004,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return markersLayer; // is undefined before a score is loaded
 	},
 
-	getCursor = function()
-	{
-		return cursor; // is undefined before a score is loaded
-	},
-
 	getStartMarker = function()
 	{
 		return startMarker; // is undefined before a score is loaded
-	},
-
-	getRegionSequence = function()
-	{
-		return regionSequence; // is undefined before a score is loaded (used at runtime)
 	},
 
 	getRegionNamesPerMsPosInScore = function()
@@ -2127,14 +2063,6 @@ export class Score
 		this.leaveRegion = leaveRegion;
 		this.resetRegionInfoStrings = resetRegionInfoStrings; 
 
-		this.setConducting = setConducting;
-		this.getConductor = getConductor;
-		this.conductCreep = conductCreep;
-		this.conductTimer = conductTimer;
-		this.switchToConductCreep = switchToConductCreep;
-		this.switchToConductTimer = switchToConductTimer;
-		this.stopConducting = stopConducting;
-
 		this.getEmptySystems = getEmptySystems;
 
 		// tracksData is an object having the following defined attributes:
@@ -2150,6 +2078,7 @@ export class Score
 		// It contains the cursor line and the start- and endMarkers for each system in the score.
 		// It is also the transparent, clickable surface used when setting the start and end markers.
 		this.getMarkersLayer = getMarkersLayer;
+		this.getSystems = getSystems;
 		this.getCursor = getCursor;
 		this.getStartMarker = getStartMarker;
 		this.getRegionSequence = getRegionSequence;

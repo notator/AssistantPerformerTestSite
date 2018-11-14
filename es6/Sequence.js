@@ -447,7 +447,7 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(timerArg, outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback, regionSequenceArg)
+	init(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback, regionSequenceArg)
 	{
 		function getRegionStartMsPositionsInScore(regionSequence)
 		{
@@ -465,11 +465,6 @@ export class Sequence
 			return rval;
 		}
 
-		if(timerArg === undefined || timerArg === null)
-		{
-			throw "The timer must be defined.";
-		}
-
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
 			throw "The midi output device must be defined.";
@@ -481,7 +476,7 @@ export class Sequence
 			throw "Error: both the position reporting callbacks must be defined.";
 		}
 
-		timer = timerArg; // performance or score.timePointer
+		timer = performance; // performance.now() is the default timer
 		tracks = outputTracks;
 		outputDevice = outputDeviceArg;
 		regionSequence = regionSequenceArg.slice(); // clone the array
@@ -493,6 +488,11 @@ export class Sequence
 		reportTickOverload = reportTickOverloadCallback;
 
 		setState("stopped");
+	}
+
+	setTimer(objectWithNowFunction)
+	{
+		timer = objectWithNowFunction; // use objectWithNowFunction.now() for timings
 	}
 
 	setSpeed(speedToSet)

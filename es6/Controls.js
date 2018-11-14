@@ -2,6 +2,7 @@
 import { constants } from "./Constants.js";
 import { TracksControl } from "./TracksControl.js";
 import { Score } from "./Score.js";
+import { Conductor } from "./Conductor.js";
 import { Sequence } from "./Sequence.js";
 import { SequenceRecording } from "./SequenceRecording.js";
 import { sequenceToSMF } from "./StandardMidiFile.js";
@@ -34,8 +35,10 @@ var
 
 	midiAccess,
 	score,
+	conductor,
 	svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd', conducting.
-	globalElements = {}, // assistantPerformer.html elements 
+	globalElements = {}, // assistantPerformer.html elements
+	conductingLimit = {}, // conducting stops if the cursor reaches these left and right limits
 	cl = {}, // control layers
 
 	// options set in the top dialog
@@ -242,53 +245,53 @@ var
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conducting'); // sets options.isConducting = true and score.setConducting(startPlaying, speed);
+				setSvgControlsState('conducting'); // sets options.isConducting = true and setConducting(startPlaying, speed);
 			}
 			else if(svgControlsState === 'conducting')
 			{
-				setSvgControlsState('stopped'); // sets options.isConducting = false and score.setConducting(startPlaying, -1);
+				setSvgControlsState('stopped'); // sets options.isConducting = false and setConducting(startPlaying, -1);
 			}
 		}
-	},
-
-	conductorMouseUp = function(e)
-	{
-		globalElements.conductingLayer.removeEventListener('mousemove', score.conductCreep, { passive: true });
-		globalElements.conductingLayer.addEventListener('mousemove', score.conductTimer, { passive: true });
-		score.switchToConductTimer(e);
-	},
-
-	conductorMouseDown = function(e)
-	{
-		globalElements.conductingLayer.removeEventListener('mousemove', score.conductTimer, { passive: true });
-		globalElements.conductingLayer.addEventListener('mousemove', score.conductCreep, { passive: true });
-		score.switchToConductCreep(e);
 	},
 
 	conductTimer = function(e)
 	{
-		if(e.clientX > 0)
+		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 		{
-			score.conductTimer(e);
+			conductor.conductTimer(e);
 		}
 		else
 		{
-			score.stopConducting();
+			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
 			setStopped();
 		}
 	},
 
 	conductCreep = function(e)
 	{
-		if(e.clientX > 0)
+		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 		{
-			score.conductCreep(e);
+			conductor.conductCreep(e);
 		}
 		else
 		{
-			score.stopConducting();
+			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
 			setStopped();
 		}
+	},
+
+	conductorMouseUp = function(e)
+	{
+		globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+		globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
+		conductor.switchToConductTimer(e);
+	},
+
+	conductorMouseDown = function(e)
+	{
+		globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+		globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
+		conductor.switchToConductCreep(e);
 	},
 
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
@@ -405,16 +408,38 @@ var
 		}
 	},
 
+	// Called when the start conducting button is clicked on or off.
+	// When the button is clicked off, the speed argument will be -1. 
+	setConducting = function(startPlayingCallback, speed)
+	{
+		score.setCursor();
+
+		if(speed > 0)
+		{
+			score.deleteTickOverloadMarkers();
+			conductor = new Conductor(score);
+			conductor.init(score.getStartMarker(), startPlayingCallback, score.getStartRegionIndex(), score.getEndRegionIndex(), speed); // calls timeMarker.init()
+			score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
+			player.setTimer(conductor);
+			options.isConducting = true;
+		}
+		else
+		{
+			conductor.stop();
+			score.getMarkersLayer().removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
+			player.setTimer(performance);
+			conductor = undefined;
+			options.isConducting = false;
+		}
+	},
+
 	setStopped = function()
 	{
 		player.stop();
 
 		if(options.isConducting === true && options.keyboard1Performance === false)
 		{
-			//score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-			options.isConducting = false;
-			score.setConducting(startPlaying, -1);
-			initializePlayer(score, options);
+			setConducting(startPlaying, -1);
 		}
 
 		score.hideCursor();
@@ -689,8 +714,7 @@ var
 			if(options.isConducting)
 			{
 				setStopped();
-				score.setConducting(startPlaying, -1);
-				options.isConducting = false;
+				setConducting(startPlaying, -1);
 			}
 			else
 			{
@@ -715,13 +739,9 @@ var
 				setEventListenersAndConductorsMouseCursor('conducting');
 
 				let speed = speedSliderValue(globalElements.speedControlInput.value);
-				score.setConducting(startPlaying, speed);
+				setConducting(startPlaying, speed);
 
 				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-
-				options.isConducting = true;
-
-				initializePlayer(score, options);
 			}
 
 		}
@@ -886,31 +906,6 @@ var
 		globalElements.speedControlCheckbox.checked = false;
 		globalElements.speedControlCheckbox.disabled = true;
 		globalElements.speedControlLabel2.innerHTML = "100%";
-	},
-
-	// Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
-	// Called again with options.isConducting===true if the conduct performance button is toggled on.
-	// If this is a live-conducted performance, sets the now() function to be the conductor's now().
-	// Otherwise performance.now() is used (for normal and Keyboard1 performances).
-	// Note that the performance's basic speed is always 1 for conducted performances, but that it can change
-	// (live) during other performances (normal Sequence and Keyboard1).
-	initializePlayer = function(score, options)
-	{
-		var timer, outputTracks = score.getTracksData().outputTracks;
-
-		player = new Sequence();
-		// public player.outputTracks is needed for sending track initialization messages
-		player.setOutputTracks(outputTracks);
-
-		if(options.isConducting)
-		{
-			timer = score.getConductor(); // use conductor.now()
-		}
-		else
-		{
-			timer = performance; // use performance.now()           
-		}
-		player.init(timer, options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload, score.getRegionSequence());
 	};
 
 export class Controls
@@ -1615,8 +1610,6 @@ export class Controls
 	// It does not require a MIDI input.
 	beginRuntime()
 	{
-		let tracksData;
-
 		function setMIDIDevices(options)
 		{
 			var i,
@@ -1765,6 +1758,26 @@ export class Controls
 			globalElements.speedControlSmokeDiv.style.display = "none";
 		}
 
+		function setConductingLayer()
+		{
+			var
+				svgPagesFrame = document.getElementById("svgPagesFrame"),
+				conductingLayer = document.getElementById("conductingLayer"),
+				pfWidth = parseInt(svgPagesFrame.style.width, 10),
+				pfLeft = parseInt(svgPagesFrame.style.left, 10);
+
+			conductingLayer.style.top = svgPagesFrame.style.top;
+			conductingLayer.style.left = "0";
+			conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
+			conductingLayer.style.height = svgPagesFrame.style.height;
+
+			// conducting stops if
+			//     e.clientX <= conductingLimit.left
+			// or  e.clientX >= conductingLimit.right
+			conductingLimit.left = parseInt(conductingLayer.style.left) + 2;
+			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
+		}
+
 		options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
 		options.isConducting = false;
 
@@ -1784,7 +1797,9 @@ export class Controls
 
 		// This function can throw an exception
 		// (e.g. if an attempt is made to create an event that has no duration).
-		tracksData = getTracksData(score, options);
+		let tracksData = getTracksData(score, options);
+
+		setConductingLayer();
 
 		if(options.keyboard1Performance)
 		{
@@ -1795,8 +1810,10 @@ export class Controls
 		}
 		else
 		{
-			// can be called again for conducted performance
-			initializePlayer(score, options);
+			let outputTracks = score.getTracksData().outputTracks;
+			player = new Sequence();
+			player.setOutputTracks(outputTracks);
+			player.init(options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload, score.getRegionSequence());
 		}
 
 		setSpeedControl(tracksControl.width());
