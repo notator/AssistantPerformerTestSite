@@ -5,16 +5,11 @@ export class Conductor
 	constructor(score, startPlayingCallback, speed)
 	{
 		let startMarker = score.getStartMarker(),
-			systems = score.getSystems(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
 			startRegionIndex = score.getStartRegionIndex(),
 			endRegionIndex = score.getEndRegionIndex(),
-			timeMarker = new TimeMarker(systems, cursor, regionSequence);
-
-		//conductor.init(score.getStartMarker(), startPlayingCallback, score.getStartRegionIndex(), score.getEndRegionIndex(), speed); // calls timeMarker.init()
-
-		timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
+			timeMarker = new TimeMarker(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex);
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
