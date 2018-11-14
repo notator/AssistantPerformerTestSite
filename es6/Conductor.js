@@ -2,41 +2,35 @@
 
 export class Conductor
 {
-	constructor(score)
+	constructor(score, startPlayingCallback, speed)
 	{
-		let systems = score.getSystems(),
+		let startMarker = score.getStartMarker(),
+			systems = score.getSystems(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
+			startRegionIndex = score.getStartRegionIndex(),
+			endRegionIndex = score.getEndRegionIndex(),
 			timeMarker = new TimeMarker(systems, cursor, regionSequence);
 
-		// These are all "private" attributes, they should only be changed using the public functions provided.
-		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
+		//conductor.init(score.getStartMarker(), startPlayingCallback, score.getStartRegionIndex(), score.getEndRegionIndex(), speed); // calls timeMarker.init()
+
+		timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
+
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
+		// The _speed is the value of the speed control when the set conducting button is clicked.
+		Object.defineProperty(this, "_speed", { value: speed, writable: false });
+		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
 		Object.defineProperty(this, "_setIntervalHandles", { value: [], writable: false });
+		Object.defineProperty(this, "_startPlaying", { value: startPlayingCallback, writable: false });
+		Object.defineProperty(this, "_timeMarker", { value: timeMarker, writable: false });
 
-		Object.defineProperty(this, "_startPlaying", { value: undefined, writable: true });
-		Object.defineProperty(this, "_timeMarker", { value: timeMarker, writable: true });
+		// variables that can change while performing
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		// Continuously increasing value wrt start of performance (and recording). Returned by now().
 		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
 		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
-		// The _speed is the value of the speed control when the set conducting button is clicked.
-		Object.defineProperty(this, "_speed", { value: -1, writable: true });
 		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
-
-	}
-
-	init(startMarker, startPlayingCallback, startRegionIndex, endRegionIndex, speed)
-	{
-		this._startPlaying = startPlayingCallback;
-		this._timeMarker.init(startMarker, startRegionIndex, endRegionIndex);
-		this._prevX = -1;
-		this._msPositionInPerformance = 0;
-		this._prevPerfNow = 0;
-		this._speed = speed;
-		this._isCreeping = false;
-		this.stop(); //_setIntervalHandle = undefined;
 	}
 
 	switchToConductTimer(e)

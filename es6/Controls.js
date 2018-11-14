@@ -417,8 +417,7 @@ var
 		if(speed > 0)
 		{
 			score.deleteTickOverloadMarkers();
-			conductor = new Conductor(score);
-			conductor.init(score.getStartMarker(), startPlayingCallback, score.getStartRegionIndex(), score.getEndRegionIndex(), speed); // calls timeMarker.init()
+			conductor = new Conductor(score, startPlayingCallback, speed);
 			score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
 			player.setTimer(conductor);
 			options.isConducting = true;
