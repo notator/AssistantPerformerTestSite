@@ -61,8 +61,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		tickOverloadMarkerElem.setAttribute("class", "tickOverloadMarker");
 
 		markersLayer.appendChild(tickOverloadMarkerElem);
-
-		//console.log("score.reportTickOverload(): %d asynchronous moments sent at the same time", nAsynchMomentsSentAtOnce);
 	},
 
 	deleteTickOverloadMarkers = function()

@@ -4,6 +4,23 @@ export class Conductor
 {
 	constructor(score, startPlayingCallback, speed)
 	{
+		// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
+		// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
+		// maxVal = 10 when e.clientX = e.target.clientWidth
+		// midVal = 1 when e.clientX = e.target.clientWidth / 2 -- My screen has width 1920px, so the middle value (1) is at 960px.
+		// minVal = 0.1 when e.clientX = e.target.clientLeft
+		function getXFactor(e)
+		{
+			let minp = e.target.clientLeft,
+				maxp = e.target.clientWidth, // The width of the screen in pixels
+				// The result will be between 0.1 and 10, the middle value is 1.
+				minv = Math.log(0.1), maxv = Math.log(10),
+				// the adjustment factor
+				scale = (maxv - minv) / (maxp - minp);
+
+			return Math.exp(minv + scale * (e.clientX - minp));
+		}
+
 		let startMarker = score.getStartMarker(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
@@ -13,7 +30,8 @@ export class Conductor
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
-		// The _speed is the value of the speed control when the set conducting button is clicked.
+		Object.defineProperty(this, "_getXFactor", { value: getXFactor, writable: false });
+		// The _speed is the value of the speed control when this constructor is called.
 		Object.defineProperty(this, "_speed", { value: speed, writable: false });
 		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
 		Object.defineProperty(this, "_setIntervalHandles", { value: [], writable: false });
@@ -43,26 +61,19 @@ export class Conductor
 		this.conductCreep(e);
 	}
 
-	timeMarkerElement()
+	addTimeMarkerToMarkersLayer(markersLayer)
 	{
-		return this._timeMarker.element;
+		markersLayer.appendChild(this._timeMarker.getElement());
 	}
 
-	// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
-	// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
-	// maxVal = 10 when e.clientX = e.target.clientWidth
-	// midVal = 1 when e.clientX = e.target.clientWidth / 2 -- My screen has width 1920px, so the middle value (1) is at 960px.
-	// minVal = 0.1 when e.clientX = e.target.clientLeft
-	_getXFactor(e)
+	removeTimeMarkerFromMarkersLayer(markersLayer)
 	{
-		let minp = e.target.clientLeft,
-			maxp = e.target.clientWidth, // The width of the screen in pixels
-			// The result will be between 0.1 and 10, the middle value is 1.
-			minv = Math.log(0.1), maxv = Math.log(10),
-			// the adjustment factor
-			scale = (maxv - minv) / (maxp - minp);
+		markersLayer.removeChild(this._timeMarker.getElement());
+	}
 
-		return Math.exp(minv + scale * (e.clientX - minp));
+	getPixelsPerMs()
+	{
+		return this._timeMarker.getPixelsPerMs();
 	}
 
 	// This mousemove handler sets performance time proportional to the distance travelled by the conductor's cursor,
@@ -79,7 +90,7 @@ export class Conductor
 			dy = e.movementY;
 
 		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-			msDurationInScore = xFactor * (pixelDistance / this._timeMarker.msPosData.pixelsPerMs) * this._speed;
+			msDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._speed;
 
 		this._msPositionInPerformance += msDurationInScore;
 		this._timeMarker.advance(msDurationInScore);
@@ -148,11 +159,6 @@ export class Conductor
 			clearInterval(handle);
 		}
 		this._setIntervalHandles.length = 0;
-	}
-
-	reportTickOverload(nAsynchMomentsSentAtOnce)
-	{
-		this._timeMarker.reportTickOverload(nAsynchMomentsSentAtOnce);
 	}
 }
 

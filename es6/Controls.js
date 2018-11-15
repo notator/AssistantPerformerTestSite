@@ -418,14 +418,14 @@ var
 		{
 			score.deleteTickOverloadMarkers();
 			conductor = new Conductor(score, startPlayingCallback, speed);
-			score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
+			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
 			player.setTimer(conductor);
 			options.isConducting = true;
 		}
 		else
 		{
 			conductor.stop();
-			score.getMarkersLayer().removeChild(conductor.timeMarkerElement()); // does nothing if the child does not exist.
+			conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());// does nothing if the TimeMarker does not exist.
 			player.setTimer(performance);
 			conductor = undefined;
 			options.isConducting = false;

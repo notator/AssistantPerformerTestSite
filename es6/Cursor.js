@@ -4,7 +4,6 @@ export class CursorBase
 	constructor(systemChangedCallback, msPosDataArray, viewBoxScale)
 	{
 		Object.defineProperty(this, "GREY", { value: "#999999", writable: false });
-		Object.defineProperty(this, "BLUE", { value: "#5555FF", writable: false });
 
 		Object.defineProperty(this, "systemChangedCallback", { value: systemChangedCallback, writable: false });
 		Object.defineProperty(this, "msPosDataArray", { value: msPosDataArray, writable: false });
