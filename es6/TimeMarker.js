@@ -6,6 +6,7 @@ let
 	_topDiagLine,
 	_bottomDiagLine,
 	_vLine,
+
 	_setAlignment = function(alignment)
 	{
 		_hLine.setAttribute("x1", (alignment - (13.9 * _viewBoxScale)).toString(10));
@@ -42,6 +43,23 @@ let
 		_vLine.setAttribute("y1", top.toString(10));
 		_vLine.setAttribute("x2", alignment.toString(10));
 		_vLine.setAttribute("y2", bottom.toString(10));
+	},
+
+	_setCreepStyle = function(toCreep)
+	{
+		if(toCreep === true)
+		{
+			_hLine.style.visibility = "visible";
+			_topDiagLine.style.visibility = "visible";
+			_bottomDiagLine.style.visibility = "visible";
+		}
+		else
+		{
+			_hLine.style.visibility = "hidden";
+			_topDiagLine.style.visibility = "hidden";
+			_bottomDiagLine.style.visibility = "hidden";
+		}
+		return toCreep;
 	},
 
 	_newElement = function(viewBoxScaleArg)
@@ -102,16 +120,17 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
 
 		_setCoordinates(msPosData.alignment, msPosData.yCoordinates.top, msPosData.yCoordinates.bottom);
+		_setCreepStyle(false);
 	}
 
 	switchToConductTimer()
 	{
-		this._isCreeping = false;
+		this._isCreeping = _setCreepStyle(false);
 	}
 
 	switchToConductCreep()
 	{
-		this._isCreeping = true;
+		this._isCreeping = _setCreepStyle(true);
 	}
 
 	getElement()
