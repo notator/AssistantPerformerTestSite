@@ -913,7 +913,7 @@ export class Controls
 	{ }
 
 	// Defines the window.svgLoaded(...) function.
-	// Sets up the pop-up menues for scores and MIDI input and output devices.
+	// Sets up the pop-up menus for scores and MIDI input and output devices.
 	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
 	// mAccess is null if the browser does not support the Web MIDI API
 	init(mAccess)
@@ -1455,7 +1455,7 @@ export class Controls
 			}
 		}
 
-		function waitForSoundFont()
+		function waitForSoundFont(that)
 		{
 			if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
 				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
@@ -1468,7 +1468,7 @@ export class Controls
 				globalElements.waitingForSoundFontDiv.style.display = "none";
 				globalElements.outputDeviceSelect.disabled = false;
 			}
-			this.doControl("scoreSelect");
+			that.doControl("scoreSelect");
 		}
 
 		if(controlID === "scoreSelect")
@@ -1505,7 +1505,7 @@ export class Controls
 			if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
 				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
 			{
-				setTimeout(waitForSoundFont, 200);
+				setTimeout(waitForSoundFont, 200, this);
 			}
 			setMainOptionsState("toFront"); // enables only the appropriate controls
 		}
