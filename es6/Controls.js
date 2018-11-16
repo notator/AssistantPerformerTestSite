@@ -280,20 +280,6 @@ var
 		}
 	},
 
-	//conductorMouseUp = function(e)
-	//{
-	//	globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-	//	globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-	//	conductor.switchToConductTimer(e);
-	//},
-
-	//conductorMouseDown = function(e)
-	//{
-	//	globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-	//	globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
-	//	conductor.switchToConductCreep(e);
-	//},
-
 	conductorMouseClick = function(e)
 	{
 		if(conductor.isCreeping())
