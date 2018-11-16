@@ -46,6 +46,11 @@ export class Conductor
 		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
 	}
 
+	isCreeping()
+	{
+		return this._isCreeping;
+	}
+
 	switchToConductTimer(e)
 	{
 		this._isCreeping = false;

@@ -280,18 +280,34 @@ var
 		}
 	},
 
-	conductorMouseUp = function(e)
-	{
-		globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-		globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-		conductor.switchToConductTimer(e);
-	},
+	//conductorMouseUp = function(e)
+	//{
+	//	globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+	//	globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
+	//	conductor.switchToConductTimer(e);
+	//},
 
-	conductorMouseDown = function(e)
+	//conductorMouseDown = function(e)
+	//{
+	//	globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+	//	globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
+	//	conductor.switchToConductCreep(e);
+	//},
+
+	conductorMouseClick = function(e)
 	{
-		globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-		globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
-		conductor.switchToConductCreep(e);
+		if(conductor.isCreeping())
+		{
+			globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+			globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
+			conductor.switchToConductTimer(e);
+		}
+		else
+		{
+			globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+			globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
+			conductor.switchToConductCreep(e);
+		}
 	},
 
 	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
@@ -313,8 +329,7 @@ var
 				case 'conducting':
 					globalElements.conductingLayer.style.visibility = "visible";
 					globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-					globalElements.conductingLayer.addEventListener('mousedown', conductorMouseDown, false);
-					globalElements.conductingLayer.addEventListener('mouseup', conductorMouseUp, false);
+					globalElements.conductingLayer.addEventListener('click', conductorMouseClick, false);
 					globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
 					break;
 				case 'stopped':
@@ -328,8 +343,7 @@ var
 					globalElements.conductingLayer.style.visibility = "hidden";
 					globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
 					globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-					globalElements.conductingLayer.removeEventListener('mousedown', conductorMouseDown, false);
-					globalElements.conductingLayer.removeEventListener('mouseup', conductorMouseUp, false);
+					globalElements.conductingLayer.removeEventListener('click', conductorMouseClick, false);
 					globalElements.conductingLayer.style.cursor = 'auto';
 					break;
 				default:
