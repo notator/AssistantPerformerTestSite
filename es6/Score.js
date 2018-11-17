@@ -55,9 +55,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	{
 		let tickOverloadMarkerElem = cursor.element.cloneNode();
 
-		const LIGHT_BLUE = "#9999FF";
+		const LIGHT_BLUE = "#AAAAFF";
+
+		let strokeWidth = parseInt(tickOverloadMarkerElem.style.strokeWidth) / 2,
+			strokeWidthString = strokeWidth.toString() + "px";
 
 		tickOverloadMarkerElem.style.stroke = LIGHT_BLUE;
+		tickOverloadMarkerElem.style.strokeWidth = strokeWidthString;
 		tickOverloadMarkerElem.setAttribute("class", "tickOverloadMarker");
 
 		markersLayer.appendChild(tickOverloadMarkerElem);
