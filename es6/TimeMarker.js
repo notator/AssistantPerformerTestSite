@@ -2,32 +2,56 @@ import { CursorBase } from "./Cursor.js";
 
 let
 	_viewBoxScale,
-	_hLine,
+	_arrowHorizLine,
+	_topHorizLine,
+	_bottomHorizLine,
 	_topDiagLine,
 	_bottomDiagLine,
 	_vLine,
 
 	_setAlignment = function(alignment)
 	{
-		_hLine.setAttribute("x1", (alignment - (13.9 * _viewBoxScale)).toString(10));
-		_hLine.setAttribute("x2", (alignment - (1.7 * _viewBoxScale)).toString(10));
+		_vLine.setAttribute("x1", alignment.toString(10));
+		_vLine.setAttribute("x2", alignment.toString(10));
+
+		_topHorizLine.setAttribute("x1", (alignment - (4 * _viewBoxScale)).toString(10));
+		_topHorizLine.setAttribute("x2", (alignment + (4 * _viewBoxScale)).toString(10));
+
+		_bottomHorizLine.setAttribute("x1", (alignment - (4 * _viewBoxScale)).toString(10));
+		_bottomHorizLine.setAttribute("x2", (alignment + (4 * _viewBoxScale)).toString(10));
+
+		_arrowHorizLine.setAttribute("x1", (alignment - (13.9 * _viewBoxScale)).toString(10));
+		_arrowHorizLine.setAttribute("x2", (alignment - (1.7 * _viewBoxScale)).toString(10));
 
 		_topDiagLine.setAttribute("x1", (alignment - (1.6 * _viewBoxScale)).toString(10));
 		_topDiagLine.setAttribute("x2", (alignment - (5.4 * _viewBoxScale)).toString(10));
 
 		_bottomDiagLine.setAttribute("x1", (alignment - (1.6 * _viewBoxScale)).toString(10));
 		_bottomDiagLine.setAttribute("x2", (alignment - (5.4 * _viewBoxScale)).toString(10));
-
-		_vLine.setAttribute("x1", alignment.toString(10));
-		_vLine.setAttribute("x2", alignment.toString(10));
 	},
 
 	_setCoordinates = function(alignment, top, bottom)
 	{
-		_hLine.setAttribute("x1", (alignment - (13.9 * _viewBoxScale)).toString(10));
-		_hLine.setAttribute("y1", (top + (10 * _viewBoxScale)).toString(10));
-		_hLine.setAttribute("x2", (alignment - (1.7 * _viewBoxScale)).toString(10));
-		_hLine.setAttribute("y2", (top + (10 * _viewBoxScale)).toString(10));
+
+		_vLine.setAttribute("x1", alignment.toString(10));
+		_vLine.setAttribute("y1", top.toString(10));
+		_vLine.setAttribute("x2", alignment.toString(10));
+		_vLine.setAttribute("y2", bottom.toString(10));
+
+		_topHorizLine.setAttribute("x1", (alignment - (4 * _viewBoxScale)).toString(10));
+		_topHorizLine.setAttribute("y1", (top.toString(10)));
+		_topHorizLine.setAttribute("x2", (alignment + (4 * _viewBoxScale)).toString(10));
+		_topHorizLine.setAttribute("y2", (top.toString(10)));
+
+		_bottomHorizLine.setAttribute("x1", (alignment - (4 * _viewBoxScale)).toString(10));
+		_bottomHorizLine.setAttribute("y1", (bottom.toString(10)));
+		_bottomHorizLine.setAttribute("x2", (alignment + (4 * _viewBoxScale)).toString(10));
+		_bottomHorizLine.setAttribute("y2", (bottom.toString(10)));
+
+		_arrowHorizLine.setAttribute("x1", (alignment - (13.9 * _viewBoxScale)).toString(10));
+		_arrowHorizLine.setAttribute("y1", (top + (10 * _viewBoxScale)).toString(10));
+		_arrowHorizLine.setAttribute("x2", (alignment - (1.7 * _viewBoxScale)).toString(10));
+		_arrowHorizLine.setAttribute("y2", (top + (10 * _viewBoxScale)).toString(10));
 
 		_topDiagLine.setAttribute("x1", (alignment - (1.6 * _viewBoxScale)).toString(10));
 		_topDiagLine.setAttribute("y1", (top + (10 * _viewBoxScale)).toString(10));
@@ -39,23 +63,19 @@ let
 		_bottomDiagLine.setAttribute("x2", (alignment - (5.4 * _viewBoxScale)).toString(10));
 		_bottomDiagLine.setAttribute("y2", (top + (14 * _viewBoxScale)).toString(10));
 
-		_vLine.setAttribute("x1", alignment.toString(10));
-		_vLine.setAttribute("y1", top.toString(10));
-		_vLine.setAttribute("x2", alignment.toString(10));
-		_vLine.setAttribute("y2", bottom.toString(10));
 	},
 
 	_setCreepStyle = function(toCreep)
 	{
 		if(toCreep === true)
 		{
-			_hLine.style.visibility = "visible";
+			_arrowHorizLine.style.visibility = "visible";
 			_topDiagLine.style.visibility = "visible";
 			_bottomDiagLine.style.visibility = "visible";
 		}
 		else
 		{
-			_hLine.style.visibility = "hidden";
+			_arrowHorizLine.style.visibility = "hidden";
 			_topDiagLine.style.visibility = "hidden";
 			_bottomDiagLine.style.visibility = "hidden";
 		}
@@ -69,24 +89,31 @@ let
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"), 
 			strokeColor = "stroke:" + BLUE,
 			hStyle = strokeColor + "; stroke-width:" + (1.5 * viewBoxScaleArg).toString(10),
-			dStyle = hStyle + "; stroke-linecap:'square'",
+			dStyle = hStyle + "; stroke-linecap:square",
 			vStyle = strokeColor + "; stroke-width:" + (1 * viewBoxScaleArg).toString(10);
 
 		_viewBoxScale = viewBoxScaleArg;
-		_hLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+		_vLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		_topHorizLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		_bottomHorizLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		_arrowHorizLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
 		_topDiagLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
 		_bottomDiagLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_vLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
-		_hLine.setAttribute("style", hStyle);
+		_vLine.setAttribute("style", vStyle);
+		_topHorizLine.setAttribute("style", vStyle);
+		_bottomHorizLine.setAttribute("style", vStyle);
+		_arrowHorizLine.setAttribute("style", hStyle);
 		_topDiagLine.setAttribute("style", dStyle);
 		_bottomDiagLine.setAttribute("style", dStyle);
-		_vLine.setAttribute("style", vStyle);
 
-		element.appendChild(_hLine);
+		element.appendChild(_vLine);
+		element.appendChild(_topHorizLine);
+		element.appendChild(_bottomHorizLine);
+		element.appendChild(_arrowHorizLine);
 		element.appendChild(_topDiagLine);
 		element.appendChild(_bottomDiagLine);
-		element.appendChild(_vLine);
 
 		return element;
 	};
