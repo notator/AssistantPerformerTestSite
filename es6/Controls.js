@@ -1,5 +1,6 @@
 
 import { constants } from "./Constants.js";
+import { readSoundFontFileAsArrayBuffer, SoundFont } from "./SoundFont.js";
 import { TracksControl } from "./TracksControl.js";
 import { Score } from "./Score.js";
 import { Conductor } from "./Conductor.js";
@@ -943,169 +944,106 @@ export class Controls
 		// resets the score selector in case the browser has cached the last value
 		function initScoreSelector(systemChanged)
 		{
-			const soundFontData =
-				[
-					//{
-					//    name: "SongSix",
-					//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
-					//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
-					//    scoreSelectIndices: [1]
-					//},
-					//{
-					//    name: "Study2",
-					//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
-					//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
-					//    scoreSelectIndices: [2]
-					//},
-					//{
-					//    name: "Study3Sketch",
-					//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
-					//    presetIndices: [72, 78, 79, 113, 115, 117, 118],
-					//    scoreSelectIndices: [3, 4, 5, 6]
-					//},
-					{
-						name: "Grand Piano",
-						url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
-						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
-					},
-					{
-					    name: "Study3Sketch",
-					    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
-					    presetIndices: [72, 78, 79, 113, 115, 117, 118],
-						scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
-					}
-				];
-
-			let soundFontPromises = [],
-				soundFonts = [];
-
-			// Each soundFont in soundfonts is added as an attribute to the scoreSelect option for the score.
-			function setScoreSelector(scoreSelect)
-			{
-				function findScoreSelectIndices(soundFontName)
-				{
-					for(let sfData of soundFontData)
-					{
-						if(sfData.name.localeCompare(soundFontName) === 0)
-						{
-							return sfData.scoreSelectIndices;
-						}
-					}
-				}
-
-				function loadFirstSoundFont(synth, soundFont)
-				{
-					var channelIndex;
-
-					synth.setSoundFont(soundFont);
-
-					// For some reason, the first noteOn to be sent by the host, reacts only after a delay.
-					// This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
-					// This is actually a kludge. I have been unable to solve the root problem.
-					// (Is there an uninitialized buffer somewhere?)
-					if(synth.setMasterVolume)
-					{
-						// consoleSf2Synth can't/shouldn't do this.
-						// (It has no setMasterVolume function)
-						synth.setMasterVolume(0);
-						for(channelIndex = 0; channelIndex < 16; ++channelIndex)
-						{
-							synth.noteOn(channelIndex, 64, 100);
-							synth.noteOff(channelIndex, 64, 100);
-						}
-					}
-					// Wait for the above noteOn/noteOff kludge to work.
-					setTimeout(function()
-					{
-						if(synth.setMasterVolume)
-						{
-							synth.setMasterVolume(16384);
-						}
-						firstSoundFontLoaded = true;
-					}, 2400);
-
-					setMainOptionsState("toFront"); // hides "soundFont loading" message
-				}
-
-				console.log("SoundFonts have all loaded. Now setting scoreSelector soundFonts.");
-
-				let firstSoundFontLoaded = false,
-					i, option;
-				
-				for(let soundFont of soundFonts)
-				{
-					let scoreSelectIndices = findScoreSelectIndices(soundFont.name);
-
-					for(i = 0; i < scoreSelectIndices.length; ++i)
-					{
-						if(scoreSelectIndices[i] < scoreSelect.options.length)
-						{
-							option = scoreSelect.options[scoreSelectIndices[i]];
-							option.soundFont = soundFont;
-						}
-					}
-
-					if(!firstSoundFontLoaded)
-					{
-						loadFirstSoundFont(residentSf2Synth, soundFont);
-					}
-				}
-			}
-
 			// Sets the soundFontPromises and soundFonts arrays.
 			function loadSoundFonts()
 			{
-				let soundFont,
-					onLoad = function(name, banks, presets)
+				const soundFontData =
+					[
+						////Song Six is not currently available in the score selector
+						//{
+						//    name: "SongSix",
+						//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+						//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
+						//    scoreSelectIndices: [] // Song Six is not currently available in the score selector
+						//},
+						//{
+						//	name: "Study3Sketch",
+						//	url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+						//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
+						//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
+						//},
+						//{   
+						//	name: "Study2", /**** This soundFont does not load properly. The bug could be in either the file or the parser... ****/
+						//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+						//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
+						//    scoreSelectIndices: [	STUDY2_SCORE_INDEX,	STUDY2_2STAVES_SCORE_INDEX]
+						//},
+						{
+							name: "Grand Piano",
+							url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+							presetIndices: [0],
+							scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
+						}
+					];
+
+				function resolve(data)
+				{
+					// The soundFont is added as an attribute to the appropriate scoreSelect options.
+					function setScoreSelector(soundFont, soundFontName)
 					{
-						soundFont.init(name, banks, presets);
-						console.log(soundFont.name + ": loading complete.");
-						soundFonts.push(soundFont);
-					},
-					resolved = function()
+						let scoreSelect = globalElements.scoreSelect,
+							soundFontInfo = soundFontData.find(a => a.name.localeCompare(soundFontName) === 0),
+							scoreSelectIndices = soundFontInfo.scoreSelectIndices;
+
+						for(let i = 0; i < scoreSelectIndices.length; ++i)
+						{
+							let scoreIndexInOptions = scoreSelectIndices[i]; 
+							if(scoreIndexInOptions < scoreSelect.options.length)
+							{
+								let option = scoreSelect.options[scoreIndexInOptions];
+								option.soundFont = soundFont;
+							}
+							else
+							{
+								throw "Error in sondFontData.";
+							}
+						}
+					}
+
+					let soundFontName = data.soundFontName,
+						arrayBuffer = data.arrayBuffer,						
+						presetIndices = data.presetIndices;
+						
+					console.log(soundFontName + " soundFont loaded");
+					let soundFont = new SoundFont(soundFontName, arrayBuffer, presetIndices);
+					setScoreSelector(soundFont, soundFontName);
+				}
+
+				function reject(error)
+				{
+					let errorString = "Error loading " + error.soundFontName + ":\n    status=" + error.status.toString();
+
+					if(error.statusText.length > 0)
 					{
-						console.log("resolved");
-					},
-					rejected = function()
-					{
-						console.log("rejected");
-					};
+						errorString = errorString + ",\n    statusText=" + error.statusText;
+					}
+					alert(errorString);
+				}
+
+				let soundFontPromises = [];
 
 				for(let soundFontIndex = 0; soundFontIndex < soundFontData.length; ++soundFontIndex)
 				{
 					let soundFontURL = soundFontData[soundFontIndex].url,
 						soundFontName = soundFontData[soundFontIndex].name,
 						presetIndices = soundFontData[soundFontIndex].presetIndices,
-						soundFontPromise = new Promise(function(resolve, reject) 
-						{
-							try
-							{
-								// Note that XMLHttpRequest does not work with local files (localhost:).
-								// To make it work, run the app from the web (http:).
-								console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
-								soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
-							}
-							catch(e)
-							{
-								reject(value => alert(e));
-							}
-						});
+						filePromise = readSoundFontFileAsArrayBuffer(soundFontURL, soundFontName, presetIndices);
 
-					console.log("continuing asynchronously");
-
-					soundFontPromises.push(soundFontPromise);
+					filePromise.then((data) => resolve(data), (errorData) => reject(errorData));
+					soundFontPromises.push(filePromise);
+					console.log("loading " + soundFontName + " soundFont.");
 				}
 
-				return Promise.all(soundFontPromises);
+				Promise.all(soundFontPromises).then(
+					() => { console.log("All soundFonts loaded.") }, // success handler
+					(error) => { console.log("Error loading all soundFonts.") } // error handler
+				);
 			}
 
 			globalElements.scoreSelect.selectedIndex = 0;
 			score = new Score(systemChanged); // an empty score, with callback function
 
-			let promise = loadSoundFonts(); 
-			promise.then(value => setScoreSelector(globalElements.scoreSelect));		
-			
+			loadSoundFonts(); // also sets the score selector			
 		}
 
 		function getControlLayers(document)
