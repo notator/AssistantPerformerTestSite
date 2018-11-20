@@ -1004,20 +1004,21 @@ export class Controls
 						arrayBuffer = data.arrayBuffer,						
 						presetIndices = data.presetIndices;
 						
-					console.log(soundFontName + " soundFont loaded");
+					console.log(soundFontName + " soundFont loaded.");
 					let soundFont = new SoundFont(soundFontName, arrayBuffer, presetIndices);
 					setScoreSelector(soundFont, soundFontName);
 				}
 
 				function reject(error)
 				{
-					let errorString = "Error loading " + error.soundFontName + ":\n    status=" + error.status.toString();
-
+					let errorString = "XMLHttpRequest error loading " + error.soundFontName + ":  status=" + error.status.toString();
 					if(error.statusText.length > 0)
 					{
-						errorString = errorString + ",\n    statusText=" + error.statusText;
+						errorString = errorString + ",  statusText=" + error.statusText;
 					}
-					alert(errorString);
+					errorString = errorString + ("  (The XHR probably timed out.)"); 
+
+					throw errorString;
 				}
 
 				let soundFontPromises = [];
@@ -1031,13 +1032,13 @@ export class Controls
 
 					filePromise.then((data) => resolve(data), (errorData) => reject(errorData));
 					soundFontPromises.push(filePromise);
-					console.log("loading " + soundFontName + " soundFont.");
+					console.log("Loading " + soundFontName + " soundFont.");
 				}
 
 				Promise.all(soundFontPromises).then(
-					() => { console.log("All soundFonts loaded.") }, // success handler
-					(error) => { console.log("Error loading all soundFonts.") } // error handler
-				);
+					() => { console.log("All soundFonts loaded."); }, // success handler
+					() => { console.log("Error loading all soundFonts."); }  // error handler
+				);					  
 			}
 
 			globalElements.scoreSelect.selectedIndex = 0;
