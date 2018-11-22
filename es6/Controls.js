@@ -27,7 +27,9 @@ const
 
 	RESIDENT_SYNTH_INDEX = 1,
 
-	SPEEDCONTROL_MIDDLE = 90; // range is 0..180
+	SPEEDCONTROL_MIDDLE = 90, // range is 0..180
+
+	conductingMode = Object.freeze({ timer: "timer", creep: "creep", acceleration: "acceleration" }); 
 
 var
 	residentSf2Synth,
@@ -281,19 +283,41 @@ var
 		}
 	},
 
-	conductorMouseClick = function(e)
+	conductAcceleration = function(e)
 	{
-		if(conductor.isCreeping())
+		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 		{
-			globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-			globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-			conductor.switchToConductTimer(e);
+			conductor.conductAcceleration(e);
 		}
 		else
 		{
-			globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-			globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
-			conductor.switchToConductCreep(e);
+			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
+			setStopped();
+		}
+	},
+
+	conductorMouseClick = function(e)
+	{
+		switch(conductor.mode())
+		{
+			case conductingMode.timer: // -> toggle to creep
+				globalElements.conductingLayer.removeEventListener('mousemove', conductAcceleration, { passive: true });
+				globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+				globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
+				conductor.switchToConductCreep(e);
+				break;
+			case conductingMode.creep: // -> toggle to acceleration
+				globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+				globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+				globalElements.conductingLayer.addEventListener('mousemove', conductAcceleration, { passive: true });
+				conductor.switchToConductAcceleration(e);
+				break;
+			case conductingMode.acceleration: // -> toggle to timer
+				globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+				globalElements.conductingLayer.removeEventListener('mousemove', conductAcceleration, { passive: true });
+				globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
+				conductor.switchToConductTimer(e);
+				break;				
 		}
 	},
 
@@ -418,7 +442,7 @@ var
 		if(speed > 0)
 		{
 			score.deleteTickOverloadMarkers();
-			conductor = new Conductor(score, startPlayingCallback, speed);
+			conductor = new Conductor(score, startPlayingCallback, speed, conductingMode);
 			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
 			player.setTimer(conductor);
 			options.isConducting = true;

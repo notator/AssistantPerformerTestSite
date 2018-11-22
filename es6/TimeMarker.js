@@ -1,11 +1,8 @@
 import { CursorBase } from "./Cursor.js";
 
-const _markerStyle = Object.freeze({ timer: "timer", creep: "creep", acceleration: "acceleration" }); 
-
-
-
 let
 	_viewBoxScale,
+	_conductingModes,
 	_iMarker,
 	_iVertical,
 	_iBottomHoriz,
@@ -33,26 +30,42 @@ let
 		_setAlignment(alignment);
 	},
 
-	_setMarkerStyle = function(markerStyle)
+	_setMarkerStyle = function(conductingMode)
 	{
-		switch(markerStyle)
+		switch(conductingMode)
 		{
-			case _markerStyle.timer:
+			case _conductingModes.timer:
 				_creepArrow.style.visibility = "hidden";
 				_accArrow.style.visibility = "hidden";
 				break;
-			case _markerStyle.creep:
+			case _conductingModes.creep:
 				_creepArrow.style.visibility = "visible";
 				_accArrow.style.visibility = "hidden";
 				break;
-			case _markerStyle.acceleration:
+			case _conductingModes.acceleration:
 				_creepArrow.style.visibility = "hidden";
 				_accArrow.style.visibility = "visible";
 				break;
 		}
 	},
 
-	_get_Element = function(viewBoxScale)
+	_getMode = function()
+	{
+		let mode = _conductingModes.timer;
+
+		if(_creepArrow.style.visibility.localeCompare("visible"))
+		{
+			mode = _conductingModes.creep;
+		}
+		else if(_accArrow.style.visibility.localeCompare("visible"))
+		{
+			mode = _conductingModes.acceleration;
+		}
+
+		return mode;
+	},
+
+	_get_Element = function()
 	{
 		function getCoordinateVectors(viewBoxScale)
 		{
@@ -157,8 +170,8 @@ let
 			_accArrow = accArrow;
 		}
 
-		let cv = getCoordinateVectors(viewBoxScale),
-			styles = getStyles(viewBoxScale),
+		let cv = getCoordinateVectors(_viewBoxScale),
+			styles = getStyles(_viewBoxScale),
 			element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			x = cv.x,
 			y = cv.y;
@@ -171,13 +184,12 @@ let
 		element.appendChild(_accArrow);
 		element.appendChild(_iMarker);
 
-		_viewBoxScale = viewBoxScale;
 		_element = element;
 	};
 
 export class TimeMarker extends CursorBase
 {
-	constructor(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex)
+	constructor(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingModes, initialConductingMode)
 	{
 		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
 
@@ -187,7 +199,9 @@ export class TimeMarker extends CursorBase
 			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // index + 1 should always work, because final barline is in this.msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
 
-		_get_Element(cursor.viewBoxScale);
+		_viewBoxScale = cursor.viewBoxScale;
+		_conductingModes = conductingModes;
+		_get_Element();
 
 		// constants
 		Object.defineProperty(this, "_regionSequence", { value: regionSequence, writable: false });
@@ -204,22 +218,27 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true });
 
 		_setCoordinates(msPosData.alignment, msPosData.yCoordinates.top, msPosData.yCoordinates.bottom);
-		_setMarkerStyle(_markerStyle.timer);
+		_setMarkerStyle(initialConductingMode);
+	}
+
+	mode()
+	{
+		return _mode;
 	}
 
 	switchToConductTimer()
 	{
-		_setMarkerStyle(_markerStyle.timer);
+		_setMarkerStyle(_conductingModes.timer);
 	}
 
 	switchToConductCreep()
 	{
-		_setMarkerStyle(_markerStyle.creep);
+		_setMarkerStyle(_conductingModes.creep);
 	}
 
 	switchToConductAcceleration()
 	{
-		_setMarkerStyle(_markerStyle.acceleration);
+		_setMarkerStyle(_conductingModes.acceleration);
 	}
 
 	getElement()

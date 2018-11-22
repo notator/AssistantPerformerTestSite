@@ -1,8 +1,10 @@
 ﻿import { TimeMarker } from "./TimeMarker.js";
 
+let _conductingModes;
+
 export class Conductor
 {
-	constructor(score, startPlayingCallback, speed)
+	constructor(score, startPlayingCallback, speed, conductingModes)
 	{
 		// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
 		// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
@@ -21,12 +23,15 @@ export class Conductor
 			return Math.exp(minv + scale * (e.clientX - minp));
 		}
 
+		_conductingModes = conductingModes;
+
 		let startMarker = score.getStartMarker(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
 			startRegionIndex = score.getStartRegionIndex(),
 			endRegionIndex = score.getEndRegionIndex(),
-			timeMarker = new TimeMarker(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex);
+			initialConductingMode = conductingModes.timer,
+			timeMarker = new TimeMarker(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingModes, initialConductingMode);
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
@@ -43,17 +48,17 @@ export class Conductor
 		// Continuously increasing value wrt start of performance (and recording). Returned by now().
 		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
 		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
-		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
+		Object.defineProperty(this, "_mode", { value: initialConductingMode, writable: true });
 	}
 
-	isCreeping()
+	mode()
 	{
-		return this._isCreeping;
+		return this._mode;
 	}
 
 	switchToConductTimer(e)
 	{
-		this._isCreeping = false;
+		this._mode = _conductingModes.timer;
 		this._timeMarker.switchToConductTimer();
 		this._prevX = -1;
 		this.conductTimer(e, true);
@@ -61,9 +66,16 @@ export class Conductor
 
 	switchToConductCreep(e)
 	{
-		this._isCreeping = true;
+		this._mode = _conductingModes.creep;
 		this._timeMarker.switchToConductCreep();
 		this.conductCreep(e);
+	}
+
+	switchToConductAcceleration(e)
+	{
+		this._mode = _conductingModes.acceleration;
+		this._timeMarker.switchToConductAcceleration();
+		this.conductAcceleration(e);
 	}
 
 	addTimeMarkerToMarkersLayer(markersLayer)
@@ -80,6 +92,24 @@ export class Conductor
 	{
 		return this._timeMarker.getPixelsPerMs();
 	}
+
+
+	//
+	// Dummy function (=conductCreep)
+	//
+	conductAcceleration(e)
+	{
+		let xFactor = this._getXFactor(e),
+			dx = e.movementX,
+			dy = e.movementY;
+
+		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
+			msDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._speed;
+
+		this._msPositionInPerformance += msDurationInScore;
+		this._timeMarker.advance(msDurationInScore);
+	}
+
 
 	// This mousemove handler sets performance time proportional to the distance travelled by the conductor's cursor,
 	// also taking the value of the global speed control into account.
@@ -110,7 +140,7 @@ export class Conductor
 	{
 		function doConducting(that, e)
 		{
-			if(that._isCreeping)
+			if(that._mode.localeCompare(_conductingModes.timer) !== 0)
 			{
 				that.stop();
 			}
