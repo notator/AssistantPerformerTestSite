@@ -1,136 +1,178 @@
 import { CursorBase } from "./Cursor.js";
 
+const _markerStyle = Object.freeze({ timer: "timer", creep: "creep", acceleration: "acceleration" }); 
+
+
+
 let
 	_viewBoxScale,
-
-	// SVG line elements
-	_vertical,
-	_topHoriz,
-	_bottomHoriz,
-	_arrowHoriz,
-	_topDiag,
-	_bottomDiag,
-
-	// numbers
-	_serifLength,
-	_arrowHorizX1,
-	_arrowX2,
-	_arrowDiagX1,
-	_arrowHorizY,
-	_arrowTopDiagY1,
-	_arrowBottomDiagY1,
+	_iMarker,
+	_iVertical,
+	_iBottomHoriz,
+	_creepArrow,
+	_accArrow,
+	_element,
+	_topAsString,
 
 	_setAlignment = function(alignment)
 	{
-		_vertical.setAttribute("x1", alignment.toString(10));
-		_vertical.setAttribute("x2", alignment.toString(10));
-
-		_topHoriz.setAttribute("x1", (alignment - _serifLength).toString(10));
-		_topHoriz.setAttribute("x2", (alignment + _serifLength).toString(10));
-
-		_bottomHoriz.setAttribute("x1", (alignment - _serifLength).toString(10));
-		_bottomHoriz.setAttribute("x2", (alignment + _serifLength).toString(10));
-
-		_arrowHoriz.setAttribute("x1", (alignment - _arrowHorizX1).toString(10));
-		_arrowHoriz.setAttribute("x2", (alignment - _arrowX2).toString(10));
-
-		_topDiag.setAttribute("x1", (alignment - _arrowDiagX1).toString(10));
-		_topDiag.setAttribute("x2", (alignment - _arrowX2).toString(10));
-
-		_bottomDiag.setAttribute("x1", (alignment - _arrowDiagX1).toString(10));
-		_bottomDiag.setAttribute("x2", (alignment - _arrowX2).toString(10));
+		_element.setAttribute("transform", "translate(" + alignment.toString(10) + " " + _topAsString + ")");
 	},
 
+	// these arguments are in viewBox units, not pixels.
 	_setCoordinates = function(alignment, top, bottom)
 	{
+		_topAsString = top.toString(10);
+
+		let bottomReTop = (bottom - top).toString(10);
+
+		_iVertical.setAttribute("y2", bottomReTop);
+		_iBottomHoriz.setAttribute("y1", bottomReTop);
+		_iBottomHoriz.setAttribute("y2", bottomReTop);
+
 		_setAlignment(alignment);
-
-		_vertical.setAttribute("y1", top.toString(10));
-		_vertical.setAttribute("y2", bottom.toString(10));
-
-		_topHoriz.setAttribute("y1", (top.toString(10)));
-		_topHoriz.setAttribute("y2", (top.toString(10)));
-
-		_bottomHoriz.setAttribute("y1", (bottom.toString(10)));
-		_bottomHoriz.setAttribute("y2", (bottom.toString(10)));
-
-		_arrowHoriz.setAttribute("y1", (top + _arrowHorizY).toString(10));
-		_arrowHoriz.setAttribute("y2", (top + _arrowHorizY).toString(10));
-
-		_topDiag.setAttribute("y1", (top + _arrowTopDiagY1).toString(10));
-		_topDiag.setAttribute("y2", (top + _arrowHorizY).toString(10));
-
-		_bottomDiag.setAttribute("y1", (top + _arrowBottomDiagY1).toString(10));
-		_bottomDiag.setAttribute("y2", (top + _arrowHorizY).toString(10));
 	},
 
-	_setCreepStyle = function(toCreep)
+	_setMarkerStyle = function(markerStyle)
 	{
-		if(toCreep === true)
+		switch(markerStyle)
 		{
-			_arrowHoriz.style.visibility = "visible";
-			_topDiag.style.visibility = "visible";
-			_bottomDiag.style.visibility = "visible";
+			case _markerStyle.timer:
+				_creepArrow.style.visibility = "hidden";
+				_accArrow.style.visibility = "hidden";
+				break;
+			case _markerStyle.creep:
+				_creepArrow.style.visibility = "visible";
+				_accArrow.style.visibility = "hidden";
+				break;
+			case _markerStyle.acceleration:
+				_creepArrow.style.visibility = "hidden";
+				_accArrow.style.visibility = "visible";
+				break;
 		}
-		else
-		{
-			_arrowHoriz.style.visibility = "hidden";
-			_topDiag.style.visibility = "hidden";
-			_bottomDiag.style.visibility = "hidden";
-		}
-		return toCreep;
 	},
 
-	_newElement = function(viewBoxScaleArg)
+	_get_Element = function(viewBoxScale)
 	{
-		function setBasicCoordinates(viewBoxScale)
+		function getCoordinateVectors(viewBoxScale)
 		{
-			let arrowDiagWidthAndHeight = 4 * viewBoxScale;
+			let x = [-13.9, -9.7, -5.7, -1.5, 0],
+				y = [6, 10, 14],
+				accH = (y[1] - y[0]) * (x[3] - x[1]) / (x[3] - x[0]);
 
-			_viewBoxScale = viewBoxScale;
-			_serifLength = 4 * viewBoxScale;
-			_arrowHorizX1 = 13.9 * viewBoxScale; // left end of arrow horizontal line
-			_arrowX2 = 1.7 * viewBoxScale; // right end of arrow horizontal line 
-			_arrowDiagX1 = arrowDiagWidthAndHeight + _arrowX2;
-			_arrowHorizY = 10 * viewBoxScale; // height of arrow horizontal line
-			_arrowTopDiagY1 = _arrowHorizY - arrowDiagWidthAndHeight;
-			_arrowBottomDiagY1 = _arrowHorizY + arrowDiagWidthAndHeight;
+			y.push(0); // top of I-beam
+			y.push(y[1] - accH);
+			y.push(y[1] + accH);
+			y.sort((a, b) => a - b);
+
+			x.push(-4); // I-beam left
+			x.push(4); // I-beam right
+			x.sort((a, b) => a - b);
+
+			let rx = [], ry = [];
+			x.forEach(a => rx.push(a *= viewBoxScale));
+			y.forEach(a => ry.push(a *= viewBoxScale));
+
+			return ({ x:rx, y:ry });
 		}
 
-		setBasicCoordinates(viewBoxScaleArg);
+		function getStyles(viewBoxScale)
+		{
+			const BLUE = "#5555FF";
 
-		const BLUE = "#5555FF";
+			let strokeAndFillColor = "stroke:" + BLUE + ";fill:none",
+				thickWidth = 1.5 * viewBoxScale,
+				thickStyle = strokeAndFillColor + ";stroke-width:" + thickWidth.toString(10),
+				thinWidth = 1 * viewBoxScale,
+				thinStyle = strokeAndFillColor + ";stroke-width:" + thinWidth.toString(10);
 
-		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"), 
-			strokeColor = "stroke:" + BLUE,
-			arrowStrokeWidth = 1.5 * viewBoxScaleArg,
-			hStyle = strokeColor + "; stroke-width:" + arrowStrokeWidth.toString(10),
-			dStyle = hStyle + "; stroke-linecap:square",
-			verticalStrokeWidth = 1 * viewBoxScaleArg,
-			vStyle = strokeColor + "; stroke-width:" + verticalStrokeWidth.toString(10);
+			return ({ thin: thinStyle, thick: thickStyle });
+		}
 
-		_vertical = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_topHoriz = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_bottomHoriz = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_arrowHoriz = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_topDiag = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		_bottomDiag = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		function get_IMarker(x, y, styles)
+		{
+			let iMarker = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+				iVertical = document.createElementNS("http://www.w3.org/2000/svg", "line"),
+				iTopHoriz = document.createElementNS("http://www.w3.org/2000/svg", "line"),
+				iBottomHoriz = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
-		_vertical.setAttribute("style", vStyle);
-		_topHoriz.setAttribute("style", vStyle);
-		_bottomHoriz.setAttribute("style", vStyle);
-		_arrowHoriz.setAttribute("style", hStyle);
-		_topDiag.setAttribute("style", dStyle);
-		_bottomDiag.setAttribute("style", dStyle);
+			iVertical.setAttribute("x1", x[5].toString(10));
+			iVertical.setAttribute("x2", x[5].toString(10));
+			iVertical.setAttribute("y1", y[0].toString(10));
+			iVertical.setAttribute("y2", y[5].toString(10)); // is set again in _setCoordinates
+			iVertical.setAttribute("style", styles.thin);
 
-		element.appendChild(_vertical);
-		element.appendChild(_topHoriz);
-		element.appendChild(_bottomHoriz);
-		element.appendChild(_arrowHoriz);
-		element.appendChild(_topDiag);
-		element.appendChild(_bottomDiag);
+			iTopHoriz.setAttribute("x1", x[3].toString(10));
+			iTopHoriz.setAttribute("x2", x[6].toString(10));
+			iTopHoriz.setAttribute("y1", y[0].toString(10));
+			iTopHoriz.setAttribute("y2", y[0].toString(10));
+			iTopHoriz.setAttribute("style", styles.thin);
 
-		return element;
+			iBottomHoriz.setAttribute("x1", x[3].toString(10));
+			iBottomHoriz.setAttribute("x2", x[6].toString(10));
+			iBottomHoriz.setAttribute("y1", y[5].toString(10)); // is set again in _setCoordinates
+			iBottomHoriz.setAttribute("y2", y[5].toString(10)); // is set again in _setCoordinates
+			iBottomHoriz.setAttribute("style", styles.thin);
+
+			iMarker.appendChild(iVertical);
+			iMarker.appendChild(iTopHoriz);
+			iMarker.appendChild(iBottomHoriz);
+
+			_iMarker = iMarker;
+			_iVertical = iVertical;
+			_iBottomHoriz = iBottomHoriz;
+		}
+		function get_CreepArrow(x, y, styles)
+		{
+			let creepArrow = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+				creepHoriz = document.createElementNS("http://www.w3.org/2000/svg", "path"),
+				creepTip = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+			creepHoriz.setAttribute("d", "M" + x[0] + " " + y[3] + " " + x[4] + " " + y[3]);
+			creepHoriz.setAttribute("style", styles.thick);
+
+			creepTip.setAttribute("d", "M" + x[2] + " " + y[1] + " " + x[4] + " " + y[3] + " " + x[2] + " " + y[5]);
+			creepTip.setAttribute("style", styles.thin);
+
+			creepArrow.appendChild(creepHoriz);
+			creepArrow.appendChild(creepTip);
+
+			_creepArrow = creepArrow;
+		}
+		function get_AccArrow(x, y, styles)
+		{
+			let accArrow = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+				accVert = document.createElementNS("http://www.w3.org/2000/svg", "path"),
+				accTip = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+			accVert.setAttribute("d", "M" + x[1] + " " + y[2] + " " + x[1] + " " + y[4]);
+			accVert.setAttribute("style", styles.thick);
+
+			accTip.setAttribute("d", "M" + x[0] + " " + y[1] + " " + x[4] + " " + y[3] + " " + x[0] + " " + y[5]);
+			accTip.setAttribute("style", styles.thin);
+
+			accArrow.appendChild(accVert);
+			accArrow.appendChild(accTip);
+
+			_accArrow = accArrow;
+		}
+
+		let cv = getCoordinateVectors(viewBoxScale),
+			styles = getStyles(viewBoxScale),
+			element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+			x = cv.x,
+			y = cv.y;
+
+		get_IMarker(x, y, styles);
+		get_CreepArrow(x, y, styles);
+		get_AccArrow(x, y, styles);
+
+		element.appendChild(_creepArrow);
+		element.appendChild(_accArrow);
+		element.appendChild(_iMarker);
+
+		_viewBoxScale = viewBoxScale;
+		_element = element;
 	};
 
 export class TimeMarker extends CursorBase
@@ -145,8 +187,9 @@ export class TimeMarker extends CursorBase
 			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // index + 1 should always work, because final barline is in this.msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
 
+		_get_Element(cursor.viewBoxScale);
+
 		// constants
-		Object.defineProperty(this, "_element", { value: _newElement(cursor.viewBoxScale), writable: false });
 		Object.defineProperty(this, "_regionSequence", { value: regionSequence, writable: false });
 		Object.defineProperty(this, "_endRegionIndex", { value: endRegionIndex, writable: false });
 
@@ -159,25 +202,29 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_yCoordinates", { value: yCoordinates, writable: true });
 		Object.defineProperty(this, "_alignment", { value: msPosData.alignment, writable: true });
 		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true });
-		Object.defineProperty(this, "_isCreeping", { value: false, writable: true });
 
 		_setCoordinates(msPosData.alignment, msPosData.yCoordinates.top, msPosData.yCoordinates.bottom);
-		_setCreepStyle(false);
+		_setMarkerStyle(_markerStyle.timer);
 	}
 
 	switchToConductTimer()
 	{
-		this._isCreeping = _setCreepStyle(false);
+		_setMarkerStyle(_markerStyle.timer);
 	}
 
 	switchToConductCreep()
 	{
-		this._isCreeping = _setCreepStyle(true);
+		_setMarkerStyle(_markerStyle.creep);
+	}
+
+	switchToConductAcceleration()
+	{
+		_setMarkerStyle(_markerStyle.acceleration);
 	}
 
 	getElement()
 	{
-		return this._element;
+		return _element;
 	}
 
 	getPixelsPerMs()
