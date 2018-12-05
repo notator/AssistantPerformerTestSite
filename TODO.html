@@ -1,0 +1,559 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>TODO Nov 2018</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGED" CONTENT="20181205;17205362">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin: 2cm }
+		P { color: #000000 }
+		TT.cjk { font-family: "NSimSun", monospace }
+		TT.monotype-western { color: #000000; font-size: 9pt }
+		TT.monotype-cjk { color: #000000; font-family: "NSimSun", monospace; font-size: 9pt }
+		TT.monotype-ctl { color: #000000; font-size: 9pt }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-GB" TEXT="#000000" DIR="LTR">
+<P ALIGN=CENTER STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT SIZE=4><B>AssistantPerformerTestSite<BR>TODO</B></FONT></FONT></P>
+<P ALIGN=CENTER STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT SIZE=2 STYLE="font-size: 9pt"><B>The
+master copy of this file is kept in
+the<BR></B></FONT><FONT SIZE=2 STYLE="font-size: 9pt"><I><B>VisualStudio</B></I></FONT><FONT COLOR="#000000"><FONT SIZE=2 STYLE="font-size: 9pt"><I><B>/.../AssistantPerformerTestSite<BR></B></I></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2 STYLE="font-size: 9pt"><B>f</B></FONT></FONT><FONT SIZE=2 STYLE="font-size: 9pt"><B>older
+on my main computer.<BR>(The file's version history is stored in the
+Team Explorer repository.)<BR></B></FONT></FONT><BR><BR>
+</P>
+<P ALIGN=LEFT STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif"><BR>(See
+TODO below)</FONT></P>
+<HR>
+<P ALIGN=LEFT STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">DONE:</FONT></P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">(October
+	2018) Upgraded all Javascript code to ES6 in directory es6 </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Edit
+	a score of Study 2, to include region definitions. </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Edit
+	the score.js code to read the region definitions in scores. (Using
+	the edited Study 2 score for testing)</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Upgraded
+	Moritz to write such scores. Tombeau1 now defines such regions.</FONT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Corrected
+	a bug in AP: Page now scroll upwards if, when the cursor moves
+	backwards, it goes off screen.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Archived
+	the redundant ap and typescript directories.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Reprogramed
+	Moritz and the AP so that region start and end points are limited to
+	barline msPositions.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Deleted
+	the </FONT><FONT COLOR="#000000"><I>Study 2 with Regions</I></FONT><FONT COLOR="#000000">
+	score.<BR>Regions testing is now done in Tombeau 1.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Moritz
+	now draws special (double)barlines at the beginnings and ends of
+	Regions. Scores now contain class information for these.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Reprogrammed
+	the AP's setStartMarker&nbsp; and setEndMarker tools to take account
+	of Regions in the score. If there is more than one Region at the
+	clicked point in the score, a popup appears in which a particular
+	Region must be selected. The StartMarker and EndMarker now display
+	the Region's name next to the disc or square at their tops...</FONT>
+	</FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">While
+	performing, the start and end regionInfo strings that correspond to
+	the currently performing region are highlighted (displayed as bold
+	red text).</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">Debugged
+	Keyboard1. (MidiObjects now have a systemIndex attribute, but only
+	for Keyboard1).</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">The
+	endMarker now has a disc, not a square at the top.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">The
+	conductor option has been completely reprogrammed in terms of the
+	Cursor class, and the RunningMarker class has been removed. The
+	startMarker and endMarker contnue to work predictably, also for the
+	Conductor.</FONT> </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Regions
+	are now working correctly. I currently&nbsp; see no need for further
+	programming there.</FONT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000">[18.11.
+	2018] The conductor now has two modes (which can be toggled using a
+	mouse-click while conducting):</FONT> </FONT>
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>conductCreep</B>:
+		in which the increase in conductor.now() (i.e. deltaTime) is
+		directly proportional to the distance travelled by the mouse. The
+		mouse drags the cursor. </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT COLOR="#000000"><B>conductTime</B></FONT><FONT COLOR="#000000">:
+		in which conductor.now() is a function of performance.now() and the
+		horizontal position of the mouse. The mouse acts like the global
+		speed slider: when the mouse is on the left, the performance is
+		slower than when it is on the right.</FONT> </FONT>
+		</P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">There
+			is a basic speed set by the AssistanPerformer's speed slider.</FONT></P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Performance.now()
+			is used to calculate time-deltas between calls to the conductor's
+			event handler. </FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+			conductor.now() value (the running total time) is incremented by a
+			simple function of time-delta and e.clientX. Note: </FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+			performance.now and basic speed values are like the momentum of an
+			orchestra's tempo, that can be changed (within limits) by the
+			conductor. </FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+			value of conductor.now() is subjective time, unrelated to the
+			absolute value of performance.now(). It depends on the conductor's
+			will, visual feedback from the score and aural feedback from the
+			performance. Are the values of conductor.now() computable numbers
+			(in the strict Turing sense)? :-)) </FONT>
+			</P>
+		</UL>
+	</UL>
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">[20.11.2018]:
+	ES6 Promises are now used to load soundFonts. Currently, the AP only
+	loads one soundFont (the Grand Piano), but this may change -- in
+	which case (concurrent) promises are a much better solution than the
+	previous (recursive, sequential) solution.<BR></FONT><BR><BR>
+	</P>
+</OL>
+<HR>
+<P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Current
+Summary [05.12.2018]: <BR>The <B>Mouse</B> <B>conductAcceleration</B>
+mode has been integrated into the AP code, with the conducting mode
+rotating per conductor&acute;s mouseClick in the score:
+(conductTimer&rarr;conductCreep&rarr;conductAcceleration).<BR>The
+TimeMarker graphics &ndash; including a new cursor (A turned 90&ordm;)
+--, and the relation timeMarker&rarr;conductor&rarr;controls code,
+are complete and working, but the conductor.conductAcceleration()
+function is currently just a dummy stub that is a duplicate of the
+conductor.conductCreep() code.<BR>I think it is, after all, a bad
+idea to use mouse clicks in the score during performance to change
+the conducting mode. Instead, conducting modes should change (in any
+order) using qwerty key messages. These control messages should
+<I>always</I> be available, so that they can also be used as
+shortcuts for selecting the mode in the setConducting button.</FONT></P>
+<P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">TODO:</FONT></P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>Create
+	a new, enum-like object, parallel to conductingModes in Controls.js,
+	called performanceModes containing:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">{machine:0,
+	keyboard1:1, conductor:2}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><BR>and
+	simplify the related conditionals in Controls.js.<BR>Apropos
+	keyboard1 mode: I think I should keep this paradigm and its scores,
+	in case it should prove useful in future. Possibly &ldquo;conducting&rdquo;
+	modes can be written for </FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><I>score
+	input information</I></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif">
+	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>where
+	it exists...</FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>Redefine
+	the existing conductingModes:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>{
+	timer: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;timer&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>,
+	creep: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;creep&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>,
+	acceleration: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;acceleration&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif">
+	</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>as
+	follows:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>{
+	off:0 timer:1, creep:2 </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=2>.</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><BR>And
+	update the related code in all files accordingly.<BR>Delete the
+	acceleration code and A-TimeMarker. (Timer and creep sub-modes are
+	going to be implemented later, but without special sub-cursors.)</FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Repeatedly
+	clicking the setConducting button should cycle through the following
+	conducting modes:</FONT></P>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">&quot;</SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><B>conductTimer</B></SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">&quot;
+		[global shortcut 's' querty key] -- icon is a selected blue
+		</SPAN></FONT><TT CLASS="western"><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">I</SPAN></FONT></TT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">-cursor
+		with serifs (like the current conductTimer cursor)</SPAN></FONT></P>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">&quot;</FONT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>conductCreep</B></FONT></FONT></TT><FONT FACE="Arial, sans-serif">&quot;
+		[global shortcut 'c' querty key] -- icon is a selected blue
+		right-arrow with vertical line (like the current conductCreep
+		cursor)</FONT></P>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&ldquo;<FONT FACE="Arial, sans-serif"><B>off</B></FONT><FONT FACE="Arial, sans-serif">&rdquo;
+		[global shortcut &ldquo;Escape&rdquo; querty key] -- icon is an
+		unselected vertical blue line, as at present.<BR>(The escape key
+		should be a global shortcut for setStopped()).</FONT></P>
+	</UL>
+	<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+	TimeMarker in the score should always also reflect the current
+	conducting mode.</FONT></P>
+</OL>
+<OL START=4>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Implement
+	the global qwerty shortcuts ('s', 'c', 'Escape') for selecting the
+	conducting modes. &ldquo;Escape&rdquo; should also stop </SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2><SPAN LANG="en-GB">machine</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
+	</TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=3><SPAN LANG="en-GB">and
+	</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2><SPAN LANG="en-GB">keyboard1</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
+	</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">performances.</SPAN></FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Starting
+	a conducted performance: If the conducting state is not &ldquo;</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>off</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western">&rdquo;</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">,
+	clicking any key except the known qwerty shortcuts, or a mousedown
+	in the score, should start the performance. Remember that midi input
+	is going to be realized soon: Any midi message that arrives while
+	the conducting mode is not &ldquo;off&rdquo; will start the
+	performance.</SPAN></FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">In
+	&quot;</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductTimer</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">&quot;
+	modes: A mousedown in the score initiates mousemove control, A
+	mouseup disables mousemove control. The position of the mousedown is
+	also used to set the speed. Performance continues at the most
+	recently set speed until a mousedown or Escape.<BR>Cursor: a blue
+	</SPAN></FONT></FONT></TT><TT CLASS="western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">I</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">-cursor
+	(like the current conductTime cursor)<BR>There are two sub-modes
+	(further sub-modes could be implemented using querty keys as state
+	signals):</SPAN></FONT></FONT></TT></P>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductRelTimer</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:</SPAN></FONT></FONT></TT></P>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Activated
+			with left mouse button.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+			position of the mousedown is &ldquo;current speed&rdquo;.
+			Mousemove to the left results in decellerando, to the right is
+			accellerando.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductAbsTimer</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:</SPAN></FONT></FONT></TT></P>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Activated
+			with right mouse button.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+			position of the mousedown acts as a simple slider, so the position
+			of the mousedown results in an abrupt tempo change.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL START=7>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">In
+	&quot;</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductCreep</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">&quot;
+	modes: A mousedown in the score initiates mousemove control, A
+	mouseup disables mousemove control. The position of the mousedown is
+	also used to change the speed relative to the distance travelled by
+	the mouse.<BR>Cursor is the current conductCreep cursor (an arrow on
+	a vertical blue I-beam).<BR>There are two sub-modes (further
+	sub-modes could be implemented using querty keys as state signals):</SPAN></FONT></FONT></TT></P>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductAbsCreep</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:</SPAN></FONT></FONT></TT></P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Activated
+			with left mouse button.</SPAN></FONT></FONT></TT></P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">mousedown.clientX
+			is the fixed relationship between mouse drag distance and &ldquo;elapsed
+			time&rdquo; (=conductor.now()). As at present, clientX works like
+			a simple simple slider. Mousemove.clientX (and clientY) values are
+			used to calculate mouse distance travelled,</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
+			</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><I>but
+			not the speed/distance ratio</I></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductRelCreep</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:</SPAN></FONT></FONT></TT></P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Actvated
+			with right mouse button.</SPAN></FONT></FONT></TT></P>
+		</UL>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Works
+			like</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
+			</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><SPAN STYLE="font-weight: normal">conductAbsCreep,
+			except that </SPAN></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">the
+			speed/distance ratio changes with mousemove.clientX. Note that its
+			possible to toggle between the two conductCreep modes by switching
+			mouse buttons. </SPAN></FONT></FONT></TT>
+			</P>
+		</UL>
+	</UL>
+</OL>
+<OL START=8>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>Implement
+	MIDI input</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:
+	Do this after completing the above, in the light of that
+	experience.<BR></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#ff0000"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+	rest of this file contains old thoughts that need reviewing!</SPAN></FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><BR>??
+	Move the Input Device Selector to page 2, and update its logic to
+	contain the following:</SPAN></FONT></FONT></TT></P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">no
+		device (= &ldquo;machine performance&rdquo; &ndash; time info as
+		embedded in the score)</FONT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">mouse+querty</FONT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">a
+		list of the avaliable MIDI input devices (e.g. E-MU keyboard, R2M
+		ribbon device etc.)</FONT></P>
+	</UL>
+	<P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>This
+	distinguishes very clearly between the physical input devices and
+	the &ldquo;performanceModes&rdquo;!<BR>The information coming from a
+	MIDI input device could also be augmented by info from the mouse
+	and/or querty, but that's probably unnecessary. The performanceModes
+	simply expect MIDI messages to arrive, regardless of the device
+	where they originate. All I'm assuming is that such devices can
+	create any/all midi note and CC messages.<BR>Consider converting
+	mouse+querty input to MIDI messages before sending the messages to
+	the current performance mode. That might make for a better
+	programming structure...</FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+	MIDI Input Devices in the Input Device Selector can be used for all
+	the conducting modes, so they can be used for both
+	performanceMode.keyboard1 and performanceMode.conductor, without
+	qualification.<BR>Again, starting from the Input Device selector:</SPAN></FONT></FONT></TT></P>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western">&ldquo;</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">no
+		device&rdquo; would simply perform the durations embedded in each
+		score</SPAN></FONT></FONT></TT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+		mouse+qwerty, R2M+qwerty and keyboard input devices would each be
+		usable for each of the conducting modes conductTimer, conductCreep
+		and conductAcceleration.</SPAN></FONT></FONT></TT></P>
+	</UL>
+</OL>
+<OL>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+		keyboard input device can also be used in
+		performanceMode.keyboard1.</SPAN></FONT></FONT></TT></P>
+	</UL>
+</OL>
+<OL START=10>
+	<LI><P STYLE="margin-bottom: 0cm; font-weight: normal; line-height: 115%">
+	<FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">Complete the </SPAN><B>Mouse
+	conductAcceleration mode</B> <SPAN LANG="en-GB">by replacing t</SPAN>he
+	dummy <SPAN LANG="en-GB">conductor.conductAcceleration()
+	code.<BR>Algorithm: In this mode, the change of conductor.now()
+	speed (=acceleration) is proportional to the speed of the mouse. In
+	other words: If the mouse position does not change, neither does the
+	speed of conductor.now(). If the mouse position changes,
+	conductor.now()'s speed factor (re performance.now()) changes in
+	proportion to the mouse's speed. So a swift jerk of the mouse
+	increases the conductor's speed dramatically, while slower mouse
+	movements slow the conductor down. Possibly, the direction (l</SPAN>&rarr;<SPAN LANG="en-GB">r
+	or r</SPAN>&rarr;<SPAN LANG="en-GB">l) could define the
+	acceleration&acute;s sign. Possibly the mode will only be active
+	when a particular qwerty key is depressed.</SPAN></FONT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><B>keyboard
+	</B></SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">and
+	</SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><B>QUERTY</B></SPAN></FONT>
+	<FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">controllers
+	(hardware devices).<BR>The keyboard1 event Handler only deals with
+	input from the </SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><I>keys</I></SPAN></FONT>
+	<FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">on a </SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><B>keyboard</B></SPAN></FONT>
+	<FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><SPAN STYLE="font-weight: normal">input
+	device, but the new conductingModes can </SPAN></SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">use
+	any of the physical controls (including the keys, wheels and 16 midi
+	control knobs). A conductingMode (=event Handler) could use the keys
+	on the keyboard either as switches (or toggles) or as a bank of keys
+	controlling e.g. speed (low=slow, high=fast) etc.<BR>The new event
+	handlers (conductingModes) are (and will be) much simpler than
+	k</SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><SPAN STYLE="font-weight: normal">eyboard1,
+	since they </SPAN></SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">will
+	be designed for single threaded performance and use neither
+	InputChords nor InputStaves. They can therefore be used on all
+	existing scores. Also: The input information for these event
+	handlers can originate from devices other than the keyboard
+	(mouse+qwerty and R2M+qwerty). Each conductor eventHandler will use
+	(define) its own event type, that can be sent from any hardware
+	input device using a handler between the input device and the
+	conductor's event handler. (An event type is defined simply as an
+	ES6 object having particular
+	attributes.)<BR><BR><BR>--------------------------------</SPAN></FONT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">21.11.2018:
+	I think the conducting modes can be associated with specific input
+	device modes.<BR>For example:</FONT></P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>NoConductingDevice
+		</B>would use <B>machine</B> (see below)</FONT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Mouse1</B>
+		would use <B>conductCreep.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Mouse2</B>
+		would use <B>conductTime.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Mouse3</B>
+		would use <B>conductAcceleration</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Keyboard1</B>
+		would use <B>conductCreep.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Keyboard2</B>
+		would use <B>conductTime.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Keyboard3</B>
+		would use <B>conductAcceleration</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>QUERTY1</B>
+		would use <B>conductCreep.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>QUERTY2</B>
+		would use <B>conductTime.</B> </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>QUERTY3</B>
+		would use <B>conductAcceleration</B> </FONT>
+		</P>
+	</UL>
+	<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Conducting
+	modes: </FONT>
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+		AP's <B>&quot;startConducting&quot; button</B> (at the top of page
+		2) should really be a <B>&quot;conductingMode&quot;</B> toggle that
+		cycles through the available conducting modes.<BR>The input device,
+		selected on page 1, would then be simply one of the following:</FONT></P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>NoConductingDevice
+			</B></FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Mouse</B>
+			</FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Keyboard
+			(= E-MU)</B></FONT></P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>QUERTY</B></FONT></P>
+		</UL>
+		<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+		behaviour of the &quot;Go&quot; and &quot;Stop&quot; buttons would
+		depend on the state of the <B>&quot;conductingMode&quot; button</B>
+		(which should, I think, be moved to the left of the setMarker
+		buttons). </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
+		states (appearance) of the &quot;conductingMode&quot; toggle would
+		be (maybe in a different order):</FONT></P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&nbsp;<FONT FACE="Arial, sans-serif"><B>&quot;machine&quot;
+			</B></FONT><FONT FACE="Arial, sans-serif">-- (no conductor) a
+			vertical grey line (like the standard cursor) </FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">&quot;</SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB"><B>conductTime</B></SPAN></FONT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">&quot;
+			-- a blue </SPAN></FONT><TT CLASS="western"><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">I</SPAN></FONT></TT><FONT FACE="Arial, sans-serif"><SPAN LANG="en-GB">-cursor
+			(like the current conductTime cursor) </SPAN></FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">&quot;<B>conductCreep</B>&quot;
+			-- a blue right-arrow with vertical line (like the current
+			conductCreep cursor) </FONT>
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">&quot;<B>conductAcceleration</B>
+			&quot; -- a blue &quot;A&quot; (rotated -90&ordm; so that it looks
+			like an arrow) next to the vertical line (the &quot;A&quot; would
+			replace the creep mode's arrow) </FONT>
+			</P>
+		</UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">I
+		think it should be possible to select these modes dynamically
+		during a performance with either <B>Keyboard</B> or <B>QUERTY</B>,
+		but that <B>Mouse</B> might be limited to the originally selected
+		mode. (This question needs revisiting once <B>conductAcceleration</B>
+		with the <B>Mouse </B>is working, and I know how mouseClicks are
+		working in that case -- see above) Maybe the <B>Mouse</B> only
+		conducts at all with the left button depressed. Changes of
+		conducting mode could be done with special keys on either <B>Keyboard
+		</B>or <B>QUERTY</B>. Such changes would be reflected dynamically
+		in the appearance of the &quot;conductingMode&quot; toggle.</FONT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">possibly
+		re-name <FONT COLOR="#000000"><B>conductTime</B></FONT><FONT COLOR="#000000">
+		--&gt; </FONT><FONT COLOR="#000000"><B>conductSpeed</B></FONT><FONT COLOR="#000000">,
+		so that Creep-&gt;Speed-&gt;Acceleration form a logical sequence
+		(of time-differentials).</FONT></FONT></P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Known
+	Bug</B>: The Study 2 soundFont does not load correctly. This may be
+	a bug in the file or in the parser. Its not currently important,
+	since I'm not using it, but it would be nice to be able to play
+	Study 2 on the residentSf2Synth. However, I'm not sure if it
+	supports all the necessary CCs! -- Check!. </FONT>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Service
+	the es6 source files: </FONT>
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Add
+		a header comment and copyright to all es6 files </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Add
+		standard comments and type checking to all constructors (use
+		instanceof). </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">See
+		if any _ (=private) class members in es6 can be moved into the
+		containing module. </FONT>
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">Are
+		there any class attributes that could be made immutable or const? </FONT>
+		</P>
+	</UL>
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Update
+	the public Assistant Performer and scores with Assistant Performer
+	Test Site code and scores. </FONT>
+	</P>
+</OL>
+<P STYLE="line-height: 115%"><BR><BR>
+</P>
+</BODY>
+</HTML>
