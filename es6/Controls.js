@@ -29,6 +29,7 @@ const
 
 	SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
+	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conducted: 2 }),
 	conductingMode = Object.freeze({ timer: "timer", creep: "creep", acceleration: "acceleration" }); 
 
 var
@@ -242,17 +243,17 @@ var
 
 	setConductorControlClicked = function()
 	{
-		// The conductor control is disabled if this is a live performance.
+		// The conductor control is disabled if this is a keyboard1 performance.
 		if(cl.setConductorControlDisabled.getAttribute("opacity") === GLASS)
 		{
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conducting'); // sets options.isConducting = true and setConducting(startPlaying, speed);
+				setSvgControlsState('conducting'); // sets options.performanceMode = performanceMode.conducted, and setConducting(startPlaying, speed);
 			}
 			else if(svgControlsState === 'conducting')
 			{
-				setSvgControlsState('stopped'); // sets options.isConducting = false and setConducting(startPlaying, -1);
+				setSvgControlsState('stopped'); // sets options.performanceMode = performanceMode.machine and setConducting(startPlaying, -1);
 			}
 		}
 	},
@@ -393,11 +394,11 @@ var
 			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
 
-			if(options.isConducting === true)
+			if(options.performanceMode === performanceMode.conducted)
 			{
 				baseSpeed = 1;
 			}
-			else // isKeyboard1Performance == true or false (player is Keyboard1 or normal Sequence)
+			else // options.performanceMode === keyboard1 or machine)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 			}
@@ -405,7 +406,7 @@ var
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
 
-		if(options.isConducting === false)
+		if(options.performanceMode !== performanceMode.conducted)
 		{
 			if(isKeyboard1Performance === true)
 			{
@@ -445,7 +446,7 @@ var
 			conductor = new Conductor(score, startPlayingCallback, speed, conductingMode);
 			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
 			player.setTimer(conductor);
-			options.isConducting = true;
+			options.performanceMode = performanceMode.conducted;
 		}
 		else
 		{
@@ -453,7 +454,7 @@ var
 			conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());// does nothing if the TimeMarker does not exist.
 			player.setTimer(performance);
 			conductor = undefined;
-			options.isConducting = false;
+			options.performanceMode = performanceMode.score;
 		}
 	},
 
@@ -461,7 +462,7 @@ var
 	{
 		player.stop();
 
-		if(options.isConducting === true && options.keyboard1Performance === false)
+		if(options.performanceMode === performanceMode.conducted)
 		{
 			setConducting(startPlaying, -1);
 		}
@@ -656,7 +657,7 @@ var
 
 		function setPaused()
 		{
-			if(options.keyboard1Performance === true)
+			if(options.performanceMode !== performanceMode.score)
 			{
 				throw "Error: Assisted performances are never paused.";
 			}
@@ -735,7 +736,7 @@ var
 
 		function toggleConducting()
 		{
-			if(options.isConducting)
+			if(options.performanceMode === performanceMode.conducted)
 			{
 				setStopped();
 				setConducting(startPlaying, -1);
@@ -781,13 +782,13 @@ var
 				setStopped();
 				break;
 			case 'paused':
-				if(options.keyboard1Performance === false) // live performances cannot be paused
+				if(options.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
 				{
 					setPaused();
 				}
 				break;
 			case 'playing':
-				startPlaying(options.keyboard1Performance);
+				startPlaying(options.performanceMode !== performanceMode.score);
 				break;
 			case 'settingStart':
 				setSettingStart();
@@ -902,6 +903,15 @@ var
 					os.SelectedIndex = 0;
 				}
 				break;
+		}
+
+		if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
+		{
+			globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
+		}
+		else
+		{
+			globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
 		}
 	},
 
@@ -1659,13 +1669,13 @@ export class Controls
 
 		// tracksData is set up inside score (where it can be retrieved
 		// again later) and returned by this function.
-		function getTracksData(score, options)
+		function getTracksData(score, isKeyboard1Performance)
 		{
-			var tracksData;
+			let tracksData;
 
 			// Get everything except the timeObjects (which have to take account of speed)
-			// This function also sets staffline colours depending on options.keyboard1Performance.
-			score.getEmptySystems(options.keyboard1Performance);
+			// This function also sets staffline colours depending on isKeyboard1Performance.
+			score.getEmptySystems(isKeyboard1Performance);
 
 			score.setTracksData();
 			// tracksData contains the following attributes:
@@ -1683,7 +1693,7 @@ export class Controls
 			// changing the value of score.isKeyboard1Performance.
 			// Repainting includes using the correct staff colours, but the score may also update the position of
 			// its start marker (which always starts on a chord) if a track is turned off.
-			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.keyboard1Performance, score.refreshDisplay);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance, score.refreshDisplay);
 
 			return tracksData;
 		}
@@ -1784,10 +1794,21 @@ export class Controls
 			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
 		}
 
-		options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
-		options.isConducting = false;
+		// The following lines replaced by the following if..else.
+		//options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
+		//options.isConducting = false;
+		let isKeyboard1Performance = false;
+		if(globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0)
+		{
+			options.performanceMode = performanceMode.keyboard1;
+			isKeyboard1Performance = true;
+		}
+		else
+		{
+			options.performanceMode = performanceMode.score; // default
+		}		 
 
-		if(options.keyboard1Performance)
+		if(isKeyboard1Performance)
 		{
 			//disable conductor button
 			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
@@ -1803,11 +1824,11 @@ export class Controls
 
 		// This function can throw an exception
 		// (e.g. if an attempt is made to create an event that has no duration).
-		let tracksData = getTracksData(score, options);
+		let tracksData = getTracksData(score, isKeyboard1Performance);
 
 		setConductingLayer();
 
-		if(options.keyboard1Performance)
+		if(isKeyboard1Performance)
 		{
 			player = options.inputHandler; // keyboard1 -- the "prepared piano"
 			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
@@ -1831,13 +1852,13 @@ export class Controls
 			midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
 		}
 
-		score.refreshDisplay(options.keyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
+		score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
 		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
 		setSvgControlsState('stopped');
 
-		if(options.keyboard1Performance === true)
+		if(isKeyboard1Performance)
 		{
 			goControlClicked();
 		}

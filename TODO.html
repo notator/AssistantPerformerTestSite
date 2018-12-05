@@ -6,7 +6,8 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
 	<META NAME="CREATED" CONTENT="0;0">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
-	<META NAME="CHANGED" CONTENT="20181205;17205362">
+	<META NAME="CHANGED" CONTENT="20181205;21490970">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
@@ -136,44 +137,55 @@ TODO below)</FONT></P>
 	ES6 Promises are now used to load soundFonts. Currently, the AP only
 	loads one soundFont (the Grand Piano), but this may change -- in
 	which case (concurrent) promises are a much better solution than the
-	previous (recursive, sequential) solution.<BR></FONT><BR><BR>
-	</P>
+	previous (recursive, sequential) solution.</FONT></P>
+	<LI><P STYLE="line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>Summary
+	[05.12.2018]: <BR>The </FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>Mouse</B></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif">
+	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>conductAcceleration</B></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif">
+	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>mode
+	has been integrated into the AP code, with the conducting mode
+	rotating per conductor&acute;s mouseClick in the score:
+	(conductTimer&rarr;conductCreep&rarr;conductAcceleration).<BR>The
+	TimeMarker graphics &ndash; including a new cursor (A turned 90&ordm;)
+	--, and the relation timeMarker&rarr;conductor&rarr;controls code,
+	are complete and working, but the conductor.conductAcceleration()
+	function is currently just a dummy stub that is a duplicate of the
+	conductor.conductCreep() code.<BR>I think it is, after all, a bad
+	idea to use mouse clicks in the score during performance to change
+	the conducting mode. Instead, conducting modes should change (in any
+	order) using qwerty key messages. These control messages should
+	</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><I>always</I></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif">
+	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>be
+	available, so that they can also be used as shortcuts for selecting
+	the mode in the setConducting button. The Keyboard1 code should be
+	kept, but treated separately from the new conductingModes. Its just
+	possible that a new conductingMode that uses InputChords will be
+	created in future.<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>Now
+	beginning a new sprint</B></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>
+	in a new repository branch (see TODO list below). This sprint goes
+	to the point where I want </FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN STYLE="font-weight: normal">to
+	i</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><SPAN STYLE="font-weight: normal">mplement
+	MIDI input:</SPAN></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><BR>Done
+	[05.12.2018] in Controls.js: Created a new, enum-like
+	</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>performanceModes</B></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>
+	object, parallel to conductingModes, containing<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2 STYLE="font-size: 10pt">{score:0,
+	keyboard1:1, conducted:2}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>,
+	</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>and
+	simplified the related code in Controls.js.<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><B>performanceModes.score</B></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>
+	is the mode that plays the temporal info as it stands in the score.
+	This is the default value when the AP's controls are in their
+	stopped state.<BR>Having performanceModes separate fom
+	conductingModes should  keep things orderly when I start introducing
+	new conductingModes...</FONT></FONT></TT></P>
 </OL>
 <HR>
-<P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Current
-Summary [05.12.2018]: <BR>The <B>Mouse</B> <B>conductAcceleration</B>
-mode has been integrated into the AP code, with the conducting mode
-rotating per conductor&acute;s mouseClick in the score:
-(conductTimer&rarr;conductCreep&rarr;conductAcceleration).<BR>The
-TimeMarker graphics &ndash; including a new cursor (A turned 90&ordm;)
---, and the relation timeMarker&rarr;conductor&rarr;controls code,
-are complete and working, but the conductor.conductAcceleration()
-function is currently just a dummy stub that is a duplicate of the
-conductor.conductCreep() code.<BR>I think it is, after all, a bad
-idea to use mouse clicks in the score during performance to change
-the conducting mode. Instead, conducting modes should change (in any
-order) using qwerty key messages. These control messages should
-<I>always</I> be available, so that they can also be used as
-shortcuts for selecting the mode in the setConducting button.</FONT></P>
 <P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">TODO:</FONT></P>
 <OL>
-	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>Create
-	a new, enum-like object, parallel to conductingModes in Controls.js,
-	called performanceModes containing:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">{machine:0,
-	keyboard1:1, conductor:2}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><BR>and
-	simplify the related conditionals in Controls.js.<BR>Apropos
-	keyboard1 mode: I think I should keep this paradigm and its scores,
-	in case it should prove useful in future. Possibly &ldquo;conducting&rdquo;
-	modes can be written for </FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><I>score
-	input information</I></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif">
-	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>where
-	it exists...</FONT></FONT></TT></P>
 	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>Redefine
 	the existing conductingModes:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>{
 	timer: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;timer&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>,
 	creep: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;creep&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>,
-	acceleration: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;acceleration&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif">
-	</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>as
+	acceleration: </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#a31515"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>&quot;acceleration&quot;</FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000">
+	</FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=1 STYLE="font-size: 8pt"><BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3>as
 	follows:<BR></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#000000"><FONT FACE="Consolas, sans-serif"><FONT SIZE=2>{
 	off:0 timer:1, creep:2 </FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2>}</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=2>.</FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><BR>And
 	update the related code in all files accordingly.<BR>Delete the
@@ -201,10 +213,11 @@ shortcuts for selecting the mode in the setConducting button.</FONT></P>
 </OL>
 <OL>
 	<UL>
-		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&ldquo;<FONT FACE="Arial, sans-serif"><B>off</B></FONT><FONT FACE="Arial, sans-serif">&rdquo;
-		[global shortcut &ldquo;Escape&rdquo; querty key] -- icon is an
-		unselected vertical blue line, as at present.<BR>(The escape key
-		should be a global shortcut for setStopped()).</FONT></P>
+		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&ldquo;<FONT FACE="Arial, sans-serif"><B>off</B></FONT>&rdquo;
+		<FONT FACE="Arial, sans-serif">[global shortcut &ldquo;Escape&rdquo;
+		querty key] -- icon is an unselected vertical blue line, as at
+		present.<BR>(The escape key should be a global shortcut for
+		setStopped()).</FONT></P>
 	</UL>
 	<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">The
 	TimeMarker in the score should always also reflect the current
@@ -213,7 +226,7 @@ shortcuts for selecting the mode in the setConducting button.</FONT></P>
 <OL START=4>
 	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Implement
 	the global qwerty shortcuts ('s', 'c', 'Escape') for selecting the
-	conducting modes. &ldquo;Escape&rdquo; should also stop </SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2><SPAN LANG="en-GB">machine</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
+	conducting modes. &ldquo;Escape&rdquo; should also stop </SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2><SPAN LANG="en-GB">score</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
 	</TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=3><SPAN LANG="en-GB">and
 	</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Consolas, monospace"><FONT SIZE=2><SPAN LANG="en-GB">keyboard1</SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
 	</TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">performances.</SPAN></FONT></FONT></TT></P>
@@ -332,14 +345,14 @@ shortcuts for selecting the mode in the setConducting button.</FONT></P>
 <OL START=8>
 	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>Implement
 	MIDI input</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">:
-	Do this after completing the above, in the light of that
-	experience.<BR></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#ff0000"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
-	rest of this file contains old thoughts that need reviewing!</SPAN></FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><BR>??
+	Do this after completing the above.<BR></SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT COLOR="#ff0000"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">The
+	rest of this file contains old thoughts that need reviewing in the
+	light of the current state of the program!</SPAN></FONT></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><BR>??
 	Move the Input Device Selector to page 2, and update its logic to
 	contain the following:</SPAN></FONT></FONT></TT></P>
 	<UL>
 		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">no
-		device (= &ldquo;machine performance&rdquo; &ndash; time info as
+		device (= &ldquo;score performance&rdquo; &ndash; time info as
 		embedded in the score)</FONT></P>
 		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">mouse+querty</FONT></P>
 		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif">a
@@ -428,7 +441,7 @@ shortcuts for selecting the mode in the setConducting button.</FONT></P>
 	device modes.<BR>For example:</FONT></P>
 	<UL>
 		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>NoConductingDevice
-		</B>would use <B>machine</B> (see below)</FONT></P>
+		</B>would use <B>score</B> (see below)</FONT></P>
 		<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><B>Mouse1</B>
 		would use <B>conductCreep.</B> </FONT>
 		</P>
@@ -487,7 +500,7 @@ shortcuts for selecting the mode in the setConducting button.</FONT></P>
 		states (appearance) of the &quot;conductingMode&quot; toggle would
 		be (maybe in a different order):</FONT></P>
 		<UL>
-			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&nbsp;<FONT FACE="Arial, sans-serif"><B>&quot;machine&quot;
+			<LI><P STYLE="margin-bottom: 0cm; line-height: 115%">&nbsp;<FONT FACE="Arial, sans-serif"><B>&quot;score&quot;
 			</B></FONT><FONT FACE="Arial, sans-serif">-- (no conductor) a
 			vertical grey line (like the standard cursor) </FONT>
 			</P>
