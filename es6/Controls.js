@@ -30,7 +30,7 @@ const
 	SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
 	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conducted: 2 }),
-	conductingMode = Object.freeze({ timer: "timer", creep: "creep", acceleration: "acceleration" }); 
+	conductingMode = Object.freeze({ off: 0, timer: 1, creep: 2 }); 
 
 var
 	residentSf2Synth,
@@ -249,82 +249,83 @@ var
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conducting'); // sets options.performanceMode = performanceMode.conducted, and setConducting(startPlaying, speed);
+				setSvgControlsState('conductingCreep'); // setSvgControlsState('conductingTimer');
 			}
-			else if(svgControlsState === 'conducting')
+			else
 			{
-				setSvgControlsState('stopped'); // sets options.performanceMode = performanceMode.machine and setConducting(startPlaying, -1);
+				setSvgControlsState('stopped');
 			}
 		}
 	},
 
+	// mousemove handler
 	conductTimer = function(e)
 	{
 		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 		{
 			conductor.conductTimer(e);
 		}
-		else
+	},
+
+	// mousedown handler
+	startConductTimer = function(e)
+	{
+		if(e.button === 0) // main (=left) button
 		{
-			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
-			setStopped();
+			globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+			globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
+			conductor.switchToConductTimer();
+
+			if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
+			{
+				conductor.conductTimer(e);
+			}
 		}
 	},
 
+	// mouseup handler
+	stopConductTimer = function(e)
+	{
+		if(e.button === 0) // main (=left) button
+		{
+			globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+		}
+	},
+
+	// mousemove handler
 	conductCreep = function(e)
 	{
 		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 		{
 			conductor.conductCreep(e);
 		}
-		else
+	},
+
+	// mousedown handler
+	startConductCreep = function(e)
+	{		
+		if(e.button === 0) // main (=left) button
 		{
-			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
-			setStopped();
+			globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+			globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
+			conductor.switchToConductCreep();
 		}
 	},
 
-	conductAcceleration = function(e)
+	// mouseup handler
+	stopConductCreep = function(e)
 	{
-		if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
+		if(e.button === 0) // main (=left) button
 		{
-			conductor.conductAcceleration(e);
-		}
-		else
-		{
-			conductor.stop(); // deliberately called again in setStopped() (I suspect race conditions can be a problem)
-			setStopped();
+			globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
 		}
 	},
 
-	conductorMouseClick = function(e)
+	setEventListenersAndMouseCursors = function(svgControlsState)
 	{
-		switch(conductor.mode())
-		{
-			case conductingMode.timer: // -> toggle to creep
-				globalElements.conductingLayer.removeEventListener('mousemove', conductAcceleration, { passive: true });
-				globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-				globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
-				conductor.switchToConductCreep(e);
-				break;
-			case conductingMode.creep: // -> toggle to acceleration
-				globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-				globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-				globalElements.conductingLayer.addEventListener('mousemove', conductAcceleration, { passive: true });
-				conductor.switchToConductAcceleration(e);
-				break;
-			case conductingMode.acceleration: // -> toggle to timer
-				globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-				globalElements.conductingLayer.removeEventListener('mousemove', conductAcceleration, { passive: true });
-				globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-				conductor.switchToConductTimer(e);
-				break;				
-		}
-	},
-
-	setEventListenersAndConductorsMouseCursor = function(svgControlsState)
-	{
-		var s = score, markersLayer = s.getMarkersLayer();
+		let s = score,
+			markersLayer = s.getMarkersLayer(),
+			conductingLayer = globalElements.conductingLayer;
 
 		if(markersLayer !== undefined)
 		{
@@ -338,11 +339,21 @@ var
 					markersLayer.addEventListener('click', s.setEndMarkerClick, false);
 					markersLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
 					break;
-				case 'conducting':
-					globalElements.conductingLayer.style.visibility = "visible";
-					globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-					globalElements.conductingLayer.addEventListener('click', conductorMouseClick, false);
-					globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+				case 'conductingTimer':
+					conductingLayer.style.visibility = "visible";
+					conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+					conductingLayer.removeEventListener('mousedown', startConductTimer, { passive: true });
+					conductingLayer.removeEventListener('mouseup', stopConductTimer, { passive: true });
+					conductingLayer.addEventListener('mousedown', startConductTimer, { passive: true });
+					conductingLayer.addEventListener('mouseup', stopConductTimer, { passive: true });
+					break;
+				case 'conductingCreep':
+					conductingLayer.style.visibility = "visible";
+					conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+					conductingLayer.removeEventListener('mousedown', startConductCreep, { passive: true });
+					conductingLayer.removeEventListener('mouseup', stopConductCreep, { passive: true });
+					conductingLayer.addEventListener('mousedown', startConductCreep, { passive: true });
+					conductingLayer.addEventListener('mouseup', stopConductCreep, { passive: true });
 					break;
 				case 'stopped':
 					// According to
@@ -352,11 +363,14 @@ var
 					markersLayer.removeEventListener('click', s.setStartMarkerClick, false);
 					markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
 					markersLayer.style.cursor = 'auto';
-					globalElements.conductingLayer.style.visibility = "hidden";
-					globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
-					globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
-					globalElements.conductingLayer.removeEventListener('click', conductorMouseClick, false);
-					globalElements.conductingLayer.style.cursor = 'auto';
+					conductingLayer.style.visibility = "hidden";
+					conductingLayer.removeEventListener('mousedown', startConductTimer, { passive: true });
+					conductingLayer.removeEventListener('mousedown', startConductCreep, { passive: true });
+					conductingLayer.removeEventListener('mouseup', stopConductTimer, { passive: true });
+					conductingLayer.removeEventListener('mouseup', stopConductCreep, { passive: true });
+					conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
+					conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
+					conductingLayer.style.cursor = 'auto';
 					break;
 				default:
 					throw "Unknown state!";
@@ -434,7 +448,7 @@ var
 		}
 	},
 
-	// Called when the start conducting button is clicked on or off.
+	// Called when the start conducting button is clicked.
 	// When the button is clicked off, the speed argument will be -1. 
 	setConducting = function(startPlayingCallback, speed)
 	{
@@ -443,15 +457,17 @@ var
 		if(speed > 0)
 		{
 			score.deleteTickOverloadMarkers();
-			conductor = new Conductor(score, startPlayingCallback, speed, conductingMode);
 			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
 			player.setTimer(conductor);
 			options.performanceMode = performanceMode.conducted;
 		}
 		else
 		{
-			conductor.stop();
-			conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());// does nothing if the TimeMarker does not exist.
+			if(conductor !== undefined)
+			{
+				conductor.stop();
+				conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());// does nothing if the TimeMarker does not exist.
+			}
 			player.setTimer(performance);
 			conductor = undefined;
 			options.performanceMode = performanceMode.score;
@@ -474,7 +490,7 @@ var
 
 		setMainOptionsState("toBack");
 
-		setEventListenersAndConductorsMouseCursor('stopped');
+		setEventListenersAndMouseCursors('stopped');
 
 		svgControlsState = 'stopped';
 
@@ -506,7 +522,9 @@ var
 		cl.sendStopToEndControlSelected.setAttribute("opacity", GLASS);
 		cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
 
-		cl.setConductorControlSelected.setAttribute("opacity", GLASS);
+		cl.setConductGo.setAttribute("opacity", METAL);
+		cl.setConductTimer.setAttribute("opacity", GLASS);
+		cl.setConductCreep.setAttribute("opacity", GLASS);
 		cl.setConductorControlDisabled.setAttribute("opacity", GLASS);
 		/********* end performance buttons *******************/
 
@@ -650,7 +668,7 @@ var
 
 			// The tracksControl is only initialised after a specific score is loaded.
 
-			setEventListenersAndConductorsMouseCursor('stopped');
+			setEventListenersAndMouseCursors('stopped');
 		}
 
 		// setStopped is outer function
@@ -707,7 +725,7 @@ var
 			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-			setEventListenersAndConductorsMouseCursor('settingStart');
+			setEventListenersAndMouseCursors('settingStart');
 		}
 
 		function setSettingEnd()
@@ -731,44 +749,73 @@ var
 			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
-			setEventListenersAndConductorsMouseCursor('settingEnd');
+			setEventListenersAndMouseCursors('settingEnd');
 		}
 
-		function toggleConducting()
+		function setOtherControlsToConductingState()
 		{
-			if(options.performanceMode === performanceMode.conducted)
+			tracksControl.setDisabled(true);
+
+			globalElements.speedControlInput.disabled = true;
+			globalElements.speedControlCheckbox.disabled = true;
+			globalElements.speedControlSmokeDiv.style.display = "block";
+
+			// begin performance buttons
+			cl.goDisabled.setAttribute("opacity", SMOKE);
+			cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+			// end performance buttons
+
+			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+
+			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+		}
+
+		function setConductingTimer()
+		{
+			setOtherControlsToConductingState();
+
+			cl.setConductGo.setAttribute("opacity", GLASS);
+			cl.setConductTimer.setAttribute("opacity", METAL);
+			cl.setConductCreep.setAttribute("opacity", GLASS);
+
+			setEventListenersAndMouseCursors('conductingTimer');
+
+			let speed = speedSliderValue(globalElements.speedControlInput.value);
+
+			if(conductor === undefined)
 			{
-				setStopped();
-				setConducting(startPlaying, -1);
+				conductor = new Conductor(score, startPlaying, speed, conductingMode);
 			}
-			else
+
+			conductor.switchToConductTimer();
+
+			setConducting(startPlaying, speed);
+		}
+
+		function setConductingCreep()
+		{
+			setOtherControlsToConductingState();
+
+			cl.setConductGo.setAttribute("opacity", GLASS);
+			cl.setConductTimer.setAttribute("opacity", GLASS);
+			cl.setConductCreep.setAttribute("opacity", METAL);
+
+			setEventListenersAndMouseCursors('conductingCreep');
+
+			let speed = speedSliderValue(globalElements.speedControlInput.value);
+
+			if(conductor === undefined)
 			{
-				tracksControl.setDisabled(true);
-
-				globalElements.speedControlInput.disabled = true;
-				globalElements.speedControlCheckbox.disabled = true;
-				globalElements.speedControlSmokeDiv.style.display = "block";
-
-				// begin performance buttons
-				cl.goDisabled.setAttribute("opacity", SMOKE);
-				cl.stopControlDisabled.setAttribute("opacity", SMOKE);
-				cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-				cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-				cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-				cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-				cl.setConductorControlSelected.setAttribute("opacity", METAL);
-				// end performance buttons
-
-				cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-				setEventListenersAndConductorsMouseCursor('conducting');
-
-				let speed = speedSliderValue(globalElements.speedControlInput.value);
-				setConducting(startPlaying, speed);
-
-				score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+				conductor = new Conductor(score, startPlaying, speed, conductingMode);
 			}
 
+			conductor.switchToConductCreep();
+			
+			setConducting(startPlaying, speed);
 		}
 
 		svgControlsState = svgCtlsState;
@@ -796,8 +843,11 @@ var
 			case 'settingEnd':
 				setSettingEnd();
 				break;
-			case 'conducting':
-				toggleConducting();
+			case 'conductingTimer':
+				setConductingTimer();
+				break;
+			case 'conductingCreep':
+				setConductingCreep();
 				break;
 		}
 	},
@@ -1106,7 +1156,9 @@ export class Controls
 			cl.sendStopToEndControlSelected = document.getElementById("sendStopToEndControlSelected");
 			cl.sendStopToEndControlDisabled = document.getElementById("sendStopToEndControlDisabled");
 
-			cl.setConductorControlSelected = document.getElementById("setConductorControlSelected");
+			cl.setConductGo = document.getElementById("setConductGo");
+			cl.setConductTimer = document.getElementById("setConductTimer");
+			cl.setConductCreep = document.getElementById("setConductCreep");
 			cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
 		}
 

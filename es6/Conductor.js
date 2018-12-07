@@ -1,10 +1,10 @@
 ﻿import { TimeMarker } from "./TimeMarker.js";
 
-let _conductingModes;
+let _conductingMode;
 
 export class Conductor
 {
-	constructor(score, startPlayingCallback, speed, conductingModes)
+	constructor(score, startPlayingCallback, speed, conductingMode)
 	{
 		// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
 		// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
@@ -23,15 +23,15 @@ export class Conductor
 			return Math.exp(minv + scale * (e.clientX - minp));
 		}
 
-		_conductingModes = conductingModes;
+		_conductingMode = conductingMode;
 
 		let startMarker = score.getStartMarker(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
 			startRegionIndex = score.getStartRegionIndex(),
 			endRegionIndex = score.getEndRegionIndex(),
-			initialConductingMode = conductingModes.timer,
-			timeMarker = new TimeMarker(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingModes, initialConductingMode);
+			initialConductingMode = conductingMode.off,
+			timeMarker = new TimeMarker(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingMode, initialConductingMode);
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
@@ -56,26 +56,18 @@ export class Conductor
 		return this._mode;
 	}
 
-	switchToConductTimer(e)
+	switchToConductTimer()
 	{
-		this._mode = _conductingModes.timer;
-		this._timeMarker.switchToConductTimer();
+		this._mode = _conductingMode.timer;
+		this._timeMarker.setStyle(_conductingMode.timer);
 		this._prevX = -1;
-		this.conductTimer(e, true);
 	}
 
-	switchToConductCreep(e)
+	switchToConductCreep()
 	{
-		this._mode = _conductingModes.creep;
-		this._timeMarker.switchToConductCreep();
-		this.conductCreep(e);
-	}
-
-	switchToConductAcceleration(e)
-	{
-		this._mode = _conductingModes.acceleration;
-		this._timeMarker.switchToConductAcceleration();
-		this.conductAcceleration(e);
+		this._mode = _conductingMode.creep;
+		this._timeMarker.setStyle(_conductingMode.creep);
+		this._prevX = -1;
 	}
 
 	addTimeMarkerToMarkersLayer(markersLayer)
@@ -93,24 +85,6 @@ export class Conductor
 		return this._timeMarker.getPixelsPerMs();
 	}
 
-
-	//
-	// Dummy function (=conductCreep)
-	//
-	conductAcceleration(e)
-	{
-		let xFactor = this._getXFactor(e),
-			dx = e.movementX,
-			dy = e.movementY;
-
-		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-			msDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._speed;
-
-		this._msPositionInPerformance += msDurationInScore;
-		this._timeMarker.advance(msDurationInScore);
-	}
-
-
 	// This mousemove handler sets performance time proportional to the distance travelled by the conductor's cursor,
 	// also taking the value of the global speed control into account.
 	// Note that _any_ function could be used to describe the relation between the mouse and conductor.now().
@@ -124,6 +98,12 @@ export class Conductor
 			dx = e.movementX,
 			dy = e.movementY;
 
+		if(this._prevX < 0)
+		{
+			this._startPlaying(false);
+			this._prevX = e.clientX;
+		}
+
 		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
 			msDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._speed;
 
@@ -136,11 +116,11 @@ export class Conductor
 	// When the cursor is in the centreX of the screen, conductor.now() speed is speedControlValue times performance.now() speed.
 	// When the cursor is on the left of the screen, conductor.now() speed (= TimeMarker speed) is slower.
 	// When the cursor is on the left of the screen, conductor.now() speed (= TimeMarker speed) is faster.
-	conductTimer(e, restartTimer)
+	conductTimer(e)
 	{
 		function doConducting(that, e)
 		{
-			if(that._mode.localeCompare(_conductingModes.timer) !== 0)
+			if(that._mode !== _conductingMode.timer)
 			{
 				that.stop();
 			}
@@ -158,13 +138,9 @@ export class Conductor
 			}
 		}
 
-		if(this._prevX < 0 && restartTimer === undefined)
-		{
-			this._startPlaying(false);
-		}
-
 		if(this._prevX < 0)
 		{
+			this._startPlaying(false);
 			this._prevX = e.clientX;
 			this._prevPerfNow = performance.now();
 

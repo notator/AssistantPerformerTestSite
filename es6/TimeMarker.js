@@ -2,12 +2,11 @@ import { CursorBase } from "./Cursor.js";
 
 let
 	_viewBoxScale,
-	_conductingModes,
+	_conductingMode,
 	_iMarker,
 	_iVertical,
 	_iBottomHoriz,
 	_creepArrow,
-	_accArrow,
 	_element,
 	_topAsString,
 
@@ -28,41 +27,6 @@ let
 		_iBottomHoriz.setAttribute("y2", bottomReTop);
 
 		_setAlignment(alignment);
-	},
-
-	_setMarkerStyle = function(conductingMode)
-	{
-		switch(conductingMode)
-		{
-			case _conductingModes.timer:
-				_creepArrow.style.visibility = "hidden";
-				_accArrow.style.visibility = "hidden";
-				break;
-			case _conductingModes.creep:
-				_creepArrow.style.visibility = "visible";
-				_accArrow.style.visibility = "hidden";
-				break;
-			case _conductingModes.acceleration:
-				_creepArrow.style.visibility = "hidden";
-				_accArrow.style.visibility = "visible";
-				break;
-		}
-	},
-
-	_getMode = function()
-	{
-		let mode = _conductingModes.timer;
-
-		if(_creepArrow.style.visibility.localeCompare("visible"))
-		{
-			mode = _conductingModes.creep;
-		}
-		else if(_accArrow.style.visibility.localeCompare("visible"))
-		{
-			mode = _conductingModes.acceleration;
-		}
-
-		return mode;
 	},
 
 	_get_Element = function()
@@ -152,23 +116,6 @@ let
 
 			_creepArrow = creepArrow;
 		}
-		function get_AccArrow(x, y, styles)
-		{
-			let accArrow = document.createElementNS("http://www.w3.org/2000/svg", "g"),
-				accVert = document.createElementNS("http://www.w3.org/2000/svg", "path"),
-				accTip = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
-			accVert.setAttribute("d", "M" + x[1] + " " + y[2] + " " + x[1] + " " + y[4]);
-			accVert.setAttribute("style", styles.thick);
-
-			accTip.setAttribute("d", "M" + x[0] + " " + y[1] + " " + x[4] + " " + y[3] + " " + x[0] + " " + y[5]);
-			accTip.setAttribute("style", styles.thin);
-
-			accArrow.appendChild(accVert);
-			accArrow.appendChild(accTip);
-
-			_accArrow = accArrow;
-		}
 
 		let cv = getCoordinateVectors(_viewBoxScale),
 			styles = getStyles(_viewBoxScale),
@@ -178,10 +125,8 @@ let
 
 		get_IMarker(x, y, styles);
 		get_CreepArrow(x, y, styles);
-		get_AccArrow(x, y, styles);
 
 		element.appendChild(_creepArrow);
-		element.appendChild(_accArrow);
 		element.appendChild(_iMarker);
 
 		_element = element;
@@ -189,7 +134,7 @@ let
 
 export class TimeMarker extends CursorBase
 {
-	constructor(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingModes, initialConductingMode)
+	constructor(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingMode, initialConductingMode)
 	{
 		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
 
@@ -200,7 +145,7 @@ export class TimeMarker extends CursorBase
 			yCoordinates = msPosData.yCoordinates;
 
 		_viewBoxScale = cursor.viewBoxScale;
-		_conductingModes = conductingModes;
+		_conductingMode = conductingMode;
 		_get_Element();
 
 		// constants
@@ -218,27 +163,40 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true });
 
 		_setCoordinates(msPosData.alignment, msPosData.yCoordinates.top, msPosData.yCoordinates.bottom);
-		_setMarkerStyle(initialConductingMode);
+		this.setStyle(initialConductingMode);
 	}
 
 	mode()
 	{
-		return _mode;
+		let mode = _conductingMode.timer;
+
+		if(_creepArrow.style.visibility.localeCompare("visible"))
+		{
+			mode = _conductingMode.creep;
+		}
+
+		return mode;
 	}
 
-	switchToConductTimer()
+	setStyle(conductingMode)
 	{
-		_setMarkerStyle(_conductingModes.timer);
-	}
-
-	switchToConductCreep()
-	{
-		_setMarkerStyle(_conductingModes.creep);
-	}
-
-	switchToConductAcceleration()
-	{
-		_setMarkerStyle(_conductingModes.acceleration);
+		switch(conductingMode)
+		{
+			case _conductingMode.timer:
+				_iMarker.style.visibility = "visible";
+				_creepArrow.style.visibility = "hidden";
+				break;
+			case _conductingMode.creep:
+				_iMarker.style.visibility = "visible";
+				_creepArrow.style.visibility = "visible";
+				break;
+			case _conductingMode.off:
+				_iMarker.style.visibility = "hidden";
+				_creepArrow.style.visibility = "hidden";
+				break;
+			default:
+				throw "unknown or illegal conductingMode";
+		}
 	}
 
 	getElement()
