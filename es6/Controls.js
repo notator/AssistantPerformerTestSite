@@ -474,12 +474,17 @@ var
 			if(options.performanceMode === performanceMode.conductingTimer || options.performanceMode === performanceMode.conductingCreep )
 			{
 				baseSpeed = 1;
+				player.setTimer(conductor);  // Sequence can use conductor or performance timer
 			}
-			else // options.performanceMode === keyboard1 or machine)
+			else // options.performanceMode === score or keyboard1)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+				if(options.performanceMode === performanceMode.score)
+				{
+					player.setTimer(performance); // Sequence can use conductor or performance timer
+				}
+				// Keyboard1 *always* uses performance timer
 			}
-
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
 	},
