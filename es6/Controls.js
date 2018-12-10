@@ -3,7 +3,7 @@ import { constants } from "./Constants.js";
 import { readSoundFontFileAsArrayBuffer, SoundFont } from "./SoundFont.js";
 import { TracksControl } from "./TracksControl.js";
 import { Score } from "./Score.js";
-import { Conductor } from "./Conductor.js";
+import { TimerConductor, CreepConductor } from "./Conductor.js";
 import { Sequence } from "./Sequence.js";
 import { SequenceRecording } from "./SequenceRecording.js";
 import { sequenceToSMF } from "./StandardMidiFile.js";
@@ -29,8 +29,7 @@ const
 
 	SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
-	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conducted: 2 }),
-	conductingMode = Object.freeze({ off: 0, timer: 1, creep: 2 }); 
+	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conductingTimer: 2, conductingCreep: 4 });
 
 var
 	residentSf2Synth,
@@ -241,15 +240,54 @@ var
 		}
 	},
 
-	setConductorControlClicked = function()
+	setPage2ControlsDisabled = function()
+	{
+		tracksControl.setDisabled(true);
+
+		globalElements.speedControlInput.disabled = true;
+		globalElements.speedControlCheckbox.disabled = true;
+		globalElements.speedControlSmokeDiv.style.display = "block";
+
+		// begin performance buttons
+		cl.goDisabled.setAttribute("opacity", SMOKE);
+		cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+		cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+		cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+		cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+		cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+		cl.setConductTimerControlDisabled.setAttribute("opacity", SMOKE);
+		cl.setConductCreepControlDisabled.setAttribute("opacity", SMOKE);
+		// end performance buttons
+
+		cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+	},
+
+	setConductTimerControlClicked = function()
 	{
 		// The conductor control is disabled if this is a keyboard1 performance.
-		if(cl.setConductorControlDisabled.getAttribute("opacity") === GLASS)
+		if(cl.setConductTimerControlDisabled.getAttribute("opacity") === GLASS)
 		{
 			// the button is enabled 
 			if(svgControlsState === 'stopped')
 			{
-				setSvgControlsState('conductingCreep'); // setSvgControlsState('conductingTimer');
+				setSvgControlsState('conductingTimer');
+			}
+			else
+			{
+				setSvgControlsState('stopped');
+			}
+		}
+	},
+
+	setConductCreepControlClicked = function()
+	{
+		// The conductor control is disabled if this is a keyboard1 performance.
+		if(cl.setConductCreepControlDisabled.getAttribute("opacity") === GLASS)
+		{
+			// the button is enabled 
+			if(svgControlsState === 'stopped')
+			{
+				setSvgControlsState('conductingCreep');
 			}
 			else
 			{
@@ -274,7 +312,7 @@ var
 		{
 			globalElements.conductingLayer.removeEventListener('mousemove', conductTimer, { passive: true });
 			globalElements.conductingLayer.addEventListener('mousemove', conductTimer, { passive: true });
-			conductor.switchToConductTimer();
+			conductor.initConducting();
 
 			if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
 			{
@@ -308,7 +346,7 @@ var
 		{
 			globalElements.conductingLayer.removeEventListener('mousemove', conductCreep, { passive: true });
 			globalElements.conductingLayer.addEventListener('mousemove', conductCreep, { passive: true });
-			conductor.switchToConductCreep();
+			conductor.initConducting();
 		}
 	},
 
@@ -380,14 +418,39 @@ var
 
 	startPlaying = function(isKeyboard1Performance)
 	{
-		var startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
+		let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
 			sequenceRecording, trackIsOnArray = [];
 
 		deleteSaveLink();
 
 		score.deleteTickOverloadMarkers();
 
-		if(isKeyboard1Performance === false && player.isPaused())
+		setPage2ControlsDisabled();
+
+		switch(options.performanceMode)
+		{
+			case performanceMode.score:
+				cl.goDisabled.setAttribute("opacity", GLASS);
+				cl.pauseUnselected.setAttribute("opacity", METAL);
+				cl.pauseSelected.setAttribute("opacity", GLASS);
+				cl.stopControlSelected.setAttribute("opacity", GLASS);
+				cl.stopControlDisabled.setAttribute("opacity", GLASS);
+				break;
+			case performanceMode.keyboard1:
+				cl.stopControlSelected.setAttribute("opacity", GLASS);
+				cl.stopControlDisabled.setAttribute("opacity", GLASS);
+				break;
+			case performanceMode.conductingTimer:
+				cl.conductTimerSelected.setAttribute("opacity", METAL);
+				cl.setConductTimerControlDisabled.setAttribute("opacity", GLASS);
+				break;
+			case performanceMode.conductingCreep:
+				cl.conductCreepSelected.setAttribute("opacity", METAL);
+				cl.setConductCreepControlDisabled.setAttribute("opacity", GLASS);
+				break;
+		}
+
+		if(options.performanceMode === performanceMode.score && player.isPaused())
 		{
 			player.resume();
 		}
@@ -408,7 +471,7 @@ var
 			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
 
-			if(options.performanceMode === performanceMode.conducted)
+			if(options.performanceMode === performanceMode.conductingTimer || options.performanceMode === performanceMode.conductingCreep )
 			{
 				baseSpeed = 1;
 			}
@@ -419,38 +482,10 @@ var
 
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
-
-		if(options.performanceMode !== performanceMode.conducted)
-		{
-			if(isKeyboard1Performance === true)
-			{
-				cl.goDisabled.setAttribute("opacity", SMOKE);
-			}
-			else
-			{
-				cl.goDisabled.setAttribute("opacity", GLASS);
-			}
-			cl.pauseUnselected.setAttribute("opacity", METAL);
-			cl.pauseSelected.setAttribute("opacity", GLASS);
-
-			tracksControl.setDisabled(true);
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			cl.stopControlSelected.setAttribute("opacity", GLASS);
-			cl.stopControlDisabled.setAttribute("opacity", GLASS);
-
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-		}
 	},
 
-	// Called when the start conducting button is clicked.
-	// When the button is clicked off, the speed argument will be -1. 
-	setConducting = function(startPlayingCallback, speed)
+	// Called when a start conducting button is clicked on.
+	setConducting = function(speed)
 	{
 		score.setCursor();
 
@@ -459,18 +494,10 @@ var
 			score.deleteTickOverloadMarkers();
 			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
 			player.setTimer(conductor);
-			options.performanceMode = performanceMode.conducted;
 		}
 		else
 		{
-			if(conductor !== undefined)
-			{
-				conductor.stop();
-				conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());// does nothing if the TimeMarker does not exist.
-			}
-			player.setTimer(performance);
-			conductor = undefined;
-			options.performanceMode = performanceMode.score;
+			throw "illegal speed! (call setStopped() when a button is clicked off)";
 		}
 	},
 
@@ -478,9 +505,23 @@ var
 	{
 		player.stop();
 
-		if(options.performanceMode === performanceMode.conducted)
+		if(conductor !== undefined)
 		{
-			setConducting(startPlaying, -1);
+			if(conductor instanceof TimerConductor)
+			{
+				conductor.stopTimer();
+			}
+			conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());
+			conductor = undefined;
+		}
+		
+		if(globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0)
+		{
+			options.performanceMode = performanceMode.keyboard1;
+		}
+		else
+		{
+			options.performanceMode = performanceMode.score;
 		}
 
 		score.hideCursor();
@@ -522,10 +563,12 @@ var
 		cl.sendStopToEndControlSelected.setAttribute("opacity", GLASS);
 		cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
 
-		cl.setConductGo.setAttribute("opacity", METAL);
-		cl.setConductTimer.setAttribute("opacity", GLASS);
-		cl.setConductCreep.setAttribute("opacity", GLASS);
-		cl.setConductorControlDisabled.setAttribute("opacity", GLASS);
+		cl.conductTimerSelected.setAttribute("opacity", GLASS);
+		cl.setConductTimerControlDisabled.setAttribute("opacity", GLASS);
+
+		cl.conductCreepSelected.setAttribute("opacity", GLASS);
+		cl.setConductCreepControlDisabled.setAttribute("opacity", GLASS);
+
 		/********* end performance buttons *******************/
 
 		tracksControl.setDisabled(false);
@@ -649,29 +692,15 @@ var
 	//svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
 	setSvgControlsState = function(svgCtlsState)
 	{
-		function setDisabled()
+
+		function setPage1Controls()
 		{
 			setMainOptionsState("toFront");
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			/********* begin performance buttons *******************/
-			cl.performanceButtonsDisabled.setAttribute("opacity", SMOKE);
-			cl.goDisabled.setAttribute("opacity", SMOKE);
-			cl.stopControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-			/********* end performance buttons *******************/
-
-			// The tracksControl is only initialised after a specific score is loaded.
 
 			setEventListenersAndMouseCursors('stopped');
 		}
 
-		// setStopped is outer function
+		// setStopped and setPage2ControlsDisabled are outer functions
 
 		function setPaused()
 		{
@@ -687,100 +716,43 @@ var
 
 			options.outputDevice.reset();
 
-			tracksControl.setDisabled(true);
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+			setPage2ControlsDisabled();
 
 			cl.pauseSelected.setAttribute("opacity", METAL);
 			cl.goDisabled.setAttribute("opacity", GLASS);
 
 			cl.stopControlSelected.setAttribute("opacity", GLASS);
 			cl.stopControlDisabled.setAttribute("opacity", GLASS);
-
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 		}
 
 		function setSettingStart()
 		{
-			tracksControl.setDisabled(true);
-
-			globalElements.speedControlInput.disabled = true;
-			globalElements.speedControlCheckbox.disabled = true;
-			globalElements.speedControlSmokeDiv.style.display = "block";
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			cl.goDisabled.setAttribute("opacity", SMOKE);
-			cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+			setPage2ControlsDisabled();
 
 			cl.setStartControlSelected.setAttribute("opacity", METAL);
 			cl.setStartControlDisabled.setAttribute("opacity", GLASS);
-
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
 
 			setEventListenersAndMouseCursors('settingStart');
 		}
 
 		function setSettingEnd()
 		{
-			tracksControl.setDisabled(true);
-
-			globalElements.speedControlInput.disabled = true;
-			globalElements.speedControlCheckbox.disabled = true;
-			globalElements.speedControlSmokeDiv.style.display = "block";
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			cl.goDisabled.setAttribute("opacity", SMOKE);
-			cl.stopControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+			setPage2ControlsDisabled();
 
 			cl.setEndControlSelected.setAttribute("opacity", METAL);
 			cl.setEndControlDisabled.setAttribute("opacity", GLASS);
 
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-
 			setEventListenersAndMouseCursors('settingEnd');
-		}
-
-		function setOtherControlsToConductingState()
-		{
-			tracksControl.setDisabled(true);
-
-			globalElements.speedControlInput.disabled = true;
-			globalElements.speedControlCheckbox.disabled = true;
-			globalElements.speedControlSmokeDiv.style.display = "block";
-
-			// begin performance buttons
-			cl.goDisabled.setAttribute("opacity", SMOKE);
-			cl.stopControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-			cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-			cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-			// end performance buttons
-
-			cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-
-			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 		}
 
 		function setConductingTimer()
 		{
-			setOtherControlsToConductingState();
+			options.performanceMode = performanceMode.conductingTimer;
 
-			cl.setConductGo.setAttribute("opacity", GLASS);
-			cl.setConductTimer.setAttribute("opacity", METAL);
-			cl.setConductCreep.setAttribute("opacity", GLASS);
+			setPage2ControlsDisabled();
+
+			cl.conductTimerSelected.setAttribute("opacity", METAL);
+			cl.setConductTimerControlDisabled.setAttribute("opacity", GLASS);
 
 			setEventListenersAndMouseCursors('conductingTimer');
 
@@ -788,21 +760,24 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new Conductor(score, startPlaying, speed, conductingMode);
+				conductor = new TimerConductor(score, startPlaying, speed);
 			}
 
-			conductor.switchToConductTimer();
+			conductor.initConducting();
 
-			setConducting(startPlaying, speed);
+			setConducting(speed);
+
+			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 		}
 
 		function setConductingCreep()
 		{
-			setOtherControlsToConductingState();
+			options.performanceMode = performanceMode.conductingCreep;
 
-			cl.setConductGo.setAttribute("opacity", GLASS);
-			cl.setConductTimer.setAttribute("opacity", GLASS);
-			cl.setConductCreep.setAttribute("opacity", METAL);
+			setPage2ControlsDisabled();
+
+			cl.conductCreepSelected.setAttribute("opacity", METAL);
+			cl.setConductCreepControlDisabled.setAttribute("opacity", GLASS);
 
 			setEventListenersAndMouseCursors('conductingCreep');
 
@@ -810,12 +785,14 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new Conductor(score, startPlaying, speed, conductingMode);
+				conductor = new CreepConductor(score, startPlaying, speed);
 			}
 
-			conductor.switchToConductCreep();
+			conductor.initConducting();
 			
-			setConducting(startPlaying, speed);
+			setConducting(speed);
+
+			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 		}
 
 		svgControlsState = svgCtlsState;
@@ -823,7 +800,7 @@ var
 		switch(svgControlsState)
 		{
 			case 'disabled':
-				setDisabled(); // enables the main options panel
+				setPage1Controls(); // enables the main options panel
 				break;
 			case 'stopped':
 				setStopped();
@@ -835,7 +812,7 @@ var
 				}
 				break;
 			case 'playing':
-				startPlaying(options.performanceMode !== performanceMode.score);
+				startPlaying(options.performanceMode === performanceMode.keyboard1);
 				break;
 			case 'settingStart':
 				setSettingStart();
@@ -1156,10 +1133,12 @@ export class Controls
 			cl.sendStopToEndControlSelected = document.getElementById("sendStopToEndControlSelected");
 			cl.sendStopToEndControlDisabled = document.getElementById("sendStopToEndControlDisabled");
 
-			cl.setConductGo = document.getElementById("setConductGo");
-			cl.setConductTimer = document.getElementById("setConductTimer");
-			cl.setConductCreep = document.getElementById("setConductCreep");
-			cl.setConductorControlDisabled = document.getElementById("setConductorControlDisabled");
+			cl.conductTimerSelected = document.getElementById("conductTimerSelected");
+			cl.setConductTimerControlDisabled = document.getElementById("setConductTimerControlDisabled");
+
+			cl.conductCreepSelected = document.getElementById("conductCreepSelected");
+			cl.setConductCreepControlDisabled = document.getElementById("setConductCreepControlDisabled");
+
 		}
 
 		// callback passed to score, which passes it to cursor. Called when the running cursor moves to a new system.
@@ -1602,8 +1581,11 @@ export class Controls
 				case "sendStopToEndControl":
 					sendStopToEndControlClicked();
 					break;
-				case "setConductorControl":
-					setConductorControlClicked();
+				case "setConductTimerControl":
+					setConductTimerControlClicked();
+					break;
+				case "setConductCreepControl":
+					setConductCreepControlClicked();
 					break;
 				default:
 					break;
@@ -1846,29 +1828,11 @@ export class Controls
 			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
 		}
 
-		// The following lines replaced by the following if..else.
-		//options.keyboard1Performance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0);
-		//options.isConducting = false;
 		let isKeyboard1Performance = false;
 		if(globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0)
 		{
-			options.performanceMode = performanceMode.keyboard1;
 			isKeyboard1Performance = true;
-		}
-		else
-		{
-			options.performanceMode = performanceMode.score; // default
 		}		 
-
-		if(isKeyboard1Performance)
-		{
-			//disable conductor button
-			cl.setConductorControlDisabled.setAttribute("opacity", SMOKE);
-		}
-		else
-		{
-			cl.setConductorControlDisabled.setAttribute("opacity", GLASS);
-		}
 
 		setMIDIDevices(options);
 

@@ -2,11 +2,8 @@ import { CursorBase } from "./Cursor.js";
 
 let
 	_viewBoxScale,
-	_conductingMode,
-	_iMarker,
 	_iVertical,
 	_iBottomHoriz,
-	_creepArrow,
 	_element,
 	_topAsString,
 
@@ -29,7 +26,7 @@ let
 		_setAlignment(alignment);
 	},
 
-	_get_Element = function()
+	_get_Element = function(isConductingTimer)
 	{
 		function getCoordinateVectors(viewBoxScale)
 		{
@@ -66,7 +63,7 @@ let
 			return ({ thin: thinStyle, thick: thickStyle });
 		}
 
-		function get_IMarker(x, y, styles)
+		function newIMarker(x, y, styles)
 		{
 			let iMarker = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 				iVertical = document.createElementNS("http://www.w3.org/2000/svg", "line"),
@@ -95,11 +92,12 @@ let
 			iMarker.appendChild(iTopHoriz);
 			iMarker.appendChild(iBottomHoriz);
 
-			_iMarker = iMarker;
 			_iVertical = iVertical;
 			_iBottomHoriz = iBottomHoriz;
+
+			return iMarker;
 		}
-		function get_CreepArrow(x, y, styles)
+		function newCreepArrow(x, y, styles)
 		{
 			let creepArrow = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 				creepHoriz = document.createElementNS("http://www.w3.org/2000/svg", "path"),
@@ -114,7 +112,7 @@ let
 			creepArrow.appendChild(creepHoriz);
 			creepArrow.appendChild(creepTip);
 
-			_creepArrow = creepArrow;
+			return creepArrow;
 		}
 
 		let cv = getCoordinateVectors(_viewBoxScale),
@@ -123,30 +121,35 @@ let
 			x = cv.x,
 			y = cv.y;
 
-		get_IMarker(x, y, styles);
-		get_CreepArrow(x, y, styles);
+		element.appendChild(newIMarker(x, y, styles)); // sets _iVertical and _iBottomHoriz
 
-		element.appendChild(_creepArrow);
-		element.appendChild(_iMarker);
+		if(isConductingTimer === false)
+		{
+			element.appendChild(newCreepArrow(x, y, styles));
+		}
 
 		_element = element;
 	};
 
 export class TimeMarker extends CursorBase
 {
-	constructor(cursor, startMarker, regionSequence, startRegionIndex, endRegionIndex, conductingMode, initialConductingMode)
+	constructor(score, isConductingTimer)
 	{
-		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
-
-		let msPosDataArray = cursor.msPosDataArray,
+		let startMarker = score.getStartMarker(),
+			cursor = score.getCursor(),
+			regionSequence = score.getRegionSequence(),
+			startRegionIndex = score.getStartRegionIndex(),
+			endRegionIndex = score.getEndRegionIndex(),
+			msPosDataArray = cursor.msPosDataArray,
 			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPositionInScore === startMarker.msPositionInScore),
 			msPosData = msPosDataArray[currentMsPosDataIndex],
 			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // index + 1 should always work, because final barline is in this.msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
 
+		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
+
 		_viewBoxScale = cursor.viewBoxScale;
-		_conductingMode = conductingMode;
-		_get_Element();
+		_get_Element(isConductingTimer);
 
 		// constants
 		Object.defineProperty(this, "_regionSequence", { value: regionSequence, writable: false });
@@ -163,40 +166,6 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_totalPxIncrement", { value: 0, writable: true });
 
 		_setCoordinates(msPosData.alignment, msPosData.yCoordinates.top, msPosData.yCoordinates.bottom);
-		this.setStyle(initialConductingMode);
-	}
-
-	mode()
-	{
-		let mode = _conductingMode.timer;
-
-		if(_creepArrow.style.visibility.localeCompare("visible"))
-		{
-			mode = _conductingMode.creep;
-		}
-
-		return mode;
-	}
-
-	setStyle(conductingMode)
-	{
-		switch(conductingMode)
-		{
-			case _conductingMode.timer:
-				_iMarker.style.visibility = "visible";
-				_creepArrow.style.visibility = "hidden";
-				break;
-			case _conductingMode.creep:
-				_iMarker.style.visibility = "visible";
-				_creepArrow.style.visibility = "visible";
-				break;
-			case _conductingMode.off:
-				_iMarker.style.visibility = "hidden";
-				_creepArrow.style.visibility = "hidden";
-				break;
-			default:
-				throw "unknown or illegal conductingMode";
-		}
 	}
 
 	getElement()
