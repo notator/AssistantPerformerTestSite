@@ -497,7 +497,7 @@ var
 		if(speed > 0)
 		{
 			score.deleteTickOverloadMarkers();
-			conductor.addTimeMarkerToMarkersLayer(score.getMarkersLayer());
+			score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
 			player.setTimer(conductor);
 		}
 		else
@@ -512,15 +512,12 @@ var
 
 		if(conductor !== undefined)
 		{
-			if(conductor instanceof TimerConductor)
-			{
-				conductor.stopTimer();
-			}
-			conductor.removeTimeMarkerFromMarkersLayer(score.getMarkersLayer());
+			score.getMarkersLayer().removeChild(conductor.timeMarkerElement());
+			conductor.stopConducting();
 			conductor = undefined;
 		}
-		
-		if(globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0)
+
+		if(options.inputHandler instanceof Keyboard1)
 		{
 			options.performanceMode = performanceMode.keyboard1;
 		}
@@ -765,7 +762,7 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new TimerConductor(score, startPlaying, speed);
+				conductor = new TimerConductor(score, startPlaying, options.inputDevice, speed);
 			}
 
 			conductor.initConducting();
@@ -790,7 +787,7 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new CreepConductor(score, startPlaying, speed);
+				conductor = new CreepConductor(score, startPlaying, options.inputDevice, speed);
 			}
 
 			conductor.initConducting();
@@ -857,6 +854,7 @@ var
 				option.text = port.name;
 				is.add(option, null);
 			});
+			globalElements.inputDeviceSelect.disabled = false;
 		}
 		else
 		{
@@ -1395,30 +1393,14 @@ export class Controls
 
 			function setOptionsInputHandler(scoreInfoInputHandler)
 			{
-				if(scoreInfoInputHandler === "none")
+				if(scoreInfoInputHandler === "keyboard1")
 				{
-					if(globalElements.inputDeviceSelect.disabled === false)
-					{
-						globalElements.inputDeviceSelect.selectedIndex = 0;
-						globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
-						globalElements.inputDeviceSelect.disabled = true;
-						options.inputHandler = undefined;
-					}
+					options.inputHandler = new Keyboard1();
 				}
 				else
 				{
-					// globalElements.inputDeviceSelect.selectedIndex is not changed here
-					globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
-					globalElements.inputDeviceSelect.disabled = false;
-
-					if(scoreInfoInputHandler === "keyboard1")
-					{
-						options.inputHandler = new Keyboard1();
-					}
-					else
-					{
-						console.assert(false, "Error: unknown scoreInfo.inputType");
-					}
+					options.inputHandler = undefined;
+					console.warn("Using inputHandler defined in Conductor.");
 				}
 			}
 
@@ -1833,11 +1815,7 @@ export class Controls
 			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
 		}
 
-		let isKeyboard1Performance = false;
-		if(globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0)
-		{
-			isKeyboard1Performance = true;
-		}		 
+		let isKeyboard1Performance = options.inputHandler instanceof Keyboard1;		 
 
 		setMIDIDevices(options);
 
