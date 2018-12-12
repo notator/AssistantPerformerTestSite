@@ -510,7 +510,7 @@ export class TimerConductor extends Conductor
 
 		if(this._prevX < 0)
 		{
-			this._startPlaying(false);
+			this._startPlaying();
 			this._prevX = e.clientX;
 			this._prevPerfNow = performance.now();
 
@@ -555,7 +555,7 @@ export class CreepConductor extends Conductor
 
 		if(this._prevX < 0)
 		{
-			this._startPlaying(false);
+			this._startPlaying();
 			this._prevX = e.clientX;
 		}
 

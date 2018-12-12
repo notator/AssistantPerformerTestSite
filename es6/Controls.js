@@ -416,7 +416,7 @@ var
 		}
 	},
 
-	startPlaying = function(isKeyboard1Performance)
+	startPlaying = function()
 	{
 		let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
 			sequenceRecording, trackIsOnArray = [];
@@ -814,7 +814,7 @@ var
 				}
 				break;
 			case 'playing':
-				startPlaying(options.performanceMode === performanceMode.keyboard1);
+				startPlaying();
 				break;
 			case 'settingStart':
 				setSettingStart();
