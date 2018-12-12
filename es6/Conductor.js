@@ -3,6 +3,8 @@ import { TimeMarker } from "./TimeMarker.js";
 import { Message } from "./Message.js";
 
 let
+	_outputDevice,
+
 	// See: http://stackoverflow.com/questions/846221/logarithmic-slider and Controls.js speedSliderValue().
 	// the returned factor is the value returned by a logarithmic slider having the width of the screen (e.target.clientWidth)
 	// maxVal = 10 when e.clientX = e.target.clientWidth
@@ -20,232 +22,98 @@ let
 		return Math.exp(minv + scale * (e.clientX - minp));
 	},
 
-	// This handler
-	// a) ignores both RealTime and SysEx messages in its input, and
-	// b) assumes that RealTime messages will not interrupt the messages being received.    
-	_handleMIDIInputEvent = function(msg)
+	// The returned object is either an empty object or a Message (having a .data attribute but no timestamp).
+	// This handler only returns message types having 2 or 3 data bytes. It throws an exception if the argument
+	// is illegal for some reason, but simply ignores both realTime and SysEx messages.
+	_getInputMessage = function(uint8Array)
 	{
-		var inputEvent, command,
-			CMD = constants.COMMAND;
+		var	inputMessage = {};
 
-		// The returned object is either empty, or has .data and .receivedTime attributes,
-		// and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
-		// This handler only returns message types having 2 or 3 data bytes. It ignores both
-		// realTime and SysEx messages since these are not used by the AssistantPerformer.
-		// If the input data is undefined, an empty object is returned, otherwise data must
-		// be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
-		function getInputEvent(data, now)
+		if(uint8Array instanceof Uint8Array && uint8Array.length <= 3)
 		{
-			var
-				SYSTEM_EXCLUSIVE = constants.SYSTEM_EXCLUSIVE,
-				isRealTimeStatus = constants.isRealTimeStatus,
-				inputEvent = {};
-
-			if(data !== undefined)
+			// If uint8Array.length === 0, an exception is thrown on the next line. This should never happen.
+			if(uint8Array[0] === constants.SYSTEM_EXCLUSIVE.START)
 			{
-				if(data[0] === SYSTEM_EXCLUSIVE.START)
+				if(!(uint8Array.length > 2 && uint8Array[uint8Array.length - 1] === SYSTEM_EXCLUSIVE.END))
 				{
-					if(!(data.length > 2 && data[data.length - 1] === SYSTEM_EXCLUSIVE.END))
-					{
-						throw "Error in System Exclusive inputEvent.";
-					}
-					// SysExMessages are ignored by the assistant, so do nothing here.
-					// Note that SysExMessages may contain realTime messages at this point (they
-					// would have to be removed somehow before creating a sysEx event), but since
-					// we are ignoring both realTime and sysEx, nothing needs doing here.
+					throw "Error in System Exclusive inputEvent.";
 				}
-				else if((data[0] & 0xF0) === 0xF0)
-				{
-					if(!(isRealTimeStatus(data[0])))
-					{
-						throw "Error: illegal data.";
-					}
-					// RealTime messages are ignored by the assistant, so do nothing here.
-				}
-				else if(data.length === 2)
-				{
-					inputEvent = new Message(data[0], data[1], 0);
-				}
-				else if(data.length === 3)
-				{
-					inputEvent = new Message(data[0], data[1], data[2]);
-				}
-
-				// other data is simply ignored
-
-				if(inputEvent.data !== undefined)
-				{
-					inputEvent.receivedTime = now;
-				}
+				// SysExMessages are ignored by the assistant, so do nothing here and return an empty object.
+				// Note that SysExMessages may contain realTime messages at this point (they
+				// would have to be removed somehow before creating a sysEx event), but since
+				// we are ignoring both realTime and sysEx, nothing needs doing here.
 			}
-
-			return inputEvent;
+			else if((uint8Array[0] & 0xF0) === 0xF0)
+			{
+				if(!(constants.isRealTimeStatus.isRealTimeStatus(uint8Array[0])))
+				{
+					throw "Error: illegal data.";
+				}
+				// RealTime messages are ignored by the assistant, so do nothing here and return an empty object.
+			}
+			else if(uint8Array.length === 2)
+			{
+				inputMessage = new Message(uint8Array[0], uint8Array[1], 0);
+			}
+			else if(uint8Array.length === 3)
+			{
+				inputMessage = new Message(uint8Array[0], uint8Array[1], uint8Array[2]);
+			}
+		}
+		else
+		{
+			throw "Error: illegal argument.";
 		}
 
+		return inputMessage;
+	},
+
+	// This handler changes the state of various performance filters...
+	_handleMIDIInputDeviceEvent = function(midiEvent)
+	{
 		// This function is called either by a real performed NoteOff or by a performed NoteOn having zero velocity.
 		function handleNoteOff(key)
 		{
-			//var keyIndex = key - keyRange.bottomKey, thisKeyInstantIndices, keyOffIndices,
-			//	instant, instantIndex, tempInstantIndex;
 
-			//if(key >= keyRange.bottomKey && key <= keyRange.topKey)
-			//{
-			//	thisKeyInstantIndices = keyInstantIndices[keyIndex];
-			//	if(thisKeyInstantIndices)
-			//	{
-			//		keyOffIndices = thisKeyInstantIndices.keyOffIndices;
-			//		if(keyOffIndices.length > thisKeyInstantIndices.index)
-			//		{
-			//			// thisKeyInstantIndices.index is incremented by advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
-			//			instantIndex = keyOffIndices[thisKeyInstantIndices.index];
-			//			if(instantIndex === currentInstantIndex || ((instantIndex === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))
-			//			{
-			//				// This is the usual case
-			//				instant = instants[instantIndex];
-			//				playKeyNoteOnOrOff(instant.noteOffs, key, 0); // the key's noteOff is removed after being played
-
-			//				currentInstantIndex = instantIndex;
-			//				indexPlayed = instantIndex;
-
-			//				if(instant.noteOns === undefined)
-			//				{
-			//					currentInstantIndex++;
-			//					if(currentInstantIndex < instants.length)
-			//					{
-			//						report(instants[currentInstantIndex].msPosition);
-			//					}
-			//				}
-			//				advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
-			//			}
-			//			else if(instantIndex > currentInstantIndex)
-			//			{
-			//				// The key has been released too early.
-			//				// Advance silently to instantIndex.
-			//				// Controller options are shunted. Seqs are stopped but not started. 
-			//				tempInstantIndex = currentInstantIndex;
-			//				while(tempInstantIndex < instantIndex)
-			//				{
-			//					instant = instants[tempInstantIndex];
-			//					report(instants[currentInstantIndex].msPosition);
-			//					sendAllTrkOffsAtInstant(instant);
-			//					currentInstantIndex = tempInstantIndex++;
-			//				}
-			//				indexPlayed = currentInstantIndex;
-			//				advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
-			//				handleNoteOff(key);
-			//			}
-			//		}
-			//	}
-			//}
 		}
 
 		// performedVelocity is always greater than 0 (otherwise handleNoteOff() is called)
 		function handleNoteOn(key, performedVelocity)
 		{
-			//var keyIndex = key - keyRange.bottomKey, thisKeyInstantIndices, keyOnIndices,
-			//	instant, instantIndex;
 
-			//if(key >= keyRange.bottomKey && key <= keyRange.topKey)
-			//{
-			//	thisKeyInstantIndices = keyInstantIndices[keyIndex];
-			//	if(thisKeyInstantIndices)
-			//	{
-			//		keyOnIndices = thisKeyInstantIndices.keyOnIndices;
-			//		if(keyOnIndices.length > thisKeyInstantIndices.index)
-			//		{
-			//			// thisKeyInstantIndices.index is incremented by advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
-			//			instantIndex = keyOnIndices[thisKeyInstantIndices.index];
-			//			if(instantIndex === currentInstantIndex || ((instantIndex === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))
-			//			{
-			//				instant = instants[instantIndex];
-
-			//				playKeyNoteOnOrOff(instant.noteOffs, key, 0); // the key's noteOff is removed after being played
-			//				if(instant.ccSettings)
-			//				{
-			//					setContinuousControllerOptions(instant.ccSettings);
-			//				}
-			//				playKeyNoteOnOrOff(instant.noteOns, key, performedVelocity);  // the key's noteOn is removed after being played
-
-			//				currentInstantIndex = instantIndex;
-			//				indexPlayed = instantIndex;
-
-			//				if(instant.noteOns.length === 0)
-			//				{
-			//					currentInstantIndex++;
-			//					report(instants[currentInstantIndex].msPosition);
-			//				}
-
-			//				console.log("performedVelocity=" + performedVelocity.toString(10));
-			//			}
-			//		}
-			//	}
-			//}
 		}
 
-		// Used by handleChannelPressure(...) and handleModWheel(...).
-		function doController(trackIndex, control, value)
+		// Currently used by handleChannelPressure(...) and handleModWheel(...).
+		// React to controller input here.
+		// Possibly simply replace this switch by separate functions.
+		function doController(control, value)
 		{
-			var volumeValue, options, message,
-				CMD = constants.COMMAND,
-				CTL = constants.CONTROL;
-
-			// argument is in range 0..127
-			// returned value is in range currentTrk.options.minVolume.currentTrk.options.maxVolume.
-			function getVolumeValue(value, minVolume, maxVolume)
+			switch(control)
 			{
-				var range = maxVolume - minVolume,
-					factor = range / 127,
-					volumeValue = minVolume + (value * factor);
-				return volumeValue;
-			}
-
-			//options = (control === "modWheel") ? trackModWheelOptions[trackIndex] : trackPressureOptions[trackIndex];
-			//console.assert(options.control !== 'disabled', "Error: option.control cannot be disabled here.");
-
-			switch(options.control)
-			{
-				case 'aftertouch':	// Note that this option results in channelPressure messages!
-					message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value);
+				case 'aftertouch':
 					break;
 				case 'channelPressure':
-					message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value);
 					break;
-				case 'modulation':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.MODWHEEL, value);
+				case 'modWheel':
 					break;
 				case 'volume':
-					volumeValue = getVolumeValue(value, options.minVolume, options.maxVolume);
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.VOLUME, volumeValue);
 					break;
 				case 'expression':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.EXPRESSION, value);
 					break;
 				case 'timbre':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.TIMBRE, value);
 					break;
 				case 'brightness':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.BRIGHTNESS, value);
 					break;
 				case 'effects':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.EFFECTS, value);
 					break;
 				case 'tremolo':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.TREMOLO, value);
 					break;
 				case 'chorus':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.CHORUS, value);
 					break;
 				case 'celeste':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.CELESTE, value);
 					break;
 				case 'phaser':
-					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.PHASER, value);
 					break;
-			}
-
-			if(message)
-			{
-				//sendMIDIMessage(message.data);
 			}
 		}
 
@@ -253,132 +121,60 @@ let
 		// Achtung: value is data[1]
 		function handleChannelPressure(data)
 		{
-			//var i, nTracks = trackWorkers.length;
-
-			//for(i = 0; i < nTracks; ++i)
-			//{
-			//	if(trackWorkers[i] !== null && trackPressureOptions[i].control !== 'disabled')
-			//	{
-			//		doController(i, "pressure", data[1]); // Achtung: value is data[1]
-			//	}
-			//}
+			doController("channelPressure", data[1]); // Achtung: value is data[1]
 		}
 
 		// called when modulation wheel changes
 		// Achtung: value is data[2]
 		function handleModWheel(data)
 		{
-			//var i, nTracks = trackWorkers.length;
-
-			//for(i = 0; i < nTracks; ++i)
-			//{
-			//	if(trackWorkers[i] !== null && trackModWheelOptions[i].control !== 'disabled')
-			//	{
-			//		doController(i, "modWheel", data[2]); // Achtung: value is data[2]
-			//	}
-			//}
+			doController("modWheel", data[2]); // Achtung: value is data[2]
 		}
 
 		// called when the pitchWheel changes
 		function handlePitchWheel(data)
 		{
-			//var i,
-			//	nTracks = trackWorkers.length;
-
-			function doPitchOption(trackIndex, data1, data2)
+			function doOption(option)
 			{
-				var msg = new Message(constants.COMMAND.PITCH_WHEEL + trackIndex, data1, data2);
-				//sendMIDIMessage(msg.data);
-			}
-
-			function doPanOption(trackIndex, value, panOrigin)  // value is in range 0..127
-			{
-				var factor, newValue,
-					CMD = constants.COMMAND,
-					CTL = constants.CONTROL;
-
-				if(value < 0x80)
-				{
-					factor = panOrigin / 0x80;
-					newValue = value * factor;
-				}
-				else
-				{
-					factor = (0xFF - panOrigin) / 0x7F;
-					newValue = panOrigin + ((value - 0x80) * factor);
-				}
-
-				msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.PAN, newValue);
-
-				//sendMIDIMessage(msg.data);
-			}
-
-			function doSpeedOption(trackIndex, value, speedDeviation) // value is in range 0..127
-			{
-				var speedFactor, factor = Math.pow(speedDeviation, 1 / 64);
-
-				// e.g. if speedDeviation is 2
-				// factor = 2^(1/64) = 1.01088...
-				// value is in range 0..127.
-				// if original value is 0, speedFactor = 1.01088^(-64) = 0.5
-				// if original value is 64, speedfactor = 1.01088^(0) = 1.0
-				// if original value is 127, speedFactor = 1.01088^(64) = 2.0 = maxSpeedFactor
-
-				value -= 64; // if value was 64, speedfactor is 1.
-				speedFactor = Math.pow(factor, value);
-				// nothing more to do! speedFactor is used in tick() to calculate delays.
-				//trackWorkers[trackIndex].postMessage({ "action": "setRelativeSpeed", "speedFactor": speedFactor });
-			}
-
-			function doOption(trackIndex, pitchWheelOption)
-			{
-				switch(pitchWheelOption.control)
+				switch(option)
 				{
 					case "pitch":
-						doPitchOption(trackIndex, data[1], data[2]);
 						break;
 					case "pan":
-						//doPanOption(trackIndex, data[1], trackPitchWheelOptions[trackIndex].panOrigin);  // data1, the hi byte, is in range 0..127
 						break;
 					case "speed":
-						//doSpeedOption(trackIndex, data[1], trackPitchWheelOptions[trackIndex].speedDeviation); // data1, the hi byte, is in range 0..127
 						break;
 				}
 			}
 
-			//for(i = 0; i < nTracks; ++i)
-			//{
-			//	if(trackWorkers[i] !== null && trackPitchWheelOptions[i].control !== 'disabled')
-			//	{
-			//		doOption(i, trackPitchWheelOptions[i]);
-			//	}
-			//}
+			doOption("pitch");
 		}
 
-		inputEvent = getInputEvent(msg.data, performance.now());
+		let inputMessage = _getInputMessage(midiEvent.data);
 
-		if(inputEvent.data !== undefined)
+		if(inputMessage.data != undefined)
 		{
-			command = inputEvent.command();
+			let command = inputMessage.command(),
+				CMD = constants.COMMAND;
 
 			switch(command)
 			{
 				case CMD.NOTE_ON:
-					if(inputEvent.data[2] !== 0)
+					if(inputMessage.data[2] !== 0)
 					{
-						handleNoteOn(inputEvent.data[1], inputEvent.data[2]);
+						handleNoteOn(inputMessage.data[1], inputMessage.data[2]);
 					}
 					else
 					{
-						handleNoteOff(inputEvent.data[1]);
+						handleNoteOff(inputMessage.data[1]);
 					}
 					break;
 				case CMD.NOTE_OFF:
-					handleNoteOff(inputEvent.data[1]);
+					handleNoteOff(inputMessage.data[1]);
 					break;
 				case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
 					// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-					handleChannelPressure(inputEvent.data);
+					handleChannelPressure(inputMessage.data);
 					break;
 				case CMD.AFTERTOUCH: // produced by the EWI breath controller
 					// AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch
@@ -386,10 +182,54 @@ let
 					// not supported
 					break;
 				case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-					handlePitchWheel(inputEvent.data);
+					handlePitchWheel(inputMessage.data);
+					break;
+				case CMD.CONTROL_CHANGE: // received when the EMU ModWheel changes.
+					handleModWheel(inputMessage.data);
+					break;
+				default:
+					break;
+			}
+		}
+	},
+
+	// This handler sends messages to the _outputDevice.
+	// The received messages may be
+	// a) simply sent on without change,
+	// b) changed before being sent on,
+	// c) suppressed completely (i.e. not sent on),
+	// d) sent on (modified or not) together with new midi messages.    
+	_handleMIDIScoreEvent = function(uint8Array, timestamp)
+	{
+		let inputMessage = _getInputMessage(uint8Array);
+
+		if(inputMessage.data !== undefined)
+		{
+			let command = inputMessage.command(),
+				CMD = constants.COMMAND;
+
+			switch(command)
+			{
+				case CMD.NOTE_ON:
+					_outputDevice.send(uint8Array, timestamp);
+					break;
+				case CMD.NOTE_OFF:
+					_outputDevice.send(uint8Array, timestamp);
+					break;
+				case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+					// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
+					_outputDevice.send(uint8Array, timestamp);
+					break;
+				case CMD.AFTERTOUCH: // produced by the EWI breath controller
+					_outputDevice.send(uint8Array, timestamp);
+					break;
+				case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+					_outputDevice.send(uint8Array, timestamp);
+					// handlePitchWheel(inputEvent.data, timestamp);
 					break;
 				case CMD.CONTROL_CHANGE: // sent when the EMU ModWheel changes.
-					handleModWheel(inputEvent.data);
+					_outputDevice.send(uint8Array, timestamp);
+					// handleModWheel(inputEvent.data, timestamp);
 					break;
 				default:
 					break;
@@ -399,7 +239,7 @@ let
 
 export class Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
 	{
 		if(midiInputDevice === null || midiInputDevice === undefined)
 		{
@@ -407,6 +247,8 @@ export class Conductor
 `No input device has been selected in the Input Device Selector.
 (The conductor can be used anyway.)`);
 		}
+
+		_outputDevice = midiOutputDevice;
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
@@ -429,7 +271,7 @@ export class Conductor
 		this._prevX = -1;
 		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
 		{
-			this._midiInputDevice.addEventListener("midimessage", _handleMIDIInputEvent, false);
+			this._midiInputDevice.addEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
 		}
 	}
 
@@ -453,6 +295,12 @@ export class Conductor
 		return this._msPositionInPerformance;
 	}
 
+	// called by Sequence. Is MIDI Thru...
+	send(msg, timestamp)
+	{
+		_handleMIDIScoreEvent(msg, timestamp);
+	}
+
 	stopConducting()
 	{
 		for(let handle of this._setIntervalHandles)
@@ -463,16 +311,16 @@ export class Conductor
 
 		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
 		{
-			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputEvent, false);
+			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
 		}
 	}
 }
 
 export class TimerConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, speed);
+		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed);
 
 		let timeMarker = new TimeMarker(score, true);
 
@@ -531,9 +379,9 @@ export class TimerConductor extends Conductor
 
 export class CreepConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, speed);
+		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed);
 
 		let timeMarker = new TimeMarker(score, false);
 

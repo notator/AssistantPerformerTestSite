@@ -2,8 +2,8 @@ import { Moment } from "./Moment.js";
 import { Conductor } from "./Conductor.js";
 
 let
-	outputDevice,
 	timer, // performance or conductor (use performance.now() or conductor.now())
+	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 	tracks,
 
 	previousTimestamp = null, // nextMoment()
@@ -238,8 +238,8 @@ let
 
 	// tick() function -- which ows a lot to Chris Wilson of the Web Audio Group
 	// Recursive function. Also used by resume(), play()
-	// This function has been tested as far as possible without having "a conformant outputDevice.send() with timestamps".
-	// It needs testing again with the conformant outputDevice.send() and a higher value for PREQUEUE. What would the
+	// This function has been tested as far as possible without having "a conformant send() with timestamps".
+	// It needs testing again with the conformant send() and a higher value for PREQUEUE. What would the
 	// ideal value for PREQUEUE be? 
 	// Email correspondence with Chris Wilson (End of Oct. 2012):
 	//      James: "...how do I decide how big PREQUEUE should be?"
@@ -477,8 +477,8 @@ export class Sequence
 		}
 
 		timer = performance; // performance.now() is the default timer
+		outputDevice = outputDeviceArg; // default output device is the one selected in the outputDevice selector 
 		tracks = outputTracks;
-		outputDevice = outputDeviceArg;
 		regionSequence = regionSequenceArg.slice(); // clone the array
 		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionSequence);
 
@@ -490,9 +490,10 @@ export class Sequence
 		setState("stopped");
 	}
 
-	setTimer(objectWithNowFunction)
+	setTimerAndOutputDevice(objectWithNowFunction, objectWithSendFunction)
 	{
 		timer = objectWithNowFunction; // use objectWithNowFunction.now() for timings
+		outputDevice = objectWithSendFunction;
 	}
 
 	setSpeed(speedToSet)
@@ -540,9 +541,6 @@ export class Sequence
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
 		endMarkerMsPositionInScore = endMarkerMsPosInScore;
 
-		outputDevice.reset();
-		//outputDevice.sendStartStateMessages(tracks);
-
 		pausedMoment = null;
 		pauseStartTime = -1;
 		previousTimestamp = null;
@@ -586,7 +584,6 @@ export class Sequence
 		{
 			setState("stopped");
 			performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
-			outputDevice.reset();
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 		}
 	}

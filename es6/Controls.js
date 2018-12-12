@@ -474,17 +474,20 @@ var
 			if(options.performanceMode === performanceMode.conductingTimer || options.performanceMode === performanceMode.conductingCreep )
 			{
 				baseSpeed = 1;
-				player.setTimer(conductor);  // Sequence can use conductor or performance timer
+				player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
 			}
 			else // options.performanceMode === score or keyboard1)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
 				if(options.performanceMode === performanceMode.score)
 				{
-					player.setTimer(performance); // Sequence can use conductor or performance timer
+					player.setTimerAndOutputDevice(performance, options.outputDevice); // Sequence can use conductor or performance timer
 				}
 				// Keyboard1 *always* uses performance timer
 			}
+
+			options.outputDevice.reset();
+
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
 	},
@@ -498,7 +501,7 @@ var
 		{
 			score.deleteTickOverloadMarkers();
 			score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
-			player.setTimer(conductor);
+			player.setTimerAndOutputDevice(conductor, conductor);
 		}
 		else
 		{
@@ -508,6 +511,8 @@ var
 
 	setStopped = function()
 	{
+		options.outputDevice.reset();
+
 		player.stop();
 
 		if(conductor !== undefined)
@@ -528,8 +533,6 @@ var
 
 		score.hideCursor();
 		score.resetRegionInfoStrings();
-
-		options.outputDevice.reset();
 
 		setMainOptionsState("toBack");
 
@@ -762,7 +765,7 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new TimerConductor(score, startPlaying, options.inputDevice, speed);
+				conductor = new TimerConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
 
 			conductor.initConducting();
@@ -787,7 +790,7 @@ var
 
 			if(conductor === undefined)
 			{
-				conductor = new CreepConductor(score, startPlaying, options.inputDevice, speed);
+				conductor = new CreepConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
 
 			conductor.initConducting();
@@ -1747,31 +1750,11 @@ export class Controls
 				}
 			}
 
-			function sendStartStateMessages(tracks)
-			{
-				var i, j, nTracks = tracks.length, track, msgs, nMsgs;
-
-				for(i = 0; i < nTracks; ++i)
-				{
-					track = tracks[i];
-					if(track.isOn)
-					{
-						msgs = tracks[i].startStateMessages;
-						nMsgs = msgs.length;
-						for(j = 0; j < nMsgs; ++j)
-						{
-							this.send(msgs[j].data, 0);
-						}
-					}
-				}
-			}
-
 			getResetMessages();
 
 			if(outputDevice !== null)
 			{
 				outputDevice.reset = reset;
-				outputDevice.sendStartStateMessages = sendStartStateMessages;
 			}
 		}
 
