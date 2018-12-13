@@ -34,7 +34,7 @@ let
 			// If uint8Array.length === 0, an exception is thrown on the next line. This should never happen.
 			if(uint8Array[0] === constants.SYSTEM_EXCLUSIVE.START)
 			{
-				if(!(uint8Array.length > 2 && uint8Array[uint8Array.length - 1] === SYSTEM_EXCLUSIVE.END))
+				if(!(uint8Array.length > 2 && uint8Array[uint8Array.length - 1] === constants.SYSTEM_EXCLUSIVE.END))
 				{
 					throw "Error in System Exclusive inputEvent.";
 				}
@@ -152,7 +152,7 @@ let
 
 		let inputMessage = _getInputMessage(midiEvent.data);
 
-		if(inputMessage.data != undefined)
+		if(inputMessage.data !== undefined)
 		{
 			let command = inputMessage.command(),
 				CMD = constants.COMMAND;
@@ -193,10 +193,10 @@ let
 		}
 	},
 
-	// This handler sends messages to the _outputDevice.
+	// This handler sends possibly altered messages to the _outputDevice.
 	// The received messages may be
 	// a) simply sent on without change,
-	// b) changed before being sent on,
+	// b) altered before being sent on,
 	// c) suppressed completely (i.e. not sent on),
 	// d) sent on (modified or not) together with new midi messages.    
 	_handleMIDIScoreEvent = function(uint8Array, timestamp)
