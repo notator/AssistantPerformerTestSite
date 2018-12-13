@@ -68,71 +68,35 @@ let
 		return inputMessage;
 	},
 
+	_handleQwertyKeyDown = function(e)
+	{
+		console.log(`qwerty: key is ${e.key}`);
+	},
+
 	// This handler changes the state of various performance filters...
 	_handleMIDIInputDeviceEvent = function(midiEvent)
 	{
 		// This function is called either by a real performed NoteOff or by a performed NoteOn having zero velocity.
-		function handleNoteOff(key)
+		function handleNoteOff(note)
 		{
-
+			console.log(`noteOff: note:${note}`);
 		}
 
 		// performedVelocity is always greater than 0 (otherwise handleNoteOff() is called)
-		function handleNoteOn(key, performedVelocity)
+		function handleNoteOn(note, velocity)
 		{
-
-		}
-
-		// Currently used by handleChannelPressure(...) and handleModWheel(...).
-		// React to controller input here.
-		// Possibly simply replace this switch by separate functions.
-		function doController(control, value)
-		{
-			switch(control)
-			{
-				case 'aftertouch':
-					break;
-				case 'channelPressure':
-					break;
-				case 'modWheel':
-					break;
-				case 'volume':
-					break;
-				case 'expression':
-					break;
-				case 'timbre':
-					break;
-				case 'brightness':
-					break;
-				case 'effects':
-					break;
-				case 'tremolo':
-					break;
-				case 'chorus':
-					break;
-				case 'celeste':
-					break;
-				case 'phaser':
-					break;
-			}
+			console.log(`noteOn: note:${note} velocity:${velocity}`);
 		}
 
 		// called when channel pressure changes
 		// Achtung: value is data[1]
-		function handleChannelPressure(data)
+		function handleChannelPressure(value)
 		{
-			doController("channelPressure", data[1]); // Achtung: value is data[1]
-		}
-
-		// called when modulation wheel changes
-		// Achtung: value is data[2]
-		function handleModWheel(data)
-		{
-			doController("modWheel", data[2]); // Achtung: value is data[2]
+			console.log(`channelPressure: value: ${value}`);
 		}
 
 		// called when the pitchWheel changes
-		function handlePitchWheel(data)
+		function handlePitchWheel(data1, data2)
 		{
 			function doOption(option)
 			{
@@ -147,34 +111,53 @@ let
 				}
 			}
 
+			let combinedValue = constants.pitchwheelCombinedValue(data1, data2);
+			console.log(`pitchWheel, data[1]:${data1} data[2]:${data2} (combinedValue:${combinedValue})`);
+
 			doOption("pitch");
+		}
+
+		// called when modulation wheel changes
+		// Achtung: value is data[2]
+		function handleModWheel(value)
+		{
+			console.log(`modWheel value:${value}`);
+		}
+
+		// called when one of the E-MU knobs is turned (in 16 channel mode)
+		function handleKnob(knobIndex, value)
+		{
+			console.log(`knob: index:${knobIndex} value:${value}`);
 		}
 
 		let inputMessage = _getInputMessage(midiEvent.data);
 
+		//console.log("MIDI Input Device Event received: " + inputMessage.toString());
+
 		if(inputMessage.data !== undefined)
 		{
-			let command = inputMessage.command(),
+			let data = inputMessage.data,
+				command = inputMessage.command(),
 				CMD = constants.COMMAND;
 
 			switch(command)
 			{
 				case CMD.NOTE_ON:
-					if(inputMessage.data[2] !== 0)
+					if(data[2] !== 0)
 					{
-						handleNoteOn(inputMessage.data[1], inputMessage.data[2]);
+						handleNoteOn(data[1], data[2]);
 					}
 					else
 					{
-						handleNoteOff(inputMessage.data[1]);
+						handleNoteOff(data[1]);
 					}
 					break;
 				case CMD.NOTE_OFF:
-					handleNoteOff(inputMessage.data[1]);
+					handleNoteOff(data[1]);
 					break;
 				case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
 					// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-					handleChannelPressure(inputMessage.data);
+					handleChannelPressure(data[1]);
 					break;
 				case CMD.AFTERTOUCH: // produced by the EWI breath controller
 					// AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch
@@ -182,10 +165,20 @@ let
 					// not supported
 					break;
 				case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-					handlePitchWheel(inputMessage.data);
+					handlePitchWheel(data[1], data[2]);
 					break;
-				case CMD.CONTROL_CHANGE: // received when the EMU ModWheel changes.
-					handleModWheel(inputMessage.data);
+				case CMD.CONTROL_CHANGE:
+					if(data[1] === constants.CONTROL.MODWHEEL) // received when the EMU ModWheel changes.
+					{
+						handleModWheel(data[2]);
+					}
+					else
+					{
+						// If the E-MU is in 16 channel mode, each knob is identified by its channel index (a value in range[0..15]).
+						// 13.12.2018: The E-MU currently sends control 0 (=BANK_CHANGE) from each knob. This control value is ignored here.
+						let knobIndex = inputMessage.channel(), value = data[2]; 
+						handleKnob(knobIndex, value);
+					}
 					break;
 				default:
 					break;
@@ -271,8 +264,13 @@ export class Conductor
 		this._prevX = -1;
 		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
 		{
+			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
 			this._midiInputDevice.addEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
+			console.log("Listening to MIDI Input device.");
 		}
+		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
+		document.addEventListener("keydown", _handleQwertyKeyDown, false);
+		console.log("Listening to qwerty keyboard device.");
 	}
 
 	addTimeMarkerToMarkersLayer(markersLayer)
@@ -312,7 +310,10 @@ export class Conductor
 		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
 		{
 			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
+			console.log("No longer listening to MIDI Input device.");
 		}
+		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
+		console.log("No longer listening to qwerty keyboard device.");
 	}
 }
 

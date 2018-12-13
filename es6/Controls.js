@@ -1402,8 +1402,7 @@ export class Controls
 				}
 				else
 				{
-					options.inputHandler = undefined;
-					console.warn("Using inputHandler defined in Conductor.");
+					options.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
 				}
 			}
 
