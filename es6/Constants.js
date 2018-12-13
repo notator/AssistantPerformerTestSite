@@ -215,6 +215,11 @@
 		return percussionName;
 	},
 
+	pitchwheelCombinedValue = function(data1, data2)
+	{
+		return (data2 << 7) + data1;
+	},
+
 	constants =
 	{
 		COMMAND: COMMAND,
@@ -228,8 +233,8 @@
 
 		isRealTimeStatus: isRealTimeStatus,
 		generalMIDIPatchName: generalMIDIPatchName,
-		generalMIDIPercussionName: generalMIDIPercussionName
-
+		generalMIDIPercussionName: generalMIDIPercussionName,
+		pitchwheelCombinedValue: pitchwheelCombinedValue
 	};
 
 export { constants };

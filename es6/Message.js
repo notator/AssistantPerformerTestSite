@@ -113,44 +113,46 @@ export class Message
 	}
 	toString()
 	{
-		let returnString = "Unknown Message Type.", channel, COMMAND = constants.COMMAND, REAL_TIME = constants.REAL_TIME;
-		if(this.data.length === 1)
+		let returnString = "Unknown Message Type.", channel, COMMAND = constants.COMMAND, REAL_TIME = constants.REAL_TIME,
+			data = this.data;
+
+		if(data.length === 1)
 		{
-			switch(this.data[0])
+			switch(data[0])
 			{
 				case REAL_TIME.TUNE_REQUEST:
-					returnString = "REAL_TIME.TUNE_REQUEST ( " + REAL_TIME.TUNE_REQUEST.toString(16) + " )";
+					returnString = "REAL_TIME.TUNE_REQUEST (0x" + REAL_TIME.TUNE_REQUEST.toString(16) + " )";
 					break;
 				case REAL_TIME.MIDI_CLOCK:
-					returnString = "REAL_TIME.MIDI_CLOCK ( " + REAL_TIME.MIDI_CLOCK.toString(16) + " )";
+					returnString = "REAL_TIME.MIDI_CLOCK (0x" + REAL_TIME.MIDI_CLOCK.toString(16) + " )";
 					break;
 				case REAL_TIME.MIDI_TICK:
-					returnString = "REAL_TIME.MIDI_TICK ( " + REAL_TIME.MIDI_TICK.toString(16) + " )";
+					returnString = "REAL_TIME.MIDI_TICK (0x" + REAL_TIME.MIDI_TICK.toString(16) + " )";
 					break;
 				case REAL_TIME.MIDI_START:
-					returnString = "REAL_TIME.MIDI_START ( " + REAL_TIME.MIDI_START.toString(16) + " )";
+					returnString = "REAL_TIME.MIDI_START (0x" + REAL_TIME.MIDI_START.toString(16) + " )";
 					break;
 				case REAL_TIME.MIDI_CONTINUE:
-					returnString = "REAL_TIME.MIDI_CONTINUE ( " + REAL_TIME.MIDI_CONTINUE.toString(16) + " )";
+					returnString = "REAL_TIME.MIDI_CONTINUE (0x" + REAL_TIME.MIDI_CONTINUE.toString(16) + " )";
 					break;
 				case REAL_TIME.MIDI_STOP:
-					returnString = "REAL_TIME.MIDI_STOP ( " + REAL_TIME.MIDI_STOP.toString(16) + " )";
+					returnString = "REAL_TIME.MIDI_STOP (0x" + REAL_TIME.MIDI_STOP.toString(16) + " )";
 					break;
 				case REAL_TIME.ACTIVE_SENSE:
-					returnString = "REAL_TIME.ACTIVE_SENSE ( " + REAL_TIME.ACTIVE_SENSE.toString(16) + " )";
+					returnString = "REAL_TIME.ACTIVE_SENSE (0x" + REAL_TIME.ACTIVE_SENSE.toString(16) + " )";
 					break;
 				case REAL_TIME.RESET:
-					returnString = "REAL_TIME.RESET ( " + REAL_TIME.RESET.toString(16) + " )";
+					returnString = "REAL_TIME.RESET (0x" + REAL_TIME.RESET.toString(16) + " )";
 					break;
 			}
 		}
-		else if(this.data.length === 2)
+		else if(data.length === 2)
 		{
-			channel = (this.data[0] & 0xF).toString();
-			switch(this.data[0] & 0xF0)
+			channel = (data[0] & 0xF).toString();
+			switch(data[0] & 0xF0)
 			{
 				case 0xF0:
-					switch(this.data[0])
+					switch(data[0])
 					{
 						case REAL_TIME.MTC_QUARTER_FRAME:
 							returnString = 'realtime: MTC_QUARTER_FRAME';
@@ -167,34 +169,88 @@ export class Message
 					returnString = 'command: PROGRAM_CHANGE, channel:' + channel;
 					break;
 			}
-			returnString.concat(' data1:' + this.data[1].toString(16) + " (" + this.data[1].toString() + ")");
+			returnString = returnString.concat(' data1:0x' + data[1].toString(16) + " (" + data[1].toString() + ")");
 		}
-		else if(this.data.length === 3)
+		else if(data.length === 3)
 		{
-			channel = (this.data[0] & 0xF).toString();
-			switch(this.data[0] & 0xF0)
+			channel = (data[0] & 0xF).toString();
+			switch(data[0] & 0xF0)
 			{
 				case 0xF0:
-					returnString = 'realtime: SONG_POSITION_POINTER';
+					returnString = `realtime: SONG_POSITION_POINTER, channel:${channel} data[1]:${data[1]} data[2]:${data[2]}`;
 					break;
 				case COMMAND.NOTE_OFF:
-					returnString = 'command: NOTE_OFF, channel:' + channel;
+					returnString = `command: NOTE_OFF, channel:${channel} note:${data[1]} velocity:${data[1]}`;
 					break;
 				case COMMAND.NOTE_ON:
-					returnString = 'command: NOTE_ON, channel:' + channel;
+					returnString = `command: NOTE_ON, channel:${channel} note:${data[1]} velocity:${data[1]}`;
 					break;
 				case COMMAND.AFTERTOUCH:
-					returnString = 'command: AFTERTOUCH, channel:' + channel;
+					returnString = `command: AFTERTOUCH, channel:${channel} data[1]:${data[1]} data[2]:${data[2]}`;
 					break;
 				case COMMAND.CONTROL_CHANGE:
-					returnString = 'command: CONTROL_CHANGE, channel:' + channel;
+					let CC = constants.CONTROL,
+						control = data[1];
+					switch(control)
+					{
+						case CC.MODWHEEL: // 1,
+							returnString = `control:1 (modwheel) channel:${channel} value:${data[2]}`;
+							break;
+						case CC.DATA_ENTRY_COARSE:// 6,
+							returnString = `control:1 (dataEntryCoarse) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.VOLUME:// 7,
+							returnString = `control:1 (volume) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.PAN:// 10,
+							returnString = `control:10 (pan) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.EXPRESSION:// 11,
+							returnString = `control:11 (expression) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.TIMBRE:// 71,
+							returnString = `control:71 (timbre) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.BRIGHTNESS:// 74,
+							returnString = `control:74 (brightness) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.EFFECTS: // 91,
+							returnString = `control:91 (effects) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.TREMOLO:// 92,
+							returnString = `control:92 (tremolo) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.CHORUS:// 93,
+							returnString = `control:93 (chorus) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.CELESTE:// 94,
+							returnString = `control:94 (celeste) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.PHASER:// 95,
+							returnString = `control:95 (phaser) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.REGISTERED_PARAMETER_COARSE:// 101,
+							returnString = `control:101 (registeredParameterCoarse) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.ALL_SOUND_OFF: // 120,
+							returnString = `control:120 (allSoundOff) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.ALL_CONTROLLERS_OFF:// 121,
+							returnString = `control:121 (allControllersOff) channel:${channel} value:${data[2]}`;
+							break;							
+						case CC.ALL_NOTES_OFF:// 123
+							returnString = `control:123 (allNotesOff) channel:${channel} value:${data[2]}`;
+							break;
+						default:
+							returnString = `unsupported control (index ${data[1]}) channel:${channel} value:${data[2]}`;
+							break;														
+					}
 					break;
 				case COMMAND.PITCH_WHEEL:
-					returnString = 'command: PITCH_WHEEL, channel:' + channel;
+					let combinedValue = constants.pitchwheelCombinedValue(data[1], data[2]);
+					returnString = `command: PITCH_WHEEL, channel:${channel} data[1]:${data[1]} data[2]:${data[2]} (combinedValue:${combinedValue})`;
 					break;
 			}
-			returnString.concat(' data1:' + this.data[1].toString(16) + " (" + this.data[1].toString() + ")" +
-				' data2:' + this.data[2].toString(16) + " (" + this.data[2].toString() + ")");
 		}
 		return returnString;
 	}
