@@ -219,7 +219,8 @@ export class TimeMarker extends CursorBase
 		// this._msPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
 		this._msPositionInScore += msIncrement;
 
-		if(this._msPositionInScore >= this._nextMsPosData.msPositionInScore)
+		// this._nextMsPosData will be undefined when the TimeMarker has reached the final barline.
+		if(this._nextMsPosData !== undefined && this._msPositionInScore >= this._nextMsPosData.msPositionInScore)
 		{
 			if(this._regionSequence[this._regionIndex].endMsPosInScore <= this._nextMsPosData.msPositionInScore)
 			{
@@ -243,13 +244,18 @@ export class TimeMarker extends CursorBase
 				this._msPosDataIndex++;				
 				this._msPosData = this.msPosDataArray[this._msPosDataIndex];
 				this._alignment = this._msPosData.alignment;
-				// index + 1 should always work, because the final barline is in this.msPosDataArray, but regions end before that.
+				// index + 1 should always work at the end of regions.
+				// it also works for the last midiObject in the score because the final barline is in this.msPosDataArray,
+				// but this._nextMsPosData will be set to undefined when the TimeMarker reaches the final barline.
 				this._nextMsPosData = this.msPosDataArray[this._msPosDataIndex + 1];
 				msIncrement = 0;
 			}
 		}
 
-		moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, msIncrement);
+		if(this._nextMsPosData !== undefined)
+		{
+			moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, msIncrement);
+		}
 	}
 }
 

@@ -6,7 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
 	<META NAME="CREATED" CONTENT="0;0">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
-	<META NAME="CHANGED" CONTENT="20181213;12524625">
+	<META NAME="CHANGED" CONTENT="20181214;13211996">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<STYLE TYPE="text/css">
 	<!--
@@ -31,23 +36,23 @@ Team Explorer repository.)<BR></B></FONT></FONT><BR><BR>
 <P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">13.12.2018:
 The Conductor currently acts as a MIDI Thru device when it exists.
 Messages sent from Sequence are then sent using the function
-Conductor.send(msg, timestamp). The conductor can modify the incoming
-messages before sending them on to the outputDevice selected in the
-page1 outputDevice selector.</FONT></P>
+Conductor.send(msg, timestamp). The conductor can modify the messages
+coming in from the score before sending them on to the outputDevice
+selected in the page1 outputDevice selector.</FONT></P>
 <OL>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
 	that the Keyboard1 code really is working properly with the other
 	controls.</FONT></P>
-	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">The
-	Conductor currently contains code for adding and removing
-	&quot;midimessage&quot; EventListeners when a MIDI inputDevice is
-	selected in the page1 inputDevice selector. This code currently
-	contains non-functional (stub) handlers. Add parallel code (also
-	with stub handlers) for listening to the qwerty keyboard.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Move
 	the code for <I>all</I> the conductor's EventListeners inside the
 	Conductor. (The &quot;mousedown&quot;, &quot;mousemove&quot; and
-	&quot;mouseup&quot; EventListener code currently in Controls.js)</FONT></P>
+	&quot;mouseup&quot; EventListener code currently in Controls.js).
+	Possibly even create the conductor's layer dynamically (rather than
+	having it permanently in the AP's html.</FONT></P>
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Create
+	a touchpad interface for the conductor.<BR>See
+	</FONT><A HREF="https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events"><FONT FACE="Arial, sans-serif"><FONT SIZE=2>https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events</FONT></FONT></A><FONT FACE="Arial, sans-serif"><BR>and
+	the Zingtouch es6 library at<BR>https://github.com/zingchart/zingtouch</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">The
 	recording of the MIDI output, currently created in Sequence, is not
 	affected by what the Conductor does. Change this so that the
@@ -244,10 +249,17 @@ page1 outputDevice selector.</FONT></P>
 	</UL>
 	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">conductingMode
 	enum has been subsumed into the performanceMode enum.</SPAN></FONT></FONT></TT></P>
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Added
+	qwerty keydown event handler, and the code for adding and removing
+	it parallel to the code that adds and removes the conductor's
+	&quot;midimessage&quot; event handlers. All this code currently
+	contains non-functional (stub) handlers containing console.log
+	statements that show useful information about the values being
+	collected. </SPAN></FONT></FONT></TT>
+	</P>
 </OL>
 <P STYLE="line-height: 115%; page-break-before: always"><FONT FACE="Arial, sans-serif"><B>Old
-ideas:</B><BR>  </FONT>
-</P>
+ideas:</B></FONT></P>
 <OL>
 	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">In
 	</SPAN></FONT></FONT></TT><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB"><B>conductTimer</B></SPAN></FONT></FONT></TT><TT CLASS="monotype-western">
