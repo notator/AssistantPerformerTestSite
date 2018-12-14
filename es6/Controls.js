@@ -765,10 +765,10 @@ var
 
 			if(conductor === undefined)
 			{
+				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
+				// and null if there are input devices that are not selected.
 				conductor = new TimerConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
-
-			conductor.initConducting();
 
 			setConducting(speed);
 
@@ -790,10 +790,10 @@ var
 
 			if(conductor === undefined)
 			{
+				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
+				// and null if there are input devices that are not selected.
 				conductor = new CreepConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
-
-			conductor.initConducting();
 			
 			setConducting(speed);
 
@@ -1659,7 +1659,14 @@ export class Controls
 			// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
 			if(inSelector.selectedIndex === 0)
 			{
-				options.inputDevice = null;
+				if(inSelector.options.length === 1)
+				{
+					options.inputDevice = undefined;
+				}
+				else
+				{
+					options.inputDevice = null;
+				}
 			}
 			else
 			{

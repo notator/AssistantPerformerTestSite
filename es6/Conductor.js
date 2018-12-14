@@ -234,7 +234,8 @@ export class Conductor
 {
 	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
 	{
-		if(midiInputDevice === null || midiInputDevice === undefined)
+		// midiInputDevice will be undefined if there are no devices in the inputDeviceSelector.
+		if(midiInputDevice === null) 
 		{
 			alert(
 `No input device has been selected in the Input Device Selector.
@@ -266,7 +267,7 @@ export class Conductor
 		{
 			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
 			this._midiInputDevice.addEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
-			console.log("Listening to MIDI Input device.");
+			console.log(`Listening to ${this._midiInputDevice.name} MIDI device.`);
 		}
 		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
 		document.addEventListener("keydown", _handleQwertyKeyDown, false);
@@ -310,7 +311,7 @@ export class Conductor
 		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
 		{
 			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
-			console.log("No longer listening to MIDI Input device.");
+			console.log(`No longer listening to ${this._midiInputDevice.name} MIDI device.`);
 		}
 		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
 		console.log("No longer listening to qwerty keyboard device.");
