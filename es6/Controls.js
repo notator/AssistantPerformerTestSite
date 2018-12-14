@@ -1163,7 +1163,6 @@ export class Controls
 		midiAccess = mAccess;
 
 		residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
-		residentSf2Synth.init();
 
 		getGlobalElements();
 
