@@ -6,7 +6,10 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
 	<META NAME="CREATED" CONTENT="0;0">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
-	<META NAME="CHANGED" CONTENT="20181214;14102987">
+	<META NAME="CHANGED" CONTENT="20181216;23002813">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
@@ -37,6 +40,11 @@ selected in the page1 outputDevice selector.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
 	that the Keyboard1 code really is working properly with the other
 	controls.</FONT></P>
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Add
+	a trackIsOn argument to the Cursor constructor, and call it (again)
+	whenever the TracksControl is changed. The Cursor constructor should
+	recalculate its msPosDataArray so that the Conductors only use the
+	tracks that are on.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Move
 	the code for <I>all</I> the conductor's EventListeners inside the
 	Conductor. (The &quot;mousedown&quot;, &quot;mousemove&quot; and
@@ -54,7 +62,28 @@ selected in the page1 outputDevice selector.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
 	that the Conductor's mouse... handlers are working exactly as they
 	should be. Possibly write qwerty/midiDevice handlers to define
-	variations.</FONT></P>
+	variations.<BR>Try the following (for both Timer and Creep modes):<BR>A
+	spaceTime diagram exists (is drawn) on the conductor's layer when in
+	a conducting mode. The spaceTime diagram is a rectangular frame
+	containing a vertical blue line at or near the left edge
+	representing &quot;now&quot;. To the right of &quot;now&quot; are
+	vertical dark grey lines representing future values in the
+	TimeMarker's msPosDataArray spaced proportionally to their temporal
+	values. (There could also be similar vertical grey lines, to the
+	left of &quot;now&quot;, representing past events.) When performance
+	starts, the grey verticals scroll to the left in time with the
+	performance, while &quot;now&quot; is stationary.<BR>The duration
+	(number of future seconds) displayed in the spaceTime diagram is
+	part of the conductor's state, and could be controlled by a MIDI
+	knob during performance. It should be possible to find an optimal
+	default value by experiment...<BR>In the TimerConductor, the speed
+	could also be controlled by a MIDI knob (or the mouse position, as
+	at present).<BR>In the CreepConductor, the ratio of mouse distance
+	to score time could be controlled by a MIDI knob (while the mouse is
+	being dragged).<BR>It will be interesting to see how the look of the
+	spaceTime diagram changes as the amount of time it displays chages.
+	Will it be possible to see changing event (=symbol) densities? Could
+	they be made clearer by relating line colours to symbol durations?</FONT></P>
 </OL>
 <P STYLE="line-height: 115%"><BR><BR>
 </P>
