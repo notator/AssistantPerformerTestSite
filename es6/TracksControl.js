@@ -248,24 +248,27 @@ export class TracksControl
 			disabledFrame = document.getElementById(DISABLED_FRAME_ID),
 			isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
-		if(toDisabled)
-		{
-			disabledFrame.setAttribute("opacity", SMOKE);
-		}
-		else
-		{
-			disabledFrame.setAttribute("opacity", GLASS);
-		}
-
-		for(i = 0; i < trackCtlElems.length; ++i)
+		if((toDisabled && (isCurrentlyDisabled === false)) || ((toDisabled === false) && isCurrentlyDisabled))
 		{
 			if(toDisabled)
 			{
-				setTrackCtlState(i, "disabled");
+				disabledFrame.setAttribute("opacity", SMOKE);
 			}
-			else if(isCurrentlyDisabled)
+			else
 			{
-				setTrackCtlState(i, trackCtlElems[i].previousState);
+				disabledFrame.setAttribute("opacity", GLASS);
+			}
+
+			for(i = 0; i < trackCtlElems.length; ++i)
+			{
+				if(toDisabled)
+				{
+					setTrackCtlState(i, "disabled");
+				}
+				else if(isCurrentlyDisabled)
+				{
+					setTrackCtlState(i, trackCtlElems[i].previousState);
+				}
 			}
 		}
 	}
