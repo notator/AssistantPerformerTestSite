@@ -1,7 +1,5 @@
-import { CursorBase } from "./Cursor.js";
 
 let
-	_viewBoxScale,
 	_iVertical,
 	_iBottomHoriz,
 	_element,
@@ -26,7 +24,7 @@ let
 		_setAlignment(alignment);
 	},
 
-	_get_Element = function(isConductingTimer)
+	_get_Element = function(viewBoxScale, isConductingTimer)
 	{
 		function getCoordinateVectors(viewBoxScale)
 		{
@@ -115,8 +113,8 @@ let
 			return creepArrow;
 		}
 
-		let cv = getCoordinateVectors(_viewBoxScale),
-			styles = getStyles(_viewBoxScale),
+		let cv = getCoordinateVectors(viewBoxScale),
+			styles = getStyles(viewBoxScale),
 			element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			x = cv.x,
 			y = cv.y;
@@ -131,7 +129,7 @@ let
 		_element = element;
 	};
 
-export class TimeMarker extends CursorBase
+export class TimeMarker
 {
 	constructor(score, isConductingTimer)
 	{
@@ -143,15 +141,15 @@ export class TimeMarker extends CursorBase
 			msPosDataArray = cursor.msPosDataArray,
 			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPositionInScore === startMarker.msPositionInScore),
 			msPosData = msPosDataArray[currentMsPosDataIndex],
-			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // index + 1 should always work, because final barline is in this.msPosDataArray, but regions can't start there.
+			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // the final barline is in msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
 
-		super(cursor.systemChangedCallback, cursor.msPosDataArray, cursor.viewBoxScale);
 
-		_viewBoxScale = cursor.viewBoxScale;
-		_get_Element(isConductingTimer);
+		_get_Element(cursor.viewBoxScale, isConductingTimer);
 
 		// constants
+		Object.defineProperty(this, "_systemChangedCallback", { value: cursor.systemChangedCallback, writable: false });
+		Object.defineProperty(this, "_viewBoxScale", { value: cursor.viewBoxScale, writable: false });
 		Object.defineProperty(this, "_regionSequence", { value: regionSequence, writable: false });
 		Object.defineProperty(this, "_endRegionIndex", { value: endRegionIndex, writable: false });
 
@@ -160,6 +158,7 @@ export class TimeMarker extends CursorBase
 		Object.defineProperty(this, "_msPosData", { value: msPosData, writable: true });
 		Object.defineProperty(this, "_nextMsPosData", { value: nextMsPosData, writable: true });
 		Object.defineProperty(this, "_regionIndex", { value: startRegionIndex, writable: true });
+		Object.defineProperty(this, "_msPosDataArray", { value: cursor.msPosDataArray, writable: true });
 		Object.defineProperty(this, "_msPosDataIndex", { value: currentMsPosDataIndex, writable: true });
 		Object.defineProperty(this, "_yCoordinates", { value: yCoordinates, writable: true });
 		Object.defineProperty(this, "_alignment", { value: msPosData.alignment, writable: true });
@@ -199,8 +198,8 @@ export class TimeMarker extends CursorBase
 				{
 					that._yCoordinates = currentMsPosData.yCoordinates;
 					_setCoordinates(alignment, that._yCoordinates.top, that._yCoordinates.bottom);
-					let yCoordinates = { top: that._yCoordinates.top / _viewBoxScale, bottom: that._yCoordinates.bottom / _viewBoxScale };
-					that.systemChangedCallback(yCoordinates);
+					let yCoordinates = { top: that._yCoordinates.top / that._viewBoxScale, bottom: that._yCoordinates.bottom / that._viewBoxScale };
+					that._systemChangedCallback(yCoordinates);
 				}
 				else
 				{
@@ -229,12 +228,12 @@ export class TimeMarker extends CursorBase
 					// move to the next region
 					this._regionIndex++;
 					this._msPositionInScore = this._regionSequence[this._regionIndex].startMsPosInScore;
-					this._msPosData = this.msPosDataArray.find((a) => a.msPositionInScore === this._msPositionInScore);
-					this._msPosDataIndex = this.msPosDataArray.findIndex((e) => e === this._msPosData);
+					this._msPosData = this._msPosDataArray.find((a) => a.msPositionInScore === this._msPositionInScore);
+					this._msPosDataIndex = this._msPosDataArray.findIndex((e) => e === this._msPosData);
 					this._alignment = this._msPosData.alignment;
 
-					// index + 1 should always work, because the final barline is in this.msPosDataArray, but regions can't start there.
-					this._nextMsPosData = this.msPosDataArray[this._msPosDataIndex + 1];
+					// index + 1 should always work, because the final barline is in this._msPosDataArray, but regions can't start there.
+					this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
 					msIncrement = 0;
 				}
 			}
@@ -242,12 +241,12 @@ export class TimeMarker extends CursorBase
 			{
 				// move to the next chord or rest in the region
 				this._msPosDataIndex++;				
-				this._msPosData = this.msPosDataArray[this._msPosDataIndex];
+				this._msPosData = this._msPosDataArray[this._msPosDataIndex];
 				this._alignment = this._msPosData.alignment;
 				// index + 1 should always work at the end of regions.
-				// it also works for the last midiObject in the score because the final barline is in this.msPosDataArray,
+				// it also works for the last midiObject in the score because the final barline is in this._msPosDataArray,
 				// but this._nextMsPosData will be set to undefined when the TimeMarker reaches the final barline.
-				this._nextMsPosData = this.msPosDataArray[this._msPosDataIndex + 1];
+				this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
 				msIncrement = 0;
 			}
 		}
