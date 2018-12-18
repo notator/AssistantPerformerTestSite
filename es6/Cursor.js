@@ -1,51 +1,37 @@
 
-export class CursorBase
+export class Cursor
 {
-	constructor(systemChangedCallback, msPosDataArray, viewBoxScale)
+	constructor(systemChangedCallback, viewBoxScale)
 	{
-		Object.defineProperty(this, "GREY", { value: "#999999", writable: false });
-
-		Object.defineProperty(this, "systemChangedCallback", { value: systemChangedCallback, writable: false });
-		Object.defineProperty(this, "msPosDataArray", { value: msPosDataArray, writable: false });
-		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
-
-		Object.defineProperty(this, "startMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
-		Object.defineProperty(this, "endMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
-		Object.defineProperty(this, "yCoordinates", { value: msPosDataArray[0].yCoordinates, writable: true }); // set in init()
-	}
-
-	setVisible(setToVisible)
-	{
-		if(setToVisible)
+		function newElement(viewBoxScale)
 		{
-			this.element.style.visibility = 'visible';
-		}
-		else
-		{
-			this.element.style.visibility = 'hidden';
-		}
-	}
-}
+			const GREY = "#999999";
 
-export class Cursor extends CursorBase
-{
-	constructor(systemChangedCallback, systems, viewBoxScale)
-	{
-		function newElement(that, firstMsPosData, viewBoxScale)
-		{
-			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
-				yCoordinates = firstMsPosData.yCoordinates, alignment = firstMsPosData.alignment;
+			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 
 			element.setAttribute("class", "cursorLine");
-			element.setAttribute("x1", alignment.toString(10));
-			element.setAttribute("y1", yCoordinates.top.toString(10));
-			element.setAttribute("x2", alignment.toString(10));
-			element.setAttribute("y2", yCoordinates.bottom.toString(10));
-			element.setAttribute("style", "stroke:" + that.GREY + ";stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
+			element.setAttribute("style", "stroke:" + GREY + ";stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
+			// the following attributes are set properly in moveElementTo(...) (inside init(...))
+			element.setAttribute("x1", "0");
+			element.setAttribute("y1", "0");
+			element.setAttribute("x2", "0");
+			element.setAttribute("y2", "0");
 
 			return element;
 		}
 
+		Object.defineProperty(this, "systemChangedCallback", { value: systemChangedCallback, writable: false });
+		Object.defineProperty(this, "viewBoxScale", { value: viewBoxScale, writable: false });
+		Object.defineProperty(this, "element", { value: newElement(viewBoxScale), writable: false });
+
+		Object.defineProperty(this, "msPosDataArray", { value: undefined, writable: true }); // set in init()
+		Object.defineProperty(this, "startMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
+		Object.defineProperty(this, "endMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
+		Object.defineProperty(this, "yCoordinates", { value: { top: -1, bottom: -1 }, writable: true }); // set in moveElementTo() in init()		
+	}
+
+	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray)
+	{
 		// Returns an array containing an msPosData object for every distinct msPositionInScore.
 		// An msPosData object contains the following fields:
 		//	.msPositionInScore
@@ -54,9 +40,45 @@ export class Cursor extends CursorBase
 		//	.pixelsPerMs
 		// The msPosData objects are sorted in order of .msPositionInscore.
 		// The last entry is an msPosData object for the final barline.
-		function getScoreMsPosDataArray(systems, viewBoxScale)
+		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray)
 		{
-			function getSystemMsPosDataArray(system, viewBoxScale)
+			// This array, containing one msPosData object per system, is needed
+			// for the case that when tracks are disabled, there are no midiObjects
+			// at the beginning of the system.
+			function getDefaultSystemStartMsPosDataArray(systems, viewBoxScale)
+			{
+				let msPosDataPerSystem = [];
+
+				for(let system of systems)
+				{
+					let line = system.startMarker.line,
+						yCoordinates = {},
+						leftmostTimeObject = system.staves[0].voices[0].timeObjects[0], 
+						// The pixelsPerMs field is set properly later.
+						msPosData = { msPositionInScore: leftmostTimeObject.msPositionInScore, alignment: leftmostTimeObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+
+					yCoordinates.top = line.y1.baseVal.value;
+					yCoordinates.bottom = line.y2.baseVal.value;
+
+					for(let staff of system.staves)
+					{
+						for(let voice of staff.voices)
+						{
+							if(voice.timeObjects[0].alignment < leftmostTimeObject.alignment)
+							{
+								leftmostTimeObject = voice.timeObjects[0];
+								// The pixelsPerMs field is set properly later.
+								msPosData = { msPositionInScore: leftmostTimeObject.msPositionInScore, alignment: leftmostTimeObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+							}
+						}
+					}
+					msPosDataPerSystem.push(msPosData);
+				}
+
+				return msPosDataPerSystem;
+			}
+
+			function getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray)
 			{
 				function setPixelsPerMs(systemMsPosDataArray)
 				{
@@ -78,40 +100,44 @@ export class Cursor extends CursorBase
 				yCoordinates.top = line.y1.baseVal.value;
 				yCoordinates.bottom = line.y2.baseVal.value;
 
+				let trackIndex = 0;
 				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 				{
 					let staff = system.staves[staffIndex], nVoices = staff.voices.length;
 					for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 					{
-						if(staff.voices[voiceIndex].timeObjects === undefined)
+						if(trackIsOnArray[trackIndex++] === true)
 						{
-							// this can happen if the voice is an InputVoice, and the input device is not selected.
-							continue;
-						}
-						let timeObjects = staff.voices[voiceIndex].timeObjects,
-							nTimeObjects = timeObjects.length; // timeObjects includes the final barline in the voice
-						
-						if(staffIndex === 0 && voiceIndex === 0)
-						{
-							for(let ti = 0; ti < nTimeObjects; ++ti)
+							if(staff.voices[voiceIndex].timeObjects === undefined)
 							{
-								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore,
-									// pixelsPerMs is set properly later in this functon
-									msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
-
-								systemMsPosDataArray.push(msPosData);
+								// this can happen if the voice is an InputVoice, and the input device is not selected.
+								continue;
 							}
-						}
-						else
-						{
-							for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+							let timeObjects = staff.voices[voiceIndex].timeObjects,
+								nTimeObjects = timeObjects.length; // timeObjects includes the final barline in the voice
+
+							if(staffIndex === 0 && voiceIndex === 0)
 							{
-								let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
-								if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
+								for(let ti = 0; ti < nTimeObjects; ++ti)
 								{
-									// pixelsPerMs is set properly later in this functon
-									let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+									let tObj = timeObjects[ti], msPos = tObj.msPositionInScore,
+										// pixelsPerMs is set properly later in this functon
+										msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+
 									systemMsPosDataArray.push(msPosData);
+								}
+							}
+							else
+							{
+								for(let ti = nTimeObjects - 1; ti >= 0; --ti)
+								{
+									let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
+									if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
+									{
+										// pixelsPerMs is set properly later in this functon
+										let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+										systemMsPosDataArray.push(msPosData);
+									}
 								}
 							}
 						}
@@ -124,13 +150,20 @@ export class Cursor extends CursorBase
 				return systemMsPosDataArray;
 			}
 
+			let defaultSystemStartMsPosData = getDefaultSystemStartMsPosDataArray(systems, viewBoxScale); 
 			let msPosDataArray = [];
 			let nSystems = systems.length;
 			for(let i = 0; i < nSystems; ++i)
 			{
 				let system = systems[i];
-				// The last entry is an msPosData object for the final barline.
-				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale);
+				// The last entry in systemMsPosDataArray is an msPosData object for the final barline.
+				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray);
+				// If there was no msPosData object at the start of the system, insert the default value.
+				if(systemMsPosDataArray[0].alignment > defaultSystemStartMsPosData[i].alignment)
+				{
+					systemMsPosDataArray.splice(0, 0, defaultSystemStartMsPosData[i]);
+				}
+				// if this is not the last system, delete the msPosData object of the right barline.
 				if(i < nSystems - 1)
 				{
 					systemMsPosDataArray.length = systemMsPosDataArray.length - 1;
@@ -141,16 +174,8 @@ export class Cursor extends CursorBase
 		}
 
 		// The last entry is an msPosData object for the final barline.
-		let msPosDataArray = getScoreMsPosDataArray(systems, viewBoxScale);
+		this.msPosDataArray = getScoreMsPosDataArray(systems, this.viewBoxScale, trackIsOnArray);
 
-		super(systemChangedCallback, msPosDataArray, viewBoxScale);
-
-		let element = newElement(this, msPosDataArray[0], viewBoxScale);
-		Object.defineProperty(this, "element", { value: element, writable: false });
-	}
-
-	init(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
-	{
 		this.startMarkerMsPosInScore = startMarkerMsPositionInScore;
 		this.endMarkerMsPosInScore = endMarkerMsPositionInScore;
 
@@ -182,6 +207,18 @@ export class Cursor extends CursorBase
 				this.element.setAttribute("x1", msPosData.alignment.toString(10));
 				this.element.setAttribute("x2", msPosData.alignment.toString(10));
 			}
+		}
+	}
+
+	setVisible(setToVisible)
+	{
+		if(setToVisible)
+		{
+			this.element.style.visibility = 'visible';
+		}
+		else
+		{
+			this.element.style.visibility = 'hidden';
 		}
 	}
 }

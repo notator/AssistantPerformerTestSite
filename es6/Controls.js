@@ -458,9 +458,10 @@ var
 		{
 			sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-			// the cursor is at its correct position:
-			// either at the start marker, or somewhere paused.
-			score.setCursor();
+			if(options.performanceMode === performanceMode.score)
+			{
+				score.setCursor();
+			}
 
 			score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 			score.getReadOnlyTrackIsOnArray(trackIsOnArray);

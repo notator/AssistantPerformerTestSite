@@ -751,10 +751,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 	},
 
-	// Called when the go button or the startConducting button is clicked.
+	// Called when the go button or a startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.init(startMarker.msPositionInScore, endMarker.msPositionInScore);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray);
 	},
 
 	// Constructs empty systems for all the pages.
@@ -1968,7 +1968,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		setMarkers(systems);
 
 		// cursor is accessed outside the score using a getter function
-		cursor = new Cursor(systemChanged, systems, viewBoxScale);
+		cursor = new Cursor(systemChanged, viewBoxScale);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray);
 
 		markersLayer.appendChild(cursor.element);
 
