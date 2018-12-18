@@ -6,7 +6,8 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
 	<META NAME="CREATED" CONTENT="0;0">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
-	<META NAME="CHANGED" CONTENT="20181216;23002813">
+	<META NAME="CHANGED" CONTENT="20181218;12132866">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
@@ -37,14 +38,14 @@ Conductor.send(msg, timestamp). The conductor can modify the messages
 coming in from the score before sending them on to the outputDevice
 selected in the page1 outputDevice selector.</FONT></P>
 <OL>
-	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
-	that the Keyboard1 code really is working properly with the other
-	controls.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Add
 	a trackIsOn argument to the Cursor constructor, and call it (again)
 	whenever the TracksControl is changed. The Cursor constructor should
 	recalculate its msPosDataArray so that the Conductors only use the
-	tracks that are on.</FONT></P>
+	tracks that are switched on.</FONT></P>
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
+	that the Keyboard1 code really is working properly with the other
+	controls.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Move
 	the code for <I>all</I> the conductor's EventListeners inside the
 	Conductor. (The &quot;mousedown&quot;, &quot;mousemove&quot; and
