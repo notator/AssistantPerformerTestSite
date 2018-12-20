@@ -154,7 +154,7 @@ export class TimeMarker
 		Object.defineProperty(this, "_endRegionIndex", { value: endRegionIndex, writable: false });
 
 		 // updated while running
-		Object.defineProperty(this, "_msPositionInScore", { value: startMarker.msPositionInScore, writable: true });	
+		Object.defineProperty(this, "_smoothMsPositionInScore", { value: startMarker.msPositionInScore, writable: true });	
 		Object.defineProperty(this, "_msPosData", { value: msPosData, writable: true });
 		Object.defineProperty(this, "_nextMsPosData", { value: nextMsPosData, writable: true });
 		Object.defineProperty(this, "_regionIndex", { value: startRegionIndex, writable: true });
@@ -177,7 +177,7 @@ export class TimeMarker
 		return this._msPosData.pixelsPerMs;
 	}
 
-	advance(msIncrement)
+	advance(smoothMsDurationInScore)
 	{
 		function moveElementTo(that, currentMsPosData, currentPreciseAlignment, nextAlignment, msIncrement)
 		{
@@ -215,11 +215,11 @@ export class TimeMarker
 			//}
 		}
 
-		// this._msPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
-		this._msPositionInScore += msIncrement;
+		// this._smoothMsPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
+		this._smoothMsPositionInScore += smoothMsDurationInScore;
 
 		// this._nextMsPosData will be undefined when the TimeMarker has reached the final barline.
-		if(this._nextMsPosData !== undefined && this._msPositionInScore >= this._nextMsPosData.msPositionInScore)
+		if(this._nextMsPosData !== undefined && this._smoothMsPositionInScore >= this._nextMsPosData.msPositionInScore)
 		{
 			if(this._regionSequence[this._regionIndex].endMsPosInScore <= this._nextMsPosData.msPositionInScore)
 			{
@@ -227,14 +227,14 @@ export class TimeMarker
 				{
 					// move to the next region
 					this._regionIndex++;
-					this._msPositionInScore = this._regionSequence[this._regionIndex].startMsPosInScore;
-					this._msPosData = this._msPosDataArray.find((a) => a.msPositionInScore === this._msPositionInScore);
+					this._smoothMsPositionInScore = this._regionSequence[this._regionIndex].startMsPosInScore;
+					this._msPosData = this._msPosDataArray.find((a) => a.msPositionInScore === this._smoothMsPositionInScore);
 					this._msPosDataIndex = this._msPosDataArray.findIndex((e) => e === this._msPosData);
 					this._alignment = this._msPosData.alignment;
 
 					// index + 1 should always work, because the final barline is in this._msPosDataArray, but regions can't start there.
 					this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
-					msIncrement = 0;
+					smoothMsDurationInScore = 0;
 				}
 			}
 			else
@@ -247,13 +247,13 @@ export class TimeMarker
 				// it also works for the last midiObject in the score because the final barline is in this._msPosDataArray,
 				// but this._nextMsPosData will be set to undefined when the TimeMarker reaches the final barline.
 				this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
-				msIncrement = 0;
+				smoothMsDurationInScore = 0;
 			}
 		}
 
 		if(this._nextMsPosData !== undefined)
 		{
-			moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, msIncrement);
+			moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, smoothMsDurationInScore);
 		}
 	}
 }

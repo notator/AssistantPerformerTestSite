@@ -493,7 +493,7 @@ export class Sequence
 	setTimerAndOutputDevice(objectWithNowFunction, objectWithSendFunction)
 	{
 		timer = objectWithNowFunction; // use objectWithNowFunction.now() for timings
-		outputDevice = objectWithSendFunction;
+		outputDevice = objectWithSendFunction; // use objectWithSendFunction.send() to send midi messages
 	}
 
 	setSpeed(speedToSet)

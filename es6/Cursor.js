@@ -38,7 +38,7 @@ export class Cursor
 		//	.alignmentX
 		//	.yCoordinates
 		//	.pixelsPerMs
-		// The msPosData objects are sorted in order of .msPositionInscore.
+		// The msPosData objects are sorted in order of .msPositionInScore.
 		// The last entry is an msPosData object for the final barline.
 		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray)
 		{

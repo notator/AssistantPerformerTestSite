@@ -232,7 +232,7 @@ let
 
 export class Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
 	{
 		// midiInputDevice will be undefined if there are no devices in the inputDeviceSelector.
 		if(midiInputDevice === null) 
@@ -246,8 +246,8 @@ export class Conductor
 
 		// The rate at which setInterval calls doConducting(...)
 		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
-		// The _speed is the value of the speed control when this constructor is called.
-		Object.defineProperty(this, "_speed", { value: speed, writable: false });
+		// The _globalSpeed is the value of the speed control when this constructor is called.
+		Object.defineProperty(this, "_globalSpeed", { value: globalSpeed, writable: false });
 		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
 		Object.defineProperty(this, "_setIntervalHandles", { value: [], writable: false });
 		Object.defineProperty(this, "_startPlaying", { value: startPlayingCallback, writable: false });
@@ -256,7 +256,7 @@ export class Conductor
 		// variables that can change while performing
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		// Continuously increasing value wrt start of performance (and recording). Returned by now().
-		Object.defineProperty(this, "_msPositionInPerformance", { value: 0, writable: true });
+		Object.defineProperty(this, "_smoothMsPositionInScore", { value: 0, writable: true });
 		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
 	}
 
@@ -291,7 +291,7 @@ export class Conductor
 
 	now()
 	{
-		return this._msPositionInPerformance;
+		return this._smoothMsPositionInScore;
 	}
 
 	// called by Sequence. Is MIDI Thru...
@@ -320,9 +320,9 @@ export class Conductor
 
 export class TimerConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed);
+		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed);
 
 		let timeMarker = new TimeMarker(score, true);
 
@@ -339,13 +339,13 @@ export class TimerConductor extends Conductor
 		function doConducting(that, e)
 		{
 			let xFactor = _getXFactor(e),
-				speedFactor = xFactor * that._speed,
+				speedFactor = xFactor * that._globalSpeed,
 				now = performance.now(),
 				timeInterval = now - that._prevPerfNow,
-				msDuration = timeInterval * speedFactor;
+				smoothMsDurationInScore = timeInterval * speedFactor;
 
-			that._msPositionInPerformance += msDuration; // _msPositionInPerformance includes durations of repeated regions.
-			that._timeMarker.advance(msDuration); // timeMarker positions are relative to msPositionInScore.
+			that._smoothMsPositionInScore += smoothMsDurationInScore; // _smoothMsPositionInScore includes durations of repeated regions.
+			that._timeMarker.advance(smoothMsDurationInScore);
 			that._prevPerfNow = now;
 		}
 
@@ -381,9 +381,9 @@ export class TimerConductor extends Conductor
 
 export class CreepConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed)
+	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, speed);
+		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed);
 
 		let timeMarker = new TimeMarker(score, false);
 
@@ -410,10 +410,10 @@ export class CreepConductor extends Conductor
 		}
 
 		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-			msDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._speed;
+			smoothMsDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._globalSpeed;
 
-		this._msPositionInPerformance += msDurationInScore;
-		this._timeMarker.advance(msDurationInScore);
+		this._smoothMsPositionInScore += smoothMsDurationInScore;
+		this._timeMarker.advance(smoothMsDurationInScore);
 	}
 }
 
