@@ -244,8 +244,12 @@ export class Conductor
 
 		_outputDevice = midiOutputDevice;
 
-		// The rate at which setInterval calls doConducting(...)
-		Object.defineProperty(this, "_INTERVAL_RATE", { value: 10, writable: false });
+		// The rate at which setInterval calls doConducting(...).
+		// After looking around the web, I think the setInterval clock is only accurate above about 5ms.
+		// (See also Chris Wilson's October 2012 comment in Sequence.js.)
+		// Since I'm not relying on complete accuracy here, I've set _INTERVAL_RATE to 3.
+		// This means that setInterval should run faster than Sequence.PREQUEUE (which I've set to 6).
+		Object.defineProperty(this, "_INTERVAL_RATE", { value: 3, writable: false });
 		// The _globalSpeed is the value of the speed control when this constructor is called.
 		Object.defineProperty(this, "_globalSpeed", { value: globalSpeed, writable: false });
 		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });

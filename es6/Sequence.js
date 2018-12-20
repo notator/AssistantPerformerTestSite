@@ -256,6 +256,13 @@ let
 	// to matter.
 	// 18th Jan. 2013 -- Jazz 1.2 does not support timestamps.
 	//
+	// 20th Dec. 2018: (while programming the TimerConductor)
+	// Changed PREQUEUE from 0 to 6.
+	// The TimerConductor is now running setInterval at a nominal 3ms, which means
+	// "as fast as meaningfully possible, and definitely faster than PREQUEUE".
+	// This means that this tick function treats all events that happen within 6ms 
+	// as "synchronous", and performs them in a tight loop.
+	//
 	// The following variables are initialised in play() to start playing the span:
 	//      currentMoment // the first moment in the sequence
 	//      track attributes:
@@ -268,7 +275,7 @@ let
 	tick = function()
 	{
 		var
-			PREQUEUE = 0, // Setting this to 20ms leads to dropouts. But does this need to be set to something larger than 0? See above.
+			PREQUEUE = 6, // Changed from 0 to 6 -- ji December 2018 (See above)
 			now = timer.now(),
 			delay;
 
