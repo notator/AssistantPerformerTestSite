@@ -6,7 +6,9 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
 	<META NAME="CREATED" CONTENT="0;0">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
-	<META NAME="CHANGED" CONTENT="20181220;12490597">
+	<META NAME="CHANGED" CONTENT="20181224;22520286">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
+	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
 	<META NAME="CHANGEDBY" CONTENT="James Ingram">
@@ -39,19 +41,14 @@ Conductor.send(msg, timestamp). The conductor can modify the messages
 coming in from the score before sending them on to the outputDevice
 selected in the page1 outputDevice selector.</FONT></P>
 <OL>
-	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Move
-	the code for <I>all</I> the conductor's EventListeners inside the
-	Conductor. (The &quot;mousedown&quot;, &quot;mousemove&quot; and
-	&quot;mouseup&quot; EventListener code currently in Controls.js).
-	Possibly even create the conductor's layer dynamically (rather than
-	having it permanently in the AP's html.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Create
 	a touchpad interface for the conductor.<BR>See
 	</FONT><A HREF="https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events"><FONT FACE="Arial, sans-serif"><FONT SIZE=2>https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events</FONT></FONT></A><FONT FACE="Arial, sans-serif"><BR>and
+	</FONT><A HREF="https://developer.mozilla.org/en-US/docs/Web/API/Touch_events"><FONT FACE="Arial, sans-serif"><FONT SIZE=2>https://developer.mozilla.org/en-US/docs/Web/API/Touch_events</FONT></FONT></A><FONT FACE="Arial, sans-serif"><BR>and
 	the Zingtouch es6 library at<BR>https://github.com/zingchart/zingtouch</FONT></P>
-	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif"><FONT FACE="Arial, sans-serif">Check
+	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">Check
 	that the Keyboard1 code really is working properly with the other
-	controls.</FONT></FONT></P>
+	controls.</FONT></P>
 	<LI><P STYLE="line-height: 115%"><FONT FACE="Arial, sans-serif">The
 	recording of the MIDI output, currently created in Sequence, is not
 	affected by what the Conductor does. Change this so that the
@@ -282,11 +279,11 @@ selected in the page1 outputDevice selector.</FONT></P>
 	statements that show useful information about the values being
 	collected. </SPAN></FONT></FONT></TT>
 	</P>
-	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT FACE="Arial, sans-serif"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Added
+	<LI><P STYLE="margin-bottom: 0cm; line-height: 115%"><TT CLASS="monotype-western"><FONT FACE="Arial, sans-serif"><FONT SIZE=3><SPAN LANG="en-GB">Added
 	a trackIsOn argument to the Cursor constructor, and called it
 	(again) whenever the TracksControl is changed. The Cursor
 	constructor now recalculates its msPosDataArray so that the
-	Conductors only use the tracks that are switched on.</SPAN></FONT></FONT></TT></FONT></P>
+	Conductors only use the tracks that are switched on.</SPAN></FONT></FONT></TT></P>
 </OL>
 <P STYLE="line-height: 115%; page-break-before: always"><FONT FACE="Arial, sans-serif"><B>Old
 ideas:</B></FONT></P>
