@@ -3,8 +3,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:score="https://www.james-ingram-act-two.de/open-source/svgScoreExtensions.html"
 	data-scoreType="https://www.james-ingram-act-two.de/open-source/cmn_core.html"
 	width="1010"
-	height="1020"
-	viewBox="0 0 8080 8162">
+	height="1022"
+	viewBox="0 0 8080 8181">
 	<title
 		class="pageTitle">Study 3 sketch 1 (scroll)</title>
 	<metadata
@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 1 (scroll)</dc:title>
-				<dc:date>Wednesday 31.10.2018, 22:53:19</dc:date>
+				<dc:date>Friday 22.03.2019, 15:22:10</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -235,7 +235,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="72">Study 3 sketch 1 (scroll), Wednesday 31.10.2018, 22:53:19</text>
+			y="72">Study 3 sketch 1 (scroll), Friday 22.03.2019, 15:22:09</text>
 		<g
 			class="titles">
 			<text
@@ -250,8 +250,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<g
 			class="system">
 			<score:leftToRight
-				systemTop="707.9734"
-				systemBottom="2992.225" />
+				systemTop="703.1734"
+				systemBottom="2997.025" />
 			<g
 				class="staff"
 				score:staffName="Palette 1+2">
@@ -390,11 +390,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="764.3226"
-								y="841.6">~1</text>
+								y="836.8">~1</text>
 							<text
 								class="dynamic"
 								x="715.1951"
-								y="752.325">ƒ</text>
+								y="747.525">ƒ</text>
 						</g>
 					</g>
 					<g
@@ -532,7 +532,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1389.57"
-								y="868.8939">~7</text>
+								y="864.0939">~7</text>
 						</g>
 					</g>
 					<g
@@ -695,7 +695,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1993.347"
-								y="873.6">~8</text>
+								y="868.8">~8</text>
 						</g>
 					</g>
 					<g
@@ -822,7 +822,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2586.938"
-								y="868.254">~5</text>
+								y="863.454">~5</text>
 						</g>
 					</g>
 					<g
@@ -1009,7 +1009,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3168.159"
-								y="868.254">~9</text>
+								y="863.454">~9</text>
 						</g>
 					</g>
 					<g
@@ -1125,7 +1125,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3746.883"
-								y="868.254">~4</text>
+								y="863.454">~4</text>
 						</g>
 					</g>
 					<g
@@ -1307,7 +1307,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4329.667"
-								y="868.254">~10</text>
+								y="863.454">~10</text>
 						</g>
 					</g>
 					<g
@@ -1412,7 +1412,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4918.767"
-								y="868.254">~3</text>
+								y="863.454">~3</text>
 						</g>
 					</g>
 					<g
@@ -1617,7 +1617,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5480.239"
-								y="820.254">~11</text>
+								y="815.454">~11</text>
 						</g>
 					</g>
 					<g
@@ -1711,7 +1711,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6025.939"
-								y="868.254">~2</text>
+								y="863.454">~2</text>
 						</g>
 					</g>
 					<g
@@ -1915,7 +1915,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6571.641"
-								y="868.254">~12</text>
+								y="863.454">~12</text>
 						</g>
 					</g>
 					<g
@@ -2042,7 +2042,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7117.342"
-								y="868.254">~6</text>
+								y="863.454">~6</text>
 						</g>
 					</g>
 					<g
@@ -2242,11 +2242,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="756.3226"
-								y="1177.825">~7</text>
+								y="1182.625">~7</text>
 							<text
 								class="dynamic"
 								x="691.3842"
-								y="1251.425">Ï</text>
+								y="1256.225">Ï</text>
 						</g>
 					</g>
 					<g
@@ -2384,7 +2384,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1422.395"
-								y="1205.572">~6</text>
+								y="1210.371">~6</text>
 						</g>
 					</g>
 					<g
@@ -2547,7 +2547,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2026.172"
-								y="1200.225">~8</text>
+								y="1205.025">~8</text>
 						</g>
 					</g>
 					<g
@@ -2674,7 +2674,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2619.763"
-								y="1205.572">~5</text>
+								y="1210.371">~5</text>
 						</g>
 					</g>
 					<g
@@ -2856,7 +2856,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3200.984"
-								y="1200.225">~9</text>
+								y="1205.025">~9</text>
 						</g>
 					</g>
 					<g
@@ -2972,7 +2972,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3779.708"
-								y="1205.572">~4</text>
+								y="1210.371">~4</text>
 						</g>
 					</g>
 					<g
@@ -3149,7 +3149,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4329.667"
-								y="1248.225">~10</text>
+								y="1253.025">~10</text>
 						</g>
 					</g>
 					<g
@@ -3254,7 +3254,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4951.592"
-								y="1205.572">~3</text>
+								y="1210.371">~3</text>
 						</g>
 					</g>
 					<g
@@ -3454,7 +3454,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5472.239"
-								y="1177.825">~11</text>
+								y="1182.625">~11</text>
 						</g>
 					</g>
 					<g
@@ -3548,7 +3548,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6058.764"
-								y="1205.572">~2</text>
+								y="1210.371">~2</text>
 						</g>
 					</g>
 					<g
@@ -3747,7 +3747,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6604.466"
-								y="1200.225">~12</text>
+								y="1205.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -3841,7 +3841,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7150.167"
-								y="1205.572">~2</text>
+								y="1210.371">~2</text>
 						</g>
 					</g>
 					<g
@@ -6891,11 +6891,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="764.3226"
-								y="1828.894">~6</text>
+								y="1824.094">~6</text>
 							<text
 								class="dynamic"
 								x="699.3842"
-								y="1739.619">Ï</text>
+								y="1734.819">Ï</text>
 						</g>
 					</g>
 					<g
@@ -7038,7 +7038,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1389.57"
-								y="1836.8">~7</text>
+								y="1832">~7</text>
 						</g>
 					</g>
 					<g
@@ -7202,7 +7202,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1993.347"
-								y="1836.8">~8</text>
+								y="1832">~8</text>
 						</g>
 					</g>
 					<g
@@ -7377,7 +7377,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2586.938"
-								y="1836.8">~9</text>
+								y="1832">~9</text>
 						</g>
 					</g>
 					<g
@@ -7563,7 +7563,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3168.159"
-								y="1836.8">~10</text>
+								y="1832">~10</text>
 						</g>
 					</g>
 					<g
@@ -7756,7 +7756,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3746.883"
-								y="1836.8">~11</text>
+								y="1832">~11</text>
 						</g>
 					</g>
 					<g
@@ -7960,7 +7960,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4329.667"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -8164,7 +8164,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4918.767"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -8378,7 +8378,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5480.239"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -8592,7 +8592,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6025.939"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -8801,7 +8801,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6571.641"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -9006,7 +9006,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7117.342"
-								y="1836.8">~12</text>
+								y="1832">~12</text>
 						</g>
 					</g>
 					<g
@@ -9195,7 +9195,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="756.3226"
-								y="2253.892">~7</text>
+								y="2258.691">~7</text>
 						</g>
 					</g>
 					<g
@@ -9333,7 +9333,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1381.57"
-								y="2253.892">~7</text>
+								y="2258.691">~7</text>
 						</g>
 					</g>
 					<g
@@ -9482,7 +9482,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1985.347"
-								y="2238.531">~8</text>
+								y="2243.332">~8</text>
 						</g>
 					</g>
 					<g
@@ -9636,7 +9636,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2578.938"
-								y="2238.531">~8</text>
+								y="2243.332">~8</text>
 						</g>
 					</g>
 					<g
@@ -9801,7 +9801,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3212.185"
-								y="2238.531">~9</text>
+								y="2243.332">~9</text>
 						</g>
 					</g>
 					<g
@@ -9972,7 +9972,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3786.108"
-								y="2228.931">~9</text>
+								y="2233.731">~9</text>
 						</g>
 					</g>
 					<g
@@ -10164,7 +10164,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4362.492"
-								y="2261.571">~10</text>
+								y="2266.372">~10</text>
 						</g>
 					</g>
 					<g
@@ -10356,7 +10356,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4918.767"
-								y="2277.571">~10</text>
+								y="2282.372">~10</text>
 						</g>
 					</g>
 					<g
@@ -10565,7 +10565,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5480.239"
-								y="2293.571">~11</text>
+								y="2298.372">~11</text>
 						</g>
 					</g>
 					<g
@@ -10770,7 +10770,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6025.939"
-								y="2309.571">~11</text>
+								y="2314.372">~11</text>
 						</g>
 					</g>
 					<g
@@ -10996,7 +10996,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6571.641"
-								y="2325.571">~12</text>
+								y="2330.372">~12</text>
 						</g>
 					</g>
 					<g
@@ -11217,7 +11217,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7117.342"
-								y="2320.225">~12</text>
+								y="2325.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -11449,11 +11449,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="764.3226"
-								y="2437.534">~7</text>
+								y="2432.734">~7</text>
 							<text
 								class="dynamic"
 								x="699.3842"
-								y="2348.259">Ï</text>
+								y="2343.459">Ï</text>
 						</g>
 					</g>
 					<g
@@ -11600,7 +11600,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1389.57"
-								y="2453.534">~7</text>
+								y="2448.734">~7</text>
 						</g>
 					</g>
 					<g
@@ -11762,7 +11762,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1993.347"
-								y="2469.534">~8</text>
+								y="2464.734">~8</text>
 						</g>
 					</g>
 					<g
@@ -11924,7 +11924,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2586.938"
-								y="2516.894">~8</text>
+								y="2512.094">~8</text>
 						</g>
 					</g>
 					<g
@@ -12097,7 +12097,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3168.159"
-								y="2532.894">~9</text>
+								y="2528.094">~9</text>
 						</g>
 					</g>
 					<g
@@ -12270,7 +12270,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3746.883"
-								y="2564.894">~9</text>
+								y="2560.094">~9</text>
 						</g>
 					</g>
 					<g
@@ -12454,7 +12454,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4329.667"
-								y="2572.8">~10</text>
+								y="2568">~10</text>
 						</g>
 					</g>
 					<g
@@ -12638,7 +12638,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4918.767"
-								y="2572.8">~10</text>
+								y="2568">~10</text>
 						</g>
 					</g>
 					<g
@@ -12833,7 +12833,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5480.239"
-								y="2572.8">~11</text>
+								y="2568">~11</text>
 						</g>
 					</g>
 					<g
@@ -13024,7 +13024,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6025.939"
-								y="2572.8">~11</text>
+								y="2568">~11</text>
 						</g>
 					</g>
 					<g
@@ -13230,7 +13230,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6571.641"
-								y="2572.8">~12</text>
+								y="2568">~12</text>
 						</g>
 					</g>
 					<g
@@ -13436,7 +13436,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7117.342"
-								y="2572.8">~12</text>
+								y="2568">~12</text>
 						</g>
 					</g>
 					<g
@@ -13625,7 +13625,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="756.3226"
-								y="2909.892">~7</text>
+								y="2914.691">~7</text>
 						</g>
 					</g>
 					<g
@@ -13763,7 +13763,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1381.57"
-								y="2909.892">~7</text>
+								y="2914.691">~7</text>
 						</g>
 					</g>
 					<g
@@ -13908,7 +13908,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1985.347"
-								y="2894.531">~8</text>
+								y="2899.332">~8</text>
 						</g>
 					</g>
 					<g
@@ -14053,7 +14053,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2578.938"
-								y="2894.531">~8</text>
+								y="2899.332">~8</text>
 						</g>
 					</g>
 					<g
@@ -14209,7 +14209,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3160.159"
-								y="2894.531">~9</text>
+								y="2899.332">~9</text>
 						</g>
 					</g>
 					<g
@@ -14369,7 +14369,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3786.108"
-								y="2884.931">~9</text>
+								y="2889.731">~9</text>
 						</g>
 					</g>
 					<g
@@ -14540,7 +14540,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4368.892"
-								y="2900.931">~10</text>
+								y="2905.731">~10</text>
 						</g>
 					</g>
 					<g
@@ -14711,7 +14711,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4951.592"
-								y="2917.571">~10</text>
+								y="2922.372">~10</text>
 						</g>
 					</g>
 					<g
@@ -14898,7 +14898,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5480.239"
-								y="2933.571">~11</text>
+								y="2938.372">~11</text>
 						</g>
 					</g>
 					<g
@@ -15085,7 +15085,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6025.939"
-								y="2949.571">~11</text>
+								y="2954.372">~11</text>
 						</g>
 					</g>
 					<g
@@ -15289,7 +15289,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6571.641"
-								y="2965.571">~12</text>
+								y="2970.372">~12</text>
 						</g>
 					</g>
 					<g
@@ -15498,7 +15498,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7117.342"
-								y="2992.225">~12</text>
+								y="2997.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -15569,7 +15569,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			class="system">
 			<score:leftToRight
 				systemTop="3318.56"
-				systemBottom="5360.226" />
+				systemBottom="5365.025" />
 			<g
 				class="staff"
 				score:staffName="pal. 1+2">
@@ -15684,13 +15684,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 6341.754 3524.7 L 6380.154 3524.7 6380.154 3538.14 6341.754 3538.14 z" />
 						<path
 							class="opaqueBeam"
-							d="M 6787.756 3511.26 L 6826.156 3511.26 6826.156 3531.42 6787.756 3531.42 z" />
+							d="M 6787.757 3511.26 L 6826.157 3511.26 6826.157 3531.42 6787.757 3531.42 z" />
 						<path
 							class="beam"
-							d="M 6787.756 3524.7 L 6826.156 3524.7 6826.156 3538.14 6787.756 3538.14 z" />
+							d="M 6787.757 3524.7 L 6826.157 3524.7 6826.157 3538.14 6787.757 3538.14 z" />
 						<path
 							class="beam"
-							d="M 5200.091 3492.7 L 7545.735 3492.7 7545.735 3506.14 5200.091 3506.14 z" />
+							d="M 5200.092 3492.7 L 7545.736 3492.7 7545.736 3506.14 5200.092 3506.14 z" />
 					</g>
 					<g
 						class="chord"
@@ -15738,13 +15738,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5200.091"
+								x1="5200.092"
 								y1="3492.7"
-								x2="5200.091"
+								x2="5200.092"
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="5165.266"
+								x="5165.267"
 								y="3632">œ</text>
 							<text
 								class="accidental"
@@ -15753,16 +15753,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5183.679"
-								y="3473.5">~1</text>
+								y="3468.7">~1</text>
 							<text
 								class="dynamic"
-								x="5134.551"
-								y="3384.225">ƒ</text>
+								x="5134.552"
+								y="3379.425">ƒ</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5523.115">
+						score:alignment="5523.116">
 						<score:midi>
 							<moments>
 								<moment
@@ -15867,17 +15867,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3632">œ</text>
 							<text
 								class="accidental"
-								x="5465.53"
+								x="5465.531"
 								y="3632">#</text>
 							<text
 								class="ornament"
-								x="5523.115"
-								y="3473.5">~7</text>
+								x="5523.116"
+								y="3468.7">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5673.822">
+						score:alignment="5673.823">
 						<score:midi>
 							<moments>
 								<moment
@@ -16012,12 +16012,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3632">œ</text>
 							<text
 								class="accidental"
-								x="5616.237"
+								x="5616.238"
 								y="3632">#</text>
 							<text
 								class="ornament"
-								x="5673.822"
-								y="3473.5">~8</text>
+								x="5673.823"
+								y="3468.7">~8</text>
 						</g>
 					</g>
 					<g
@@ -16112,7 +16112,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="5925.507"
+								x="5925.508"
 								y="3632">œ</text>
 							<text
 								class="accidental"
@@ -16121,12 +16121,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5943.92"
-								y="3473.5">~5</text>
+								y="3468.7">~5</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6051.796">
+						score:alignment="6051.797">
 						<score:midi>
 							<moments>
 								<moment
@@ -16280,17 +16280,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3632">œ</text>
 							<text
 								class="accidental"
-								x="5994.211"
+								x="5994.212"
 								y="3632">#</text>
 							<text
 								class="ornament"
-								x="6051.796"
-								y="3473.5">~9</text>
+								x="6051.797"
+								y="3468.7">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6363.741">
+						score:alignment="6363.742">
 						<score:midi>
 							<moments>
 								<moment
@@ -16373,12 +16373,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3632">œ</text>
 							<text
 								class="accidental"
-								x="6306.156"
+								x="6306.157"
 								y="3632">#</text>
 							<text
 								class="ornament"
-								x="6363.741"
-								y="3473.5">~4</text>
+								x="6363.742"
+								y="3468.7">~4</text>
 						</g>
 					</g>
 					<g
@@ -16528,7 +16528,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="6479.861"
+								x="6479.862"
 								y="3632">œ</text>
 							<text
 								class="accidental"
@@ -16537,7 +16537,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6498.274"
-								y="3473.5">~10</text>
+								y="3468.7">~10</text>
 						</g>
 					</g>
 					<g
@@ -16604,13 +16604,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6826.156"
+								x1="6826.157"
 								y1="3492.7"
-								x2="6826.156"
+								x2="6826.157"
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="6791.331"
+								x="6791.332"
 								y="3632">œ</text>
 							<text
 								class="accidental"
@@ -16619,7 +16619,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6809.744"
-								y="3473.5">~3</text>
+								y="3468.7">~3</text>
 						</g>
 					</g>
 					<g
@@ -16786,9 +16786,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7032.972"
+								x1="7032.973"
 								y1="3492.7"
-								x2="7032.972"
+								x2="7032.973"
 								y2="3628.304" />
 							<text
 								class="notehead"
@@ -16801,7 +16801,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7016.56"
-								y="3473.5">~11</text>
+								y="3468.7">~11</text>
 						</g>
 					</g>
 					<g
@@ -16857,13 +16857,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7251.44"
+								x1="7251.441"
 								y1="3492.7"
-								x2="7251.44"
+								x2="7251.441"
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="7216.615"
+								x="7216.616"
 								y="3632">œ</text>
 							<text
 								class="accidental"
@@ -16872,7 +16872,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7235.028"
-								y="3473.5">~2</text>
+								y="3468.7">~2</text>
 						</g>
 					</g>
 					<g
@@ -17038,9 +17038,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7387.39"
+								x1="7387.391"
 								y1="3492.7"
-								x2="7387.39"
+								x2="7387.391"
 								y2="3628.304" />
 							<text
 								class="notehead"
@@ -17053,12 +17053,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7370.978"
-								y="3473.5">~12</text>
+								y="3468.7">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="7529.322">
+						score:alignment="7529.323">
 						<score:midi>
 							<moments>
 								<moment
@@ -17142,29 +17142,29 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="7545.735"
+								x1="7545.736"
 								y1="3492.7"
-								x2="7545.735"
+								x2="7545.736"
 								y2="3628.304" />
 							<text
 								class="notehead"
-								x="7510.91"
+								x="7510.911"
 								y="3632">œ</text>
 							<text
 								class="accidental"
-								x="7471.737"
+								x="7471.738"
 								y="3632">#</text>
 							<text
 								class="ornament"
-								x="7529.322"
-								y="3473.5">~6</text>
+								x="7529.323"
+								y="3468.7">~6</text>
 						</g>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="3550"
-						x2="7679.996"
+						x2="7679.997"
 						y2="3682" />
 				</g>
 				<g
@@ -17201,31 +17201,31 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 4826.543 3763.837 L 4864.943 3764.187 4864.943 3784.346 4826.543 3783.997 z" />
+							d="M 4826.544 3763.837 L 4864.944 3764.187 4864.944 3784.346 4826.544 3783.997 z" />
 						<path
 							class="beam"
-							d="M 4826.543 3750.397 L 4864.943 3750.747 4864.943 3764.187 4826.543 3763.837 z" />
+							d="M 4826.544 3750.397 L 4864.944 3750.747 4864.944 3764.187 4826.544 3763.837 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5218.063 3767.402 L 5256.463 3767.752 5256.463 3787.912 5218.063 3787.562 z" />
+							d="M 5218.064 3767.402 L 5256.464 3767.752 5256.464 3787.912 5218.064 3787.562 z" />
 						<path
 							class="beam"
-							d="M 5218.063 3753.962 L 5256.463 3754.312 5256.463 3767.752 5218.063 3767.402 z" />
+							d="M 5218.064 3753.962 L 5256.464 3754.312 5256.464 3767.752 5218.064 3767.402 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5708.207 3771.865 L 5746.607 3772.215 5746.607 3792.375 5708.207 3792.025 z" />
+							d="M 5708.208 3771.865 L 5746.607 3772.215 5746.607 3792.375 5708.208 3792.025 z" />
 						<path
 							class="beam"
-							d="M 5708.207 3758.425 L 5746.607 3758.775 5746.607 3772.215 5708.207 3771.865 z" />
+							d="M 5708.208 3758.425 L 5746.607 3758.775 5746.607 3772.215 5708.208 3771.865 z" />
 						<path
 							class="opaqueBeam"
-							d="M 6086.181 3775.307 L 6124.581 3775.657 6124.581 3795.817 6086.181 3795.467 z" />
+							d="M 6086.182 3775.307 L 6124.582 3775.657 6124.582 3795.817 6086.182 3795.467 z" />
 						<path
 							class="beam"
-							d="M 6086.181 3761.867 L 6124.581 3762.217 6124.581 3775.657 6086.181 3775.307 z" />
+							d="M 6086.182 3761.867 L 6124.582 3762.217 6124.582 3775.657 6086.182 3775.307 z" />
 						<path
 							class="beam"
-							d="M 4569.141 3780.053 L 6911.932 3801.386 6911.932 3814.826 4569.141 3793.493 z" />
+							d="M 4569.142 3780.053 L 6911.933 3801.386 6911.933 3814.826 4569.142 3793.493 z" />
 					</g>
 					<g
 						class="chord"
@@ -17343,26 +17343,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4569.141"
+								x1="4569.142"
 								y1="3587.696"
-								x2="4569.141"
+								x2="4569.142"
 								y2="3780.053" />
 							<text
 								class="notehead"
-								x="4567.141"
+								x="4567.142"
 								y="3584">œ</text>
 							<text
 								class="accidental"
-								x="4526.986"
+								x="4526.987"
 								y="3584">#</text>
 							<text
 								class="ornament"
 								x="4585.554"
-								y="3850.678">~7</text>
+								y="3855.479">~7</text>
 							<text
 								class="dynamic"
-								x="4520.615"
-								y="3924.278">Ï</text>
+								x="4520.616"
+								y="3929.078">Ï</text>
 						</g>
 					</g>
 					<g
@@ -17462,13 +17462,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4864.943"
+								x1="4864.944"
 								y1="3651.696"
-								x2="4864.943"
+								x2="4864.944"
 								y2="3782.747" />
 							<text
 								class="notehead"
-								x="4862.943"
+								x="4862.944"
 								y="3648">œ</text>
 							<text
 								class="accidental"
@@ -17477,7 +17477,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4881.356"
-								y="3853.372">~6</text>
+								y="3858.172">~6</text>
 						</g>
 					</g>
 					<g
@@ -17607,22 +17607,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5017.124"
+								x1="5017.125"
 								y1="3651.696"
-								x2="5017.124"
+								x2="5017.125"
 								y2="3784.132" />
 							<text
 								class="notehead"
-								x="5015.124"
+								x="5015.125"
 								y="3648">œ</text>
 							<text
 								class="accidental"
-								x="4974.969"
+								x="4974.97"
 								y="3648">#</text>
 							<text
 								class="ornament"
 								x="5033.537"
-								y="3854.758">~8</text>
+								y="3859.558">~8</text>
 						</g>
 					</g>
 					<g
@@ -17711,13 +17711,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5256.463"
+								x1="5256.464"
 								y1="3651.696"
-								x2="5256.463"
+								x2="5256.464"
 								y2="3786.312" />
 							<text
 								class="notehead"
-								x="5254.463"
+								x="5254.464"
 								y="3648">œ</text>
 							<text
 								class="accidental"
@@ -17726,12 +17726,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5272.876"
-								y="3856.937">~5</text>
+								y="3861.737">~5</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5434.9">
+						score:alignment="5434.901">
 						<score:midi>
 							<moments>
 								<moment
@@ -17889,8 +17889,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3648">#</text>
 							<text
 								class="ornament"
-								x="5434.9"
-								y="3858.413">~9</text>
+								x="5434.901"
+								y="3863.212">~9</text>
 						</g>
 					</g>
 					<g
@@ -17978,17 +17978,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3648">œ</text>
 							<text
 								class="accidental"
-								x="5704.452"
+								x="5704.453"
 								y="3648">#</text>
 							<text
 								class="ornament"
 								x="5763.02"
-								y="3861.4">~4</text>
+								y="3866.2">~4</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5897.552">
+						score:alignment="5897.553">
 						<score:midi>
 							<moments>
 								<moment
@@ -18141,8 +18141,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3696">#</text>
 							<text
 								class="ornament"
-								x="5897.552"
-								y="3862.625">~10</text>
+								x="5897.553"
+								y="3867.425">~10</text>
 						</g>
 					</g>
 					<g
@@ -18209,27 +18209,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6124.581"
+								x1="6124.582"
 								y1="3651.696"
-								x2="6124.581"
+								x2="6124.582"
 								y2="3794.217" />
 							<text
 								class="notehead"
-								x="6122.581"
+								x="6122.582"
 								y="3648">œ</text>
 							<text
 								class="accidental"
-								x="6082.426"
+								x="6082.427"
 								y="3648">#</text>
 							<text
 								class="ornament"
 								x="6140.994"
-								y="3864.842">~3</text>
+								y="3869.642">~3</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6275.526">
+						score:alignment="6275.527">
 						<score:midi>
 							<moments>
 								<moment
@@ -18405,13 +18405,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3584">#</text>
 							<text
 								class="ornament"
-								x="6275.526"
-								y="3866.067">~11</text>
+								x="6275.527"
+								y="3870.867">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="6587.471">
+						score:alignment="6587.472">
 						<score:midi>
 							<moments>
 								<moment
@@ -18476,8 +18476,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="3648">#</text>
 							<text
 								class="ornament"
-								x="6587.471"
-								y="3868.908">~2</text>
+								x="6587.472"
+								y="3873.708">~2</text>
 						</g>
 					</g>
 					<g
@@ -18643,22 +18643,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6705.116"
+								x1="6705.117"
 								y1="3651.696"
-								x2="6705.116"
+								x2="6705.117"
 								y2="3799.503" />
 							<text
 								class="notehead"
-								x="6703.116"
+								x="6703.117"
 								y="3648">œ</text>
 							<text
 								class="accidental"
-								x="6662.961"
+								x="6662.962"
 								y="3648">#</text>
 							<text
 								class="ornament"
 								x="6721.529"
-								y="3870.128">~12</text>
+								y="3874.928">~12</text>
 						</g>
 					</g>
 					<g
@@ -18714,22 +18714,22 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6911.932"
+								x1="6911.933"
 								y1="3651.696"
-								x2="6911.932"
+								x2="6911.933"
 								y2="3801.386" />
 							<text
 								class="notehead"
-								x="6909.932"
+								x="6909.933"
 								y="3648">œ</text>
 							<text
 								class="accidental"
-								x="6869.777"
+								x="6869.778"
 								y="3648">#</text>
 							<text
 								class="ornament"
 								x="6928.345"
-								y="3872.012">~2</text>
+								y="3876.812">~2</text>
 						</g>
 					</g>
 					<g
@@ -18756,9 +18756,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="3550"
-						x2="7679.996"
+						x2="7679.997"
 						y2="3682" />
 				</g>
 			</g>
@@ -18851,13 +18851,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 4209.194 4018.56 L 4247.594 4018.56 4247.594 4032 4209.194 4032 z" />
 						<path
 							class="opaqueBeam"
-							d="M 5539.611 4005.12 L 5578.011 4005.12 5578.011 4025.28 5539.611 4025.28 z" />
+							d="M 5539.612 4005.12 L 5578.012 4005.12 5578.012 4025.28 5539.612 4025.28 z" />
 						<path
 							class="beam"
-							d="M 5539.611 4018.56 L 5578.011 4018.56 5578.011 4032 5539.611 4032 z" />
+							d="M 5539.612 4018.56 L 5578.012 4018.56 5578.012 4032 5539.612 4032 z" />
 						<path
 							class="beam"
-							d="M 3893.598 3986.56 L 6261.051 3986.56 6261.051 4000 3893.598 4000 z" />
+							d="M 3893.598 3986.56 L 6261.052 3986.56 6261.052 4000 3893.598 4000 z" />
 					</g>
 					<g
 						class="chord"
@@ -18985,7 +18985,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4060.66">
+						score:alignment="4060.661">
 						<score:midi>
 							<moments>
 								<moment
@@ -19095,13 +19095,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4003.075"
+								x="4003.076"
 								y="4112">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4231.181">
+						score:alignment="4231.182">
 						<score:midi>
 							<moments>
 								<moment
@@ -19203,13 +19203,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4173.596"
+								x="4173.597"
 								y="4112">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4408.593">
+						score:alignment="4408.594">
 						<score:midi>
 							<moments>
 								<moment
@@ -19341,7 +19341,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4351.008"
+								x="4351.009"
 								y="4112">#</text>
 						</g>
 					</g>
@@ -19449,9 +19449,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4697.225"
+								x1="4697.226"
 								y1="3986.56"
-								x2="4697.225"
+								x2="4697.226"
 								y2="4108.304" />
 							<text
 								class="notehead"
@@ -19575,11 +19575,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="4983.963"
+								x="4983.964"
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4944.791"
+								x="4944.792"
 								y="4112">#</text>
 						</g>
 					</g>
@@ -19697,13 +19697,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5200.091"
+								x1="5200.092"
 								y1="3986.56"
-								x2="5200.091"
+								x2="5200.092"
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="5165.266"
+								x="5165.267"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -19819,7 +19819,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="5357.818"
+								x="5357.819"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -19921,13 +19921,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5578.011"
+								x1="5578.012"
 								y1="3986.56"
-								x2="5578.011"
+								x2="5578.012"
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="5543.186"
+								x="5543.187"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -20059,11 +20059,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="5735.379"
+								x="5735.38"
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="5696.207"
+								x="5696.208"
 								y="4112">#</text>
 						</g>
 					</g>
@@ -20165,13 +20165,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5981.781"
+								x1="5981.782"
 								y1="3986.56"
-								x2="5981.781"
+								x2="5981.782"
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="5946.956"
+								x="5946.957"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -20285,13 +20285,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="6261.051"
+								x1="6261.052"
 								y1="3986.56"
-								x2="6261.051"
+								x2="6261.052"
 								y2="4108.304" />
 							<text
 								class="notehead"
-								x="6226.226"
+								x="6226.227"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -20301,7 +20301,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						score:alignment="6475.96">
+						score:alignment="6475.961">
 						<score:midi>
 							<moments>
 								<moment
@@ -20317,15 +20317,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="6452.21"
+								x="6452.211"
 								y="4032">Ó</text>
 						</g>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4030"
-						x2="7679.996"
+						x2="7679.997"
 						y2="4162" />
 				</g>
 				<g
@@ -20374,7 +20374,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 4859.349 4208 L 4897.749 4208 4897.749 4221.44 4859.349 4221.44 z" />
 						<path
 							class="beam"
-							d="M 3279.097 4240 L 5634.383 4240 5634.383 4253.44 3279.097 4253.44 z" />
+							d="M 3279.098 4240 L 5634.384 4240 5634.384 4253.44 3279.098 4253.44 z" />
 					</g>
 					<g
 						class="chord"
@@ -20422,13 +20422,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3279.097"
+								x1="3279.098"
 								y1="4115.696"
-								x2="3279.097"
+								x2="3279.098"
 								y2="4240" />
 							<text
 								class="notehead"
-								x="3277.097"
+								x="3277.098"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -20624,13 +20624,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="3726.513"
+								x="3726.514"
 								y="4112">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3972.445">
+						score:alignment="3972.446">
 						<score:midi>
 							<moments>
 								<moment
@@ -20690,7 +20690,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4320.378">
+						score:alignment="4320.379">
 						<score:midi>
 							<moments>
 								<moment
@@ -20740,7 +20740,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4261.811"
+								x="4261.812"
 								y="4112">#</text>
 						</g>
 					</g>
@@ -20794,17 +20794,17 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4569.141"
+								x1="4569.142"
 								y1="4115.696"
-								x2="4569.141"
+								x2="4569.142"
 								y2="4240" />
 							<text
 								class="notehead"
-								x="4567.141"
+								x="4567.142"
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4526.986"
+								x="4526.987"
 								y="4112">#</text>
 						</g>
 					</g>
@@ -20858,23 +20858,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4753.597"
+								x1="4753.598"
 								y1="4115.696"
-								x2="4753.597"
+								x2="4753.598"
 								y2="4240" />
 							<text
 								class="notehead"
-								x="4751.597"
+								x="4751.598"
 								y="4112">œ</text>
 							<text
 								class="accidental"
-								x="4711.442"
+								x="4711.443"
 								y="4112">#</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4914.161">
+						score:alignment="4914.162">
 						<score:midi>
 							<moments>
 								<moment
@@ -20930,7 +20930,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5091.573">
+						score:alignment="5091.574">
 						<score:midi>
 							<moments>
 								<moment
@@ -21002,7 +21002,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="chord"
-						score:alignment="5288.016">
+						score:alignment="5288.017">
 						<score:midi>
 							<moments>
 								<moment
@@ -21102,13 +21102,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="5634.383"
+								x1="5634.384"
 								y1="4115.696"
-								x2="5634.383"
+								x2="5634.384"
 								y2="4240" />
 							<text
 								class="notehead"
-								x="5632.383"
+								x="5632.384"
 								y="4112">œ</text>
 							<text
 								class="accidental"
@@ -21118,7 +21118,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="rest"
-						score:alignment="5857.13">
+						score:alignment="5857.131">
 						<score:midi>
 							<moments>
 								<moment
@@ -21134,15 +21134,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="5838.851"
+								x="5838.852"
 								y="4192">∑</text>
 						</g>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4030"
-						x2="7679.996"
+						x2="7679.997"
 						y2="4162" />
 				</g>
 			</g>
@@ -21229,13 +21229,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 2443.14 4451.721 L 2967.416 4455.813 2967.416 4475.974 2443.14 4471.881 z" />
+							d="M 2443.141 4451.721 L 2967.417 4455.813 2967.417 4475.974 2443.141 4471.881 z" />
 						<path
 							class="beam"
-							d="M 2443.14 4465.161 L 2967.416 4469.253 2967.416 4482.693 2443.14 4478.601 z" />
+							d="M 2443.141 4465.161 L 2967.417 4469.253 2967.417 4482.693 2443.141 4478.601 z" />
 						<path
 							class="beam"
-							d="M 2443.14 4433.161 L 4492.822 4449.161 4492.822 4462.601 2443.14 4446.601 z" />
+							d="M 2443.141 4433.161 L 4492.823 4449.161 4492.823 4462.601 2443.141 4446.601 z" />
 					</g>
 					<g
 						class="chord"
@@ -21319,9 +21319,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2443.14"
+								x1="2443.141"
 								y1="4433.161"
-								x2="2443.14"
+								x2="2443.141"
 								y2="4556.304" />
 							<text
 								class="notehead"
@@ -21339,12 +21339,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2426.728"
-								y="4364.8">~6</text>
+								y="4360">~6</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2605.988">
+						score:alignment="2605.989">
 						<score:midi>
 							<moments>
 								<moment
@@ -21453,18 +21453,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									class="ledgerline"
 									x1="2573.163"
 									y1="4544"
-									x2="2638.813"
+									x2="2638.814"
 									y2="4544" />
 							</g>
 							<text
 								class="ornament"
-								x="2605.988"
-								y="4364.8">~7</text>
+								x="2605.989"
+								y="4360">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2720.993">
+						score:alignment="2720.994">
 						<score:midi>
 							<moments>
 								<moment
@@ -21580,7 +21580,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4576">œ</text>
 							<text
 								class="accidental"
-								x="2650.013"
+								x="2650.014"
 								y="4576">#</text>
 							<g
 								class="ledgerlines">
@@ -21599,8 +21599,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</g>
 							<text
 								class="ornament"
-								x="2720.993"
-								y="4364.8">~8</text>
+								x="2720.994"
+								y="4360">~8</text>
 						</g>
 					</g>
 					<g
@@ -21722,9 +21722,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2967.416"
+								x1="2967.417"
 								y1="4437.253"
-								x2="2967.416"
+								x2="2967.417"
 								y2="4572.304" />
 							<text
 								class="notehead"
@@ -21738,13 +21738,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2918.178"
+									x1="2918.179"
 									y1="4544"
 									x2="2983.829"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="2918.178"
+									x1="2918.179"
 									y1="4576"
 									x2="2983.829"
 									y2="4576" />
@@ -21752,7 +21752,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2951.004"
-								y="4364.8">~9</text>
+								y="4360">~9</text>
 						</g>
 					</g>
 					<g
@@ -21891,7 +21891,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="4572.304" />
 							<text
 								class="notehead"
-								x="3106.762"
+								x="3106.763"
 								y="4576">œ</text>
 							<g
 								class="ledgerlines">
@@ -21911,12 +21911,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3125.175"
-								y="4364.8">~10</text>
+								y="4360">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3356.303">
+						score:alignment="3356.304">
 						<score:midi>
 							<moments>
 								<moment
@@ -22067,26 +22067,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3323.478"
+									x1="3323.479"
 									y1="4544"
 									x2="3389.129"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="3323.478"
+									x1="3323.479"
 									y1="4576"
 									x2="3389.129"
 									y2="4576" />
 							</g>
 							<text
 								class="ornament"
-								x="3356.303"
-								y="4364.8">~11</text>
+								x="3356.304"
+								y="4360">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3516.596">
+						score:alignment="3516.597">
 						<score:midi>
 							<moments>
 								<moment
@@ -22261,13 +22261,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</g>
 							<text
 								class="ornament"
-								x="3516.596"
-								y="4364.8">~12</text>
+								x="3516.597"
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="3748.806">
+						score:alignment="3748.807">
 						<score:midi>
 							<moments>
 								<moment
@@ -22442,8 +22442,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</g>
 							<text
 								class="ornament"
-								x="3748.806"
-								y="4364.8">~12</text>
+								x="3748.807"
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
@@ -22598,13 +22598,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3938.073"
+								x1="3938.074"
 								y1="4444.83"
-								x2="3938.073"
+								x2="3938.074"
 								y2="4604.304" />
 							<text
 								class="notehead"
-								x="3903.248"
+								x="3903.249"
 								y="4608">œ</text>
 							<text
 								class="accidental"
@@ -22634,7 +22634,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3921.661"
-								y="4364.8">~12</text>
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
@@ -22789,13 +22789,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4213.527"
+								x1="4213.528"
 								y1="4446.98"
-								x2="4213.527"
+								x2="4213.528"
 								y2="4604.304" />
 							<text
 								class="notehead"
-								x="4178.702"
+								x="4178.703"
 								y="4608">œ</text>
 							<text
 								class="accidental"
@@ -22825,7 +22825,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4197.115"
-								y="4364.8">~12</text>
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
@@ -22980,35 +22980,35 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="4492.822"
+								x1="4492.823"
 								y1="4449.161"
-								x2="4492.822"
+								x2="4492.823"
 								y2="4604.304" />
 							<text
 								class="notehead"
-								x="4457.997"
+								x="4457.998"
 								y="4608">œ</text>
 							<text
 								class="accidental"
-								x="4413.971"
+								x="4413.972"
 								y="4608">n</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4443.584"
+									x1="4443.585"
 									y1="4544"
 									x2="4509.235"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="4443.584"
+									x1="4443.585"
 									y1="4576"
 									x2="4509.235"
 									y2="4576" />
 								<line
 									class="ledgerline"
-									x1="4443.584"
+									x1="4443.585"
 									y1="4608"
 									x2="4509.235"
 									y2="4608" />
@@ -23016,12 +23016,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4476.41"
-								y="4364.8">~12</text>
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="4855.491">
+						score:alignment="4855.492">
 						<score:midi>
 							<moments>
 								<moment
@@ -23183,27 +23183,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4822.666"
+									x1="4822.667"
 									y1="4544"
-									x2="4888.316"
+									x2="4888.317"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="4822.666"
+									x1="4822.667"
 									y1="4576"
-									x2="4888.316"
+									x2="4888.317"
 									y2="4576" />
 								<line
 									class="ledgerline"
-									x1="4822.666"
+									x1="4822.667"
 									y1="4608"
-									x2="4888.316"
+									x2="4888.317"
 									y2="4608" />
 							</g>
 							<text
 								class="ornament"
-								x="4855.491"
-								y="4364.8">~12</text>
+								x="4855.492"
+								y="4360">~12</text>
 						</g>
 					</g>
 					<g
@@ -23224,13 +23224,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="5157.399"
+								x="5157.4"
 								y="4384">∑</text>
 							<g
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="5142.039"
+									x1="5142.04"
 									y1="4352"
 									x2="5220.199"
 									y2="4352" />
@@ -23239,9 +23239,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4382"
-						x2="7679.996"
+						x2="7679.997"
 						y2="4514" />
 				</g>
 				<g
@@ -23290,7 +23290,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 1773.852 4666.667 L 2332.665 4684.799 2332.665 4698.239 1773.852 4680.107 z" />
 						<path
 							class="beam"
-							d="M 1773.852 4698.667 L 3417.541 4752 3417.541 4765.44 1773.852 4712.107 z" />
+							d="M 1773.852 4698.667 L 3417.542 4752 3417.542 4765.44 1773.852 4712.107 z" />
 					</g>
 					<g
 						class="chord"
@@ -23400,7 +23400,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1790.265"
-								y="4769.292">~7</text>
+								y="4774.092">~7</text>
 						</g>
 					</g>
 					<g
@@ -23510,12 +23510,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="4512">œ</text>
 							<text
 								class="accidental"
-								x="1840.635"
+								x="1840.634"
 								y="4512">#</text>
 							<text
 								class="ornament"
 								x="1899.202"
-								y="4772.827">~7</text>
+								y="4777.627">~7</text>
 						</g>
 					</g>
 					<g
@@ -23641,12 +23641,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2009.52"
-								y="4776.406">~8</text>
+								y="4781.206">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2132.579">
+						score:alignment="2132.58">
 						<score:midi>
 							<moments>
 								<moment
@@ -23766,13 +23766,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									class="ledgerline"
 									x1="2099.754"
 									y1="4544"
-									x2="2165.404"
+									x2="2165.405"
 									y2="4544" />
 							</g>
 							<text
 								class="ornament"
-								x="2132.579"
-								y="4780.399">~8</text>
+								x="2132.58"
+								y="4785.199">~8</text>
 						</g>
 					</g>
 					<g
@@ -23906,7 +23906,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2208.691"
+									x1="2208.692"
 									y1="4544"
 									x2="2274.342"
 									y2="4544" />
@@ -23914,12 +23914,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2241.517"
-								y="4783.934">~9</text>
+								y="4788.734">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2349.077">
+						score:alignment="2349.078">
 						<score:midi>
 							<moments>
 								<moment
@@ -24061,8 +24061,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</g>
 							<text
 								class="ornament"
-								x="2349.077"
-								y="4787.424">~9</text>
+								x="2349.078"
+								y="4792.224">~9</text>
 						</g>
 					</g>
 					<g
@@ -24195,13 +24195,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2511.925"
+								x1="2511.926"
 								y1="4611.696"
-								x2="2511.925"
+								x2="2511.926"
 								y2="4722.615" />
 							<text
 								class="notehead"
-								x="2509.925"
+								x="2509.926"
 								y="4608">œ</text>
 							<text
 								class="accidental"
@@ -24231,7 +24231,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2528.338"
-								y="4793.24">~10</text>
+								y="4798.041">~10</text>
 						</g>
 					</g>
 					<g
@@ -24380,19 +24380,19 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="2803.173"
+									x1="2803.174"
 									y1="4544"
 									x2="2868.824"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="2803.173"
+									x1="2803.174"
 									y1="4576"
 									x2="2868.824"
 									y2="4576" />
 								<line
 									class="ledgerline"
-									x1="2803.173"
+									x1="2803.174"
 									y1="4608"
 									x2="2868.824"
 									y2="4608" />
@@ -24400,7 +24400,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2835.999"
-								y="4803.224">~10</text>
+								y="4808.023">~10</text>
 						</g>
 					</g>
 					<g
@@ -24560,25 +24560,25 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="3014.699"
+									x1="3014.7"
 									y1="4544"
 									x2="3080.35"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="3014.699"
+									x1="3014.7"
 									y1="4576"
 									x2="3080.35"
 									y2="4576" />
 								<line
 									class="ledgerline"
-									x1="3014.699"
+									x1="3014.7"
 									y1="4608"
 									x2="3080.35"
 									y2="4608" />
 								<line
 									class="ledgerline"
-									x1="3014.699"
+									x1="3014.7"
 									y1="4640"
 									x2="3080.35"
 									y2="4640" />
@@ -24586,7 +24586,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3047.525"
-								y="4810.087">~11</text>
+								y="4814.887">~11</text>
 						</g>
 					</g>
 					<g
@@ -24730,13 +24730,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3417.541"
+								x1="3417.542"
 								y1="4659.696"
-								x2="3417.541"
+								x2="3417.542"
 								y2="4752" />
 							<text
 								class="notehead"
-								x="3415.541"
+								x="3415.542"
 								y="4656">œ</text>
 							<g
 								class="ledgerlines">
@@ -24768,7 +24768,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3433.954"
-								y="4822.625">~11</text>
+								y="4827.425">~11</text>
 						</g>
 					</g>
 					<g
@@ -24923,13 +24923,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3654.743"
+								x1="3654.744"
 								y1="4675.696"
-								x2="3654.743"
+								x2="3654.744"
 								y2="4787.2" />
 							<text
 								class="notehead"
-								x="3652.743"
+								x="3652.744"
 								y="4672">œ</text>
 							<text
 								class="accidental"
@@ -24971,7 +24971,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3671.156"
-								y="4848.226">~12</text>
+								y="4853.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -25138,39 +25138,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="4049.284"
+									x1="4049.285"
 									y1="4544"
-									x2="4114.934"
+									x2="4114.936"
 									y2="4544" />
 								<line
 									class="ledgerline"
-									x1="4049.284"
+									x1="4049.285"
 									y1="4576"
-									x2="4114.934"
+									x2="4114.936"
 									y2="4576" />
 								<line
 									class="ledgerline"
-									x1="4049.284"
+									x1="4049.285"
 									y1="4608"
-									x2="4114.934"
+									x2="4114.936"
 									y2="4608" />
 								<line
 									class="ledgerline"
-									x1="4049.284"
+									x1="4049.285"
 									y1="4640"
-									x2="4114.934"
+									x2="4114.936"
 									y2="4640" />
 								<line
 									class="ledgerline"
-									x1="4049.284"
+									x1="4049.285"
 									y1="4672"
-									x2="4114.934"
+									x2="4114.936"
 									y2="4672" />
 							</g>
 							<text
 								class="ornament"
 								x="4082.11"
-								y="4848.226">~12</text>
+								y="4853.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -25191,15 +25191,15 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<text
 								class="rest"
-								x="4559.274"
+								x="4559.275"
 								y="4544">∑</text>
 						</g>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4382"
-						x2="7679.996"
+						x2="7679.997"
 						y2="4514" />
 				</g>
 			</g>
@@ -25283,7 +25283,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 1198.746 4961.69 L 1706.956 4965.748 1706.956 4979.188 1198.746 4975.13 z" />
 						<path
 							class="beam"
-							d="M 1198.746 4929.69 L 3202.778 4945.69 3202.778 4959.13 1198.746 4943.13 z" />
+							d="M 1198.746 4929.69 L 3202.779 4945.69 3202.779 4959.13 1198.746 4943.13 z" />
 					</g>
 					<g
 						class="chord"
@@ -25402,7 +25402,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1182.333"
-								y="4910.49">~7</text>
+								y="4905.69">~7</text>
 						</g>
 					</g>
 					<g
@@ -25526,7 +25526,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1291.27"
-								y="4911.36">~7</text>
+								y="4906.56">~7</text>
 						</g>
 					</g>
 					<g
@@ -25665,7 +25665,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1400.207"
-								y="4912.229">~8</text>
+								y="4907.43">~8</text>
 						</g>
 					</g>
 					<g
@@ -25804,7 +25804,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1577.62"
-								y="4913.646">~8</text>
+								y="4908.846">~8</text>
 						</g>
 					</g>
 					<g
@@ -25954,7 +25954,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1690.543"
-								y="4914.548">~9</text>
+								y="4909.748">~9</text>
 						</g>
 					</g>
 					<g
@@ -26100,7 +26100,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1868.507"
-								y="4915.969">~9</text>
+								y="4911.168">~9</text>
 						</g>
 					</g>
 					<g
@@ -26246,13 +26246,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2118.489"
+								x1="2118.49"
 								y1="4937.033"
-								x2="2118.489"
+								x2="2118.49"
 								y2="5084.304" />
 							<text
 								class="notehead"
-								x="2083.664"
+								x="2083.665"
 								y="5088">œ</text>
 							<text
 								class="accidental"
@@ -26261,7 +26261,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2102.077"
-								y="4917.833">~10</text>
+								y="4913.033">~10</text>
 						</g>
 					</g>
 					<g
@@ -26407,13 +26407,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2299.25"
+								x1="2299.251"
 								y1="4938.477"
-								x2="2299.25"
+								x2="2299.251"
 								y2="5084.304" />
 							<text
 								class="notehead"
-								x="2264.425"
+								x="2264.426"
 								y="5088">œ</text>
 							<text
 								class="accidental"
@@ -26422,7 +26422,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2282.838"
-								y="4919.276">~10</text>
+								y="4914.477">~10</text>
 						</g>
 					</g>
 					<g
@@ -26579,9 +26579,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="2510.11"
+								x1="2510.111"
 								y1="4940.16"
-								x2="2510.11"
+								x2="2510.111"
 								y2="5084.304" />
 							<text
 								class="notehead"
@@ -26590,12 +26590,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2493.698"
-								y="4920.96">~11</text>
+								y="4916.16">~11</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2874.333">
+						score:alignment="2874.334">
 						<score:midi>
 							<moments>
 								<moment
@@ -26757,8 +26757,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="5088">œ</text>
 							<text
 								class="ornament"
-								x="2874.333"
-								y="4923.999">~11</text>
+								x="2874.334"
+								y="4919.199">~11</text>
 						</g>
 					</g>
 					<g
@@ -26926,9 +26926,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="3202.778"
+								x1="3202.779"
 								y1="4945.69"
-								x2="3202.778"
+								x2="3202.779"
 								y2="5100.304" />
 							<text
 								class="notehead"
@@ -26941,7 +26941,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3186.366"
-								y="4926.49">~12</text>
+								y="4921.69">~12</text>
 						</g>
 					</g>
 					<g
@@ -27115,7 +27115,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="5100.304" />
 							<text
 								class="notehead"
-								x="3517.74"
+								x="3517.741"
 								y="5104">œ</text>
 							<text
 								class="accidental"
@@ -27124,7 +27124,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3536.153"
-								y="4940.8">~12</text>
+								y="4936">~12</text>
 						</g>
 					</g>
 					<g
@@ -27153,16 +27153,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									class="ledgerline"
 									x1="3835.546"
 									y1="4928"
-									x2="3913.705"
+									x2="3913.706"
 									y2="4928" />
 							</g>
 						</g>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4958"
-						x2="7679.996"
+						x2="7679.997"
 						y2="5090" />
 				</g>
 				<g
@@ -27304,12 +27304,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="577.8313"
-								y="5249.292">~7</text>
+								y="5254.092">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="686.7682">
+						score:alignment="686.7681">
 						<score:midi>
 							<moments>
 								<moment
@@ -27404,27 +27404,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="670.3555"
+								x1="670.3554"
 								y1="4995.696"
-								x2="670.3555"
+								x2="670.3554"
 								y2="5182.75" />
 							<text
 								class="notehead"
-								x="668.3555"
+								x="668.3554"
 								y="4992">œ</text>
 							<text
 								class="accidental"
-								x="628.2009"
+								x="628.2008"
 								y="4992">#</text>
 							<text
 								class="ornament"
-								x="686.7682"
-								y="5253.376">~7</text>
+								x="686.7681"
+								y="5258.176">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="795.7051">
+						score:alignment="795.7049">
 						<score:midi>
 							<moments>
 								<moment
@@ -27530,23 +27530,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="779.2924"
+								x1="779.2922"
 								y1="5011.696"
-								x2="779.2924"
+								x2="779.2922"
 								y2="5186.834" />
 							<text
 								class="notehead"
-								x="777.2924"
+								x="777.2922"
 								y="5008">œ</text>
 							<text
 								class="ornament"
-								x="795.7051"
-								y="5257.46">~8</text>
+								x="795.7049"
+								y="5262.26">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="904.642">
+						score:alignment="904.6418">
 						<score:midi>
 							<moments>
 								<moment
@@ -27652,18 +27652,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="888.2293"
+								x1="888.2291"
 								y1="5027.696"
-								x2="888.2293"
+								x2="888.2291"
 								y2="5190.918" />
 							<text
 								class="notehead"
-								x="886.2293"
+								x="886.2291"
 								y="5024">œ</text>
 							<text
 								class="ornament"
-								x="904.642"
-								y="5261.544">~8</text>
+								x="904.6418"
+								y="5266.344">~8</text>
 						</g>
 					</g>
 					<g
@@ -27785,18 +27785,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="997.1662"
+								x1="997.166"
 								y1="5043.696"
-								x2="997.1662"
+								x2="997.166"
 								y2="5195.002" />
 							<text
 								class="notehead"
-								x="995.1662"
+								x="995.166"
 								y="5040">œ</text>
 							<text
 								class="ornament"
 								x="1013.579"
-								y="5265.628">~9</text>
+								y="5270.428">~9</text>
 						</g>
 					</g>
 					<g
@@ -27918,13 +27918,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1106.936"
+								x1="1106.935"
 								y1="5075.696"
-								x2="1106.936"
+								x2="1106.935"
 								y2="5199.118" />
 							<text
 								class="notehead"
-								x="1104.936"
+								x="1104.935"
 								y="5072">œ</text>
 							<text
 								class="accidental"
@@ -27933,7 +27933,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1123.348"
-								y="5269.743">~9</text>
+								y="5274.543">~9</text>
 						</g>
 					</g>
 					<g
@@ -28066,13 +28066,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1260.7"
+								x1="1260.699"
 								y1="5091.696"
-								x2="1260.7"
+								x2="1260.699"
 								y2="5204.882" />
 							<text
 								class="notehead"
-								x="1258.7"
+								x="1258.699"
 								y="5088">œ</text>
 							<text
 								class="accidental"
@@ -28081,12 +28081,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1277.112"
-								y="5275.507">~10</text>
+								y="5280.308">~10</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1489.405">
+						score:alignment="1489.404">
 						<score:midi>
 							<moments>
 								<moment
@@ -28228,8 +28228,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="5104">#</text>
 							<text
 								class="ornament"
-								x="1489.405"
-								y="5283.466">~10</text>
+								x="1489.404"
+								y="5288.266">~10</text>
 						</g>
 					</g>
 					<g
@@ -28373,13 +28373,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1691.526"
+								x1="1691.525"
 								y1="5123.696"
-								x2="1691.526"
+								x2="1691.525"
 								y2="5221.033" />
 							<text
 								class="notehead"
-								x="1689.526"
+								x="1689.525"
 								y="5120">œ</text>
 							<g
 								class="ledgerlines">
@@ -28393,7 +28393,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1707.938"
-								y="5291.659">~11</text>
+								y="5296.459">~11</text>
 						</g>
 					</g>
 					<g
@@ -28549,7 +28549,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								class="ledgerlines">
 								<line
 									class="ledgerline"
-									x1="1967.642"
+									x1="1967.641"
 									y1="5120"
 									x2="2033.292"
 									y2="5120" />
@@ -28557,7 +28557,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2000.467"
-								y="5302.625">~11</text>
+								y="5307.425">~11</text>
 						</g>
 					</g>
 					<g
@@ -28738,12 +28738,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2300.502"
-								y="5328.226">~12</text>
+								y="5333.025">~12</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="2693.611">
+						score:alignment="2693.612">
 						<score:midi>
 							<moments>
 								<moment
@@ -28903,7 +28903,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="5184">œ</text>
 							<text
 								class="accidental"
-								x="2622.631"
+								x="2622.632"
 								y="5184">#</text>
 							<g
 								class="ledgerlines">
@@ -28928,8 +28928,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							</g>
 							<text
 								class="ornament"
-								x="2693.611"
-								y="5360.226">~12</text>
+								x="2693.612"
+								y="5365.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -28956,9 +28956,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<line
 						class="normalBarline"
-						x1="7679.996"
+						x1="7679.997"
 						y1="4958"
-						x2="7679.996"
+						x2="7679.997"
 						y2="5090" />
 				</g>
 			</g>
@@ -28972,9 +28972,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					y2="4032" />
 				<line
 					class="normalBarline"
-					x1="7679.996"
+					x1="7679.997"
 					y1="3678"
-					x2="7679.996"
+					x2="7679.997"
 					y2="4034" />
 				<line
 					class="normalBarline"
@@ -28990,9 +28990,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					y2="4960" />
 				<line
 					class="normalBarline"
-					x1="7679.996"
+					x1="7679.997"
 					y1="4510"
-					x2="7679.996"
+					x2="7679.997"
 					y2="4962" />
 			</g>
 		</g>
@@ -29000,7 +29000,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			class="system">
 			<score:leftToRight
 				systemTop="5686.56"
-				systemBottom="7728.226" />
+				systemBottom="7733.025" />
 			<g
 				class="staff"
 				score:staffName="pal. 1+2">
@@ -29227,11 +29227,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5223.588"
-								y="5841.5">~1</text>
+								y="5836.7">~1</text>
 							<text
 								class="dynamic"
 								x="5174.461"
-								y="5752.225">ƒ</text>
+								y="5747.425">ƒ</text>
 						</g>
 					</g>
 					<g
@@ -29346,7 +29346,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5603.203"
-								y="5841.5">~7</text>
+								y="5836.7">~7</text>
 						</g>
 					</g>
 					<g
@@ -29491,7 +29491,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5744.342"
-								y="5841.5">~8</text>
+								y="5836.7">~8</text>
 						</g>
 					</g>
 					<g
@@ -29595,7 +29595,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6007.229"
-								y="5841.5">~5</text>
+								y="5836.7">~5</text>
 						</g>
 					</g>
 					<g
@@ -29759,7 +29759,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6116.166"
-								y="5841.5">~9</text>
+								y="5836.7">~9</text>
 						</g>
 					</g>
 					<g
@@ -29852,7 +29852,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6428.111"
-								y="5841.5">~4</text>
+								y="5836.7">~4</text>
 						</g>
 					</g>
 					<g
@@ -30011,7 +30011,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6562.644"
-								y="5841.5">~10</text>
+								y="5836.7">~10</text>
 						</g>
 					</g>
 					<g
@@ -30093,7 +30093,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6874.588"
-								y="5841.5">~3</text>
+								y="5836.7">~3</text>
 						</g>
 					</g>
 					<g
@@ -30275,7 +30275,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7062.959"
-								y="5841.5">~11</text>
+								y="5836.7">~11</text>
 						</g>
 					</g>
 					<g
@@ -30346,7 +30346,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7259.892"
-								y="5841.5">~2</text>
+								y="5836.7">~2</text>
 						</g>
 					</g>
 					<g
@@ -30527,7 +30527,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7394.424"
-								y="5841.5">~12</text>
+								y="5836.7">~12</text>
 						</g>
 					</g>
 					<g
@@ -30631,7 +30631,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="7528.143"
-								y="5841.5">~6</text>
+								y="5836.7">~6</text>
 						</g>
 					</g>
 					<g
@@ -30864,7 +30864,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4565.175"
-								y="6218.205">~7</text>
+								y="6223.005">~7</text>
 						</g>
 					</g>
 					<g
@@ -30979,7 +30979,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4836.617"
-								y="6220.608">~6</text>
+								y="6225.408">~6</text>
 						</g>
 					</g>
 					<g
@@ -31124,7 +31124,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4983.694"
-								y="6221.91">~8</text>
+								y="6226.71">~8</text>
 						</g>
 					</g>
 					<line
@@ -31234,11 +31234,11 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5364.442"
-								y="6225.281">~5</text>
+								y="6230.081">~5</text>
 							<text
 								class="dynamic"
 								x="5299.504"
-								y="6298.881">Ï</text>
+								y="6303.681">Ï</text>
 						</g>
 					</g>
 					<g
@@ -31402,7 +31402,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5514.988"
-								y="6226.614">~9</text>
+								y="6231.414">~9</text>
 						</g>
 					</g>
 					<g
@@ -31495,7 +31495,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5833.54"
-								y="6229.434">~4</text>
+								y="6234.234">~4</text>
 						</g>
 					</g>
 					<g
@@ -31654,7 +31654,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="5968.072"
-								y="6230.625">~10</text>
+								y="6235.425">~10</text>
 						</g>
 					</g>
 					<g
@@ -31736,7 +31736,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6205.363"
-								y="6232.726">~3</text>
+								y="6237.526">~3</text>
 						</g>
 					</g>
 					<g
@@ -31918,7 +31918,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6339.896"
-								y="6233.917">~11</text>
+								y="6238.717">~11</text>
 						</g>
 					</g>
 					<g
@@ -31989,7 +31989,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6651.841"
-								y="6236.679">~2</text>
+								y="6241.479">~2</text>
 						</g>
 					</g>
 					<g
@@ -32170,7 +32170,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6786.374"
-								y="6237.87">~12</text>
+								y="6242.67">~12</text>
 						</g>
 					</g>
 					<g
@@ -32241,7 +32241,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="6974.744"
-								y="6239.538">~2</text>
+								y="6244.338">~2</text>
 						</g>
 					</g>
 					<g
@@ -34936,7 +34936,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2401.307"
-								y="6732.8">~6</text>
+								y="6728">~6</text>
 						</g>
 					</g>
 					<g
@@ -35056,7 +35056,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2580.567"
-								y="6732.8">~7</text>
+								y="6728">~7</text>
 						</g>
 					</g>
 					<g
@@ -35197,7 +35197,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2695.572"
-								y="6732.8">~8</text>
+								y="6728">~8</text>
 						</g>
 					</g>
 					<g
@@ -35349,7 +35349,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2925.583"
-								y="6732.8">~9</text>
+								y="6728">~9</text>
 						</g>
 					</g>
 					<g
@@ -35508,7 +35508,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3084.742"
-								y="6732.8">~10</text>
+								y="6728">~10</text>
 						</g>
 					</g>
 					<g
@@ -35678,7 +35678,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3406.77"
-								y="6732.8">~11</text>
+								y="6728">~11</text>
 						</g>
 					</g>
 					<g
@@ -35859,7 +35859,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3566.899"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<g
@@ -36040,7 +36040,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3775.071"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<g
@@ -36231,7 +36231,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3935.564"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<g
@@ -36422,7 +36422,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4204.45"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<g
@@ -36613,7 +36613,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4467.9"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<g
@@ -36800,7 +36800,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4814.774"
-								y="6732.8">~12</text>
+								y="6728">~12</text>
 						</g>
 					</g>
 					<line
@@ -36890,19 +36890,19 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
-							d="M 1747.056 7016.107 L 1785.456 7017.295 1785.456 7037.455 1747.056 7036.267 z" />
+							d="M 1747.055 7016.107 L 1785.455 7017.295 1785.455 7037.455 1747.055 7036.267 z" />
 						<path
 							class="beam"
-							d="M 1747.056 7002.667 L 1785.456 7003.855 1785.456 7017.295 1747.056 7016.107 z" />
+							d="M 1747.055 7002.667 L 1785.455 7003.855 1785.455 7017.295 1747.055 7016.107 z" />
 						<path
 							class="opaqueBeam"
-							d="M 1747.056 7048.107 L 2307.244 7065.443 2307.244 7085.603 1747.056 7068.267 z" />
+							d="M 1747.055 7048.107 L 2307.244 7065.443 2307.244 7085.603 1747.055 7068.267 z" />
 						<path
 							class="beam"
-							d="M 1747.056 7034.667 L 2307.244 7052.003 2307.244 7065.443 1747.056 7048.107 z" />
+							d="M 1747.055 7034.667 L 2307.244 7052.003 2307.244 7065.443 1747.055 7048.107 z" />
 						<path
 							class="beam"
-							d="M 1747.056 7066.667 L 3470.422 7120 3470.422 7133.44 1747.056 7080.107 z" />
+							d="M 1747.055 7066.667 L 3470.422 7120 3470.422 7133.44 1747.055 7080.107 z" />
 					</g>
 					<g
 						class="chord"
@@ -36997,13 +36997,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1747.056"
+								x1="1747.055"
 								y1="6867.696"
-								x2="1747.056"
+								x2="1747.055"
 								y2="7066.667" />
 							<text
 								class="notehead"
-								x="1745.056"
+								x="1745.055"
 								y="6864">œ</text>
 							<text
 								class="accidental"
@@ -37012,7 +37012,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1763.468"
-								y="7137.292">~7</text>
+								y="7142.092">~7</text>
 						</g>
 					</g>
 					<g
@@ -37127,7 +37127,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1872.405"
-								y="7140.663">~7</text>
+								y="7145.463">~7</text>
 						</g>
 					</g>
 					<g
@@ -37253,7 +37253,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1982.723"
-								y="7144.077">~8</text>
+								y="7148.877">~8</text>
 						</g>
 					</g>
 					<g
@@ -37384,7 +37384,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2105.782"
-								y="7147.886">~8</text>
+								y="7152.686">~8</text>
 						</g>
 					</g>
 					<g
@@ -37526,7 +37526,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2214.719"
-								y="7151.257">~9</text>
+								y="7156.057">~9</text>
 						</g>
 					</g>
 					<g
@@ -37674,7 +37674,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2323.656"
-								y="7154.628">~9</text>
+								y="7159.428">~9</text>
 						</g>
 					</g>
 					<g
@@ -37843,7 +37843,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2502.917"
-								y="7160.176">~10</text>
+								y="7164.976">~10</text>
 						</g>
 					</g>
 					<g
@@ -38012,7 +38012,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2810.577"
-								y="7169.697">~10</text>
+								y="7174.497">~10</text>
 						</g>
 					</g>
 					<g
@@ -38198,7 +38198,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3007.092"
-								y="7175.779">~11</text>
+								y="7180.579">~11</text>
 						</g>
 					</g>
 					<line
@@ -38386,7 +38386,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3486.834"
-								y="7190.625">~11</text>
+								y="7195.425">~11</text>
 						</g>
 					</g>
 					<g
@@ -38589,7 +38589,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3697.421"
-								y="7216.226">~12</text>
+								y="7221.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -38788,7 +38788,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="4089.445"
-								y="7216.226">~12</text>
+								y="7221.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -39047,12 +39047,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="7420.304" />
 							<text
 								class="notehead"
-								x="1153.915"
+								x="1153.914"
 								y="7424">œ</text>
 							<text
 								class="ornament"
 								x="1172.327"
-								y="7278.524">~7</text>
+								y="7273.724">~7</text>
 						</g>
 					</g>
 					<g
@@ -39165,9 +39165,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1297.677"
+								x1="1297.676"
 								y1="7298.56"
-								x2="1297.677"
+								x2="1297.676"
 								y2="7420.304" />
 							<text
 								class="notehead"
@@ -39176,12 +39176,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1281.264"
-								y="7279.36">~7</text>
+								y="7274.56">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1390.201">
+						score:alignment="1390.2">
 						<score:midi>
 							<moments>
 								<moment
@@ -39314,8 +39314,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="7440">#</text>
 							<text
 								class="ornament"
-								x="1390.201"
-								y="7280.196">~8</text>
+								x="1390.2"
+								y="7275.396">~8</text>
 						</g>
 					</g>
 					<g
@@ -39449,12 +39449,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="7440">œ</text>
 							<text
 								class="accidental"
-								x="1510.029"
+								x="1510.028"
 								y="7440">#</text>
 							<text
 								class="ornament"
 								x="1567.613"
-								y="7281.558">~8</text>
+								y="7276.758">~8</text>
 						</g>
 					</g>
 					<g
@@ -39595,16 +39595,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y2="7436.304" />
 							<text
 								class="notehead"
-								x="1658.138"
+								x="1658.137"
 								y="7440">œ</text>
 							<text
 								class="accidental"
-								x="1627.507"
+								x="1627.506"
 								y="7440">n</text>
 							<text
 								class="ornament"
 								x="1676.55"
-								y="7282.394">~9</text>
+								y="7277.594">~9</text>
 						</g>
 					</g>
 					<g
@@ -39739,9 +39739,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1858.123"
+								x1="1858.122"
 								y1="7302.862"
-								x2="1858.123"
+								x2="1858.122"
 								y2="7436.304" />
 							<text
 								class="notehead"
@@ -39750,7 +39750,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1841.71"
-								y="7283.662">~9</text>
+								y="7278.862">~9</text>
 						</g>
 					</g>
 					<g
@@ -39911,7 +39911,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2075.28"
-								y="7285.455">~10</text>
+								y="7280.654">~10</text>
 						</g>
 					</g>
 					<g
@@ -40072,7 +40072,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2256.569"
-								y="7286.846">~10</text>
+								y="7282.046">~10</text>
 						</g>
 					</g>
 					<g
@@ -40240,7 +40240,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2468.277"
-								y="7288.471">~11</text>
+								y="7283.671">~11</text>
 						</g>
 					</g>
 					<g
@@ -40408,7 +40408,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2848.913"
-								y="7291.393">~11</text>
+								y="7286.593">~11</text>
 						</g>
 					</g>
 					<line
@@ -40597,7 +40597,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3256.871"
-								y="7294.524">~12</text>
+								y="7289.724">~12</text>
 						</g>
 					</g>
 					<g
@@ -40780,7 +40780,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="3583.414"
-								y="7308.8">~12</text>
+								y="7304">~12</text>
 						</g>
 					</g>
 					<g
@@ -40882,7 +40882,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							d="M 561.419 7514.667 L 997.166 7531.316 997.166 7544.756 561.419 7528.107 z" />
 						<path
 							class="beam"
-							d="M 561.419 7546.667 L 1957.258 7600 1957.258 7613.44 561.419 7560.107 z" />
+							d="M 561.419 7546.667 L 1957.257 7600 1957.257 7613.44 561.419 7560.107 z" />
 					</g>
 					<g
 						class="chord"
@@ -40992,12 +40992,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="577.8313"
-								y="7617.292">~7</text>
+								y="7622.092">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="686.7682">
+						score:alignment="686.7681">
 						<score:midi>
 							<moments>
 								<moment
@@ -41092,27 +41092,27 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="670.3555"
+								x1="670.3554"
 								y1="7363.696"
-								x2="670.3555"
+								x2="670.3554"
 								y2="7550.829" />
 							<text
 								class="notehead"
-								x="668.3555"
+								x="668.3554"
 								y="7360">œ</text>
 							<text
 								class="accidental"
-								x="628.2009"
+								x="628.2008"
 								y="7360">#</text>
 							<text
 								class="ornament"
-								x="686.7682"
-								y="7621.454">~7</text>
+								x="686.7681"
+								y="7626.254">~7</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="795.7051">
+						score:alignment="795.7049">
 						<score:midi>
 							<moments>
 								<moment
@@ -41218,23 +41218,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="779.2924"
+								x1="779.2922"
 								y1="7379.696"
-								x2="779.2924"
+								x2="779.2922"
 								y2="7554.991" />
 							<text
 								class="notehead"
-								x="777.2924"
+								x="777.2922"
 								y="7376">œ</text>
 							<text
 								class="ornament"
-								x="795.7051"
-								y="7625.617">~8</text>
+								x="795.7049"
+								y="7630.417">~8</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="904.642">
+						score:alignment="904.6417">
 						<score:midi>
 							<moments>
 								<moment
@@ -41340,18 +41340,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="888.2293"
+								x1="888.2291"
 								y1="7395.696"
-								x2="888.2293"
+								x2="888.2291"
 								y2="7559.154" />
 							<text
 								class="notehead"
-								x="886.2293"
+								x="886.2291"
 								y="7392">œ</text>
 							<text
 								class="ornament"
-								x="904.642"
-								y="7629.779">~8</text>
+								x="904.6417"
+								y="7634.579">~8</text>
 						</g>
 					</g>
 					<g
@@ -41473,23 +41473,23 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="997.1662"
+								x1="997.1659"
 								y1="7411.696"
-								x2="997.1662"
+								x2="997.1659"
 								y2="7563.316" />
 							<text
 								class="notehead"
-								x="995.1662"
+								x="995.1659"
 								y="7408">œ</text>
 							<text
 								class="ornament"
 								x="1013.579"
-								y="7633.941">~9</text>
+								y="7638.741">~9</text>
 						</g>
 					</g>
 					<g
 						class="chord"
-						score:alignment="1122.516">
+						score:alignment="1122.515">
 						<score:midi>
 							<moments>
 								<moment
@@ -41620,8 +41620,8 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="7440">#</text>
 							<text
 								class="ornament"
-								x="1122.516"
-								y="7638.104">~9</text>
+								x="1122.515"
+								y="7642.904">~9</text>
 						</g>
 					</g>
 					<g
@@ -41764,12 +41764,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								y="7456">œ</text>
 							<text
 								class="accidental"
-								x="1210.488"
+								x="1210.487"
 								y="7456">#</text>
 							<text
 								class="ornament"
 								x="1269.055"
-								y="7643.703">~10</text>
+								y="7648.503">~10</text>
 						</g>
 					</g>
 					<g
@@ -41902,13 +41902,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1462.986"
+								x1="1462.985"
 								y1="7475.696"
-								x2="1462.986"
+								x2="1462.985"
 								y2="7581.114" />
 							<text
 								class="notehead"
-								x="1460.986"
+								x="1460.985"
 								y="7472">œ</text>
 							<text
 								class="accidental"
@@ -41917,7 +41917,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1479.398"
-								y="7651.74">~10</text>
+								y="7656.54">~10</text>
 						</g>
 					</g>
 					<g
@@ -42061,13 +42061,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1677.533"
+								x1="1677.532"
 								y1="7491.696"
-								x2="1677.533"
+								x2="1677.532"
 								y2="7589.312" />
 							<text
 								class="notehead"
-								x="1675.533"
+								x="1675.532"
 								y="7488">œ</text>
 							<g
 								class="ledgerlines">
@@ -42075,13 +42075,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 									class="ledgerline"
 									x1="1661.12"
 									y1="7488"
-									x2="1726.771"
+									x2="1726.77"
 									y2="7488" />
 							</g>
 							<text
 								class="ornament"
 								x="1693.945"
-								y="7659.938">~11</text>
+								y="7664.737">~11</text>
 						</g>
 					</g>
 					<g
@@ -42225,13 +42225,13 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							class="graphics">
 							<line
 								class="stem"
-								x1="1957.258"
+								x1="1957.257"
 								y1="7507.696"
-								x2="1957.258"
+								x2="1957.257"
 								y2="7600" />
 							<text
 								class="notehead"
-								x="1955.258"
+								x="1955.257"
 								y="7504">œ</text>
 							<g
 								class="ledgerlines">
@@ -42245,7 +42245,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="1973.67"
-								y="7670.625">~11</text>
+								y="7675.425">~11</text>
 						</g>
 					</g>
 					<g
@@ -42426,7 +42426,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2274.459"
-								y="7696.226">~12</text>
+								y="7701.025">~12</text>
 						</g>
 					</g>
 					<g
@@ -42617,7 +42617,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<text
 								class="ornament"
 								x="2668.19"
-								y="7728.226">~12</text>
+								y="7733.025">~12</text>
 							<line
 								class="noteExtender"
 								x1="2709.015"

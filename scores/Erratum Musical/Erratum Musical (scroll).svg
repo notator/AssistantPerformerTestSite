@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Erratum Musical I-VIII (scroll)</dc:title>
-				<dc:date>Tuesday 05.02.2019, 12:22:21</dc:date>
+				<dc:date>Friday 22.03.2019, 15:18:00</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -42,107 +42,112 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			type="text/css">
 			@font-face
 			{
-			font-family: 'CLicht';
-			src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot');
-			src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot?#iefix') format('embedded-opentype'),
-			url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.woff') format('woff'),
-			url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.ttf') format('truetype'),
-			url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.svg#webfontl9D2oOyX') format('svg');
-			font-weight: normal;
-			font-style: normal;
+				font-family: 'CLicht';
+				src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot');
+				src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot?#iefix') format('embedded-opentype'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.woff') format('woff'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.ttf') format('truetype'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.svg#webfontl9D2oOyX') format('svg');
+				font-weight: normal;
+				font-style: normal;
 			}
 			@font-face
 			{
-			font-family: 'Arial';
-			src: url('https://james-ingram-act-two.de/fonts/arial.ttf') format('truetype');
-			font-weight:400;
-			font-style: normal;
+				font-family: 'Arial';
+				src: url('https://james-ingram-act-two.de/fonts/arial.ttf') format('truetype');
+				font-weight:400;
+				font-style: normal;
 			}
 			@font-face
 			{
-			font-family: 'Open Sans';
-			src: url('https://james-ingram-act-two.de/fonts/OpenSans-Regular.ttf') format('truetype');
-			font-weight:400;
-			font-style: normal;
+				font-family: 'Open Sans';
+				src: url('https://james-ingram-act-two.de/fonts/OpenSans-Regular.ttf') format('truetype');
+				font-weight:400;
+				font-style: normal;
 			}
 			@font-face
 			{
-			font-family: 'Open Sans Condensed';
-			src: url('https://james-ingram-act-two.de/fonts/OpenSans-CondBold.ttf') format('truetype');
-			font-weight:600;
-			font-style: normal;
+				font-family: 'Open Sans Condensed';
+				src: url('https://james-ingram-act-two.de/fonts/OpenSans-CondBold.ttf') format('truetype');
+				font-weight:600;
+				font-style: normal;
 			}
-			.mainTitle
-			{
-			font-family:"Open Sans";
-			font-size:256px;
-			text-anchor:middle
-			}
-			.author
-			{
-			font-family:"Open Sans";
-			font-size:128px;
-			text-anchor:end
-			}
-			.rest, .notehead, .accidental, .clef, .dynamic
-			{
-			font-family:CLicht
-			}
-			.rest, .notehead, .accidental, .clef
-			{
-			font-size:125.44px
-			}
-			.dynamic
-			{
-			font-size:94.08px
-			}
-			.timeStamp, .staffName, .barNumberNumber
-			{
-			font-family:Arial
-			}
-			.timeStamp
-			{
-			font-size:72px
-			}
-			.staffName
-			{
-			font-size:70.4px;
-			text-anchor:middle
-			}
-			.barNumberNumber
-			{
-			font-size:100px;
-			font-weight:bold;
-			text-anchor:middle
-			}
-			.staffline, .ledgerline, .stem, .beam
-			{
-			stroke:black;
-			stroke-width:4px;
-			fill:black
-			}
-			.stem
-			{
-			stroke-linecap:round
-			}
-			.normalBarline
-			{
-			stroke:black;
-			stroke-width:8px
-			}
-			.thickBarline
-			{
-			stroke:black;
-			stroke-width:16px
-			}
-			.opaqueBeam
-			{
-			stroke:white;
-			stroke-width:4px;
-			fill:white;
-			opacity:0.65
-			}
-		</style>
+		    .mainTitle
+            {
+                font-family:"Open Sans";
+                font-size:256px;
+                text-anchor:middle
+            }
+            .author
+            {
+                font-family:"Open Sans";
+                font-size:128px;
+                text-anchor:end
+            }
+            .rest, .notehead, .accidental, .clef, .dynamic
+            {
+                font-family:CLicht
+            }
+            .rest, .notehead, .accidental, .clef
+            {
+                font-size:125.44px
+            }
+            .dynamic
+            {
+                font-size:94.08px
+            }
+            .timeStamp, .staffName, .barNumberNumber
+            {
+                font-family:Arial
+            }
+            .timeStamp
+            {
+                font-size:72px
+            }
+            .staffName
+            {
+                font-size:70.4px;
+                text-anchor:middle
+            }
+            .barNumberNumber
+            {
+                font-size:63.9744px;
+                text-anchor:middle
+            }
+            .staffline, .ledgerline, .stem, .beam
+            {
+                stroke:black;
+                stroke-width:4px;
+                fill:black
+            }
+            .stem
+            {
+                stroke-linecap:round                
+            }
+            .normalBarline
+            {
+                stroke:black;
+                stroke-width:8px
+            }
+            .thickBarline
+            {
+                stroke:black;
+                stroke-width:16px
+            }
+            .barNumberFrame
+            {
+                stroke:black;
+                stroke-width:4.8px;
+                fill:none
+            }
+            .opaqueBeam
+            {
+                stroke:white;
+                stroke-width:4px;
+                fill:white;
+                opacity:0.65                
+            }
+            </style>
 		<g
 			id="trebleClef">
 			<text
@@ -154,7 +159,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="72">Erratum Musical (scroll), Tuesday 05.02.2019, 12:22:21</text>
+			y="72">Erratum Musical (scroll), Friday 22.03.2019, 15:17:59</text>
 		<g
 			class="titles">
 			<text
@@ -225,12 +230,6 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						x="232"
 						y="1241.6"> </text>
 					<g
-						class="barNumber">
-						<text
-							class="barNumberNumber"
-							x="280"
-							y="1248">I</text>
-					</g><g
 						class="beamBlock">
 						<path
 							class="opaqueBeam"
@@ -5683,10 +5682,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="2745.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="1995.322"
+							width="91.488"
+							height="89.4399" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="2752">II</text>
+							x="507.2"
+							y="2062.762">2</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -11347,10 +11352,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="4089.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="3687.062"
+							width="91.488"
+							height="89.4399" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="4096">III</text>
+							x="507.2"
+							y="3754.502">3</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -16843,10 +16854,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="5433.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="4981.844"
+							width="91.488"
+							height="89.4399" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="5440">IV</text>
+							x="507.2"
+							y="5049.284">4</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -22321,10 +22338,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="6745.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="6347.214"
+							width="91.488"
+							height="89.4404" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="6752">V</text>
+							x="507.2"
+							y="6414.654">5</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -27745,10 +27768,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="8057.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="7659.24"
+							width="91.488"
+							height="89.4399" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="8064">VI</text>
+							x="507.2"
+							y="7726.68">6</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -33215,10 +33244,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="9369.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="8950.591"
+							width="91.488"
+							height="89.4395" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="9376">VII</text>
+							x="507.2"
+							y="9018.03">7</text>
 					</g>
 					<g
 						class="beamBlock">
@@ -38795,10 +38830,16 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						y="10649.6"> </text>
 					<g
 						class="barNumber">
+						<rect
+							class="barNumberFrame"
+							x="461.456"
+							y="10243.42"
+							width="91.488"
+							height="89.4395" />
 						<text
 							class="barNumberNumber"
-							x="280"
-							y="10656">VIII</text>
+							x="507.2"
+							y="10310.86">8</text>
 					</g>
 					<g
 						class="beamBlock">
