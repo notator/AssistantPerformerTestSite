@@ -1,6 +1,5 @@
 
 import { constants } from "./Constants.js";
-import { readSoundFontFileAsArrayBuffer, SoundFont } from "./SoundFont.js";
 import { TracksControl } from "./TracksControl.js";
 import { Score } from "./Score.js";
 import { TimerConductor, CreepConductor } from "./Conductor.js";
@@ -1014,46 +1013,14 @@ export class Controls
 		// resets the score selector in case the browser has cached the last value
 		function initScoreSelector(systemChanged)
 		{
-			// Sets the soundFontPromises and soundFonts arrays.
-			function loadSoundFonts()
+			function onSoundFontLoaded(soundFont, scoreSelectIndices)
 			{
-				const soundFontData =
-					[
-						////Song Six is not currently available in the score selector
-						//{
-						//    name: "SongSix",
-						//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
-						//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
-						//    scoreSelectIndices: [] // Song Six is not currently available in the score selector
-						//},
-						//{
-						//	name: "Study3Sketch",
-						//	url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
-						//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
-						//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
-						//},
-						//{   
-						//	name: "Study2", /**** This soundFont does not load properly. The bug could be in either the file or the parser... ****/
-						//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
-						//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
-						//    scoreSelectIndices: [	STUDY2_SCORE_INDEX,	STUDY2_2STAVES_SCORE_INDEX]
-						//},
-						{
-							name: "Grand Piano",
-							url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
-							presetIndices: [0],
-							scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES]
-						}
-					];
-
-				function resolve(data)
+				if(soundFont.banks !== null)
 				{
 					// The soundFont is added as an attribute to the appropriate scoreSelect options.
-					function setScoreSelector(soundFont, soundFontName)
+					function setScoreSelector(soundFont, soundFontName, scoreSelectIndices)
 					{
-						let scoreSelect = globalElements.scoreSelect,
-							soundFontInfo = soundFontData.find(a => a.name.localeCompare(soundFontName) === 0),
-							scoreSelectIndices = soundFontInfo.scoreSelectIndices;
+						let scoreSelect = globalElements.scoreSelect;
 
 						for(let i = 0; i < scoreSelectIndices.length; ++i)
 						{
@@ -1070,45 +1037,92 @@ export class Controls
 						}
 					}
 
-					let soundFontName = data.soundFontName,
-						arrayBuffer = data.arrayBuffer,						
-						presetIndices = data.presetIndices;
-						
-					console.log(soundFontName + " soundFont loaded.");
-					let soundFont = new SoundFont(soundFontName, arrayBuffer, presetIndices);
-					setScoreSelector(soundFont, soundFontName);
-				}
+					setScoreSelector(soundFont, soundFont.name, scoreSelectIndices);
 
-				function reject(error)
+					console.log("The " + soundFont.name + " soundFont has loaded.");
+					//for(let i = 0; i < soundFont.presets.length; ++i)
+					//{
+					//	console.log("  preset" + i.toString() + ": " + soundFont.presets[i].name);
+					//}
+				}
+				else
 				{
-					let errorString = "XMLHttpRequest error loading " + error.soundFontName + ":  status=" + error.status.toString();
-					if(error.statusText.length > 0)
-					{
-						errorString = errorString + ",  statusText=" + error.statusText;
-					}
-					errorString = errorString + ("  (The XHR probably timed out.)"); 
-
-					throw errorString;
+					console.log("Error loading soundFont: " + soundFont.name);
 				}
+			}
 
-				let soundFontPromises = [];
+			function loadSoundFonts()
+			{
+				const soundFontData =
+				[
+					////Song Six is not currently available in the score selector
+					//{
+					//    name: "SongSix",
+					//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+					//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
+					//    scoreSelectIndices: [] // Song Six is not currently available in the score selector
+					//},
+					//{
+					//	name: "Study3Sketch",
+					//	url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+					//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
+					//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
+					//},
+					//{   
+					//	name: "Study2", /**** This soundFont does not load properly. The bug could be in either the file or the parser... ****/
+					//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+					//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
+					//    scoreSelectIndices: [	STUDY2_SCORE_INDEX,	STUDY2_2STAVES_SCORE_INDEX]
+					//},
+					{
+						name: "Grand Piano",
+						url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+						presetIndices: [0],
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES]
+					}
+					];
+
+				// Create a promise that resolves to the loaded soundFont.
+				// Note that XMLHttpRequest does not work with local files (localhost:).
+				// To make it work, run the app from the web (http:).
+				function setSfPromise(soundFontURL, soundFontName, presetIndices, scoreSelectIndices)
+				{
+					let promise = new Promise(function(resolve, reject)
+					{
+						let soundFont = null;
+
+						function onLoaded()
+						{
+							if((!(soundFont instanceof WebMIDI.soundFont.SoundFont)) || soundFont.banks === null)
+							{
+								reject(new Error("Error: SoundFont failed to load."));
+							}
+							else
+							{
+								resolve(soundFont);
+							}
+						}
+
+						soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoaded);
+					});
+
+					console.log("Loading the " + soundFontName +" soundFont...");
+
+					promise.then(
+						soundFont => onSoundFontLoaded(soundFont, scoreSelectIndices),
+						error => alert(error) // shows "Error: SoundFont failed to load in promise."
+					);
+				}
 
 				for(let soundFontIndex = 0; soundFontIndex < soundFontData.length; ++soundFontIndex)
 				{
 					let soundFontURL = soundFontData[soundFontIndex].url,
 						soundFontName = soundFontData[soundFontIndex].name,
 						presetIndices = soundFontData[soundFontIndex].presetIndices,
-						filePromise = readSoundFontFileAsArrayBuffer(soundFontURL, soundFontName, presetIndices);
+						scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
 
-					filePromise.then((data) => resolve(data), (errorData) => reject(errorData));
-					soundFontPromises.push(filePromise);
-					console.log("Loading " + soundFontName + " soundFont.");
+					setSfPromise(soundFontURL, soundFontName, presetIndices, scoreSelectIndices);
 				}
-
-				Promise.all(soundFontPromises).then(
-					() => { console.log("All soundFonts loaded."); }, // success handler
-					() => { console.log("Error loading all soundFonts."); }  // error handler
-				);					  
 			}
 
 			globalElements.scoreSelect.selectedIndex = 0;
