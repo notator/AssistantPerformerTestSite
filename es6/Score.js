@@ -1260,11 +1260,29 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	sendEndMarkerToEnd = function()
 	{
-		var lastTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
+		function getSystemIndex(endMsPosInScore)
+		{
+			var endSystemIndex = systems.length - 1;
+			for(var i = 0; i < systems.length; i++)
+			{
+				var timeObjects = systems[i].staves[0].voices[0].timeObjects;
+				if(timeObjects[timeObjects.length - 1].msPositionInScore >= endMsPosInScore)
+				{
+					endSystemIndex = i;
+					break;
+				}
+			}
+			return endSystemIndex;
+		}
 
-		endMarker = systems[systems.length - 1].endMarker;
+		var endMsPosInScore = regionSequence[regionSequence.length - 1].endMsPosInScore,
+			endSystemIndex = getSystemIndex(endMsPosInScore),
+			lastTimeObjects = systems[endSystemIndex].staves[0].voices[0].timeObjects,
+			lastTimeObject = lastTimeObjects[lastTimeObjects.length - 1]; 
+
+		endMarker = systems[endSystemIndex].endMarker;
 		hideEndMarkersExcept(endMarker);
-		endMarker.moveTo(lastTimeObjects[lastTimeObjects.length - 1]);
+		endMarker.moveTo(lastTimeObject);
 		endRegionIndex = regionSequence.length - 1;
 	},
 
