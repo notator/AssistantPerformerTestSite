@@ -1281,6 +1281,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			lastTimeObject = lastTimeObjects[lastTimeObjects.length - 1]; 
 
 		endMarker = systems[endSystemIndex].endMarker;
+		endMarker.setName(regionSequence[regionSequence.length - 1].name);
 		hideEndMarkersExcept(endMarker);
 		endMarker.moveTo(lastTimeObject);
 		endRegionIndex = regionSequence.length - 1;
@@ -1324,7 +1325,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// Does nothing when the end of the score is reached.
 	advanceCursor = function(msPositionInScore)
 	{
-		cursor.moveElementTo(msPositionInScore);
+		if(!(msPositionInScore === endMarker.msPositionInScore
+			&& endMarker.text.textContent.localeCompare(regionSequence[endRegionIndex].name === 0)))
+		{
+			cursor.moveElementTo(msPositionInScore);
+		}
 	},
 
 	// tracksData has the following defined attributes:

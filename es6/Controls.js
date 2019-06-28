@@ -1871,6 +1871,7 @@ export class Controls
 		score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
 		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+		score.sendEndMarkerToEnd();
 
 		setSvgControlsState('stopped');
 
