@@ -1245,6 +1245,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	sendStartMarkerToStart = function()
 	{
 		startMarker = systems[0].startMarker;
+		startMarker.setName(regionSequence[0].name);
 		hideStartMarkersExcept(startMarker);
 		startMarker.moveTo(systems[0].staves[0].voices[0].timeObjects[0]);
 		startRegionIndex = 0;
