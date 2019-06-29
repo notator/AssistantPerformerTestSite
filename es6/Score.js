@@ -636,9 +636,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return regionIndex;
 		}
 
-		setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
-		setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
-
 		systemIndex = findSystemIndex(cursorY);
 		system = systems[systemIndex];
 
@@ -666,6 +663,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					if(regionName.localeCompare("") === 0)
 					{
 						regionIndex = selectRegionIndex(timeObject.msPositionInScore, true);
+						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
+						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
 					else regionIndex = indexInRegionSequence(regionName);
 
@@ -685,6 +684,8 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					if(regionName.localeCompare("") === 0)
 					{
 						regionIndex = selectRegionIndex(timeObject.msPositionInScore, false);
+						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
+						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
 					else regionIndex = indexInRegionSequence(regionName);
 
