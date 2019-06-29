@@ -237,15 +237,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return returnTimeObject;
 	},
 
-	updateStartMarker = function(timeObjectsArray, timeObject)
-	{
-
-		if(timeObject.msPositionInScore < endMarker.msPositionInScore)
-		{
-			startMarker.moveTo(timeObject);
-		}
-	},
-
 	// This function is called by the tracksControl whenever a track's on/off state is toggled.
 	// It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
 	// Either argument can be undefined, in which case the corresponding internal attribute is not changed.
@@ -348,7 +339,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
 		if(timeObject !== null && timeObject.alignment !== startMarkerAlignment)
 		{
-			updateStartMarker(timeObjectsArray, timeObject);
+			startMarker.moveTo(timeObject);
 		}
 	},
 
@@ -598,14 +589,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					let index = indexInRegionSequence(name);
 					if(findStartRegionNames)
 					{
-						if(index <= endRegionIndex && msPositionInScore < endMarker.msPositionInScore)
+						if(index < endRegionIndex || (index === endRegionIndex && msPositionInScore < endMarker.msPositionInScore))
 						{
 							possibleNames.push(name);
 						}
 					}
 					else // find end region names
 					{
-						if(index >= startRegionIndex && msPositionInScore > startMarker.msPositionInScore)
+						if(index > startRegionIndex || (index === startRegionIndex && msPositionInScore > startMarker.msPositionInScore))
 						{
 							possibleNames.push(name);
 						}
@@ -683,7 +674,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 						startRegionIndex = regionIndex;
 						startMarker = system.startMarker;
 						hideStartMarkersExcept(startMarker);
-						updateStartMarker(timeObjectsArray, timeObject);
+						startMarker.moveTo(timeObject);
 						if(regionSequence.length > 1)
 						{
 							startMarker.setName(regionSequence[startRegionIndex].name);
