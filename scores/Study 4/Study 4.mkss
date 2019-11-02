@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--file created: Friday 28.06.2019, 12:25:27-->
+<!--file created: Thursday 31.10.2019, 21:02:32-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
 		<websiteLink
-			aboutLinkText="About Tombeau 1"
-			aboutLinkURL="https://james-ingram-act-two.de/compositions/aboutTombeau1.html" />
+			aboutLinkText="About Study 4"
+			aboutLinkURL="https://james-ingram-act-two.de/compositions/aboutStudy4.html" />
 	</metadata>
 	<dimensions>
 		<paper
@@ -27,21 +27,25 @@
 		minimumCrotchetDuration="800"
 		beamsCrossBarlines="true"
 		stafflineStemStrokeWidth="0.5"
-		gap="3.5"
+		gap="4"
 		minGapsBetweenStaves="6"
 		minGapsBetweenSystems="8"
-		voiceIndicesPerStaff="0, 1, 2, 3 "
-		clefsPerStaff="t, t, b, b"
-		stafflinesPerStaff="5,  5,  5,  5"
-		staffGroups="4"
-		longStaffNames="0, 1, 2, 3"
-		shortStaffNames="0, 1, 2, 3"
-		systemStartBars="1, 13, 25, 37, 49, 61, 73, 85, 97, 109" />
+		voiceIndicesPerStaff="0, 1, 2, 3, 4, 5, 6, 7 "
+		clefsPerStaff="t, t, t, t, t, t, t, t"
+		stafflinesPerStaff="5,  5,  5,  5,  5,  5,  5,  5"
+		staffGroups="7,  1"
+		longStaffNames="0, 1, 2, 3, 4, 5, 6, Mode"
+		shortStaffNames="0, 1, 2, 3, 4, 5, 6, Mode"
+		systemStartBars="1, 27" />
 	<krystals>
 		<krystal
-			name="xk3(7.7.18)-2.krys" />
+			name="xk4(7.7.12)-2.krys" />
 		<krystal
-			name="xk3(7.7.21)-1.krys" />
+			name="xk3(7.7.4)-2.krys" />
+		<krystal
+			name="xk2(7.7.4)-1.krys" />
+		<krystal
+			name="lk1(7)-12.krys" />
 	</krystals>
 	<palettes>
 		<palette
