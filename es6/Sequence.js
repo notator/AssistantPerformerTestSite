@@ -351,7 +351,7 @@ let
 
 		if(nAsynchMomentsSentAtOnce > 1)
 		{
-			reportTickOverload(nAsynchMomentsSentAtOnce);
+			reportTickOverload();
 		}
 
 		window.setTimeout(tick, delay);  // that will schedule the next tick.

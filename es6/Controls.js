@@ -25,6 +25,7 @@ const
 	ERRATUM_MUSICAL_I_VIII = 9,
 	THREE_CRASHES = 10,
 	TOMBEAU1_SCORE_INDEX = 11,
+	STUDY4_SCORE_INDEX = 12,
 
 	RESIDENT_SYNTH_INDEX = 1,
 
@@ -186,7 +187,7 @@ var
 	residentSynthCanPlayScore = function(scoreIndex)
 	{
 		var rval = false,
-			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES];
+			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX];
 
 		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
@@ -1078,7 +1079,7 @@ export class Controls
 						name: "Grand Piano",
 						url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX]
 					}
 					];
 
@@ -1294,6 +1295,12 @@ export class Controls
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Three Crashes";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
+						break;
+					case STUDY4_SCORE_INDEX:
+						scoreInfo.path = "Study 4/Study 4 (scroll)";
+						scoreInfo.inputHandler = "none";
+						scoreInfo.aboutText = "about Study 4";
+						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study4/aboutStudy4.html";
 						break;
 					default:
 						break;

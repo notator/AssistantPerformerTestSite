@@ -51,7 +51,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	// This callback is called by sequence.tick() if it can't keep up with the speed of a performance,
 	// so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
 	// nAsynchMomentsSentAtOnce is the number of moments sent "synchronously" during the overload.
-	reportTickOverload = function(nAsynchMomentsSentAtOnce)
+	reportTickOverload = function()
 	{
 		let tickOverloadMarkerElem = cursor.element.cloneNode();
 
