@@ -1271,7 +1271,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		var endMsPosInScore = regionSequence[regionSequence.length - 1].endMsPosInScore,
 			endSystemIndex = getSystemIndex(endMsPosInScore),
 			lastTimeObjects = systems[endSystemIndex].staves[0].voices[0].timeObjects,
-			lastTimeObject = lastTimeObjects[lastTimeObjects.length - 1]; 
+			lastTimeObject = lastTimeObjects.find(x => x.msPositionInScore === endMsPosInScore); 
 
 		endMarker = systems[endSystemIndex].endMarker;
 		endMarker.setName(regionSequence[regionSequence.length - 1].name);
