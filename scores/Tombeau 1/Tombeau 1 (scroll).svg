@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Tombeau 1 (scroll)</dc:title>
-				<dc:date>Friday 28.06.2019, 12:25:35</dc:date>
+				<dc:date>Friday 15.11.2019, 13:09:06</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -119,7 +119,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
                 font-size:84px;
                 text-anchor:middle
             }
-            .staffline, .ledgerline, .stem
+            .staffline, .ledgerline, .stem, .regionFrameConnector
             {
                 stroke:black;
                 stroke-width:4px;
@@ -226,7 +226,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="63">Tombeau 1 (scroll), Friday 28.06.2019, 12:25:28</text>
+			y="63">Tombeau 1 (scroll), Friday 15.11.2019, 13:08:45</text>
 		<g
 			class="titles">
 			<text
@@ -305,6 +305,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						class="staffName"
 						x="228"
 						y="1170.4">0</text>
+					<line
+						class="regionFrameConnector"
+						x1="498.8"
+						y1="1008"
+						x2="498.8"
+						y2="1092" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -6509,6 +6515,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x2="11032"
 							y2="3082" />
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="11032"
+						y1="2884"
+						x2="11032"
+						y2="2968" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -10648,6 +10660,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="498.8"
 							y="4599.381">25</text>
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="498.8"
+						y1="4867.571"
+						x2="498.8"
+						y2="5040" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -17179,6 +17197,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x2="11032"
 							y2="6834" />
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="11032"
+						y1="6636"
+						x2="11032"
+						y2="6720" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -27982,6 +28006,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x2="11032"
 							y2="10418" />
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="11032"
+						y1="10220"
+						x2="11032"
+						y2="10304" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -31882,6 +31912,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="498.8"
 							y="11956.17">73</text>
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="498.8"
+						y1="12139.87"
+						x2="498.8"
+						y2="12292" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -42647,6 +42683,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x="498.8"
 							y="16075.57">97</text>
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="498.8"
+						y1="16259.27"
+						x2="498.8"
+						y2="16408" />
 					<g
 						class="framedRegionInfo">
 						<rect
@@ -49309,6 +49351,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							x2="11032"
 							y2="18314" />
 					</g>
+					<line
+						class="regionFrameConnector"
+						x1="11032"
+						y1="18116"
+						x2="11032"
+						y2="18200" />
 					<g
 						class="framedRegionInfo">
 						<rect

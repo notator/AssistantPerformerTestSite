@@ -1781,61 +1781,104 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				appendVoiceEndTimeObjects(systems);
 			}
 
-			function getSystemBarlineTimeObjects(systemElems, systems)
+			function getSystemBarlineTimeObjects(systemElems, systemElem)
 			{
-				let system,	voiceTimeObjects, allNoteObjectElems, systemIndex;
-
-				function getBarlineTimeObjects(voiceTimeObjects, noteObjectElems)
+				function getBarlineObjects(voiceTimeObjects, systemElem)
 				{
-					let timeObjects = [],
-						voiceTimeObjectIndex = voiceTimeObjects.length - 1,
-						currentMsPos = voiceTimeObjects[voiceTimeObjectIndex--].msPositionInScore,
-						noteObjectElem, noteObjectClass, thickBarlineElem, barlineObjectElem,
-						elemIndex, timeObject, barlineX1;
-					
-					for(elemIndex = noteObjectElems.length - 1; elemIndex >= 0; --elemIndex)
+					function getBarlineTypeAndAlignments(barlineElems, typeString)
 					{
-						noteObjectElem = noteObjectElems[elemIndex];
-						noteObjectClass = noteObjectElem.getAttribute('class');
-						thickBarlineElem = noteObjectElem.getElementsByClassName('thickBarline')[0];
-						barlineObjectElem = null;					
+						let barlineElem, barlineX1,
+							barlineObjs = [], barlineObj, thickBarlines,
+							alignment, currentAlignment = -1;
 
-						if(noteObjectClass === 'normalBarline')
+						for(var i = 0; i < barlineElems.length; i++)
 						{
-							barlineObjectElem = noteObjectElem;
-						}
-						else if(thickBarlineElem !== undefined)
-						{
-							barlineObjectElem = thickBarlineElem; 
+							barlineElem = barlineElems[i];
+							thickBarlines = barlineElem.getElementsByClassName('thickBarline');
+							if(thickBarlines.length === 0)
+							{
+								barlineX1 = barlineElem.getAttribute('x1');
+							}
+							else
+							{
+								barlineX1 = thickBarlines[0].getAttribute('x1');
+							}
+							alignment = parseFloat(barlineX1, 10) / viewBoxScale; 
+							if(alignment > currentAlignment)
+							{
+								barlineObj = {};
+								barlineObj.typeString = typeString;
+								barlineObj.alignment = alignment;
+								barlineObjs.push(barlineObj);
+
+								currentAlignment = alignment;
+							}
+							else
+							{
+								break;
+							}
 						}
 
-						if(barlineObjectElem !== null)
-						{
-							timeObject = {};
-							barlineX1 = barlineObjectElem.getAttribute('x1');
-
-							timeObject.alignment = parseFloat(barlineX1, 10) / viewBoxScale;
-							timeObject.msPositionInScore = currentMsPos;
-							timeObjects.push(timeObject);
-						}
-						else if(noteObjectClass === 'chord' || noteObjectClass === 'rest')
-						{
-							currentMsPos = voiceTimeObjects[voiceTimeObjectIndex--].msPositionInScore;
-						}
+						return barlineObjs;
 					}
 
-					timeObjects = timeObjects.reverse();
+					let normalBarlineElems = Array.from(systemElem.getElementsByClassName('normalBarline')),
+						startRegionBarlineElems = Array.from(systemElem.getElementsByClassName('startRegionBarline')),
+						endAndStartRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline')),
+						endRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endRegionBarline')),
+						endOfScoreBarlineElems = Array.from(systemElem.getElementsByClassName('endOfScoreBarline')),
+						barlineObjs, normalBarlineTimeObjs = [], startBarlineTimeObjs = [], endBarlineTimeObjs = [], endOfScoreTimeObjs = [],
+						endAndStartBarlineTimeObjs = [];
 
-					return timeObjects;
+					normalBarlineTimeObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
+					startBarlineTimeObjs = getBarlineTypeAndAlignments(startRegionBarlineElems, "startRegionBarline");
+					endBarlineTimeObjs = getBarlineTypeAndAlignments(endRegionBarlineElems, "endRegionBarline");
+					endOfScoreTimeObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
+					endAndStartBarlineTimeObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
+
+					barlineObjs = [...normalBarlineTimeObjs, ...startBarlineTimeObjs, ...endAndStartBarlineTimeObjs, ...endBarlineTimeObjs, ...endOfScoreTimeObjs];
+					barlineObjs.sort((x, y) => x.alignment - y.alignment);
+
+					if(barlineObjs[barlineObjs.length - 1].typeString === "endOfScoreBarline")
+					{
+						barlineObjs.splice(barlineObjs.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
+					}
+
+					let jIndex = 0;
+					for(let i = 0; i < barlineObjs.length; i++)
+					{
+						let barline = barlineObjs[i];
+						for(var j = jIndex; j < voiceTimeObjects.length; j++)
+						{
+							let voiceTimeObject = voiceTimeObjects[j];
+							if((voiceTimeObject instanceof MidiChord || voiceTimeObject instanceof MidiRest)
+								&& voiceTimeObject.alignment > barline.alignment)
+							{
+								barline.msPositionInScore = voiceTimeObject.msPositionInScore;
+								jIndex = j + 1;
+								break;
+							}
+						}
+					}
+					let lastRegionBarline = barlineObjs[barlineObjs.length - 1];
+					let lastBarlineInVoice = voiceTimeObjects[voiceTimeObjects.length - 1];
+					if(lastRegionBarline.alignment === lastBarlineInVoice.alignment)
+					{
+						lastRegionBarline.msPositionInScore = lastBarlineInVoice.msPositionInScore;
+					}
+
+					return barlineObjs;
 				}
 
-				for(systemIndex = 0; systemIndex < systems.length; ++systemIndex)
+				let voiceTimeObjects;
+				for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
 				{
-					system = systems[systemIndex],
+					system = systems[systemIndex];
+					systemElem = systemElems[systemIndex];
 					voiceTimeObjects = system.staves[0].voices[0].timeObjects,
-					allNoteObjectElems = systemElems[systemIndex].getElementsByClassName("voice")[0].children;
+					//allNoteObjectElems = systemElems[systemIndex].getElementsByClassName("voice")[0].children;
 
-					system.barlines = getBarlineTimeObjects(voiceTimeObjects, allNoteObjectElems);
+					system.barlines = getBarlineObjects(voiceTimeObjects, systemElem);
 				}
 			}
 
