@@ -140,8 +140,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return timeObjectsArray;
 	},
 
-	// Returns null or the performing midiChord, midiRest, inputChord or voice end TimeObject closest to alignment
+	// Returns null or the performing midiChord, midiRest, inputChord, voice end TimeObject or barline closest to alignment
 	// (in any performing input or output track, depending on findInput).
+	// Displays an alert if an attempt is made to position the start marker at the end of a system, or
+	// the end marker at the beginning of a system.
 	// If trackIndex is defined, the returned timeObject will be in that track.
 	// Returns null if no timeObject can be found that matches the arguments.
 	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignment, trackIndex, state)
@@ -510,9 +512,19 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return index;
 		}
 
-		// Returns -1 if an attempt was made to set the startMarker or endMarker in the wrong order.
-		function selectRegionIndex(msPositionInScore, findStartRegionIndex)
+		// Displays an alert if an attempt was made to set the startMarker or endMarker in the wrong order.
+		function selectRegionIndex(timeObject, findStartRegionIndex)
 		{
+			function findMsPositionForRegions(timeObject)
+			{
+				let msPos = timeObject.msPositionInScore;
+				if(timeObject.typeString.indexOf('Barline') > -1)
+				{
+					msPos--;
+				}
+				return msPos;
+			}
+
 			function findRegionNamesAtMsPos(msPositionInScore)
 			{
 				let regionNames = undefined;
@@ -643,8 +655,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return possibleNames;
 			}
 
-			let regionNames = findRegionNamesAtMsPos(msPositionInScore),
-				possibleRegionNames = getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionIndex),
+			let msPositionForRegions = findMsPositionForRegions(timeObject),
+				regionNames = findRegionNamesAtMsPos(msPositionForRegions),
+				possibleRegionNames = getPossibleRegionNames(msPositionForRegions, regionNames, findStartRegionIndex),
 				regionIndex = -1;
 
 			if(possibleRegionNames.length > 1)
@@ -690,7 +703,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				case 'settingStart':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(timeObject.msPositionInScore, true);
+						regionIndex = selectRegionIndex(timeObject, true);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
@@ -711,7 +724,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				case 'settingEnd':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(timeObject.msPositionInScore, false);
+						regionIndex = selectRegionIndex(timeObject, false);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
