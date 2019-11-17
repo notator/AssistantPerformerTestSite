@@ -241,11 +241,6 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				alert("The start marker cannot be set at the end of a system.\nSet it at the start of the next one.");
 				returnTimeObject = null;
 			}
-			else if(returnTimeObject.alignment === timeObjects[0].alignment)
-			{
-				// silently prevent the startMarker from being set to a first chord or rest (it will be set to the barline).
-				returnTimeObject = null; 
-			}
 		}
 
 		return returnTimeObject;
@@ -513,12 +508,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		}
 
 		// Displays an alert if an attempt was made to set the startMarker or endMarker in the wrong order.
-		function selectRegionIndex(timeObject, findStartRegionIndex)
+		function selectRegionIndex(timeObject, settingEndMarker)
 		{
-			function findMsPositionForRegions(timeObject)
+			function findMsPositionForRegions(timeObject, settingEndMarker)
 			{
 				let msPos = timeObject.msPositionInScore;
-				if(timeObject.typeString.indexOf('Barline') > -1)
+				if(settingEndMarker === true && timeObject.typeString.indexOf('Barline') > -1)
 				{
 					msPos--;
 				}
@@ -618,13 +613,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				document.body.appendChild(selectRegionLayer);
 			}
 
-			function getPossibleRegionNames(msPositionInScore, regionNames, findStartRegionNames)
+			function getPossibleRegionNames(msPositionInScore, regionNames, settingEndMarker)
 			{
 				let possibleNames = [];
 				for(let name of regionNames)
 				{
 					let index = indexInRegionSequence(name);
-					if(findStartRegionNames)
+					if(settingEndMarker === false)
 					{
 						if(index < endRegionIndex || (index === endRegionIndex && msPositionInScore < endMarker.msPositionInScore))
 						{
@@ -642,7 +637,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 				if(possibleNames.length === 0)
 				{
-					if(findStartRegionIndex)
+					if(settingEndMarker === false)
 					{
 						alert("Can't position the startMarker on or after the endMarker.");
 					}
@@ -655,9 +650,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				return possibleNames;
 			}
 
-			let msPositionForRegions = findMsPositionForRegions(timeObject),
+			let msPositionForRegions = findMsPositionForRegions(timeObject, settingEndMarker),
 				regionNames = findRegionNamesAtMsPos(msPositionForRegions),
-				possibleRegionNames = getPossibleRegionNames(msPositionForRegions, regionNames, findStartRegionIndex),
+				possibleRegionNames = getPossibleRegionNames(msPositionForRegions, regionNames, settingEndMarker),
 				regionIndex = -1;
 
 			if(possibleRegionNames.length > 1)
@@ -690,20 +685,20 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex, state);
 		}
 
+		barlineTimeObject = system.barlines.find(x => x.msPositionInScore === timeObject.msPositionInScore);
+		timeObject = (barlineTimeObject === undefined) ? timeObject : barlineTimeObject;
+
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
 		// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
 		if(timeObject !== null)
 		{
-			barlineTimeObject = system.barlines.find(x => x.msPositionInScore === timeObject.msPositionInScore);
-			timeObject = (barlineTimeObject === undefined) ? timeObject : barlineTimeObject;
-
 			let regionIndex = 0;
 			switch(state)
 			{
 				case 'settingStart':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(timeObject, true);
+						regionIndex = selectRegionIndex(timeObject, false);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
@@ -724,7 +719,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				case 'settingEnd':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(timeObject, false);
+						regionIndex = selectRegionIndex(timeObject, true);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
