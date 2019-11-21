@@ -360,7 +360,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		// timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
 		if(timeObject !== null && timeObject.alignment !== startMarkerAlignment)
 		{
-			startMarker.moveTo(timeObject);
+			let barline = system.barlines.find(x => x.msPositionInScore === timeObject.msPositionInScore);
+			if(barline !== undefined)
+			{
+				startMarker.moveTo(barline);
+			}
+			else
+			{
+				startMarker.moveTo(timeObject);
+			}
 		}
 	},
 
