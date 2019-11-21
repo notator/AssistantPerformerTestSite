@@ -693,13 +693,13 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex, state);
 		}
 
-		barlineTimeObject = system.barlines.find(x => x.msPositionInScore === timeObject.msPositionInScore);
-		timeObject = (barlineTimeObject === undefined) ? timeObject : barlineTimeObject;
-
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
 		// either in a live performers voice (if there is one and it is performing) or in a performing output voice.
 		if(timeObject !== null)
 		{
+			barlineTimeObject = system.barlines.find(x => x.msPositionInScore === timeObject.msPositionInScore);
+			timeObject = (barlineTimeObject === undefined) ? timeObject : barlineTimeObject;
+
 			let regionIndex = 0;
 			switch(state)
 			{
