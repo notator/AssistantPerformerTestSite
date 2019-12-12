@@ -522,7 +522,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			function findMsPositionForRegions(timeObject, settingEndMarker)
 			{
 				let msPos = timeObject.msPositionInScore;
-				if(settingEndMarker === true && timeObject.typeString.indexOf('Barline') > -1)
+				if(settingEndMarker === true && timeObject.typeString !== undefined && timeObject.typeString.indexOf('Barline') > -1)
 				{
 					msPos--;
 				}
