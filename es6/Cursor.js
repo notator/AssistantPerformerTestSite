@@ -187,26 +187,19 @@ export class Cursor
 	// use running index here if possible...
 	moveElementTo(msPositionInScore)
 	{
-		if(msPositionInScore === this.endMarkerMsPosInScore)
+		let msPosData = this.msPosDataArray.find((e) => e.msPositionInScore === msPositionInScore);
+		if(msPosData !== undefined)
 		{
-			this.setVisible(false);
-		}
-		else
-		{
-			let msPosData = this.msPosDataArray.find((e) => e.msPositionInScore === msPositionInScore);
-			if(msPosData !== undefined)
+			if(msPosData.yCoordinates !== this.yCoordinates)
 			{
-				if(msPosData.yCoordinates !== this.yCoordinates)
-				{
-					this.yCoordinates = msPosData.yCoordinates;
-					this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
-					this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
-					let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
-					this.systemChangedCallback(yCoordinates);
-				}
-				this.element.setAttribute("x1", msPosData.alignment.toString(10));
-				this.element.setAttribute("x2", msPosData.alignment.toString(10));
+				this.yCoordinates = msPosData.yCoordinates;
+				this.element.setAttribute("y1", this.yCoordinates.top.toString(10));
+				this.element.setAttribute("y2", this.yCoordinates.bottom.toString(10));
+				let yCoordinates = { top: this.yCoordinates.top / this.viewBoxScale, bottom: this.yCoordinates.bottom / this.viewBoxScale };
+				this.systemChangedCallback(yCoordinates);
 			}
+			this.element.setAttribute("x1", msPosData.alignment.toString(10));
+			this.element.setAttribute("x2", msPosData.alignment.toString(10));
 		}
 	}
 

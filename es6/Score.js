@@ -29,6 +29,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	regionNamesPerMsPosInScore,
 	startRegionIndex,
 	endRegionIndex,
+	currentRegionIndex,
 	regionName = "", // used by regionName selector
 
 	setMarkerEvent,
@@ -767,10 +768,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				regionSequence[regionIndex].setActiveInfoStringsStyle(false);
 			}
 
-			let nextRegionIndex = regionIndex + 1;
-			if(nextRegionIndex < regionSequence.length)
+			currentRegionIndex = regionIndex + 1;
+			if(currentRegionIndex < regionSequence.length)
 			{
-				regionSequence[nextRegionIndex].setActiveInfoStringsStyle(true);
+				regionSequence[currentRegionIndex].setActiveInfoStringsStyle(true);
 			}
 		}
 	},
@@ -1361,11 +1362,14 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	},
 
 	// Advances the cursor to msPosition (in any channel)
-	// Does nothing when the end of the score is reached.
+	// Sets the cursor invisible when the end of the score is reached.
 	advanceCursor = function(msPositionInScore)
 	{
-		if(!(msPositionInScore === endMarker.msPositionInScore
-			&& endMarker.text.textContent.localeCompare(regionSequence[endRegionIndex].name === 0)))
+		if(msPositionInScore === endMarker.msPositionInScore && currentRegionIndex === endRegionIndex)
+		{
+			cursor.setVisible(false);
+		}
+		else
 		{
 			cursor.moveElementTo(msPositionInScore);
 		}
