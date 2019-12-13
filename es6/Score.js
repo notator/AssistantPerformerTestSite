@@ -724,6 +724,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 							startMarker.setName(regionSequence[startRegionIndex].name);
 						}
 					}
+					currentRegionIndex = regionIndex;
 					break;
 				case 'settingEnd':
 					if(regionName.localeCompare("") === 0)
@@ -755,6 +756,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	hideCursor = function()
 	{
 		cursor.setVisible(false);
+	},
+
+	setActiveInfoStringsStyle = function(regionIndex)
+	{
+		regionSequence[regionIndex].setActiveInfoStringsStyle(true);
 	},
 
 	leaveRegion = function(regionIndex)
@@ -2233,8 +2239,9 @@ export class Score
 		this.advanceCursor = advanceCursor;
 		this.hideCursor = hideCursor;
 
+		this.resetRegionInfoStrings = resetRegionInfoStrings;
+		this.setActiveInfoStringsStyle = setActiveInfoStringsStyle;
 		this.leaveRegion = leaveRegion;
-		this.resetRegionInfoStrings = resetRegionInfoStrings; 
 
 		this.getEmptySystems = getEmptySystems;
 

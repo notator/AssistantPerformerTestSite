@@ -469,7 +469,7 @@ var
 			score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
 			startRegionIndex = score.getStartRegionIndex();
-			score.leaveRegion(startRegionIndex - 1);
+			score.setActiveInfoStringsStyle(startRegionIndex);
 			startMarkerMsPosition = score.startMarkerMsPosition();
 			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
