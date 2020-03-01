@@ -864,7 +864,7 @@ var
 		}
 		else
 		{
-			option.text = "browser does not support Web MIDI";
+			option.text = "MIDI input devices are not available";
 			is.add(option, null);
 			globalElements.inputDeviceSelect.disabled = true;
 		}

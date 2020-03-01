@@ -32,8 +32,19 @@ window.addEventListener("load", function ()
 			// the contents of the device selector menus.
 			_AP.controls.init(midiAccess);
 		},
+
+		// This function should be called either
+		// if the browser does not support the Web MIDI API,
+		// or if the user refuses permission to use his hardware MIDI devices.
 		onErrorCallback = function ()
 		{
+			alert("Assistant Performer, limited functionality:\n\n" +
+				"This application can perform most of its scores without using\n" +
+				"third party software plugins or MIDI hardware.\n" +
+				"Hardware MIDI input and output devices can be used if the browser\n" +
+				"    1. supports the Web MIDI API, and\n" +
+				"    2. has been given permission to use them.");
+			// sets the contents of the device selector menus (without hardware devices).
 			_AP.controls.init(null);
 		};
 
