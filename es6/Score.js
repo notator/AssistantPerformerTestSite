@@ -759,8 +759,15 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	},
 
 	setActiveInfoStringsStyle = function(regionIndex)
-	{
-		regionSequence[regionIndex].setActiveInfoStringsStyle(true);
+    {
+        // if regionSequence.length === 1, regionSequence[0] is not a RegionDef
+        // and there are no region InfoStrings whose style needs to be set.
+        // see Score.getRegionData(svgElem).
+        if(regionSequence[regionIndex] instanceof RegionDef)
+        {
+            console.assert(regionSequence.length > 1, "console assertion failed!");
+            regionSequence[regionIndex].setActiveInfoStringsStyle(true);
+        }
 	},
 
 	leaveRegion = function(regionIndex)
