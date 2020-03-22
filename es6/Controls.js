@@ -34,7 +34,8 @@ const
 	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conductingTimer: 2, conductingCreep: 4 });
 
 var
-	residentSf2Synth,
+    residentWAFSynth,
+    residentSf2Synth,
 	player, // player can be set to Sequence, or to Keyboard1 objects.
 	tracksControl = new TracksControl(),
 
@@ -872,7 +873,7 @@ var
 
 	// sets the options in the output device selector
 	// midiAccess can be null
-	setMIDIOutputDeviceSelector = function(midiAccess, residentSf2Synth)
+    setMIDIOutputDeviceSelector = function(midiAccess, residentWAFynth, residentSf2Synth)
 	{
 		var
 			option,
@@ -884,10 +885,15 @@ var
 		option.text = "choose a MIDI output device";
 		os.add(option, null);
 
-		option = document.createElement("option");
-		option.outputDevice = residentSf2Synth;
-		option.text = "Resident Sf2 Synth";
-		os.add(option, null);
+        option = document.createElement("option");
+        option.outputDevice = residentWAFSynth;
+        option.text = "ResidentWAFSynth";
+        os.add(option, null);
+
+        option = document.createElement("option");
+        option.outputDevice = residentSf2Synth;
+        option.text = "ResidentSf2Synth";
+        os.add(option, null);
 
 		if(midiAccess !== null)
 		{
@@ -1052,7 +1058,7 @@ export class Controls
 				}
 			}
 
-			function loadSoundFonts()
+			function setSoundFonts()
 			{
 				const soundFontData =
 				[
@@ -1124,12 +1130,26 @@ export class Controls
 
 					setSfPromise(soundFontURL, soundFontName, presetIndices, scoreSelectIndices);
 				}
-			}
+            }
+
+            function setWebAudioFonts()
+            {
+                let scoreSelect = globalElements.scoreSelect;
+
+                for(let i = 0; i < scoreSelect.options.length; ++i)
+                {
+                    let option = scoreSelect.options[i];
+                    option.webAudioFont = residentWAFSynth.webAudioFonts[0];
+                }
+            }
 
 			globalElements.scoreSelect.selectedIndex = 0;
-			score = new Score(systemChanged); // an empty score, with callback function
+            score = new Score(systemChanged); // an empty score, with callback function
 
-			loadSoundFonts(); // also sets the score selector			
+            setWebAudioFonts();
+
+            setSoundFonts(); // loads the soundFonts first
+            
 		}
 
 		function getControlLayers(document)
@@ -1180,12 +1200,13 @@ export class Controls
 
 		midiAccess = mAccess;
 
+        residentWAFSynth = new WebMIDI.residentWAFSynth.ResidentWAFSynth();
 		residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
 
 		getGlobalElements();
 
 		setMIDIInputDeviceSelector(midiAccess);
-		setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
+        setMIDIOutputDeviceSelector(midiAccess, residentWAFSynth, residentSf2Synth);
 
 		if(midiAccess !== null)
 		{
@@ -1726,10 +1747,14 @@ export class Controls
 				options.outputDevice.open();
 			}
 
-			if(options.outputDevice.setSoundFont !== undefined)
-			{
-				options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
-			}
+            if(options.outputDevice === residentSf2Synth)
+            {
+                options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
+            }
+            else if(options.outputDevice === residentWAFSynth)
+            {
+                options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].webAudioFont);
+            }
 		}
 
 		// tracksData is set up inside score (where it can be retrieved
