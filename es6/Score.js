@@ -760,10 +760,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 	setActiveInfoStringsStyle = function(regionIndex)
     {
-        // if regionSequence.length === 1, regionSequence[0] is not a RegionDef
-        // and there are no region InfoStrings whose style needs to be set.
+        // setActiveInfoStringsStyle is only defined if there are InfoStrings whose style needs to be set.
+        // There are no InfoStrings if the score contains no regionInfoStringElems. This is the case for
+        // all scores prior to Tombeau 1.
         // see Score.getRegionData(svgElem).
-        if(regionSequence[regionIndex] instanceof RegionDef)
+        if(regionSequence[regionIndex].setActiveInfoStringsStyle !== undefined)
         {
             console.assert(regionSequence.length > 1, "console assertion failed!");
             regionSequence[regionIndex].setActiveInfoStringsStyle(true);
