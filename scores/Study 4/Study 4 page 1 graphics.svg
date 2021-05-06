@@ -59,11 +59,7 @@
             {
                 font-size:156.8px
             }
-            .fffColor
-			{
-			    fill:#FF0000
-			}
-			.ffColor
+            .ffColor
 			{
 			    fill:#D50055
 			}
@@ -187,7 +183,7 @@
 		<text
 			class="timeStamp"
 			x="32"
-			y="90">Study 4 page 1 graphics, Thursday 19.12.2019, 12:35:50</text>
+			y="90">Study 4 page 1 graphics, Tuesday 07.04.2020, 12:19:56</text>
 		<g
 			class="titles">
 			<text
@@ -363,7 +359,7 @@
 								x2="763.3655"
 								y2="2155.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="719.8339"
 								y="2160">œ</text>
 							<g
@@ -398,7 +394,7 @@
 								x="839.7432"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="839.7432"
 								y="2160">œ</text>
 							<g
@@ -433,7 +429,7 @@
 								x="946.4623"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="946.4623"
 								y="2160">œ</text>
 							<g
@@ -464,7 +460,7 @@
 								x2="1090.718"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1047.186"
 								y="1980">œ</text>
 							<text
@@ -472,7 +468,7 @@
 								x="1047.186"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1047.186"
 								y="2160">œ</text>
 							<g
@@ -503,7 +499,7 @@
 								x2="1185.746"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1142.214"
 								y="1980">œ</text>
 							<text
@@ -511,7 +507,7 @@
 								x="1142.214"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1142.214"
 								y="2160">œ</text>
 							<g
@@ -542,7 +538,7 @@
 								x2="1275.678"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1232.146"
 								y="1980">œ</text>
 							<text
@@ -550,7 +546,7 @@
 								x="1232.146"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1232.146"
 								y="2160">œ</text>
 							<g
@@ -581,11 +577,11 @@
 								x2="1360.514"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1316.982"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1316.982"
 								y="1980">œ</text>
 							<text
@@ -593,11 +589,11 @@
 								x="1316.982"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1316.982"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1268.017"
 								y="1920">#</text>
 							<g
@@ -628,11 +624,11 @@
 								x2="1440.553"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1397.021"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1397.021"
 								y="1980">œ</text>
 							<text
@@ -640,11 +636,11 @@
 								x="1397.021"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1397.021"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1348.056"
 								y="1920">#</text>
 							<g
@@ -675,11 +671,11 @@
 								x2="1550.822"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1507.29"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1507.29"
 								y="1980">œ</text>
 							<text
@@ -687,11 +683,11 @@
 								x="1507.29"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1507.29"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1458.325"
 								y="1920">#</text>
 							<g
@@ -722,15 +718,15 @@
 								x2="1673.661"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="1630.13"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1630.13"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1630.13"
 								y="1980">œ</text>
 							<text
@@ -738,11 +734,11 @@
 								x="1630.13"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1630.13"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1565.09"
 								y="1900">b</text>
 							<g
@@ -782,15 +778,15 @@
 								x2="1813.244"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="1769.713"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1769.713"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1769.713"
 								y="1980">œ</text>
 							<text
@@ -798,11 +794,11 @@
 								x="1769.713"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1769.713"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1704.673"
 								y="1900">b</text>
 							<g
@@ -842,15 +838,15 @@
 								x2="1952.828"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="1909.296"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="1909.296"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="1909.296"
 								y="1980">œ</text>
 							<text
@@ -858,11 +854,11 @@
 								x="1909.296"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="1909.296"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="1844.257"
 								y="1900">b</text>
 							<g
@@ -902,7 +898,7 @@
 								x2="2049.891"
 								y2="2155.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2006.359"
 								y="2160">œ</text>
 							<g
@@ -937,7 +933,7 @@
 								x="2126.269"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2126.269"
 								y="2160">œ</text>
 							<g
@@ -972,7 +968,7 @@
 								x="2232.988"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2232.988"
 								y="2160">œ</text>
 							<g
@@ -1003,7 +999,7 @@
 								x2="2377.243"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2333.711"
 								y="1980">œ</text>
 							<text
@@ -1011,7 +1007,7 @@
 								x="2333.711"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2333.711"
 								y="2160">œ</text>
 							<g
@@ -1042,7 +1038,7 @@
 								x2="2472.271"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2428.74"
 								y="1980">œ</text>
 							<text
@@ -1050,7 +1046,7 @@
 								x="2428.74"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2428.74"
 								y="2160">œ</text>
 							<g
@@ -1081,7 +1077,7 @@
 								x2="2562.203"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2518.672"
 								y="1980">œ</text>
 							<text
@@ -1089,7 +1085,7 @@
 								x="2518.672"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2518.672"
 								y="2160">œ</text>
 							<g
@@ -1120,11 +1116,11 @@
 								x2="2647.039"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="2603.508"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2603.508"
 								y="1980">œ</text>
 							<text
@@ -1132,11 +1128,11 @@
 								x="2603.508"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2603.508"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="2554.542"
 								y="1920">#</text>
 							<g
@@ -1167,11 +1163,11 @@
 								x2="2727.079"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="2683.547"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2683.547"
 								y="1980">œ</text>
 							<text
@@ -1179,11 +1175,11 @@
 								x="2683.547"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2683.547"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="2634.582"
 								y="1920">#</text>
 							<g
@@ -1214,11 +1210,11 @@
 								x2="2837.348"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="2793.816"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="2793.816"
 								y="1980">œ</text>
 							<text
@@ -1226,11 +1222,11 @@
 								x="2793.816"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2793.816"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="2744.851"
 								y="1920">#</text>
 							<g
@@ -1318,7 +1314,7 @@
 								x2="3042.544"
 								y2="2155.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="2999.012"
 								y="2160">œ</text>
 							<g
@@ -1353,7 +1349,7 @@
 								x="3118.921"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3118.921"
 								y="2160">œ</text>
 							<g
@@ -1388,7 +1384,7 @@
 								x="3225.64"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3225.64"
 								y="2160">œ</text>
 							<g
@@ -1419,7 +1415,7 @@
 								x2="3369.896"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3326.364"
 								y="1980">œ</text>
 							<text
@@ -1427,7 +1423,7 @@
 								x="3326.364"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3326.364"
 								y="2160">œ</text>
 							<g
@@ -1458,7 +1454,7 @@
 								x2="3464.924"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3421.392"
 								y="1980">œ</text>
 							<text
@@ -1466,7 +1462,7 @@
 								x="3421.392"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3421.392"
 								y="2160">œ</text>
 							<g
@@ -1497,7 +1493,7 @@
 								x2="3554.855"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3511.324"
 								y="1980">œ</text>
 							<text
@@ -1505,7 +1501,7 @@
 								x="3511.324"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3511.324"
 								y="2160">œ</text>
 							<g
@@ -1536,11 +1532,11 @@
 								x2="3639.691"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="3596.16"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3596.16"
 								y="1980">œ</text>
 							<text
@@ -1548,11 +1544,11 @@
 								x="3596.16"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3596.16"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="3547.195"
 								y="1920">#</text>
 							<g
@@ -1583,11 +1579,11 @@
 								x2="3719.73"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="3676.199"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3676.199"
 								y="1980">œ</text>
 							<text
@@ -1595,11 +1591,11 @@
 								x="3676.199"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3676.199"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="3627.234"
 								y="1920">#</text>
 							<g
@@ -1630,11 +1626,11 @@
 								x2="3829.999"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="3786.468"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3786.468"
 								y="1980">œ</text>
 							<text
@@ -1642,11 +1638,11 @@
 								x="3786.468"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3786.468"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="3737.502"
 								y="1920">#</text>
 							<g
@@ -1677,15 +1673,15 @@
 								x2="3952.838"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="3909.307"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="3909.307"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="3909.307"
 								y="1980">œ</text>
 							<text
@@ -1693,11 +1689,11 @@
 								x="3909.307"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="3909.307"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="3844.268"
 								y="1900">b</text>
 							<g
@@ -1737,15 +1733,15 @@
 								x2="4092.422"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="4048.891"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="4048.891"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4048.891"
 								y="1980">œ</text>
 							<text
@@ -1753,11 +1749,11 @@
 								x="4048.891"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4048.891"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="3983.851"
 								y="1900">b</text>
 							<g
@@ -1797,15 +1793,15 @@
 								x2="4232.005"
 								y2="2155.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="4188.474"
 								y="1860">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="4188.474"
 								y="1900">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4188.474"
 								y="1980">œ</text>
 							<text
@@ -1813,11 +1809,11 @@
 								x="4188.474"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4188.474"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="4123.435"
 								y="1900">b</text>
 							<g
@@ -1857,7 +1853,7 @@
 								x2="4329.069"
 								y2="2155.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4285.538"
 								y="2160">œ</text>
 							<g
@@ -1892,7 +1888,7 @@
 								x="4405.447"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4405.447"
 								y="2160">œ</text>
 							<g
@@ -1927,7 +1923,7 @@
 								x="4512.166"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4512.166"
 								y="2160">œ</text>
 							<g
@@ -1958,7 +1954,7 @@
 								x2="4656.421"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4612.89"
 								y="1980">œ</text>
 							<text
@@ -1966,7 +1962,7 @@
 								x="4612.89"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4612.89"
 								y="2160">œ</text>
 							<g
@@ -1997,7 +1993,7 @@
 								x2="4751.449"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4707.918"
 								y="1980">œ</text>
 							<text
@@ -2005,7 +2001,7 @@
 								x="4707.918"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4707.918"
 								y="2160">œ</text>
 							<g
@@ -2036,7 +2032,7 @@
 								x2="4841.381"
 								y2="2155.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4797.85"
 								y="1980">œ</text>
 							<text
@@ -2044,7 +2040,7 @@
 								x="4797.85"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4797.85"
 								y="2160">œ</text>
 							<g
@@ -2075,11 +2071,11 @@
 								x2="4926.216"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="4882.685"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4882.685"
 								y="1980">œ</text>
 							<text
@@ -2087,11 +2083,11 @@
 								x="4882.685"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4882.685"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="4833.72"
 								y="1920">#</text>
 							<g
@@ -2122,11 +2118,11 @@
 								x2="5006.256"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="4962.725"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="4962.725"
 								y="1980">œ</text>
 							<text
@@ -2134,11 +2130,11 @@
 								x="4962.725"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="4962.725"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="4913.759"
 								y="1920">#</text>
 							<g
@@ -2169,11 +2165,11 @@
 								x2="5116.524"
 								y2="2155.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="5072.993"
 								y="1920">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="5072.993"
 								y="1980">œ</text>
 							<text
@@ -2181,11 +2177,11 @@
 								x="5072.993"
 								y="2080">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5072.993"
 								y="2160">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="5024.028"
 								y="1920">#</text>
 							<g
@@ -2222,15 +2218,15 @@
 								x2="5295.596"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="5252.064"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="5252.064"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="5252.064"
 								y="1940">œ</text>
 							<text
@@ -2238,11 +2234,11 @@
 								x="5252.064"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5252.064"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="5186.355"
 								y="1940">#</text>
 							<text
@@ -2298,15 +2294,15 @@
 								x2="5439.353"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="5395.821"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="5395.821"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="5395.821"
 								y="1940">œ</text>
 							<text
@@ -2314,11 +2310,11 @@
 								x="5395.821"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5395.821"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="5330.112"
 								y="1940">#</text>
 							<text
@@ -2374,15 +2370,15 @@
 								x2="5583.109"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="5539.578"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="5539.578"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="5539.578"
 								y="1940">œ</text>
 							<text
@@ -2390,11 +2386,11 @@
 								x="5539.578"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5539.578"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="5473.869"
 								y="1940">#</text>
 							<text
@@ -2450,7 +2446,7 @@
 								x2="5680.173"
 								y2="2115.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5636.642"
 								y="2120">œ</text>
 							<g
@@ -2479,7 +2475,7 @@
 								x="5756.551"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5756.551"
 								y="2120">œ</text>
 							<text
@@ -2512,7 +2508,7 @@
 								x="5863.27"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="5863.27"
 								y="2120">œ</text>
 							<text
@@ -2541,7 +2537,7 @@
 								x2="6050.558"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6007.027"
 								y="1940">œ</text>
 							<text
@@ -2549,11 +2545,11 @@
 								x="6007.027"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6007.027"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="5958.062"
 								y="1940">#</text>
 							<text
@@ -2582,7 +2578,7 @@
 								x2="6194.315"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6150.784"
 								y="1940">œ</text>
 							<text
@@ -2590,11 +2586,11 @@
 								x="6150.784"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6150.784"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6101.818"
 								y="1940">#</text>
 							<text
@@ -2623,7 +2619,7 @@
 								x2="6338.072"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6294.541"
 								y="1940">œ</text>
 							<text
@@ -2631,11 +2627,11 @@
 								x="6294.541"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6294.541"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6245.575"
 								y="1940">#</text>
 							<text
@@ -2664,11 +2660,11 @@
 								x2="6481.829"
 								y2="2115.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="6438.297"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6438.297"
 								y="1940">œ</text>
 							<text
@@ -2676,11 +2672,11 @@
 								x="6438.297"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6438.297"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6372.588"
 								y="1940">#</text>
 							<text
@@ -2718,11 +2714,11 @@
 								x2="6625.585"
 								y2="2115.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="6582.054"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6582.054"
 								y="1940">œ</text>
 							<text
@@ -2730,11 +2726,11 @@
 								x="6582.054"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6582.054"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6516.345"
 								y="1940">#</text>
 							<text
@@ -2772,11 +2768,11 @@
 								x2="6769.342"
 								y2="2115.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="6725.811"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6725.811"
 								y="1940">œ</text>
 							<text
@@ -2784,11 +2780,11 @@
 								x="6725.811"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6725.811"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6660.102"
 								y="1940">#</text>
 							<text
@@ -2826,15 +2822,15 @@
 								x2="6913.099"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="6869.568"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="6869.568"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="6869.568"
 								y="1940">œ</text>
 							<text
@@ -2842,11 +2838,11 @@
 								x="6869.568"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="6869.568"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6803.858"
 								y="1940">#</text>
 							<text
@@ -2902,15 +2898,15 @@
 								x2="7056.856"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="7013.325"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="7013.325"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="7013.325"
 								y="1940">œ</text>
 							<text
@@ -2918,11 +2914,11 @@
 								x="7013.325"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7013.325"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="6947.615"
 								y="1940">#</text>
 							<text
@@ -2978,15 +2974,15 @@
 								x2="7200.613"
 								y2="2115.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="7157.082"
 								y="1740">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="7157.082"
 								y="1860">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="7157.082"
 								y="1940">œ</text>
 							<text
@@ -2994,11 +2990,11 @@
 								x="7157.082"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7157.082"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="7091.372"
 								y="1940">#</text>
 							<text
@@ -3054,7 +3050,7 @@
 								x2="7297.676"
 								y2="2115.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7254.145"
 								y="2120">œ</text>
 							<g
@@ -3083,7 +3079,7 @@
 								x="7374.054"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7374.054"
 								y="2120">œ</text>
 							<text
@@ -3116,7 +3112,7 @@
 								x="7480.773"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7480.773"
 								y="2120">œ</text>
 							<text
@@ -3145,7 +3141,7 @@
 								x2="7668.062"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="7624.53"
 								y="1940">œ</text>
 							<text
@@ -3153,11 +3149,11 @@
 								x="7624.53"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7624.53"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="7575.565"
 								y="1940">#</text>
 							<text
@@ -3186,7 +3182,7 @@
 								x2="7811.818"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="7768.287"
 								y="1940">œ</text>
 							<text
@@ -3194,11 +3190,11 @@
 								x="7768.287"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7768.287"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="7719.321"
 								y="1940">#</text>
 							<text
@@ -3227,7 +3223,7 @@
 								x2="7955.574"
 								y2="2115.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="7912.043"
 								y="1940">œ</text>
 							<text
@@ -3235,11 +3231,11 @@
 								x="7912.043"
 								y="2060">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="7912.043"
 								y="2120">œ</text>
 							<text
-								class="accidental mpColor"
+								class="accidental mfColor"
 								x="7863.077"
 								y="1940">#</text>
 							<text
@@ -3274,11 +3270,11 @@
 								x2="8124.26"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8080.729"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8080.729"
 								y="1900">œ</text>
 							<text
@@ -3286,7 +3282,7 @@
 								x="8080.729"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8080.729"
 								y="2080">œ</text>
 							<g
@@ -3317,11 +3313,11 @@
 								x2="8204.299"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8160.768"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8160.768"
 								y="1900">œ</text>
 							<text
@@ -3329,7 +3325,7 @@
 								x="8160.768"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8160.768"
 								y="2080">œ</text>
 							<g
@@ -3360,11 +3356,11 @@
 								x2="8279.842"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8236.311"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8236.311"
 								y="1900">œ</text>
 							<text
@@ -3372,7 +3368,7 @@
 								x="8236.311"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8236.311"
 								y="2080">œ</text>
 							<g
@@ -3403,15 +3399,15 @@
 								x2="8351.188"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="8307.656"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8307.656"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8307.656"
 								y="1900">œ</text>
 							<text
@@ -3419,7 +3415,7 @@
 								x="8307.656"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8307.656"
 								y="2080">œ</text>
 							<g
@@ -3456,15 +3452,15 @@
 								x2="8418.337"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="8374.806"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8374.806"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8374.806"
 								y="1900">œ</text>
 							<text
@@ -3472,7 +3468,7 @@
 								x="8374.806"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8374.806"
 								y="2080">œ</text>
 							<g
@@ -3509,15 +3505,15 @@
 								x2="8515.399"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="8471.868"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="8471.868"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8471.868"
 								y="1900">œ</text>
 							<text
@@ -3525,7 +3521,7 @@
 								x="8471.868"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8471.868"
 								y="2080">œ</text>
 							<g
@@ -3562,7 +3558,7 @@
 								x2="8575.354"
 								y2="2075.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8531.823"
 								y="2080">œ</text>
 						</g>
@@ -3582,7 +3578,7 @@
 								x="8651.732"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8651.732"
 								y="2080">œ</text>
 						</g>
@@ -3602,7 +3598,7 @@
 								x="8758.452"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8758.452"
 								y="2080">œ</text>
 						</g>
@@ -3618,7 +3614,7 @@
 								x2="8902.707"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8859.176"
 								y="1900">œ</text>
 							<text
@@ -3626,7 +3622,7 @@
 								x="8859.176"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8859.176"
 								y="2080">œ</text>
 						</g>
@@ -3642,7 +3638,7 @@
 								x2="8997.735"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="8954.204"
 								y="1900">œ</text>
 							<text
@@ -3650,7 +3646,7 @@
 								x="8954.204"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="8954.204"
 								y="2080">œ</text>
 						</g>
@@ -3666,7 +3662,7 @@
 								x2="9087.668"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9044.137"
 								y="1900">œ</text>
 							<text
@@ -3674,7 +3670,7 @@
 								x="9044.137"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9044.137"
 								y="2080">œ</text>
 						</g>
@@ -3690,11 +3686,11 @@
 								x2="9172.504"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9128.973"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9128.973"
 								y="1900">œ</text>
 							<text
@@ -3702,7 +3698,7 @@
 								x="9128.973"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9128.973"
 								y="2080">œ</text>
 							<g
@@ -3733,11 +3729,11 @@
 								x2="9252.544"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9209.013"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9209.013"
 								y="1900">œ</text>
 							<text
@@ -3745,7 +3741,7 @@
 								x="9209.013"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9209.013"
 								y="2080">œ</text>
 							<g
@@ -3776,11 +3772,11 @@
 								x2="9328.087"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9284.556"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9284.556"
 								y="1900">œ</text>
 							<text
@@ -3788,7 +3784,7 @@
 								x="9284.556"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9284.556"
 								y="2080">œ</text>
 							<g
@@ -3819,15 +3815,15 @@
 								x2="9399.433"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="9355.901"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9355.901"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9355.901"
 								y="1900">œ</text>
 							<text
@@ -3835,7 +3831,7 @@
 								x="9355.901"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9355.901"
 								y="2080">œ</text>
 							<g
@@ -3872,15 +3868,15 @@
 								x2="9466.582"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="9423.051"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9423.051"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9423.051"
 								y="1900">œ</text>
 							<text
@@ -3888,7 +3884,7 @@
 								x="9423.051"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9423.051"
 								y="2080">œ</text>
 							<g
@@ -3925,15 +3921,15 @@
 								x2="9563.645"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="9520.113"
 								y="1780">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="9520.113"
 								y="1820">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9520.113"
 								y="1900">œ</text>
 							<text
@@ -3941,7 +3937,7 @@
 								x="9520.113"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9520.113"
 								y="2080">œ</text>
 							<g
@@ -3978,7 +3974,7 @@
 								x2="9623.6"
 								y2="2075.38" />
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9580.068"
 								y="2080">œ</text>
 						</g>
@@ -3998,7 +3994,7 @@
 								x="9699.978"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9699.978"
 								y="2080">œ</text>
 						</g>
@@ -4018,7 +4014,7 @@
 								x="9806.697"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9806.697"
 								y="2080">œ</text>
 						</g>
@@ -4034,7 +4030,7 @@
 								x2="9950.952"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="9907.421"
 								y="1900">œ</text>
 							<text
@@ -4042,7 +4038,7 @@
 								x="9907.421"
 								y="2000">œ</text>
 							<text
-								class="notehead fffColor"
+								class="notehead ffColor"
 								x="9907.421"
 								y="2080">œ</text>
 						</g>
@@ -4064,7 +4060,7 @@
 								x2="10136.96"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="10136.96"
 								y="2000">œ</text>
 							<text
@@ -4092,7 +4088,7 @@
 								x2="10290.76"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="10290.76"
 								y="2000">œ</text>
 							<text
@@ -4120,11 +4116,11 @@
 								x2="10491.41"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="10447.88"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="10491.41"
 								y="2000">œ</text>
 							<text
@@ -4136,7 +4132,7 @@
 								x="10447.88"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="10398.92"
 								y="1940">#</text>
 							<text
@@ -4156,11 +4152,11 @@
 								x2="10692.06"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="10648.53"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="10692.06"
 								y="2000">œ</text>
 							<text
@@ -4172,7 +4168,7 @@
 								x="10648.53"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="10599.57"
 								y="1940">#</text>
 							<text
@@ -4192,11 +4188,11 @@
 								x2="10892.71"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="10849.18"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="10892.71"
 								y="2000">œ</text>
 							<text
@@ -4208,7 +4204,7 @@
 								x="10849.18"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="10800.22"
 								y="1940">#</text>
 							<text
@@ -4228,15 +4224,15 @@
 								x2="11110.11"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="11066.58"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="11066.58"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="11110.11"
 								y="2000">œ</text>
 							<text
@@ -4248,7 +4244,7 @@
 								x="11066.58"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="11000.87"
 								y="1940">#</text>
 							<text
@@ -4277,15 +4273,15 @@
 								x2="11327.5"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="11283.97"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="11283.97"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="11327.5"
 								y="2000">œ</text>
 							<text
@@ -4297,7 +4293,7 @@
 								x="11283.97"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="11218.26"
 								y="1940">#</text>
 							<text
@@ -4326,15 +4322,15 @@
 								x2="11544.9"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="11501.37"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="11501.37"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="11544.9"
 								y="2000">œ</text>
 							<text
@@ -4346,7 +4342,7 @@
 								x="11501.37"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="11435.66"
 								y="1940">#</text>
 							<text
@@ -4439,7 +4435,7 @@
 								x2="11932.21"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="11932.21"
 								y="2000">œ</text>
 							<text
@@ -4467,7 +4463,7 @@
 								x2="12086.01"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="12086.01"
 								y="2000">œ</text>
 							<text
@@ -4495,7 +4491,7 @@
 								x2="12239.81"
 								y2="2075.38" />
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="12239.81"
 								y="2000">œ</text>
 							<text
@@ -4523,11 +4519,11 @@
 								x2="12440.46"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="12396.93"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="12440.46"
 								y="2000">œ</text>
 							<text
@@ -4539,7 +4535,7 @@
 								x="12396.93"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="12347.96"
 								y="1940">#</text>
 							<text
@@ -4559,11 +4555,11 @@
 								x2="12641.11"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="12597.58"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="12641.11"
 								y="2000">œ</text>
 							<text
@@ -4575,7 +4571,7 @@
 								x="12597.58"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="12548.61"
 								y="1940">#</text>
 							<text
@@ -4595,11 +4591,11 @@
 								x2="12841.76"
 								y2="2075.38" />
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="12798.23"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="12841.76"
 								y="2000">œ</text>
 							<text
@@ -4611,7 +4607,7 @@
 								x="12798.23"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="12749.26"
 								y="1940">#</text>
 							<text
@@ -4631,15 +4627,15 @@
 								x2="13059.15"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="13015.62"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="13015.62"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="13059.15"
 								y="2000">œ</text>
 							<text
@@ -4651,7 +4647,7 @@
 								x="13015.62"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="12949.91"
 								y="1940">#</text>
 							<text
@@ -4680,15 +4676,15 @@
 								x2="13276.55"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="13233.02"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="13233.02"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="13276.55"
 								y="2000">œ</text>
 							<text
@@ -4700,7 +4696,7 @@
 								x="13233.02"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="13167.31"
 								y="1940">#</text>
 							<text
@@ -4729,15 +4725,15 @@
 								x2="13493.94"
 								y2="2075.38" />
 							<text
-								class="notehead ppColor"
+								class="notehead pColor"
 								x="13450.41"
 								y="1880">œ</text>
 							<text
-								class="notehead pColor"
+								class="notehead mpColor"
 								x="13450.41"
 								y="1940">œ</text>
 							<text
-								class="notehead mpColor"
+								class="notehead mfColor"
 								x="13493.94"
 								y="2000">œ</text>
 							<text
@@ -4749,7 +4745,7 @@
 								x="13450.41"
 								y="2080">œ</text>
 							<text
-								class="accidental pColor"
+								class="accidental mpColor"
 								x="13384.7"
 								y="1940">#</text>
 							<text
