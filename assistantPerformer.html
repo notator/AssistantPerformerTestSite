@@ -8,6 +8,10 @@
 		  media="all"
 		  rel="stylesheet"
 		  type="text/css" />
+    <link href="sliderStyleSheet.css"
+		  media="all"
+		  rel="stylesheet"
+		  type="text/css" />
 	<link rel="shortcut icon" href="https://james-ingram-act-two.de/open-source/assistantPerformer/AP3.ico" />
 	<!-- Javascript files are included at the end of the body element -->
 </head>
@@ -121,9 +125,9 @@
             <label id="speedControlLabel1" for="speedControlInput" style="position:absolute; top:5px; left:4px; margin:0;">
                 speed:
             </label>
-            <input type="range" id="speedControlInput" value="90" min="0" max="180"
+            <input type="range" class="speedSlider" id="speedControlInput" value="90" min="0" max="180"
                    onmousemove="_AP.controls.doControl('speedControlMousemove')"
-                   style="position:absolute; top:4px; left:45px; width:180px; margin:0;" />
+                   style="position:absolute; top:5px; left:45px;" />
             <label id="speedControlLabel2" for="speedControlInput" style="position:absolute; top:5px; left:227px; margin:0;">
                 100%
             </label>
