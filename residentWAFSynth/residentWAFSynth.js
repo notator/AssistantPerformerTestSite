@@ -25,13 +25,46 @@ WebMIDI.namespace('residentWAFSynth');
 WebMIDI.residentWAFSynth = (function(window)
 {
     "use strict";
-    let
-        banks, // set in synth.setSoundFont
-        channelAudioNodes = [], // initialized in synth.open
-        channelControls = [], // initialized in synth.open
+	let
+		banks, // set in synth.setSoundFont
+		channelAudioNodes = [], // initialized in synth.open
+		channelControls = [], // initialized in synth.open
+		tuningGroupIndex = 0, // used by updateChannelTuning() -- set by DataEntry message.
+
+		tuningsFactory = new WebMIDI.tuningsFactory.TuningsFactory(),
+
+		triggerStack,
+		triggerStackIndex,
+		currentTriggerKey,
+
+		getCurrentTriggerKey = function(triggerStack, triggerStackIndex)
+		{
+			let triggerKey = undefined;
+			for(var i = triggerStackIndex; i <= triggerStack.maxIndex; i++)
+			{
+				let triggerDef = triggerStack[i];
+				if(triggerDef !== undefined)
+				{
+					triggerKey = triggerDef.triggerKey;
+					break;
+                }
+			}
+			return triggerKey;
+        },
+
+		// returns a three character string representing the index
+		getIndexString = function(index)
+		{
+			let iString = index.toString();
+			while(iString.length < 3)
+			{
+				iString = "0" + iString;
+			}
+			return iString;
+		},
 
 		// Called by the constructor, which sets this.webAudioFonts to the return value of this function.
-		// Creates all the WebAudioFonts defined in "residentWAFSynth/webAudioFontDefs/webAudioFontDefs.js",
+		// Creates all the WebAudioFonts defined in "synthConfig/webAudioFontDefs.js",
 		// adjusting (=decoding) all the required WebAudioFontPresets.
 		getWebAudioFonts = function(audioContext)
 		{
@@ -56,7 +89,7 @@ WebMIDI.residentWAFSynth = (function(window)
 							}, 111);
 						}
 					}
-					
+
 					// The presetName parameter has only been added for use in console.log when the preset adjustment is complete.
 					function adjustPreset(audioContext, preset, presetName)
 					{
@@ -219,17 +252,6 @@ WebMIDI.residentWAFSynth = (function(window)
 						return i;
 					}
 
-					// returns a three character string representing the index
-					function getIndexString(index)
-					{
-						let iString = index.toString();
-						while(iString.length < 3)
-						{
-							iString = "0" + iString;
-						}
-						return iString;
-					}
-
 					let presetOptionName = "error: illegal presetVariable",
 						bankString = getIndexString(bankIndex),
 						presetString = getIndexString(presetIndex);
@@ -293,287 +315,287 @@ WebMIDI.residentWAFSynth = (function(window)
 				}
 
 				return allPresetsPerBank;
-            }
+			}
 
-            function adjustForWAFSynth(webAudioFont)
-            {
-                function setZonesToMaximumRange(presetName, presetGMIndex, zones)
-			    {
-				    let bottomZone = zones[0],
-					    topZone = zones[zones.length - 1],
-					    expanded = false;
+			function adjustForWAFSynth(webAudioFont)
+			{
+				function setZonesToMaximumRange(presetName, presetGMIndex, zones)
+				{
+					let bottomZone = zones[0],
+						topZone = zones[zones.length - 1],
+						expanded = false;
 
-				    if(bottomZone.keyRangeLow !== 0)
-				    {
-					    bottomZone.keyRangeLow = 0;
-					    expanded = true;
-				    }
-				    if(topZone.keyRangeHigh !== 127)
-				    {
-					    topZone.keyRangeHigh = 127;
-					    expanded = true;
-				    }
+					if(bottomZone.keyRangeLow !== 0)
+					{
+						bottomZone.keyRangeLow = 0;
+						expanded = true;
+					}
+					if(topZone.keyRangeHigh !== 127)
+					{
+						topZone.keyRangeHigh = 127;
+						expanded = true;
+					}
 
-				    if(expanded)
-				    {
-                        let gmName = WebMIDI.constants.generalMIDIPresetName(presetGMIndex);
-					    console.warn("WAFSynth: extended the pitch range of preset " + presetName +" (" + gmName +").");
-				    }
-                }
+					if(expanded)
+					{
+						let gmName = WebMIDI.constants.generalMIDIPresetName(presetGMIndex);
+						console.warn("WAFSynth: extended the pitch range of preset " + presetName + " (" + gmName + ").");
+					}
+				}
 
 
-                function deleteZoneAHDSRs(zones)
-                {
-                    for(var i = 0; i < zones.length; i++)
-                    {
-                        if(! delete zones[i].ahdsr)
-                        {
-                            console.warn("Failed to delete preset.ahdsr.");
-                        };
-                    }
+				function deleteZoneAHDSRs(zones)
+				{
+					for(var i = 0; i < zones.length; i++)
+					{
+						if(! delete zones[i].ahdsr)
+						{
+							console.warn("Failed to delete preset.ahdsr.");
+						}
+					}
 
-                }
+				}
 
-                function setZoneVEnvData(presetName, presetIndex, zones)
-                {
-                    // envTypes:
-                    // 0: short envelope (e.g. drum, xylophone, percussion)
-                    // 1: long envelope (e.g. piano)
-                    // 2: unending envelope (e.g. wind instrument, organ)
-                    const PRESET_ENVTYPE = { SHORT: 0, LONG: 1, UNENDING: 2 },
-                        MAX_DURATION = 300000, // five minutes should be long enough...
-                        DEFAULT_NOTEOFF_RELEASE_DURATION = 0.2;
+				function setZoneVEnvData(presetName, presetIndex, zones)
+				{
+					// envTypes:
+					// 0: short envelope (e.g. drum, xylophone, percussion)
+					// 1: long envelope (e.g. piano)
+					// 2: unending envelope (e.g. wind instrument, organ)
+					const PRESET_ENVTYPE = { SHORT: 0, LONG: 1, UNENDING: 2 },
+						MAX_DURATION = 300000, // five minutes should be long enough...
+						DEFAULT_NOTEOFF_RELEASE_DURATION = 0.2;
 
-                    function presetEnvType(isPercussion, presetIndex)
-                    {
-                        const shortEnvs = [
-                            13,
-                            45, 47,
-                            55,
-                            112, 113, 114, 115, 116, 117, 118, 119,
-                            120, 123, 127
-                        ],
-                            longEnvs = [
-                                0, 1, 2, 3, 4, 5, 6, 7,
-                                8, 9, 10, 11, 12, 14, 15,
-                                24, 25, 26, 27, 28, 29, 30, 31,
-                                46,
-                                32, 33, 34, 35, 36, 37, 38, 39,
-                                104, 105, 106, 107, 108, 109, 110, 111
-                            ],
-                            unendingEnvs = [
-                                16, 17, 18, 19, 20, 21, 22, 23,
-                                40, 41, 42, 43, 44,
-                                48, 49, 50, 51, 52, 53, 54,
-                                56, 57, 58, 59, 60, 61, 62, 63,
-                                64, 65, 66, 67, 68, 69, 70, 71,
-                                72, 73, 74, 75, 76, 77, 78, 79,
-                                80, 81, 82, 83, 84, 85, 86, 87,
-                                88, 89, 90, 91, 92, 93, 94, 95,
-                                96, 97, 98, 99, 100, 101, 102, 103,
-                                121, 122, 124, 125, 126
-                            ];
+					function presetEnvType(isPercussion, presetIndex)
+					{
+						const shortEnvs = [
+							13,
+							45, 47,
+							55,
+							112, 113, 114, 115, 116, 117, 118, 119,
+							120, 123, 127
+						],
+							longEnvs = [
+								0, 1, 2, 3, 4, 5, 6, 7,
+								8, 9, 10, 11, 12, 14, 15,
+								24, 25, 26, 27, 28, 29, 30, 31,
+								46,
+								32, 33, 34, 35, 36, 37, 38, 39,
+								104, 105, 106, 107, 108, 109, 110, 111
+							],
+							unendingEnvs = [
+								16, 17, 18, 19, 20, 21, 22, 23,
+								40, 41, 42, 43, 44,
+								48, 49, 50, 51, 52, 53, 54,
+								56, 57, 58, 59, 60, 61, 62, 63,
+								64, 65, 66, 67, 68, 69, 70, 71,
+								72, 73, 74, 75, 76, 77, 78, 79,
+								80, 81, 82, 83, 84, 85, 86, 87,
+								88, 89, 90, 91, 92, 93, 94, 95,
+								96, 97, 98, 99, 100, 101, 102, 103,
+								121, 122, 124, 125, 126
+							];
 
-                        if(isPercussion)
-                        {
-                            return PRESET_ENVTYPE.SHORT;
-                        }
-                        else if(shortEnvs.indexOf(presetIndex) >= 0)
-                        {
-                            return PRESET_ENVTYPE.SHORT;
-                        }
-                        else if(longEnvs.indexOf(presetIndex) >= 0)
-                        {
-                            return PRESET_ENVTYPE.LONG;
-                        }
-                        else if(unendingEnvs.indexOf(presetIndex) >= 0)
-                        {
-                            return PRESET_ENVTYPE.UNENDING;
-                        }
-                        else
-                        {
-                            throw "presetIndex not found.";
-                        }
-                    }
+						if(isPercussion)
+						{
+							return PRESET_ENVTYPE.SHORT;
+						}
+						else if(shortEnvs.indexOf(presetIndex) >= 0)
+						{
+							return PRESET_ENVTYPE.SHORT;
+						}
+						else if(longEnvs.indexOf(presetIndex) >= 0)
+						{
+							return PRESET_ENVTYPE.LONG;
+						}
+						else if(unendingEnvs.indexOf(presetIndex) >= 0)
+						{
+							return PRESET_ENVTYPE.UNENDING;
+						}
+						else
+						{
+							throw "presetIndex not found.";
+						}
+					}
 
-                    function checkDurations(envData)
-                    {
-                        // The following restrictions apply because setTimeout(..) uses a millisecond delay parameter:
-                        // ((envData.envelopeDuration * 1000) <= Number.MAX_VALUE), and
-                        // ((envData.noteOffReleaseDuration * 1000) + 1000) < Number.MAX_VALUE) -- see noteOff().
-                        // These should in practice never be a problem, but just in case...
-                        if(!((envData.envelopeDuration * 1000) <= Number.MAX_VALUE)) // see noteOn() 
-                        {
-                            throw "illegal envelopeDuration";
-                        }
+					function checkDurations(envData)
+					{
+						// The following restrictions apply because setTimeout(..) uses a millisecond delay parameter:
+						// ((envData.envelopeDuration * 1000) <= Number.MAX_VALUE), and
+						// ((envData.noteOffReleaseDuration * 1000) + 1000) < Number.MAX_VALUE) -- see noteOff().
+						// These should in practice never be a problem, but just in case...
+						if(!((envData.envelopeDuration * 1000) <= Number.MAX_VALUE)) // see noteOn() 
+						{
+							throw "illegal envelopeDuration";
+						}
 
-                        if(!(((envData.noteOffReleaseDuration * 1000) + 1000) < Number.MAX_VALUE)) // see noteOff()
-                        {
-                            throw "illegal noteOffReleaseDuration";
-                        }
-                    }
+						if(!(((envData.noteOffReleaseDuration * 1000) + 1000) < Number.MAX_VALUE)) // see noteOff()
+						{
+							throw "illegal noteOffReleaseDuration";
+						}
+					}
 
-                    function setSHORT_vEnvData(zones)
-                    {
-                        // Sets attack, hold, decay and release durations for each zone.
-                        for(var i = 0; i < zones.length; i++)
-                        {
-                            let vEnvData = { attack: 0, hold: 0.5, decay: 4.5, release: DEFAULT_NOTEOFF_RELEASE_DURATION }; // Surikov envelope
-                            vEnvData.envelopeDuration = 5; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
-                            vEnvData.noteOffReleaseDuration = DEFAULT_NOTEOFF_RELEASE_DURATION; // zoneVEnvData.release;
-                            zones[i].vEnvData = vEnvData;
-                        }
-                        checkDurations(zones[0].vEnvData);
-                    }
+					function setSHORT_vEnvData(zones)
+					{
+						// Sets attack, hold, decay and release durations for each zone.
+						for(var i = 0; i < zones.length; i++)
+						{
+							let vEnvData = { attack: 0, hold: 0.5, decay: 4.5, release: DEFAULT_NOTEOFF_RELEASE_DURATION }; // Surikov envelope
+							vEnvData.envelopeDuration = 5; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
+							vEnvData.noteOffReleaseDuration = DEFAULT_NOTEOFF_RELEASE_DURATION; // zoneVEnvData.release;
+							zones[i].vEnvData = vEnvData;
+						}
+						checkDurations(zones[0].vEnvData);
+					}
 
-                    function setLONG_vEnvData(presetName, presetIndex, zones)
-                    {
-                        // Sets attack, hold, decay and release durations for each zone.
-                        // The duration values are set to increase logarithmically per pitchIndex
-                        // from the ..Low value at pitchIndex 0 to the ..High value at pitchIndex 127.
-                        // The values per zone are then related to the pitchIndex of zone.keyRangeLow,
-                        function setCustomLONGEnvData(zones, aLow, aHigh, hLow, hHigh, dLow, dHigh, rLow, rHigh)
-                        {
-                            let aFactor = (aHigh === 0 || aLow === 0) ? 1 : Math.pow(aHigh / aLow, 1 / 127),
-                                hFactor = (hHigh === 0 || hLow === 0) ? 1 : Math.pow(hHigh / hLow, 1 / 127),
-                                dFactor = (dHigh === 0 || dLow === 0) ? 1 : Math.pow(dHigh / dLow, 1 / 127),
-                                rFactor = (rHigh === 0 || rLow === 0) ? 1 : Math.pow(rHigh / rLow, 1 / 127);
+					function setLONG_vEnvData(presetName, presetIndex, zones)
+					{
+						// Sets attack, hold, decay and release durations for each zone.
+						// The duration values are set to increase logarithmically per pitchIndex
+						// from the ..Low value at pitchIndex 0 to the ..High value at pitchIndex 127.
+						// The values per zone are then related to the pitchIndex of zone.keyRangeLow,
+						function setCustomLONGEnvData(zones, aLow, aHigh, hLow, hHigh, dLow, dHigh, rLow, rHigh)
+						{
+							let aFactor = (aHigh === 0 || aLow === 0) ? 1 : Math.pow(aHigh / aLow, 1 / 127),
+								hFactor = (hHigh === 0 || hLow === 0) ? 1 : Math.pow(hHigh / hLow, 1 / 127),
+								dFactor = (dHigh === 0 || dLow === 0) ? 1 : Math.pow(dHigh / dLow, 1 / 127),
+								rFactor = (rHigh === 0 || rLow === 0) ? 1 : Math.pow(rHigh / rLow, 1 / 127);
 
-                            for(var i = 0; i < zones.length; i++)
-                            {
-                                let zone = zones[i],
-                                    keyLow = zone.keyRangeLow,
-                                    a = aLow * Math.pow(aFactor, keyLow),
-                                    h = hLow * Math.pow(hFactor, keyLow),
-                                    d = dLow * Math.pow(dFactor, keyLow),
-                                    r = rLow * Math.pow(rFactor, keyLow);
+							for(var i = 0; i < zones.length; i++)
+							{
+								let zone = zones[i],
+									keyLow = zone.keyRangeLow,
+									a = aLow * Math.pow(aFactor, keyLow),
+									h = hLow * Math.pow(hFactor, keyLow),
+									d = dLow * Math.pow(dFactor, keyLow),
+									r = rLow * Math.pow(rFactor, keyLow);
 
-                                let vEnvData = { attack: a, hold: h, decay: d, release: r };
-                                vEnvData.envelopeDuration = a + h + d; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
-                                vEnvData.noteOffReleaseDuration = r; // zoneVEnvData.release;
-                                checkDurations(vEnvData);
-                                zone.vEnvData = vEnvData;
-                            }
-                        }
+								let vEnvData = { attack: a, hold: h, decay: d, release: r };
+								vEnvData.envelopeDuration = a + h + d; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
+								vEnvData.noteOffReleaseDuration = r; // zoneVEnvData.release;
+								checkDurations(vEnvData);
+								zone.vEnvData = vEnvData;
+							}
+						}
 
-                        // The following presetIndices have LONG envelopes:
-                        // 0, 1, 2, 3, 4, 5, 6, 7,
-                        // 8, 9, 10, 11, 12, 14, 15,
-                        // 24, 25, 26, 27, 28, 29, 30, 31,
-                        // 32, 33, 34, 35, 36, 37, 38, 39,
-                        // 46 (Harp)
-                        // 104, 105, 106, 107, 108, 109, 110, 111
-                        //
-                        // 02.2020: Except for Harpsichord, the following presetIndices
-                        // are all those used by the AssistantPerformer(GrandPiano + Study2)
-                        switch(presetIndex)
-                        {
-                            case 0: // Grand Piano						
-                                setCustomLONGEnvData(zones, 0, 0, 0, 0, 25, 5, 1, 0.5);
-                                break;
-                            case 6: // Harpsichord -- not used by AssistantPerformer 02.2020
-                                setCustomLONGEnvData(zones, 0, 0, 0, 0, 15, 1, 0.5, 0.1);
-                                break;
-                            case 8: // Celesta
-                                setCustomLONGEnvData(zones, 0, 0, 0, 0, 8, 4, 0.5, 0.1);
-                                break;
-                            case 9: // Glockenspiel
-                                setCustomLONGEnvData(zones, 0, 0, 0.002, 0.002, 6, 1.5, 0.4, 0.1);
-                                break;
-                            case 10: // MusicBox
-                                setCustomLONGEnvData(zones, 0, 0, 0, 0, 8, 0.5, 0.5, 0.1);
-                                break;
-                            case 11: // Vibraphone
-                                setCustomLONGEnvData(zones, 0, 0, 0.4, 0.4, 10, 3, 0.5, 0.1);
-                                break;
-                            case 12: // Marimba
-                                setCustomLONGEnvData(zones, 0, 0, 0, 0, 9.5, 0.6, 0.5, 0.1);
-                                break;
-                            //case 13: // Xylophone -- used by AssistantPerformer, but does not have a LONG envelope.
-                            //	break;
-                            case 14: // Tubular Bells
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 20, 5, 0.5, 0.1);
-                                break;
-                            case 15: // Dulcimer
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 10, 0.4, 0.4, 0.04);
-                                break;
-                            case 24: // NylonGuitar
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
-                                break;
-                            case 25: // AcousticGuitar (steel)
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
-                                break;
-                            case 26: // ElectricGuitar (Jazz)
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
-                                break;
-                            case 27: // ElectricGuitar (clean)
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
-                                break;
-                            case 46: // Harp
-                                setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 10, 0.4, 0.4, 0.04);
-                                break;
-                            default:
-                                console.warn("Volume envelope data has not been defined for preset " + presetIndex.toString() + " (" + presetName + ").");
-                        }
-                    }
+						// The following presetIndices have LONG envelopes:
+						// 0, 1, 2, 3, 4, 5, 6, 7,
+						// 8, 9, 10, 11, 12, 14, 15,
+						// 24, 25, 26, 27, 28, 29, 30, 31,
+						// 32, 33, 34, 35, 36, 37, 38, 39,
+						// 46 (Harp)
+						// 104, 105, 106, 107, 108, 109, 110, 111
+						//
+						// 02.2020: Except for Harpsichord, the following presetIndices
+						// are all those used by the AssistantPerformer(GrandPiano + Study2)
+						switch(presetIndex)
+						{
+							case 0: // Grand Piano						
+								setCustomLONGEnvData(zones, 0, 0, 0, 0, 25, 5, 1, 0.5);
+								break;
+							case 6: // Harpsichord -- not used by AssistantPerformer 02.2020
+								setCustomLONGEnvData(zones, 0, 0, 0, 0, 15, 1, 0.5, 0.1);
+								break;
+							case 8: // Celesta
+								setCustomLONGEnvData(zones, 0, 0, 0, 0, 8, 4, 0.5, 0.1);
+								break;
+							case 9: // Glockenspiel
+								setCustomLONGEnvData(zones, 0, 0, 0.002, 0.002, 6, 1.5, 0.4, 0.1);
+								break;
+							case 10: // MusicBox
+								setCustomLONGEnvData(zones, 0, 0, 0, 0, 8, 0.5, 0.5, 0.1);
+								break;
+							case 11: // Vibraphone
+								setCustomLONGEnvData(zones, 0, 0, 0.4, 0.4, 10, 3, 0.5, 0.1);
+								break;
+							case 12: // Marimba
+								setCustomLONGEnvData(zones, 0, 0, 0, 0, 9.5, 0.6, 0.5, 0.1);
+								break;
+							//case 13: // Xylophone -- used by AssistantPerformer, but does not have a LONG envelope.
+							//	break;
+							case 14: // Tubular Bells
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 20, 5, 0.5, 0.1);
+								break;
+							case 15: // Dulcimer
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 10, 0.4, 0.4, 0.04);
+								break;
+							case 24: // NylonGuitar
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
+								break;
+							case 25: // AcousticGuitar (steel)
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
+								break;
+							case 26: // ElectricGuitar (Jazz)
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
+								break;
+							case 27: // ElectricGuitar (clean)
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
+								break;
+							case 46: // Harp
+								setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 10, 0.4, 0.4, 0.04);
+								break;
+							default:
+								console.warn("Volume envelope data has not been defined for preset " + presetIndex.toString() + " (" + presetName + ").");
+						}
+					}
 
-                    function setUNENDING_vEnvData(zones)
-                    {
-                        // Sets attack, hold, decay and release durations for each zone.
-                        for(var i = 0; i < zones.length; i++)
-                        {
-                            let vEnvData = { attack: 0, hold: MAX_DURATION, decay: 0, release: DEFAULT_NOTEOFF_RELEASE_DURATION }; // Surikov envelope
-                            vEnvData.envelopeDuration = MAX_DURATION; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
-                            vEnvData.noteOffReleaseDuration = DEFAULT_NOTEOFF_RELEASE_DURATION; // zoneVEnvData.release;
-                            zones[i].vEnvData = vEnvData;
-                        }
-                        checkDurations(zones[0].vEnvData);
-                    }
+					function setUNENDING_vEnvData(zones)
+					{
+						// Sets attack, hold, decay and release durations for each zone.
+						for(var i = 0; i < zones.length; i++)
+						{
+							let vEnvData = { attack: 0, hold: MAX_DURATION, decay: 0, release: DEFAULT_NOTEOFF_RELEASE_DURATION }; // Surikov envelope
+							vEnvData.envelopeDuration = MAX_DURATION; // zoneVEnvData.attack + zoneVEnvData.hold + zoneVEnvData.decay;
+							vEnvData.noteOffReleaseDuration = DEFAULT_NOTEOFF_RELEASE_DURATION; // zoneVEnvData.release;
+							zones[i].vEnvData = vEnvData;
+						}
+						checkDurations(zones[0].vEnvData);
+					}
 
-                    let isPercussion = presetName.includes("percussion"),
-                        envType = presetEnvType(isPercussion, zones[0].midi);
+					let isPercussion = presetName.includes("percussion"),
+						envType = presetEnvType(isPercussion, zones[0].midi);
 
-                    // envTypes:
-                    // 0: short envelope (e.g. drum, xylophone, percussion)
-                    // 1: long envelope (e.g. piano)
-                    // 2: unending envelope (e.g. wind instrument, organ)
-                    switch(envType)
-                    {
-                        case PRESET_ENVTYPE.SHORT:
-                            setSHORT_vEnvData(zones);
-                            break;
-                        case PRESET_ENVTYPE.LONG:
-                            setLONG_vEnvData(presetName, presetIndex, zones);
-                            break;
-                        case PRESET_ENVTYPE.UNENDING:
-                            setUNENDING_vEnvData(zones);
-                            break;
-                    }
-                }
+					// envTypes:
+					// 0: short envelope (e.g. drum, xylophone, percussion)
+					// 1: long envelope (e.g. piano)
+					// 2: unending envelope (e.g. wind instrument, organ)
+					switch(envType)
+					{
+						case PRESET_ENVTYPE.SHORT:
+							setSHORT_vEnvData(zones);
+							break;
+						case PRESET_ENVTYPE.LONG:
+							setLONG_vEnvData(presetName, presetIndex, zones);
+							break;
+						case PRESET_ENVTYPE.UNENDING:
+							setUNENDING_vEnvData(zones);
+							break;
+					}
+				}
 
-                let banks = webAudioFont.banks;                
+				let banks = webAudioFont.banks;
 
-                for(var i = 0; i < banks.length; i++)
-                {
-                    let presets = banks[i];
-                    for(var j = 0; j < presets.length; j++)
-                    {
-                        let preset = presets[j],
-                            presetName = preset.name,
-                            presetGMIndex = preset.presetIndex,
-                            zones = preset.zones;
+				for(var i = 0; i < banks.length; i++)
+				{
+					let presets = banks[i];
+					for(var j = 0; j < presets.length; j++)
+					{
+						let preset = presets[j],
+							presetName = preset.name,
+							presetGMIndex = preset.presetIndex,
+							zones = preset.zones;
 
-                        setZonesToMaximumRange(presetName, presetGMIndex, zones);
-                        // The residentWAFSynth is going to use the zone.vEnvData attributes
-                        //(which are set below) instead of the original zone.ahdsr attributes.
-                        // The zone.ahdsr attributes are deleted here to avoid confusion.
-                        deleteZoneAHDSRs(zones);
-                        setZoneVEnvData(presetName, presetGMIndex, zones);
-                    }
-                }
+						setZonesToMaximumRange(presetName, presetGMIndex, zones);
+						// The residentWAFSynth is going to use the zone.vEnvData attributes
+						//(which are set below) instead of the original zone.ahdsr attributes.
+						// The zone.ahdsr attributes are deleted here to avoid confusion.
+						deleteZoneAHDSRs(zones);
+						setZoneVEnvData(presetName, presetGMIndex, zones);
+					}
+				}
 
-                return webAudioFont;
-            }
+				return webAudioFont;
+			}
 
 			// See: https://stackoverflow.com/questions/758688/sleep-in-javascript-delay-between-actions
 			function sleepUntilAllFontsAreReady(webAudioFonts)
@@ -615,40 +637,298 @@ WebMIDI.residentWAFSynth = (function(window)
 					name = webAudioFontDef.name,
 					allPresetsPerBank = finalizeAllPresetsPerWAFBank(webAudioFontDef, percussionPresets),
 					presetNamesPerBank = webAudioFontDef.presetNamesPerBank,
-                    webAudioFont = new WebMIDI.webAudioFont.WebAudioFont(name, allPresetsPerBank, presetNamesPerBank);
+					webAudioFont = new WebMIDI.webAudioFont.WebAudioFont(name, allPresetsPerBank, presetNamesPerBank);
 
-                // The webAudioFont's zone.file attributes need not have been completely adjusted (=unpacked) when
-                // this function is called since neither the zone.file nor the binary zone.buffer attributes are accessed.
-                let adjustedWebAudioFont = adjustForWAFSynth(webAudioFont);
+				// The webAudioFont's zone.file attributes need not have been completely adjusted (=unpacked) when
+				// this function is called since neither the zone.file nor the binary zone.buffer attributes are accessed.
+				let adjustedWebAudioFont = adjustForWAFSynth(webAudioFont);
 
-                webAudioFonts.push(adjustedWebAudioFont);
+				webAudioFonts.push(adjustedWebAudioFont);
 			}
 
 			sleepUntilAllFontsAreReady(webAudioFonts);
 
 			return webAudioFonts;
-        },
+		},
 
-        // returns a value in range [-8192..+8191] for argument values in range [0..127]
-        getPitchBend14bit = function(byte)
-        {
-            return ((byte << 7) + byte) - 8192;
+		getDefaultTuning = function()
+		{
+			let defaultTuning = []; // standard MIDI (i.e. equal temperament) tuning
+			defaultTuning.name = "Equal Temperament (default)";
+			for(var key = 0; key < 128; key++)
+			{
+				defaultTuning.push(key);
+			}
+
+			return defaultTuning;
+		},
+
+		getTuningGroups = function()
+		{
+			let tuningGroupDefs = WebMIDI.tuningDefs,
+				tuningGroups = [],
+				wmgc = WebMIDI.gamutConstructors;
+
+			if(tuningGroupDefs === undefined || tuningGroupDefs.length === 0)
+			{
+				// default tuning
+				let tuningGroup = [],
+					gamut = tuningsFactory.getEqualTemperamentGamut();
+
+				gamut.name = "Equal Temperament";
+				tuningGroup.push(gamut);
+				tuningGroups.push(tuningGroup);
+			}
+			else
+			{
+				for(var i = 0; i < tuningGroupDefs.length; i++)
+				{
+					let tuningGroupDef = tuningGroupDefs[i],
+						tuningDefs = tuningGroupDef.tunings,
+						tuningGroup = [];
+
+					tuningGroup.name = tuningGroupDef.name;
+
+					switch(tuningGroupDef.ctor)
+					{
+						case wmgc.FUNCTION_GET_GAMUT_FROM_CONSTANT_FACTOR:
+							{
+								for(let k = 0; k < tuningDefs.length; k++)
+								{
+									let tuningDef = tuningDefs[k],
+										rootIndex = tuningDef.rootIndex,
+										factor = tuningDef.factor,
+										gamut = tuningsFactory.getGamutFromConstantFactor(rootIndex, factor);
+
+									gamut.name = tuningDef.name;
+									tuningGroup.push(gamut);
+								}
+								break;
+							}
+						case wmgc.FUNCTION_GET_PARTCH_GAMUT:
+							{
+								for(let k = 0; k < tuningDefs.length; k++)
+								{
+									let tuningDef = tuningDefs[k],
+										rootIndex = tuningDef.rootIndex,
+										gamut = tuningsFactory.getPartchGamut(rootIndex);
+
+									gamut.name = tuningDef.name;
+									tuningGroup.push(gamut);
+								}
+								break;
+							}
+						case wmgc.FUNCTION_GET_REPEATING_WARPED_OCTAVES_GAMUT:
+							{
+								for(let k = 0; k < tuningDefs.length; k++)
+								{
+									let tuningDef = tuningDefs[k],
+										keyValuesArray = tuningDef.keyValuesArray,
+										gamut = tuningsFactory.getRepeatingWarpedOctavesGamut(keyValuesArray);
+
+									gamut.name = tuningDef.name;
+									tuningGroup.push(gamut);
+								}
+								break;
+							}
+						case wmgc.FUNCTION_GET_FREE_KEYBOARD_GAMUT:
+							{
+								for(let k = 0; k < tuningDefs.length; k++)
+								{
+									let tuningDef = tuningDefs[k],
+										keyValuesArray = tuningDef.keyValuesArray,
+										gamut = tuningsFactory.getFreeKeyboardGamut(keyValuesArray);
+
+									gamut.name = tuningDef.name;
+									tuningGroup.push(gamut);
+								}
+								break;
+							}
+						default:
+							console.assert(false, "Unknown tuning type.");
+					}
+
+					tuningGroups.push(tuningGroup);
+				}
+			}
+
+			return tuningGroups;
+		},
+
+		getMixtures = function()
+		{
+			// There can be at most 256 [keyIncrement, velocityFactor] components.
+			// KeyIncrement components must be integers in range [-127..127].
+			// VelocityFactor components are usually floats > 0 and < 1, but can be <= 100.0.
+			function checkMixtures(mixtures)
+			{
+				let nIncrVels = 0;
+				for(var i = 0; i < mixtures.length; i++)
+				{
+					let mixture = mixtures[i];
+					for(var k = 0; k < mixture.length; k++)
+					{
+						let keyVel = mixture[k],
+							keyIncr = keyVel[0],
+							velFac = keyVel[1];
+
+						console.assert(keyVel.length === 2);
+						console.assert(Number.isInteger(keyIncr) && keyIncr >= -127 && keyIncr <= 127);
+						console.assert(velFac > 0 && velFac <= 100.0);
+
+						nIncrVels++;
+					}
+				}
+
+				console.assert(nIncrVels <= 256);
+			}
+
+			let mixtures = [];
+
+			if(WebMIDI.mixtureDefs !== undefined)
+			{
+				mixtures = WebMIDI.mixtureDefs;
+				checkMixtures(mixtures);
+			}
+
+			return mixtures; // can be empty
+		},
+
+		getPresetMixtures = function(that)
+		{
+			function checkPresetMixtureDefs(webAudioFonts, mixtures, presetMixtureDefs)
+			{
+				for(var i = 0; i < presetMixtureDefs.length; i++)
+				{
+					let pmd = presetMixtureDefs[i];
+
+					console.assert(pmd.webAudioFontIndex !== undefined && pmd.webAudioFontIndex < webAudioFonts.length);
+					let banks = webAudioFonts[pmd.webAudioFontIndex].banks;
+					console.assert(pmd.basePresetBankIndex !== undefined && pmd.basePresetBankIndex < banks.length);
+					console.assert(pmd.basePresetIndex !== undefined);
+					let preset = banks[pmd.basePresetBankIndex].find(x => x.presetIndex === pmd.basePresetIndex);
+					console.assert(preset !== undefined);
+					console.assert(pmd.mixtureIndex !== undefined && pmd.mixtureIndex < mixtures.length);
+				}
+			}
+
+			function getMixtureName(oldName, mixtureIndex)
+			{
+				let mixString = ":" + getIndexString(mixtureIndex),
+					newName = oldName.slice(0, 7) + mixString + oldName.slice(7) + " mix";
+
+				return newName;
+			}
+
+			let webAudioFonts = that.webAudioFonts,
+				mixtures = that.mixtures,
+				presetMixtureDefs = WebMIDI.presetMixtureDefs,
+				presetMixtures = [];
+
+			if(mixtures !== undefined && mixtures.length > 0 && presetMixtureDefs !== undefined && presetMixtureDefs.length > 0)
+			{
+				checkPresetMixtureDefs(webAudioFonts, mixtures, presetMixtureDefs);
+
+				for(var i = 0; i < presetMixtureDefs.length; i++)
+				{
+					let pmd = presetMixtureDefs[i],
+						banks = webAudioFonts[pmd.webAudioFontIndex].banks,
+						bank = banks[pmd.basePresetBankIndex],
+						basePreset = bank.find(x => x.presetIndex === pmd.basePresetIndex),
+						presetMixture = {};
+
+					presetMixture.name = getMixtureName(basePreset.name, pmd.mixtureIndex);
+					presetMixture.bankIndex = basePreset.bankIndex;
+					presetMixture.presetIndex = basePreset.presetIndex;
+					presetMixture.mixtureIndex = pmd.mixtureIndex;
+
+					presetMixtures.push(presetMixture);
+				}
+			}
+
+			return presetMixtures; // can be empty
+		},
+
+		getTriggerStacks = function()
+		{
+			function checkTriggerStacks(triggerStacks)
+			{
+				for(var i = 0; i < triggerStacks.length; i++)
+				{
+					let triggerType = WebMIDI.triggerType,
+						triggerDefs = triggerStacks[i].triggerDefs,
+						triggerDefsLength = triggerDefs.length;
+					console.assert(triggerDefsLength > 0);
+					for(var k = 0; k < triggerDefsLength; k++)
+					{
+						let triggerDef = triggerDefs[k],
+							name = triggerDef.name,
+							key = triggerDef.key,
+							fireOnHitNumber = triggerDef.fireOnHitNumber,
+							result = triggerDef.result;
+
+						console.assert((typeof name === "string") && name.length > 0);
+						console.assert(Number.isInteger(key) && key >= 0 && key <= 127);
+						console.assert(Number.isInteger(fireOnHitNumber) && fireOnHitNumber > 0);
+						console.assert(Array.isArray(result) && result.length > 0 && result.length <= 3);
+
+						let presetExists = false,
+							tuningExists = false,
+							tuningOverlayExists = false;
+						for(var m = 0; m < result.length; m++)
+						{
+							let type = result[m].type;
+
+							console.assert(type === triggerType.TRIGGER_TYPE_PRESET
+								|| type === triggerType.TRIGGER_TYPE_TUNING
+								|| type === triggerType.TRIGGER_TYPE_TUNING_OVERLAY);
+
+							if(type === triggerType.TRIGGER_TYPE_PRESET)
+							{
+								console.assert(presetExists === false);
+								presetExists = true;
+							}
+							else if(type === triggerType.TRIGGER_TYPE_TUNING)
+							{
+								// If it exists, tuningOverlay must come after tuning.
+								console.assert(tuningExists === false);
+								console.assert(tuningOverlayExists === false);
+								tuningExists = true;
+							}
+							else if(type === triggerType.TRIGGER_TYPE_TUNING_OVERLAY)
+							{
+								console.assert(tuningOverlayExists === false);
+								tuningOverlayExists = true;
+							}
+						}
+					}
+				}
+			}
+
+			let triggerStacks = [];
+
+			if(WebMIDI.triggerStackDefs !== undefined)
+			{
+				triggerStacks = WebMIDI.triggerStackDefs;
+				checkTriggerStacks(triggerStacks);
+            }
+
+			return triggerStacks;
         },
 
         // This command resets the pitchWheel and all CC controllers to their default values,
         // but does *not* reset the current bank or preset.
-        // (CMD.CHANNEL_PRESSURE should also be reset here if/when it is implemented.) 
+        // CMD.AFTERTOUCH is set to its default value (= no aftertouch) per note, when each note is created. 
+		// (CMD.CHANNEL_PRESSURE should also be reset here if/when it is implemented.) 
         setCCDefaults = function(that, channel)
         {
-            let commandDefaultValue = WebMIDI.constants.commandDefaultValue,
-                controlDefaultValue = WebMIDI.constants.controlDefaultValue;
+            let controlDefaultValue = WebMIDI.constants.controlDefaultValue;
 
-            that.updatePitchWheel(channel, commandDefaultValue(CMD.PITCHWHEEL));
+			that.registeredParameterCoarse(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE));
 
-            that.registeredParameterCoarse(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE));
-            that.dataEntryCoarse(channel, controlDefaultValue(CTL.DATA_ENTRY_COARSE));
-            that.updateReverberation(channel, controlDefaultValue(CTL.REVERBERATION));
-            that.updateVolume(channel, controlDefaultValue(CTL.VOLUME));
+			that.updateReverberation(channel, controlDefaultValue(CTL.REVERBERATION));
+			that.updateModWheel(channel, controlDefaultValue(CTL.MODWHEEL));
+			that.updateVolume(channel, controlDefaultValue(CTL.VOLUME));
             that.updatePan(channel, controlDefaultValue(CTL.PAN));
         },
 
@@ -660,13 +940,15 @@ WebMIDI.residentWAFSynth = (function(window)
 			[
 				CMD.NOTE_OFF,
 				CMD.NOTE_ON,
-				// CMD.AFTERTOUCH is not defined.
-                // It is very unlikely that this synth will ever need to implement AFTERTOUCH, so
-                // AFTERTOUCH has been eliminated from the ResidentWAFSynthHost development environment.
+				CMD.AFTERTOUCH,
 				CMD.CONTROL_CHANGE,
 				CMD.PRESET,
-				// CMD.CHANNEL_PRESSURE is not yet defined,
+				//CMD.CHANNEL_PRESSURE,
+				// It is very unlikely that this synth will ever need to implement CHANNEL_PRESSURE, so
+                // CHANNEL_PRESSURE has been eliminated from the ResidentWAFSynthHost development environment.
 				CMD.PITCHWHEEL
+				//CMD.SYSEX
+				// This synth does not use any SysEx commands
 			],
 
 		controls =
@@ -679,6 +961,7 @@ WebMIDI.residentWAFSynth = (function(window)
 				// WebMIDI.constants.CONTROL.BANK definition to call setBank(channel, data2) via handleControl(channel, data1, data2).
 				// The bank can be set by other applications by sending the appropriate message.
 				CTL.BANK,
+				CTL.MODWHEEL,
 				CTL.VOLUME,
 				CTL.PAN,
 				CTL.REVERBERATION,
@@ -744,6 +1027,11 @@ WebMIDI.residentWAFSynth = (function(window)
 			let AudioContextFunc = (window.AudioContext || window.webkitAudioContext); 
 			Object.defineProperty(this, "audioContext", { value: new AudioContextFunc(), writable: false });
 			Object.defineProperty(this, "webAudioFonts", { value: getWebAudioFonts(this.audioContext), writable: false });
+			Object.defineProperty(this, "defaultTuning", { value: getDefaultTuning(), writable: false });
+			Object.defineProperty(this, "tuningGroups", { value: getTuningGroups(), writable: false });
+			Object.defineProperty(this, "mixtures", { value: getMixtures(), writable: false }); // can be empty
+			Object.defineProperty(this, "presetMixtures", { value: getPresetMixtures(this), writable: false }); // can be empty
+			Object.defineProperty(this, "triggerStacks", { value: getTriggerStacks(), writable: false }); // can be empty
 		},
 
 		API =
@@ -760,45 +1048,44 @@ WebMIDI.residentWAFSynth = (function(window)
         function audioNodesConfig(audioContext, finalGainNode)
         {
             // Create and connect the channel AudioNodes:
-            let channelPanNode = audioContext.createStereoPanner(),
-                channelReverberator = new WebMIDI.wafReverberator.WAFReverberator(audioContext),
-                channelGainNode = audioContext.createGain();
+			let channelInfo = {};			
+			
+			channelInfo.panNode = audioContext.createStereoPanner();
+			channelInfo.reverberator = new WebMIDI.wafReverberator.WAFReverberator(audioContext);				
+			channelInfo.gainNode = audioContext.createGain();
+			channelInfo.inputNode = channelInfo.panNode;
 
-            channelPanNode.connect(channelReverberator.input);
-            channelReverberator.output.connect(channelGainNode);
-            channelGainNode.connect(finalGainNode);
-
-            let channelInfo = {};
-            // The GainNode that is created by each NoteOn (to control the note's individual envelope),
-            // is connected to the channelInfo.inputNode.
-            channelInfo.inputNode = channelPanNode;
-            channelInfo.panNode = channelPanNode;
-            channelInfo.reverberator = channelReverberator;
-            channelInfo.gainNode = channelGainNode;
+			channelInfo.panNode.connect(channelInfo.reverberator.input);
+			channelInfo.reverberator.output.connect(channelInfo.gainNode);
+			channelInfo.gainNode.connect(finalGainNode);
 
             return channelInfo;
-        }
+		}
 
-        function initialControlsState(channel)
+        function initialControlsState(defaultTuning)
         {
             let constants = WebMIDI.constants,
-                CMD = constants.COMMAND,
                 CTL = constants.CONTROL,
-                commandDefaultValue = constants.commandDefaultValue,
                 controlDefaultValue = constants.controlDefaultValue,
                 controlState = {};
 
             controlState.bankIndex = -1; // These are set to the first preset in a font, when the font is loaded
-            controlState.presetIndex = -1;
+			controlState.presetIndex = -1;
 
-            controlState.pitchWheel = commandDefaultValue(CMD.PITCHWHEEL);
+			controlState.tuning = [...defaultTuning]; // shallow clone of the default tuning (without name, bankIndex or presetIndex attributes)
 
+			controlState.pitchWheel = constants.commandDefaultValue(CMD.PITCHWHEEL);
+			controlState.pitchWheel14Bit = 0;
+			controlState.pitchWheelSensitivity = 2;
+
+			controlState.registeredParameterCoarse = controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE);
+			 
+			controlState.modWheel = controlDefaultValue(CTL.MODWHEEL);
             controlState.volume = controlDefaultValue(CTL.VOLUME);
             controlState.pan = controlDefaultValue(CTL.PAN);
             controlState.reverberation = controlDefaultValue(CTL.REVERBERATION);
-            controlState.dataEntryCoarse = controlDefaultValue(CTL.DATA_ENTRY_COARSE);
 
-            controlState.currentNoteOns = [];
+			controlState.currentNoteOns = [];			
 
             return controlState;
         }
@@ -812,8 +1099,8 @@ WebMIDI.residentWAFSynth = (function(window)
 
 		for(var i = 0; i < 16; i++)
 		{
-            channelAudioNodes.push(audioNodesConfig(audioContext, channelAudioNodes.finalGainNode));
-            channelControls.push(initialControlsState(i));
+			channelAudioNodes.push(audioNodesConfig(audioContext, channelAudioNodes.finalGainNode));
+			channelControls.push(initialControlsState(this.defaultTuning));
 		}
 		console.log("residentWAFSynth opened.");
 	};
@@ -847,18 +1134,18 @@ WebMIDI.residentWAFSynth = (function(window)
 			data2 = message[2],
 			that = this;
 
-		function checkCommandExport(command)
+		function checkCommandExport(checkCommand)
 		{
-			if(command === undefined)
+			if(checkCommand === undefined)
 			{
                 console.warn("Illegal command");
 			}
 			else
 			{
-				let cmd = commands.find(cmd => cmd === command);
+				let cmd = commands.find(cmd => cmd === checkCommand);
 				if(cmd === undefined)
 				{
-                    console.warn("Command " + command.toString(10) + " (0x" + command.toString(16) + ") is not supported.");
+					console.warn("Command " + checkCommand.toString(10) + " (0x" + checkCommand.toString(16) + ") is not supported.");
 				}
 			}
 		}
@@ -881,6 +1168,15 @@ WebMIDI.residentWAFSynth = (function(window)
                 that.noteOn(channel, data1, data2);
             }
 		}
+		// The AFTERTOUCH command can be sent from the ResidentWAFSynthHost's GUI and, potentially,
+		// from the AssistantPerformer, but it is never sent from my EMU keyboard.
+		// It is implemented as a (single note) pitch bend parallel to the normal (channel) pitchWheel.
+		function handleAftertouch(channel, key, value)
+		{
+			checkCommandExport(CMD.AFTERTOUCH);
+			//console.log("residentWAFSynth Aftertouch: channel:" + channel + " key:" + key + " value:" + value);
+			that.updateAftertouch(channel, key, value);
+        }
 		function handleControl(channel, data1, data2)
 		{
 			function checkControlExport(control)
@@ -906,6 +1202,12 @@ WebMIDI.residentWAFSynth = (function(window)
                 channelControls[channel].bankIndex = value; // this is the complete implementation!
 
 				// console.log("residentWAFSynth Bank: channel:" + channel + " value:" + value);
+			}
+			function setModwheel(channel, value)
+			{
+				checkControlExport(CTL.MODWHEEL);
+				// console.log("residentWAFSynth ModWheel: channel:" + channel + " value:" + value);
+				that.updateModWheel(channel, value);
 			}
 			function setVolume(channel, value)
 			{
@@ -940,22 +1242,19 @@ WebMIDI.residentWAFSynth = (function(window)
 				that.allSoundOff(channel);
 			}
 
+			// This function must always be called immediately before calling setDataEntryCoarse(...).
 			function setRegisteredParameterCoarse(channel, value)
 			{
 				checkControlExport(CTL.REGISTERED_PARAMETER_COARSE);
 				// console.log("residentWAFSynth RegisteredParameterCoarse: channel:" + channel + " value:" + value);
-				if(value !== 0)
-				{
-					throw "This synth only supports registeredParameterCoarse = 0 (pitchWheelDeviation semitones)";
-				}
 				that.registeredParameterCoarse(channel, value);
 			}
-
-			function setDataEntryCoarse(channel, semitones)
+			// setRegisteredParameterCoarse(...) must always be called immediately before calling this function.
+			function setDataEntryCoarse(channel, value)
 			{
 				checkControlExport(CTL.DATA_ENTRY_COARSE);
 				// console.log("residentWAFSynth DataEntryCoarse: channel:" + channel + " value:" + semitones);
-				that.dataEntryCoarse(channel, semitones);
+				that.dataEntryCoarse(channel, value);
 			}
 
 			checkCommandExport(CMD.CONTROL_CHANGE);
@@ -964,6 +1263,9 @@ WebMIDI.residentWAFSynth = (function(window)
 			{
 				case CTL.BANK: // N.B. This is implemented for send, but is not an independent control in the WebMIDISynthHost's GUI
 					setBank(channel, data2);
+					break;
+				case CTL.MODWHEEL:
+					setModwheel(channel, data2);
 					break;
 				case CTL.VOLUME:
 					setVolume(channel, data2);
@@ -984,7 +1286,8 @@ WebMIDI.residentWAFSynth = (function(window)
 				case CTL.REGISTERED_PARAMETER_COARSE:
 					setRegisteredParameterCoarse(channel, data2);
 					break;
-				case CTL.DATA_ENTRY_COARSE: // default coarse is semitones pitchWheelDeviation when RPC is 0
+				// CTL.REGISTERED_PARAMETER_COARSE is always set immediately before setting CTL.DATA_ENTRY_COARSE.
+				case CTL.DATA_ENTRY_COARSE:
 					setDataEntryCoarse(channel, data2);
 					break;
 
@@ -998,10 +1301,18 @@ WebMIDI.residentWAFSynth = (function(window)
 			// console.log("residentWAFSynth Preset: channel:" + channel, " value:" + data1);
 			that.updatePreset(channel, data1);
 		}
-		function handlePitchWheel(channel, data1)
+		// The CHANNEL_PRESSURE command can be sent from my EMU keyboard, but is never sent from the ResidentWAFSynthHost GUI.
+		// It could be implemented later, to do something different from the other controls.
+		function handleChannelPressure(channel, data1)
+		{
+			//let warnMessage = "Channel pressure: channel:" + channel + " pressure:" + data1 +
+			//	" (The ResidentWAFSynth does not implement the channelPressure (0x" + CMD.CHANNEL_PRESSURE.toString(16) + ") command.)";
+			//console.warn(warnMessage);
+		}
+		function handlePitchWheel(channel, data1, data2)
 		{
 			checkCommandExport(CMD.PITCHWHEEL);
-			// console.log("residentWAFSynth PitchWheel: channel:" + channel, " value:" + data1);
+			//console.log("residentWAFSynth PitchWheel: channel:" + channel + " data1:" + data1 + " data2:" + data2);
 			that.updatePitchWheel(channel, data1, data2);
 		}
 
@@ -1013,33 +1324,44 @@ WebMIDI.residentWAFSynth = (function(window)
 			case CMD.NOTE_ON:
 				handleNoteOn(channel, data1, data2);
 				break;
+			case CMD.AFTERTOUCH:
+				handleAftertouch(channel, data1, data2);
+				break;
 			case CMD.CONTROL_CHANGE:
 				handleControl(channel, data1, data2);
 				break;
 			case CMD.PRESET:
 				handlePreset(channel, data1);
 				break;
+			case CMD.CHANNEL_PRESSURE:
+				handleChannelPressure(channel, data1);
+				break;
 			case CMD.PITCHWHEEL:
 				handlePitchWheel(channel, data1, data2);
 				break;
 			default:
-                console.warn("Command " + command.toString(10) + " (0x" + command.toString(16) + ") is not supported.");
+				console.assert(false, "Illegal command.");
+				break;
 		}
     };
 
+	// Used to reset the GUI controls when changing channels
     ResidentWAFSynth.prototype.channelControlsState = function(channel)
     {
         let controlsInfo = channelControls[channel],
             state = [];
 
         state.push({ cmdIndex: CMD.PRESET, cmdValue: controlsInfo.presetIndex });
-        state.push({ cmdIndex: CMD.PITCHWHEEL, cmdValue: controlsInfo.pitchWheel });
+		state.push({ cmdIndex: CMD.PITCHWHEEL, cmdValue: controlsInfo.pitchWheel });
 
-        state.push({ ccIndex: CTL.BANK, ccValue: controlsInfo.bankIndex });
+		state.push({ ccIndex: CTL.BANK, ccValue: controlsInfo.bankIndex });
+		state.push({ ccIndex: CTL.MODWHEEL, ccValue: controlsInfo.modWheel });
         state.push({ ccIndex: CTL.VOLUME, ccValue: controlsInfo.volume });
         state.push({ ccIndex: CTL.PAN, ccValue: controlsInfo.pan });
-        state.push({ ccIndex: CTL.REVERBERATION, ccValue: controlsInfo.reverberation });
-        state.push({ ccIndex: CTL.DATA_ENTRY_COARSE, ccValue: controlsInfo.dataEntryCoarse });
+		state.push({ ccIndex: CTL.REVERBERATION, ccValue: controlsInfo.reverberation });
+		// Repeat the following two lines for each registered parameter
+		state.push({ ccIndex: CTL.REGISTERED_PARAMETER_COARSE, ccValue: 0 }); // 0 is pitchWheelSensitivity
+		state.push({ ccIndex: CTL.DATA_ENTRY_COARSE, ccValue: controlsInfo.pitchWheelSensitivity });
 
         return state;
     };
@@ -1066,14 +1388,15 @@ WebMIDI.residentWAFSynth = (function(window)
         }
 
         let defaultBankIndex = 0,
-            defaultPresetIndex = webAudioFont.banks[0][0].presetIndex;
+			defaultPresetIndex = webAudioFont.banks[0][0].presetIndex,
+			defaultMixtureIndex = undefined; // = no mixture
         
 		for(let i = 0; i < 16; ++i)
         {
             // set default bank and preset.
             // N.B. In the ResidentWAFSynthHost application, the bank and preset defaults are
             // overridden so that each channel is given its own preset when the app initializes.
-            this.setPresetInChannel(i, defaultBankIndex, defaultPresetIndex);
+			this.setPresetInChannel(i, defaultBankIndex, defaultPresetIndex, defaultMixtureIndex);
 			setCCDefaults(this, i);
         }
 
@@ -1086,103 +1409,50 @@ WebMIDI.residentWAFSynth = (function(window)
 		throw "Not implemented error.";
 	};
 
-	ResidentWAFSynth.prototype.noteOn = function(channel, key, velocity)
+	ResidentWAFSynth.prototype.setPresetTrigger = function(message)
 	{
-		var audioContext = this.audioContext,
-            bankIndex = channelControls[channel].bankIndex,
-			bank = banks[bankIndex],
-			preset,
-			zone,
-			note,
-			midi = {},
-            bankIndexStr, presetIndexStr, channelStr, keyStr;
+		let channel = message[5],
+			chanControls = channelControls[channel];
 
-		// *Setting* the pitchBendSensitivity should be done by
-		//   1. setting registeredParameterCoarse to 0.
-		//   2. setting dataEntryCoarse to the sensitivity (in semitones) -- using this.dataEntryCoarse(channel, semitones).
-		// If the channelRegisteredParameterCoarse param is set !== 0, then this function will throw an exception.
-		// This synth ignores both channelRegisteredParameterFine and channelDataEntryFine.
-		function getPitchBendSensitivity(channel)
-		{
-            if(channelControls[channel].registeredParameterCoarse !== 0)
-			{
-				throw "registeredParameterCoarse must be 0 to get the pitch bend sensitivity";
-			}
-            return channelControls[channel].dataEntryCoarse; // the channel's pitchBendSensitivity in semitones
-		}
-
-		if(velocity === 0)
-		{
-            let currentNoteOns = channelControls[channel].currentNoteOns;
-			let note = currentNoteOns.find(note => note.key === key);
-			if(note !== undefined)
-			{
-				note.noteOff();
-			}
-			return;
-		}
-
-		if(bank === undefined)
-		{
-			console.warn("bank " + bankIndex.toString(10) + " not found.");
-			return;
-		}
-
-        preset = bank[channelControls[channel].presetIndex];
-		if(preset === undefined)
-		{
-			bankIndexStr = bankIndex.toString(10);
-            presetIndexStr = (channelControls[channel].presetIndex).toString(10);
-			console.warn("preset not found: bankIndex=" + bankIndexStr + " presetIndex=" + presetIndexStr);
-			return;
-		}
-
-		zone = preset.zones.find(obj => (obj.keyRangeHigh >= key && obj.keyRangeLow <= key)); 
-		if(!zone)
-		{
-			bankIndexStr = bankIndex.toString(10);
-            presetIndexStr = (channelControls[channel].presetIndex).toString(10);
-			channelStr = channel.toString(10);
-			keyStr = key.toString(10);
-			let warnString = "zone not found: bank=" + bankIndexStr + " presetIndex=" + presetIndexStr + " channel=" + channelStr + " key=" + keyStr;
-			if(preset.name.includes("percussion"))
-			{
-				warnString += "\nThis is a percussion preset containing the following instrument indices:";
-				for(var i = 0; i < preset.zones.length; i++)
-				{
-					warnString += " " + preset.zones[i].keyRangeLow.toString() + ",";
-				}
-				warnString = warnString.slice(0, -1);
-			}
-			console.warn(warnString);
-			return;
-		}
-
-		midi.key = key;
-		midi.velocity = velocity;
-        midi.pitchBend14bit = getPitchBend14bit(channelControls[channel].pitchWheel); // a value in range [-8192..+8191]
-		midi.pitchBendSensitivity = getPitchBendSensitivity(channel);
-
-		let noteGainNode = audioContext.createGain();
-
-		noteGainNode.connect(channelAudioNodes[channel].inputNode);
-
-		// note on
-		note = new WebMIDI.residentWAFSynthNote.ResidentWAFSynthNote(audioContext, noteGainNode, zone, midi);
-		note.noteOn();
-        channelControls[channel].currentNoteOns.push(note);
+		chanControls.pushPresetKey = message[6];
+		chanControls.pushBankIndex = message[7];
+		chanControls.pushPresetIndex = message[8];
+		chanControls.pushMixtureIndex = message[9];
 	};
 
-	ResidentWAFSynth.prototype.noteOff = function(channel, key, velocity)
+	ResidentWAFSynth.prototype.setTuningTrigger = function(message)
 	{
-        let currentNoteOns = channelControls[channel].currentNoteOns,
-			noteIndex = currentNoteOns.findIndex(obj => obj.key === key);
+		let channel = message[5],
+			chanControls = channelControls[channel];
 
-		if(noteIndex >= 0)
+		chanControls.pushTuningKey = message[6];
+		chanControls.pushTuningBankIndex = message[7];
+		chanControls.pushTuningPresetIndex = message[8];
+	};
+
+	ResidentWAFSynth.prototype.setTriggerStack = function(triggerDefs)
+	{
+		if(triggerDefs === undefined)
 		{
-			currentNoteOns[noteIndex].noteOff();
-			currentNoteOns.splice(noteIndex, 1);
+			triggerStack = undefined;
+			return;
 		}
+
+		triggerStack = [];
+		triggerStackIndex = 0;
+
+		let hitIndex = -1;
+        for(var i = 0; i < triggerDefs.length; i++)
+		{
+			let trigger = triggerDefs[i];
+
+			hitIndex += trigger.fireOnHitNumber;
+			triggerStack[hitIndex] = trigger.result;
+			triggerStack[hitIndex].triggerKey = trigger.key;
+			triggerStack.maxIndex = hitIndex;
+		}
+
+		currentTriggerKey = getCurrentTriggerKey(triggerStack, triggerStackIndex);
 	};
 
 	// The bank argument is in range [0..127].
@@ -1190,70 +1460,118 @@ WebMIDI.residentWAFSynth = (function(window)
 	{
         channelControls[channel].bankIndex = bankIndex;
 	};
-
 	// N.B. the presetIndex argument is the General MIDI presetIndex
 	ResidentWAFSynth.prototype.updatePreset = function(channel, presetIndex)
 	{
-        channelControls[channel].presetIndex = presetIndex;
+		channelControls[channel].presetIndex = presetIndex;
+	};
+	ResidentWAFSynth.prototype.setPresetInChannel = function(channel, bankIndex, presetIndex, mixtureIndex)
+	{
+		channelControls[channel].bankIndex = bankIndex;
+		channelControls[channel].presetIndex = presetIndex;
+		channelControls[channel].mixtureIndex = mixtureIndex;
+	};
+	ResidentWAFSynth.prototype.setTuningInChannel = function(channel, tuningGroupIndex, tuningIndex)
+	{
+		channelControls[channel].tuning = [...this.tuningGroups[tuningGroupIndex][tuningIndex]];
 	};
 
-	ResidentWAFSynth.prototype.updatePitchWheel = function(channel, lowerByte, higherByte)
+	ResidentWAFSynth.prototype.updateAftertouch = function(channel, key, value)
 	{
-		var pitchBend14Bit = ((lowerByte & 0x7f) | ((higherByte & 0x7f) << 7)) - 8192,
-            currentNoteOns = channelControls[channel].currentNoteOns;
+		let currentNoteOns = channelControls[channel].currentNoteOns,
+			noteIndex = currentNoteOns.findIndex(obj => obj.keyPitch === key),
+			aftertouch14Bit = "undefined"; // will be set in range -8192..8191;
 
-		if(currentNoteOns !== undefined)
+		if(noteIndex !== undefined)
+		{
+			if(value <= 64)
+			{
+				aftertouch14Bit = (128 * (value - 64)); // valueRange(0..64): -> range: 128*-64 (= -8192) .. 0
+			}
+			else
+			{
+				aftertouch14Bit = Math.floor((8191 / 63) * (value - 64)); // valueRange(65..127): -> range: 127..8191
+            }
+			
+			currentNoteOns[noteIndex].updateAftertouch(aftertouch14Bit);
+		}
+
+		console.log("updateAftertouch() key: " + key + " value:" + value + " aftertouch14Bit=" + aftertouch14Bit);
+	};
+
+	ResidentWAFSynth.prototype.updatePitchWheel = function(channel, data1, data2)
+	{
+		var pitchWheel14Bit = (((data2 & 0x7f) << 7) | (data1 & 0x7f)) - 8192,
+			currentNoteOns = channelControls[channel].currentNoteOns;
+
+		// data2 is the MSB, data1 is LSB.
+		console.log("updatePitchWheel() data1: " + data1 + " data2:" + data2 + " pitchWheel14Bit=" + pitchWheel14Bit + " (should be in range -8192..+8191)");
+
+		if(currentNoteOns !== undefined && currentNoteOns.length > 0)
 		{
 			let nNoteOns = currentNoteOns.length;
 			for(let i = 0; i < nNoteOns; ++i)
 			{
-				currentNoteOns[i].updatePlaybackRate(pitchBend14Bit);
+				currentNoteOns[i].updatePitchWheel(pitchWheel14Bit);
 			}
 		}
-        channelControls[channel].pitchWheel = lowerByte;
-	};
 
-	// Both of these should be called by clients, but setting registeredParameterCoarse to anything other than 0
-	// will cause the retrieval of the dataEntryCoarse (pitchBendSensitivity) to throw an exception and fail.
-	// Setting registeredParameterCoarse has been suppressed in this synth's UI in the WebMIDISynthHost app. 
-	ResidentWAFSynth.prototype.registeredParameterCoarse = function(channel, value)
-	{
-        channelControls[channel].registeredParameterCoarse = value;
+		channelControls[channel].pitchWheel14Bit = pitchWheel14Bit; // for new noteOns
+		channelControls[channel].pitchWheel = data2; // for GUI
 	};
-	ResidentWAFSynth.prototype.dataEntryCoarse = function(channel, semitones)
+	// The value argument is in range [0..127], meaning not modulated to as modulated as possible.
+	// The frequency of the modMode depends on the frequency of the note...
+	ResidentWAFSynth.prototype.updateModWheel = function(channel, value)
 	{
-        channelControls[channel].dataEntryCoarse = semitones;
+		console.log("ResidentWAFSynth: ModWheel channel:" + channel + " value:" + value );
 
-        let currentNoteOns = channelControls[channel].currentNoteOns;
-		if(currentNoteOns !== undefined)
+		channelControls[channel].modWheel = value;
+
+		if(channelAudioNodes[channel].modNode === undefined)
 		{
-            let pitchWheel = channelControls[channel].pitchWheel,
-                pitchBend14bit = getPitchBend14bit(pitchWheel),
-				nNoteOns = currentNoteOns.length;
-
-			for(let i = 0; i < nNoteOns; ++i)
+			if(value > 0)
 			{
-				currentNoteOns[i].pitchBendSensitivity = semitones;
-				currentNoteOns[i].updatePlaybackRate(pitchBend14bit);
+				let modNode = this.audioContext.createOscillator(),
+					modGainNode = this.audioContext.createGain();
+
+				modNode.type = 'sine';
+				modNode.connect(modGainNode);
+				modGainNode.connect(channelAudioNodes[channel].gainNode.gain);
+				modNode.start();
+
+				channelAudioNodes[channel].modNode = modNode;
+				channelAudioNodes[channel].modGainNode = modGainNode;
 			}
 		}
+		else
+		{
+			if(value === 0)
+			{
+				channelAudioNodes[channel].modNode.stop();
+				channelAudioNodes[channel].modNode = undefined;
+				channelAudioNodes[channel].modGainNode = undefined;
+			}
+			else
+			{
+				let currentNoteOns = channelControls[channel].currentNoteOns;
+				if(currentNoteOns !== undefined && currentNoteOns.length > 0)
+				{
+					let nNoteOns = currentNoteOns.length;
+					for(let i = 0; i < nNoteOns; ++i)
+					{
+						currentNoteOns[i].updateModWheel(channelAudioNodes[channel].modNode, channelAudioNodes[channel].modGainNode, value);
+					}
+				}
+            }
+		}		
 	};
-
-	// The reverberation argument is in range [0..127], meaning completely dry to completely wet.
-	ResidentWAFSynth.prototype.updateReverberation = function(channel, reverberation)
-    {
-        channelAudioNodes[channel].reverberator.setValueAtTime(reverberation, this.audioContext.currentTime);
-        channelControls[channel].reverberation = reverberation;
-	};
-
 	// The volume argument is in range [0..127], meaning muted to as loud as possible.
 	ResidentWAFSynth.prototype.updateVolume = function(channel, volume)
 	{
 		let volumeFactor = volume / 127;
-        channelAudioNodes[channel].gainNode.gain.setValueAtTime(volumeFactor, this.audioContext.currentTime);
-        channelControls[channel].volume = volume;
+		channelAudioNodes[channel].gainNode.gain.setValueAtTime(volumeFactor, this.audioContext.currentTime);
+		channelControls[channel].volume = volume;
 	};
-
 	// The pan argument is in range [0..127], meaning completely left to completely right.
 	ResidentWAFSynth.prototype.updatePan = function(channel, pan)
 	{
@@ -1261,22 +1579,75 @@ WebMIDI.residentWAFSynth = (function(window)
         channelAudioNodes[channel].panNode.pan.setValueAtTime(panValue, this.audioContext.currentTime);
         channelControls[channel].pan = pan;
 	};
-
-	ResidentWAFSynth.prototype.allSoundOff = function(channel)
+	// The reverberation argument is in range [0..127], meaning completely dry to completely wet.
+	ResidentWAFSynth.prototype.updateReverberation = function(channel, reverberation)
 	{
-        var currentNoteOns = channelControls[channel].currentNoteOns;
+		channelAudioNodes[channel].reverberator.setValueAtTime(reverberation, this.audioContext.currentTime);
+		channelControls[channel].reverberation = reverberation;
+	};
 
-		while(currentNoteOns.length > 0)
+	// This function must always be called immediately before calling ResidentWAFSynth.prototype.dataEntryCoarse(...)
+	ResidentWAFSynth.prototype.registeredParameterCoarse = function(channel, value)
+	{
+		channelControls[channel].registeredParameterCoarse = value;
+	};
+	// ResidentWAFSynth.prototype.registeredParameterCoarse must always be called immediately before calling this function.
+	ResidentWAFSynth.prototype.dataEntryCoarse = function(channel, value)
+	{
+		function updatePitchWheelSensitivity(controls, semitones)
 		{
-			this.noteOff(channel, currentNoteOns[0].key, 0);
-		}
-    };
+			controls.pitchWheelSensitivity = semitones; // required for GUI
 
-    ResidentWAFSynth.prototype.setPresetInChannel = function(channel, bankIndex, presetIndex)
-    {
-        channelControls[channel].bankIndex = bankIndex;
-        channelControls[channel].presetIndex = presetIndex;
-    };
+			let currentNoteOns = controls.currentNoteOns;
+			if(currentNoteOns !== undefined && currentNoteOns.length > 0) // required for sounding notes
+			{
+				let pitchWheel14Bit = controls.pitchWheel14Bit,
+					nNoteOns = currentNoteOns.length;
+
+				for(let i = 0; i < nNoteOns; ++i)
+				{
+					currentNoteOns[i].pitchWheelSensitivity = semitones;
+					currentNoteOns[i].updatePitchWheel(pitchWheel14Bit);
+				}
+			}
+		}
+
+		// The channel.tuning is set to a shallow clone of a tuning stored in the synth.
+		// Its important that the tunings stored in the synth are never changed, and that they can be used
+		// to reset the channel.tuning at any time.
+		function updateChannelTuning(that, channel, tuningGroupIndex, tuningIndex)
+		{
+			let chanControls = channelControls[channel];
+			if(that.tuningGroups[tuningGroupIndex] !== undefined && that.tuningGroups[tuningGroupIndex][tuningIndex] !== undefined)
+			{
+				chanControls.tuning = [...that.tuningGroups[tuningGroupIndex][tuningIndex]];
+			}
+			else
+			{
+				chanControls.tuning = [...that.defaultTuning];
+            }
+		}
+
+		let control = WebMIDI.constants.CONTROL;
+
+		switch(channelControls[channel].registeredParameterCoarse)
+		{
+			case control.INGRAM_REGPARAM_SET_PITCHWHEEL_SENSITIVITY:
+				let semitones = value;
+				updatePitchWheelSensitivity(channelControls[channel], semitones);
+				break;
+			case control.INGRAM_REGPARAM_SELECT_TUNING_PRESET:
+				let tuningIndex = value;
+				updateChannelTuning(this, channel, tuningGroupIndex, tuningIndex);
+				break;
+			case control.INGRAM_REGPARAM_SELECT_TUNING_BANK:
+				tuningGroupIndex = value;
+				break;
+			default:
+				console.assert(false, "Unknown registered parameter.");
+				break;
+        }
+	};
 
 	ResidentWAFSynth.prototype.allControllersOff = function(channel)
 	{
@@ -1284,10 +1655,174 @@ WebMIDI.residentWAFSynth = (function(window)
 
 		while(currentNoteOns.length > 0)
 		{
-			this.noteOff(channel, currentNoteOns[0].key, 0);
+			this.noteOff(channel, currentNoteOns[0].keyPitch, 0);
 		}
 
 		setCCDefaults(this, channel);
+	};
+
+	ResidentWAFSynth.prototype.allSoundOff = function(channel)
+	{
+		var currentNoteOns = channelControls[channel].currentNoteOns;
+
+		while(currentNoteOns.length > 0)
+		{
+			this.noteOff(channel, currentNoteOns[0].keyPitch, 0);
+		}
+	};
+
+	ResidentWAFSynth.prototype.noteOn = function(channel, key, velocity)
+	{
+		function doNoteOn(midi)
+		{
+			let zone, note,
+				preset = midi.preset,
+				keyPitchBase = Math.floor(midi.keyPitch),
+				keyPitchBaseStr, bankIndexStr, presetIndexStr, channelStr;
+
+			zone = preset.zones.find(obj => (obj.keyRangeHigh >= keyPitchBase && obj.keyRangeLow <= keyPitchBase));
+			if(!zone)
+			{
+				bankIndexStr = chanControls.bankIndex.toString(10);
+				presetIndexStr = (chanControls.presetIndex).toString(10);
+				channelStr = channel.toString(10);
+				keyPitchBaseStr = keyPitchBase.toString(10);
+				let warnString = "zone not found: bank=" + bankIndexStr + " presetIndex=" + presetIndexStr + " channel=" + channelStr + " key=" + keyPitchBaseStr;
+				if(preset.name.includes("percussion"))
+				{
+					warnString += "\nThis is a percussion preset containing the following instrument indices:";
+					for(var i = 0; i < preset.zones.length; i++)
+					{
+						warnString += " " + preset.zones[i].keyRangeLow.toString() + ",";
+					}
+					warnString = warnString.slice(0, -1);
+				}
+				console.warn(warnString);
+				return;
+			}
+
+			let noteGainNode = audioContext.createGain();
+			noteGainNode.connect(channelAudioNodes[channel].inputNode);
+
+			// note on
+			note = new WebMIDI.residentWAFSynthNote.ResidentWAFSynthNote(audioContext, noteGainNode, zone, midi, chanControls, channelAudioNodes[channel]);
+			note.noteOn();
+			chanControls.currentNoteOns.push(note);
+		}
+
+		let audioContext = this.audioContext,
+			chanControls = channelControls[channel],
+			bank,
+			preset,
+			midi = {};
+
+		if(triggerStack !== undefined && key === currentTriggerKey)
+		{
+			let triggerResult = triggerStack[triggerStackIndex];
+			if(triggerResult !== undefined)
+			{
+				let tt = WebMIDI.triggerType;
+
+				for(var i = 0; i < triggerResult.length; i++)
+				{
+					let result = triggerResult[i];
+					switch(result.type)
+					{
+						case tt.TRIGGER_TYPE_PRESET:
+							chanControls.bankIndex = result.presetBankIndex;
+							chanControls.presetIndex = result.presetIndex;
+							chanControls.mixtureIndex = result.mixtureIndex;
+							break;
+						case tt.TRIGGER_TYPE_TUNING:
+							chanControls.tuning = [...this.tuningGroups[result.tuningGroupIndex][result.tuningIndex]];
+							break;
+						case tt.TRIGGER_TYPE_TUNING_OVERLAY:
+							let tuning = chanControls.tuning,
+								gamutSeg = tuningsFactory.getGamutSegment(result.overlayDef),
+								startIndex = gamutSeg.rootKey,
+								endIndex = startIndex + gamutSeg.length;
+							for(let overrideKey = startIndex; overrideKey < endIndex; overrideKey++)
+							{
+								tuning[overrideKey] = gamutSeg[overrideKey - startIndex];
+							}
+							break;
+					}
+				}
+			}
+			triggerStackIndex++;
+			if(triggerStackIndex > triggerStack.maxIndex)
+			{
+				triggerStack = undefined;
+			}
+			else
+			{
+				currentTriggerKey = getCurrentTriggerKey(triggerStack, triggerStackIndex);
+			}
+		}
+
+		bank = banks[chanControls.bankIndex];
+		preset = bank[chanControls.presetIndex];
+
+		console.assert(bank !== undefined);
+		console.assert(preset !== undefined);
+
+		if(velocity === 0)
+		{
+			let currentNoteOns = chanControls.currentNoteOns;
+			let note = currentNoteOns.find(note => note.keyPitch === key);
+			if(note !== undefined)
+			{
+				note.noteOff();
+			}
+			return;
+		}
+
+		midi.preset = preset;
+		midi.offKey = key; // the note stops when the offKey's noteOff arrives
+		midi.keyPitch = chanControls.tuning[key];
+		midi.velocity = velocity;
+
+		doNoteOn(midi);
+
+		if(chanControls.mixtureIndex !== undefined)
+		{
+			console.assert(chanControls.mixtureIndex < this.mixtures.length);
+
+			let mixture = this.mixtures[chanControls.mixtureIndex];
+			for(var i = 0; i < mixture.length; i++)
+			{
+				let keyVel = mixture[i],
+					newKey = key + keyVel[0],
+					newVelocity = Math.floor(velocity * keyVel[1]);
+
+				newKey = (newKey > 127) ? 127 : newKey;
+				newKey = (newKey < 0) ? 0 : newKey;
+				newVelocity = (newVelocity > 127) ? 127 : newVelocity;
+				newVelocity = (newVelocity < 1) ? 1 : newVelocity;
+
+				// midi.preset is unchanged
+				midi.offKey = key; // the key that turns this note off (unchanged in mix)
+				midi.keyPitch = chanControls.tuning[newKey];
+				midi.velocity = newVelocity;
+				
+				doNoteOn(midi);
+			}
+        }
+	};
+
+	ResidentWAFSynth.prototype.noteOff = function(channel, key, unusedVelocity)
+	{
+		let currentNoteOns = channelControls[channel].currentNoteOns;
+		
+		for(var index = currentNoteOns.length - 1; index >= 0; index--)
+		{
+			if(currentNoteOns[index].offKey === key)
+			{
+				currentNoteOns[index].noteOff();
+				currentNoteOns.splice(index, 1);
+
+            }
+		}
 	};
 
 	return API;

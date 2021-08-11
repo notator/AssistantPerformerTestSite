@@ -12,14 +12,15 @@
 /*jslint bitwise, white */
 /*global WebMIDI */
 
-WebMIDI.namespace('WebMIDI.constants');
+WebMIDI.namespace('constants');
 
 WebMIDI.constants = (function()
 {
-    "use strict";
-    var
+	"use strict";
+	const MIDI_0_FREQUENCY = 8.1758; // Hertz
+	var	
     COMMAND = {},
-    CONTROL = {},
+	CONTROL = {},
 	// These GM_PRESET_NAMES are written here exactly as defined at MIDI.org: 
 	// http://midi.org/techspecs/gm1sound.php
 	GM_PRESET_NAMES =
@@ -254,7 +255,8 @@ WebMIDI.constants = (function()
     API =
     {
         COMMAND: COMMAND,
-        CONTROL: CONTROL,
+		CONTROL: CONTROL,
+		MIDI_0_FREQUENCY: MIDI_0_FREQUENCY, // Hertz
         commandName: commandName,
         commandDefaultValue: commandDefaultValue,
         controlName: controlName,
@@ -270,7 +272,7 @@ WebMIDI.constants = (function()
     Object.defineProperty(COMMAND, "CONTROL_CHANGE", { value: 0xB0, writable: false });
     Object.defineProperty(COMMAND, "PRESET", { value: 0xC0, writable: false });
     Object.defineProperty(COMMAND, "CHANNEL_PRESSURE", { value: 0xD0, writable: false });
-    Object.defineProperty(COMMAND, "PITCHWHEEL", { value: 0xE0, writable: false });
+	Object.defineProperty(COMMAND, "PITCHWHEEL", { value: 0xE0, writable: false });
 
     // CONTROL
 	// Note that I am currently only using the "coarse" versions of these controls.
@@ -287,7 +289,12 @@ WebMIDI.constants = (function()
     Object.defineProperty(CONTROL, "REGISTERED_PARAMETER_COARSE", { value: 101, writable: false });
     Object.defineProperty(CONTROL, "ALL_SOUND_OFF", { value: 120, writable: false });
     Object.defineProperty(CONTROL, "ALL_CONTROLLERS_OFF", { value: 121, writable: false });
-    Object.defineProperty(CONTROL, "ALL_NOTES_OFF", { value: 123, writable: false });
+	Object.defineProperty(CONTROL, "ALL_NOTES_OFF", { value: 123, writable: false });
+
+	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SET_PITCHWHEEL_SENSITIVITY", { value: 0x00, writable: false });
+	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SELECT_TUNING_BANK", { value: 0x03, writable: false });
+	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SELECT_TUNING_PRESET", { value: 0x04, writable: false });
+
 	return API;
 } ());
 
