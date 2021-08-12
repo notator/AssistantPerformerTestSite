@@ -21,9 +21,9 @@ const
 	STUDY2_2STAVES_SCORE_INDEX = 5,
 	STUDY3_SKETCH1_SCORE_INDEX = 6,
 	STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
-	STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 8,
-	ERRATUM_MUSICAL_I_VIII = 9,
-	THREE_CRASHES = 10,
+	STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX = 8,
+	ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 9,
+	THREE_CRASHES_SCORE_INDEX = 10,
 	TOMBEAU1_SCORE_INDEX = 11,
 	STUDY4_SCORE_INDEX = 12,
 
@@ -185,14 +185,21 @@ var
 		}
 	},
 
-	residentSf2SynthCanPlayScore = function(scoreIndex)
+	isPlayableScore = function(scoreIndex)
 	{
 		var rval = false,
-			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX];
+			playableScores =
+				[
+					PIANOLA_MUSIC_SCORE_INDEX,
+					STUDY1_SCORE_INDEX,
+					TOMBEAU1_SCORE_INDEX,
+					PIANOLA_MUSIC_3STAVES_SCORE_INDEX,
+					ERRATUM_MUSICAL_I_VIII_SCORE_INDEX,
+					THREE_CRASHES_SCORE_INDEX,
+					STUDY4_SCORE_INDEX
+				];
 
-		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
-
-		if(playableScores.indexOf(scoreIndex) >= 0)
+		if(playableScores.indexOf(scoreIndex) >= 0 && scoreIndex < playableScores.length)
 		{
 			rval = true;
 		}
@@ -219,7 +226,7 @@ var
 				{
 					globalElements.aboutLinkDiv.style.display = "block";
 
-					if(residentSf2SynthCanPlayScore(scoreIndex) === true || (residentSf2SynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
+					if(isPlayableScore(scoreIndex) === true || (isPlayableScore(scoreIndex) === false && midiAccess !== null))
 					{
 						if(globalElements.waitingForSoundFontDiv.style.display === "none"
 							&& scoreIndex > 0 && outputDeviceIndex > 0)
@@ -947,7 +954,7 @@ var
 				break;
 		}
 
-		if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
+		if(isPlayableScore(globalElements.scoreSelect.selectedIndex))
 		{
 			globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
 		}
@@ -1073,7 +1080,7 @@ export class Controls
 					//	name: "Study3Sketch",
 					//	url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
 					//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
-					//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
+					//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX]
 					//},
 					//{   
 					//	name: "Study2", /**** This soundFont does not load properly. The bug could be in either the file or the parser... ****/
@@ -1085,7 +1092,13 @@ export class Controls
 						name: "Grand Piano",
 						url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, 
+							STUDY1_SCORE_INDEX,
+							TOMBEAU1_SCORE_INDEX, 
+							PIANOLA_MUSIC_3STAVES_SCORE_INDEX,
+							ERRATUM_MUSICAL_I_VIII_SCORE_INDEX,
+							THREE_CRASHES_SCORE_INDEX,
+							STUDY4_SCORE_INDEX]
 					}
 					];
 
@@ -1293,7 +1306,7 @@ export class Controls
 						scoreInfo.aboutText = "about Study 3 Sketch";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 						break;
-					case STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX:
+					case STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX:
 						scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
 						scoreInfo.inputHandler = "keyboard1";
 						scoreInfo.aboutText = "about Study 3 Sketch";
@@ -1305,13 +1318,13 @@ export class Controls
 						scoreInfo.aboutText = "about Tombeau 1";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
 						break;
-					case ERRATUM_MUSICAL_I_VIII:
+					case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
 						scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Erratum Musical I-VIII";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
 						break;
-					case THREE_CRASHES:
+					case THREE_CRASHES_SCORE_INDEX:
 						scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Three Crashes";
@@ -1466,7 +1479,7 @@ export class Controls
 
 			setAboutLink(scoreInfo);
 
-			if(residentSf2SynthCanPlayScore(scoreIndex) === true || (residentSf2SynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
+			if(isPlayableScore(scoreIndex) === true || (isPlayableScore(scoreIndex) === false && midiAccess !== null))
 			{
 				setPages(scoreInfo);
 
@@ -1550,7 +1563,7 @@ export class Controls
 
 		function waitForSoundFont(that)
 		{
-			if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+			if(isPlayableScore(globalElements.scoreSelect.selectedIndex)
 				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				globalElements.waitingForSoundFontDiv.style.display = "block";
@@ -1570,7 +1583,7 @@ export class Controls
 
 			if(globalElements.scoreSelect.selectedIndex > 0)
 			{
-				if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
+				if(isPlayableScore(globalElements.scoreSelect.selectedIndex))
 				{
 					globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
 				}
@@ -1595,7 +1608,7 @@ export class Controls
 
 		if(controlID === "scoreSelect")
 		{
-			if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+			if(isPlayableScore(globalElements.scoreSelect.selectedIndex)
 				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				setTimeout(waitForSoundFont, 200, this);
