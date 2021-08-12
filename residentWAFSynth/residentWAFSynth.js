@@ -1651,7 +1651,7 @@ WebMIDI.residentWAFSynth = (function(window)
 
 	ResidentWAFSynth.prototype.allControllersOff = function(channel)
 	{
-        var currentNoteOns = channelControls[channel].currentNoteOns;
+		var currentNoteOns = channelControls[channel].currentNoteOns;
 
 		while(currentNoteOns.length > 0)
 		{
@@ -1820,7 +1820,6 @@ WebMIDI.residentWAFSynth = (function(window)
 			{
 				currentNoteOns[index].noteOff();
 				currentNoteOns.splice(index, 1);
-
             }
 		}
 	};

@@ -113,12 +113,6 @@ WebMIDI.residentWAFSynthNote = (function()
 
 		this.bufferSourceNode = getBufferSourceNode(audioContext, this.keyPitch, zone);
 		this.updatePitchWheel(this.pitchWheel14Bit);		
-		this.bufferSourceNode.onended = function()
-		{
-			// see https://stackoverflow.com/questions/46203191/should-i-disconnect-nodes-that-cant-be-used-anymore
-			noteGainNode.disconnect();
-			//console.log("The note's bufferSourceNode has stopped, and its noteGainNode has been disconnected.");
-		};
 		this.bufferSourceNode.connect(noteGainNode);
 
 		// see https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode/start
@@ -135,7 +129,9 @@ WebMIDI.residentWAFSynthNote = (function()
 		noteGainNode.gain.cancelScheduledValues(0);
 		noteGainNode.gain.linearRampToValueAtTime(0, stopTime);
 
-		this.bufferSourceNode.stop(stopTime + 0.5);
+		this.bufferSourceNode.stop(stopTime);
+
+		noteGainNode.disconnect();
 	};
 
 	// This function is called when the bufferSourceNode has just been created, and
