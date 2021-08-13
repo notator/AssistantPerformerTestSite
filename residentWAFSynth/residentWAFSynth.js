@@ -1701,11 +1701,8 @@ WebMIDI.residentWAFSynth = (function(window)
 				return;
 			}
 
-			let noteGainNode = audioContext.createGain();
-			noteGainNode.connect(channelAudioNodes[channel].inputNode);
-
 			// note on
-			note = new WebMIDI.residentWAFSynthNote.ResidentWAFSynthNote(audioContext, noteGainNode, zone, midi, chanControls, channelAudioNodes[channel]);
+			note = new WebMIDI.residentWAFSynthNote.ResidentWAFSynthNote(audioContext, zone, midi, chanControls, channelAudioNodes[channel]);
 			note.noteOn();
 			chanControls.currentNoteOns.push(note);
 		}

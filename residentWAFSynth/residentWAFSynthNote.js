@@ -19,15 +19,21 @@ WebMIDI.residentWAFSynthNote = (function()
     "use strict";
 
 	var
-		ResidentWAFSynthNote = function(audioContext, noteGainNode, zone, midi, channelControls, channelAudioNodes)
+		ResidentWAFSynthNote = function(audioContext, zone, midi, channelControls, channelAudioNodes)
 		{
 			if(!(this instanceof ResidentWAFSynthNote))
 			{
 				return new ResidentWAFSynthNote(audioContext, noteGainNode, zone, midi);
 			}
 
+			let noteGainNode = audioContext.createGain(),
+				channelInputNode = channelAudioNodes.inputNode;
+
+			noteGainNode.connect(channelInputNode);
+
 			this.audioContext = audioContext;
-			this.noteGainNode = noteGainNode; // this node has been connected to a channel inputNode
+			this.noteGainNode = noteGainNode;
+			this.channelInputNode = channelInputNode;
 			this.zone = zone;
 
 			this.offKey = midi.offKey; // the noteOff key that stops this note.
@@ -116,7 +122,7 @@ WebMIDI.residentWAFSynthNote = (function()
 		this.bufferSourceNode.onended = function()
 		{
 			// see https://stackoverflow.com/questions/46203191/should-i-disconnect-nodes-that-cant-be-used-anymore
-			noteGainNode.disconnect();
+			noteGainNode.disconnect(this.channelInputNode);
 			//console.log("The note's bufferSourceNode has stopped, and its noteGainNode has been disconnected.");
 		};
 		this.bufferSourceNode.connect(noteGainNode);
