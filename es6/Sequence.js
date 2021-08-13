@@ -83,7 +83,7 @@ let
 		var
 			track, nextMomtMsPosInScore, trackNextMomtMsPos, nextMomt = null, delay;
 
-		function stopAfterDelay()
+		function stopAtEndOfPerformance()
 		{
 			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
@@ -160,7 +160,7 @@ let
 
 		if(document.hidden === true)
 		{
-			stopAfterDelay();
+			stopAtEndOfPerformance();
 		}
 		else if(track === null)
 		{
@@ -174,7 +174,7 @@ let
 				}
 				else
 				{
-					stopAfterDelay();
+					stopAtEndOfPerformance();
 				}
 			}
 			else // using performance.now()
@@ -183,7 +183,7 @@ let
 				setState("stopped");
 				// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
 				delay = (endMarkerMsPositionInScore - previousMomtMsPosInScore) / speed;
-				window.setTimeout(stopAfterDelay, delay);
+				window.setTimeout(stopAtEndOfPerformance, delay);
 			}
 		}
 		else
