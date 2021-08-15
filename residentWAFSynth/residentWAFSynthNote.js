@@ -142,6 +142,8 @@ WebMIDI.residentWAFSynthNote = (function()
 		noteGainNode.gain.linearRampToValueAtTime(0, stopTime);
 
 		this.bufferSourceNode.stop(stopTime);
+
+		return stopTime;
 	};
 
 	// This function is called when the bufferSourceNode has just been created, and
@@ -184,6 +186,8 @@ WebMIDI.residentWAFSynthNote = (function()
 
 		modNode.frequency.setValueAtTime(modulationFrequency, this.audioContext.currentTime);
 		modGainNode.gain.setValueAtTime(modGain, this.audioContext.currentTime);
+
+
 
 		//this.modVal = modVal;
 		//this.modulationFrequency = modulationFrequency;

@@ -1,4 +1,4 @@
-﻿/* Copyright 2020 James Ingram, Sergey Surikov
+/* Copyright 2020 James Ingram, Sergey Surikov
  * https://james-ingram-act-two.de/
  * https://github.com/surikov
  *  
@@ -1658,11 +1658,24 @@ WebMIDI.residentWAFSynth = (function(window)
 
 	ResidentWAFSynth.prototype.allSoundOff = function(channel)
 	{
-		var currentNoteOns = channelControls[channel].currentNoteOns;
+		function reconnectChannelInput(that)
+		{
+			chanAudioNodes.inputNode = that.audioContext.createStereoPanner();
+			chanAudioNodes.panNode = chanAudioNodes.inputNode;
+			chanAudioNodes.inputNode.connect(chanAudioNodes.reverberator.input);
+		}
+
+		var currentNoteOns = channelControls[channel].currentNoteOns,
+			chanAudioNodes = channelAudioNodes[channel],
+			inputNode = chanAudioNodes.inputNode,
+			now = 0, stopTime = 0;
 
 		while(currentNoteOns.length > 0)
 		{
-			this.noteOff(channel, currentNoteOns[0].keyPitch, 0);
+			inputNode.disconnect();
+			now = this.audioContext.currentTime;
+			stopTime = this.noteOff(channel, currentNoteOns[0].keyPitch, 0);
+			setTimeout(reconnectChannelInput(this), stopTime - now);			
 		}
 	};
 
@@ -1804,16 +1817,19 @@ WebMIDI.residentWAFSynth = (function(window)
 
 	ResidentWAFSynth.prototype.noteOff = function(channel, key, unusedVelocity)
 	{
-		let currentNoteOns = channelControls[channel].currentNoteOns;
+		let currentNoteOns = channelControls[channel].currentNoteOns,
+			stopTime = 0;
 		
 		for(var index = currentNoteOns.length - 1; index >= 0; index--)
 		{
 			if(currentNoteOns[index].offKey === key)
 			{
-				currentNoteOns[index].noteOff();
+				stopTime = currentNoteOns[index].noteOff();
 				currentNoteOns.splice(index, 1);
             }
 		}
+
+		return stopTime;
 	};
 
 	return API;
