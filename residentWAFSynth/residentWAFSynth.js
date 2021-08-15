@@ -1651,12 +1651,7 @@ WebMIDI.residentWAFSynth = (function(window)
 
 	ResidentWAFSynth.prototype.allControllersOff = function(channel)
 	{
-		var currentNoteOns = channelControls[channel].currentNoteOns;
-
-		while(currentNoteOns.length > 0)
-		{
-			this.noteOff(channel, currentNoteOns[0].keyPitch, 0);
-		}
+		this.allSoundOff(channel);
 
 		setCCDefaults(this, channel);
 	};
