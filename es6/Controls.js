@@ -7,6 +7,7 @@ import { Sequence } from "./Sequence.js";
 import { SequenceRecording } from "./SequenceRecording.js";
 import { sequenceToSMF } from "./StandardMidiFile.js";
 import { Keyboard1 } from "./Keyboard1.js";
+import { MasterKeyboard } from "./MasterKeyboard.js";
 
 const
 	// constants for control layer opacity values
@@ -210,7 +211,10 @@ var
 	{
 		var
 			scoreIndex = globalElements.scoreSelect.selectedIndex,
-			outputDeviceIndex = globalElements.outputDeviceSelect.selectedIndex;
+			inputDeviceSelect = globalElements.inputDeviceSelect,
+			outputDeviceSelect = globalElements.outputDeviceSelect,
+			outputDeviceIndex = outputDeviceSelect.selectedIndex,
+			outputDeviceName = outputDeviceSelect.options[outputDeviceIndex].innerHTML;
 
 		switch(mainOptionsState)
 		{
@@ -228,10 +232,22 @@ var
 
 					if(isPlayableScore(scoreIndex) === true || (isPlayableScore(scoreIndex) === false && midiAccess !== null))
 					{
+						outputDeviceSelect.disabled = false;
+
 						if(globalElements.waitingForSoundFontDiv.style.display === "none"
 							&& scoreIndex > 0 && outputDeviceIndex > 0)
 						{
 							globalElements.startRuntimeButton.style.display = "initial";
+							if(options.inputHandler instanceof Keyboard1
+								|| (options.inputHandler instanceof MasterKeyboard && outputDeviceName === "ResidentWAFSynth"))
+							{
+								inputDeviceSelect.disabled = false;
+							}
+							else
+							{
+								inputDeviceSelect.selectedIndex = 0;
+								inputDeviceSelect.disabled = true;
+                            }
 						}
 					}
 					else
@@ -239,6 +255,11 @@ var
 						globalElements.needsMIDIAccessDiv.style.display = "block";
 					}
 				}
+				else
+				{
+					inputDeviceSelect.disabled = true;
+					outputDeviceSelect.disabled = true;
+                }
 				break;
 			case "toBack": // set svg controls and score visible
 				globalElements.titleOptionsDiv.style.visibility = "hidden";
@@ -868,13 +889,11 @@ var
 				option.text = port.name;
 				is.add(option, null);
 			});
-			globalElements.inputDeviceSelect.disabled = false;
 		}
 		else
 		{
 			option.text = "MIDI input devices are not available";
 			is.add(option, null);
-			globalElements.inputDeviceSelect.disabled = true;
 		}
 	},
 
@@ -1237,6 +1256,10 @@ export class Controls
 	// called when the user clicks a control in the GUI
 	doControl(controlID)
 	{
+		let outputDeviceSelect = globalElements.outputDeviceSelect,
+			inputDeviceSelect = globalElements.inputDeviceSelect,
+			scoreSelect = globalElements.scoreSelect;
+
 		// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
 		// and uses the information to load the score's svg files into the "svgPagesFrame" div,
 		// The score is actually analysed when the Start button is clicked.
@@ -1278,7 +1301,7 @@ export class Controls
 						break;
 					case STUDY1_SCORE_INDEX:
 						scoreInfo.path = "Study 1/Study 1 (scroll)";
-						scoreInfo.inputHandler = "none";
+						scoreInfo.inputHandler = "masterKeyboard";
 						scoreInfo.aboutText = "about Study 1";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
 						break;
@@ -1387,7 +1410,7 @@ export class Controls
 				if(nPagesLoading === 0)
 				{
 					globalElements.waitingForScoreDiv.style.display = "none";
-					globalElements.outputDeviceSelect.disabled = false;
+					outputDeviceSelect.disabled = false;
 				}
 			}
 
@@ -1396,7 +1419,7 @@ export class Controls
 				if(nPagesLoading === 0)
 				{
 					globalElements.waitingForScoreDiv.style.display = "block";
-					globalElements.outputDeviceSelect.disabled = true;
+					outputDeviceSelect.disabled = true;
 				}
 				nPagesLoading++;
 			}
@@ -1468,6 +1491,10 @@ export class Controls
 				if(scoreInfoInputHandler === "keyboard1")
 				{
 					options.inputHandler = new Keyboard1();
+				}
+				else if(scoreInfoInputHandler === "masterKeyboard")
+				{
+					options.inputHandler = new MasterKeyboard();
 				}
 				else
 				{
@@ -1563,36 +1590,40 @@ export class Controls
 
 		function waitForSoundFont(that)
 		{
-			if(isPlayableScore(globalElements.scoreSelect.selectedIndex)
-				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
+			if(isPlayableScore(scoreSelect.selectedIndex)
+				&& scoreSelect.options[scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				globalElements.waitingForSoundFontDiv.style.display = "block";
-				globalElements.outputDeviceSelect.disabled = true;
+				outputDeviceSelect.disabled = true;
 			}
 			else
 			{
 				globalElements.waitingForSoundFontDiv.style.display = "none";
-				globalElements.outputDeviceSelect.disabled = false;
+				outputDeviceSelect.disabled = false;
 			}
 			that.doControl("scoreSelect");
 		}
 
 		if(controlID === "scoreSelect")
 		{
-			globalElements.outputDeviceSelect.selectedIndex = 0;
+			inputDeviceSelect.disabled = true;
+			inputDeviceSelect.selectedIndex = 0;
 
-			if(globalElements.scoreSelect.selectedIndex > 0)
+			outputDeviceSelect.disabled = true;
+			outputDeviceSelect.selectedIndex = 0;			
+
+			if(scoreSelect.selectedIndex > 0)
 			{
-				if(isPlayableScore(globalElements.scoreSelect.selectedIndex))
+				if(isPlayableScore(scoreSelect.selectedIndex))
 				{
-					globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
+					outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
 				}
 				else
 				{
-					globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = true;
+					outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = true;
 				}
 
-				setScore(globalElements.scoreSelect.selectedIndex);
+				setScore(scoreSelect.selectedIndex);
 			}
 			else
 			{
@@ -1608,8 +1639,8 @@ export class Controls
 
 		if(controlID === "scoreSelect")
 		{
-			if(isPlayableScore(globalElements.scoreSelect.selectedIndex)
-				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
+			if(isPlayableScore(scoreSelect.selectedIndex)
+				&& scoreSelect.options[scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				setTimeout(waitForSoundFont, 200, this);
 			}
