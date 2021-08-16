@@ -518,7 +518,7 @@ var
 				// Keyboard1 *always* uses performance timer
 			}
 
-			options.outputDevice.reset();
+			options.outputDevice.setAllChannelControllersOff();
 
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
@@ -543,8 +543,6 @@ var
 
 	setStopped = function()
 	{
-		options.outputDevice.reset();
-
 		player.stop();
 
 		if(conductor !== undefined)
@@ -695,6 +693,8 @@ var
 		// The moment.timestamps do not need to be restored to their original values here
 		// because they will be re-assigned next time sequenceRecording.nextMoment() is called.
 
+		options.outputDevice.setAllChannelSoundOff();
+
 		setStopped();
 		// the following line is important, because the stop button is also the pause button.
 		svgControlsState = "stopped";
@@ -751,7 +751,7 @@ var
 				player.pause();
 			}
 
-			options.outputDevice.reset();
+			options.outputDevice.setAllChannelSoundOff();
 
 			setPage2ControlsDisabled();
 
@@ -1834,39 +1834,60 @@ export class Controls
 
 		function setOutputDeviceFunctions(outputDevice)
 		{
-			var resetMessages = [];
+			let allSoundOffMessages = [],
+				allControllersOffMessages = [];
 
-			function getResetMessages()
+			function getAllSoundOffMessages()
 			{
 				var byte1, channelIndex,
 					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-					ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
 					ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
 
 				for(channelIndex = 0; channelIndex < 16; channelIndex++)
 				{
 					byte1 = CONTROL_CHANGE + channelIndex;
-					resetMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-					// resetMessages must include allSoundOff messages because
-					// VirtualMIDISynth does not call allSoundOff() from allControllersOff().
-					resetMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
+					allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
 				}
 			}
 
-			function reset()
+			function getAllControllersOffMessages()
+			{
+				var byte1, channelIndex,
+					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+					ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF;
+
+				for(channelIndex = 0; channelIndex < 16; channelIndex++)
+				{
+					byte1 = CONTROL_CHANGE + channelIndex;
+					allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+				}
+			}
+
+			getAllSoundOffMessages();
+			getAllControllersOffMessages();
+
+			function setAllChannelSoundOff()
 			{
 				var i;
-				for(i = 0; i < resetMessages.length; i++)
+				for(i = 0; i < allSoundOffMessages.length; i++)
 				{
-					this.send(resetMessages[i], performance.now());
+					this.send(allSoundOffMessages[i], performance.now());
 				}
 			}
 
-			getResetMessages();
+			function setAllChannelControllersOff()
+			{
+				var i;
+				for(i = 0; i < allControllersOffMessages.length; i++)
+				{
+					this.send(allControllersOffMessages[i], performance.now());
+				}
+			}
 
 			if(outputDevice !== null)
 			{
-				outputDevice.reset = reset;
+				outputDevice.setAllChannelSoundOff = setAllChannelSoundOff;
+				outputDevice.setAllChannelControllersOff = setAllChannelControllersOff;
 			}
 		}
 
