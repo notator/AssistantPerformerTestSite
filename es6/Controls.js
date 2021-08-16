@@ -1816,6 +1816,8 @@ export class Controls
 				{
 					byte1 = CONTROL_CHANGE + channelIndex;
 					resetMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+					// resetMessages must include allSoundOff messages because
+					// VirtualMIDISynth does not call allSoundOff() from allControllersOff().
 					resetMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
 				}
 			}
