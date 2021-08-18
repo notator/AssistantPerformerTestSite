@@ -200,13 +200,13 @@ WebMIDI.residentSf2Synth = (function(window)
 
 	// WebMIDIAPI MIDIOutput send()
 	// This synth does not yet support timestamps (05.11.2015)
-	ResidentSf2Synth.prototype.send = function(message, ignoredTimestamp)
+	ResidentSf2Synth.prototype.send = function(messageData, ignoredTimestamp)
 	{
 		var
-			command = message[0] & 0xF0,
-			channel = message[0] & 0xF,
-			data1 = message[1],
-			data2 = message[2],
+			command = messageData[0] & 0xF0,
+			channel = messageData[0] & 0xF,
+			data1 = messageData[1],
+			data2 = messageData[2],
 			that = this;
 
 		function checkCommandExport(command)
