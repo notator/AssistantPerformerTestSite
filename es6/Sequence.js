@@ -535,7 +535,12 @@ export class Sequence
 
 				if(track.isOn)
 				{
-					track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+					let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+
+					for(var j = 0; j < trackInitMessages.length; j++)
+					{
+						outputDevice.send(trackInitMessages[j].data, performance.now());
+                    }					
 				}
 			}
 		}

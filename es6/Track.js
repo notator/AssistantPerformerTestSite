@@ -1,7 +1,7 @@
 
 import { constants } from "./Constants.js";
 import { RegionLink } from "./RegionLink.js";
-import { MidiChord } from "./MidiObject.js";
+import { MidiRest, MidiChord } from "./MidiObject.js";
 import { RegionControls } from "./RegionControls.js";
 
 export class Track
@@ -51,50 +51,173 @@ export class Track
 		// track.currentMoment is set to its (only) moment (which may be empty).
 		// If a MidiRest straddles the startMarker, track._currentMidiObject is set to the following MidiChord, and
 		// track.currentMoment is set to the its first moment.
-		// track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects. 
+		// track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects.
+		//
+		// 17.08.2021: this function now returns an array of Messages that should be sent by player.run(...)
+		// at the beginning of a performance to set the CC and preset state of the track.
 		function setInitialTrackState(that, startMarkerMsPositionInScore, endMarkerMsPositionInScore)
 		{
-			var i, index = -1, midiObject, midiChord, midiRest, nMidiObjects;
+			let isRegParamIndex, regParamIndex;
+
+			// Adds msg to messages, replacing a similar message, if it exists.
+			function addUnique(msg, messages)
+			{
+				const CMD = WebMIDI.constants.COMMAND,
+					CTL = WebMIDI.constants.CONTROL;
+
+				let cmd = msg.command(),
+					index;
+
+				isRegParamIndex = false;
+
+				if(cmd === CMD.CONTROL_CHANGE)
+				{
+					let ctl = msg.data[1];
+
+					if(ctl === CTL.REGISTERED_PARAMETER)
+					{
+						let regParamValue = msg.data[2];
+						index = messages.findIndex(x => { (x.data[0] === cmd) && (x.data[1] === ctl) && (x.data[2] === regParamValue); });
+						regParamIndex = index;
+						isRegParamIndex = true;
+					}
+					else if(ctl === CTL.DATA_ENTRY)
+					{
+						index = regParamIndex + 1; // regParamIndex must have been set by the previous message
+						regParamIndex = undefined;
+					}
+					else
+					{
+						index = messages.findIndex(x => { (x.data[0] === cmd) && (x.data[1] === ctl); });
+					}
+				}
+				else
+				{
+					index = messages.findIndex(x => (x.data[0] === cmd));
+				}
+
+				if(index === -1)
+				{
+					messages.push(msg);
+					if(isRegParamIndex === true)
+					{
+						regParamIndex = messages.length - 1;
+                    }
+				}
+				else
+				{
+					messages[index] = msg;
+				}
+			}
+
+			// returns messages (except noteOns and noteOffs) that represent the state of the controls
+			// set by the midiObject before startMarkerMsPositionInScore.
+			function getControlMessages(midiObject, startMarkerMsPositionInScore)
+			{
+				const CMD = WebMIDI.constants.COMMAND;
+
+				let controlMessages = [],
+					moments = midiObject.moments,
+					objPosInScore = midiObject.msPositionInScore;
+
+				if(objPosInScore < startMarkerMsPositionInScore)
+				{
+					for(var i = 0; i < moments.length; i++)
+					{
+						let moment = moments[i];
+
+						if((objPosInScore + moment.msPositionInChord) < startMarkerMsPositionInScore)
+						{
+							let messages = moment.messages;
+							for(var j = 0; j < messages.length; j++)
+							{
+								let msg = messages[j];
+								let cmd = msg.command();
+								if(cmd !== CMD.NOTE_ON && cmd !== CMD.NOTE_OFF)
+								{
+									addUnique(msg, controlMessages);
+								}
+							}
+						}
+						else
+						{
+							break;
+                        }
+					}
+				}
+
+				return controlMessages;
+			}
+
+			// Adds messages from moControlMessages to trackInitMessages,
+			// replacing messages for the same control, if they exist.
+			function collectMessages(moControlMessages, trackInitMessages)
+			{
+				for(var i = 0; i < moControlMessages.length; i++)
+				{
+					addUnique(moControlMessages[i], trackInitMessages);
+                }
+            }
+
+			var i, index = -1, midiObject, nMidiObjects,
+				trackInitMessages = [], moControlMessages;
+
 			if(that.midiObjects === undefined)
 			{
 				throw "Can't set OutputSpan!";
 			}
+
 			nMidiObjects = that.midiObjects.length;
 			for(i = 0; i < nMidiObjects; ++i)
 			{
-				// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
-				// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
-				// or the index of a MidiRest that starts at or after the startMarkerMsPositionInScore.
-				if(that.midiObjects[i] instanceof MidiChord)
+				let midiObject = that.midiObjects[i];
+
+				if(midiObject instanceof MidiRest)
 				{
-					midiChord = that.midiObjects[i];
-					if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
-						&& (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore))
+					let midiRest = midiObject;
+					if(midiRest.msPositionInScore < startMarkerMsPositionInScore)
 					{
+						// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
+						// in the midiChord.moments that precede startMarkerMsPositionInScore. 
+						moControlMessages = getControlMessages(midiObject, startMarkerMsPositionInScore);
+						collectMessages(moControlMessages, trackInitMessages);
+					}
+					else
+					{
+						midiRest.setToStartAtBeginning();
+						index = i;
+						break;
+					}
+                }
+				else // midiObject is MidiChord
+				{
+					let midiChord = midiObject;
+					if(midiChord.msPositionInScore <= startMarkerMsPositionInScore)
+					{
+						// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
+						// in the midiChord.moments that _precede_ startMarkerMsPositionInScore. 
+						moControlMessages = getControlMessages(midiChord, startMarkerMsPositionInScore);
+						collectMessages(moControlMessages, trackInitMessages); 
+						
 						// if the MidiChord is at or straddles the startMarkerMsPositionInScore
 						// set its moment pointers to startMarkerMsPositionInScore
 						// midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
-						midiChord.setToStartMarker(startMarkerMsPositionInScore);
-						if(midiChord.currentMoment !== undefined)
+						if(midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore)
 						{
-							index = i;
-							break;
+							midiChord.setToStartMarker(startMarkerMsPositionInScore);
+							if(midiChord.currentMoment !== undefined)
+							{
+								index = i;
+								break;
+							}
 						}
 					}
-					if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
-					{
-						// a MidiRest straddles the startMarker. 
+					else
+					{ 
 						midiChord.setToStartAtBeginning();
 						index = i;
 						break;
 					}
-				}
-				else if(that.midiObjects[i].msPositionInScore >= startMarkerMsPositionInScore)
-				{
-					midiRest = that.midiObjects[i];
-					midiRest.setToStartAtBeginning();
-					index = i;
-					break;
 				}
 			}
 
@@ -128,6 +251,8 @@ export class Track
 			}
   
 			that.hasEndedRegion = false;
+
+			return trackInitMessages;
 		}
 
 		// Adds the current Controller messages to the Moment at or immediately after the beginning of each region.
@@ -230,8 +355,12 @@ index, even if there are no NoteOn messages in the channel.`
 				}
 			}
 		}
-		setInitialTrackState(this, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
+
 		setInitialRegionMomentControls(this, trackIndex, startMarkerMsPositionInScore, endMarkerMsPositionInScore, regionStartMsPositionsInScore);
+
+		let trackInitMessages = setInitialTrackState(this, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
+
+		return trackInitMessages;
 	}
 
 	// ** Compare this code with setInitialTrackState() inside setOutputSpan() above. **
