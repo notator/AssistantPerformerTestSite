@@ -92,12 +92,12 @@ WebMIDI.residentSf2Synth = (function(window)
 				CTL.VOLUME,
 				CTL.PAN,
 
-				// REGISTERED_PARAMETER_COARSE can be set by client software, but it should never be set to anything except 0.
+				// REGISTERED_PARAMETER can be set by client software, but it should never be set to anything except 0.
 				// If the value is set to anything other than 0, attempts to retrieve pitchBendSensitivity will fail.
-				// These synths don't use REGISTERED_PARAMETER_COARSE for anything else.
-				// The REGISTERED_PARAMETER_COARSE control has been deliberately omitted from this synth's UI in the WebMIDISynthHost application. 
-				CTL.REGISTERED_PARAMETER_COARSE,
-				CTL.DATA_ENTRY_COARSE,
+				// This synth does not use REGISTERED_PARAMETER for anything else.
+				// The REGISTERED_PARAMETER control has been deliberately omitted from this synth's UI in the WebMIDISynthHost application. 
+				CTL.REGISTERED_PARAMETER,
+				CTL.DATA_ENTRY,
 
 				// standard 2-byte controllers.
 				// The name strings for these are defined in WebMIDI.constants
@@ -285,22 +285,22 @@ WebMIDI.residentSf2Synth = (function(window)
 				that.allSoundOff(channel);
 			}
 
-			function setRegisteredParameterCoarse(channel, param)
+			function setRegisteredParameter(channel, param)
 			{
-				checkControlExport(CTL.REGISTERED_PARAMETER_COARSE);
+				checkControlExport(CTL.REGISTERED_PARAMETER);
 				// console.log("residentSf2Synth RegisteredParameterCoarse: channel:" + channel + " value:" + param);
 				if(param !== 0)
 				{
-					throw "This synth only supports registeredParameterCoarse = 0 (pitchWheelDeviation semitones)";
+					throw "This synth only supports registeredParameter = 0 (pitchWheelDeviation semitones)";
 				}
-				that.registeredParameterCoarse(channel, param);
+				that.registeredParameter(channel, param);
 			}
 
-			function setDataEntryCoarse(channel, semitones)
+			function setDataEntry(channel, semitones)
 			{
-				checkControlExport(CTL.DATA_ENTRY_COARSE);
+				checkControlExport(CTL.DATA_ENTRY);
 				// console.log("residentSf2Synth DataEntryCoarse: channel:" + channel + " value:" + semitones);
-				that.dataEntryCoarse(channel, semitones);
+				that.dataEntry(channel, semitones);
 			}
 
 			checkCommandExport(CMD.CONTROL_CHANGE);
@@ -322,14 +322,14 @@ WebMIDI.residentSf2Synth = (function(window)
 				case CTL.ALL_SOUND_OFF:
 					setAllSoundOff(channel);
 					break;
-				// CTL.REGISTERED_PARAMETER_FINE and CTL.DATA_ENTRY_FINE are not supported (i.e. are ignored by) this synth.
-				case CTL.REGISTERED_PARAMETER_COARSE:
-					setRegisteredParameterCoarse(channel, data2);
+				case CTL.REGISTERED_PARAMETER:
+					setRegisteredParameter(channel, data2);
 					break;
-				case CTL.DATA_ENTRY_COARSE: // default coarse is semitones pitchWheelDeviation when RPC is 0
-					setDataEntryCoarse(channel, data2);
+				case CTL.DATA_ENTRY: // default is semitones pitchWheelDeviation when RPC is 0
+					setDataEntry(channel, data2);
 					break;
 				default:
+					// FINE versions of controllers are not supported (i.e. are ignored by) this synth.
 					console.warn(`Controller ${data1.toString(10)} (0x${data1.toString(16)}) is not supported.`);
 			}
 		}
@@ -377,8 +377,8 @@ WebMIDI.residentSf2Synth = (function(window)
 
 		this.volumeChange(channel, controlDefaultValue(CTL.VOLUME)); // 100 -- was 0x64
 		this.panpotChange(channel, controlDefaultValue(CTL.PAN)); // 64 -- was 0x40
-		this.registeredParameterCoarse(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE)); // 0 -- was 0
-		this.dataEntryCoarse(channel, controlDefaultValue(CTL.DATA_ENTRY_COARSE)); // 2 -- was 2
+		this.registeredParameter(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER)); // 0 -- was 0
+		this.dataEntry(channel, controlDefaultValue(CTL.DATA_ENTRY)); // 2 -- was 2
 	};
 
 	ResidentSf2Synth.prototype.setSoundFont = function(soundFont)
@@ -429,8 +429,8 @@ WebMIDI.residentSf2Synth = (function(window)
 			bankIndexStr, instrStr, channelStr;
 
 		// *Setting* the pitchBendSensitivity should be done by
-		//   1. setting channelRegisteredParameterCoarse[channel] to 0 -- using this.registeredParameterCoarse(channel, param).
-		//   2. setting channelDataEntryCoarse[channel] to the sensitivity (in semitones) -- using this.dataEntryCoarse(channel, semitones).
+		//   1. setting channelRegisteredParameterCoarse[channel] to 0 -- using this.registeredParameter(channel, param).
+		//   2. setting channelDataEntryCoarse[channel] to the sensitivity (in semitones) -- using this.dataEntry(channel, semitones).
 		// If the channelRegisteredParameterCoarse param is set !== 0, then this function will throw an exception.
 		// These synths ignore both channelRegisteredParameterFine and channelDataEntryFine.
 		function getPitchBendSensitivity(channel)
@@ -558,14 +558,14 @@ WebMIDI.residentSf2Synth = (function(window)
 		channelPitchBend[channel] = pitchBend;
 	};
 
-	// Both of these should be called by clients, but setting registeredParameterCoarse to anything other than 0
-	// will cause the retrieval of the dataEntryCoarse (pitchBendSensitivity) to throw an exception and fail.
-	// Setting registeredParameterCoarse has been suppressed in this synth's UI in the WebMIDISynthHost app. 
-	ResidentSf2Synth.prototype.registeredParameterCoarse = function(channel, param)
+	// Both of these should be called by clients, but setting registeredParameter to anything other than 0
+	// will cause the retrieval of the dataEntry (pitchBendSensitivity) to throw an exception and fail.
+	// Setting registeredParameter has been suppressed in this synth's UI in the WebMIDISynthHost app. 
+	ResidentSf2Synth.prototype.registeredParameter = function(channel, param)
 	{
 		channelRegisteredParameterCoarse[channel] = param;
 	};
-	ResidentSf2Synth.prototype.dataEntryCoarse = function(channel, semitones)
+	ResidentSf2Synth.prototype.dataEntry = function(channel, semitones)
 	{
 		channelDataEntryCoarse[channel] = semitones;
 	};

@@ -196,8 +196,8 @@ export class Message
 						case CC.MODWHEEL: // 1,
 							returnString = `control:1 (modwheel) channel:${channel} value:${data[2]}`;
 							break;
-						case CC.DATA_ENTRY_COARSE:// 6,
-							returnString = `control:1 (dataEntryCoarse) channel:${channel} value:${data[2]}`;
+						case CC.DATA_ENTRY:// 6,
+							returnString = `control:1 (dataEntry) channel:${channel} value:${data[2]}`;
 							break;							
 						case CC.VOLUME:// 7,
 							returnString = `control:1 (volume) channel:${channel} value:${data[2]}`;
@@ -229,8 +229,8 @@ export class Message
 						case CC.PHASER:// 95,
 							returnString = `control:95 (phaser) channel:${channel} value:${data[2]}`;
 							break;							
-						case CC.REGISTERED_PARAMETER_COARSE:// 101,
-							returnString = `control:101 (registeredParameterCoarse) channel:${channel} value:${data[2]}`;
+						case CC.REGISTERED_PARAMETER:// 101,
+							returnString = `control:101 (registeredParameter) channel:${channel} value:${data[2]}`;
 							break;							
 						case CC.ALL_SOUND_OFF: // 120,
 							returnString = `control:120 (allSoundOff) channel:${channel} value:${data[2]}`;

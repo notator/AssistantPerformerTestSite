@@ -924,7 +924,7 @@ WebMIDI.residentWAFSynth = (function(window)
         {
             let controlDefaultValue = WebMIDI.constants.controlDefaultValue;
 
-			that.registeredParameterCoarse(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE));
+			that.registeredParameter(channel, controlDefaultValue(CTL.REGISTERED_PARAMETER));
 
 			that.updateReverberation(channel, controlDefaultValue(CTL.REVERBERATION));
 			that.updateModWheel(channel, controlDefaultValue(CTL.MODWHEEL));
@@ -965,12 +965,8 @@ WebMIDI.residentWAFSynth = (function(window)
 				CTL.VOLUME,
 				CTL.PAN,
 				CTL.REVERBERATION,
-
-				// CTL.REGISTERED_PARAMETER_COARSE is set by this synthesizer to its defaultValue 0.
-				// This synth prevents it being set to any other value (an exception is thrown if such an attempt is made),
-				// so the WebMidiSynthHost does not provide a control for it in the controls section of its GUI.
-				CTL.REGISTERED_PARAMETER_COARSE,
-				CTL.DATA_ENTRY_COARSE,
+				CTL.REGISTERED_PARAMETER,
+				CTL.DATA_ENTRY,
 
 				// standard 2-byte controllers.
 				CTL.ALL_CONTROLLERS_OFF,
@@ -1078,8 +1074,9 @@ WebMIDI.residentWAFSynth = (function(window)
 			controlState.pitchWheel14Bit = 0;
 			controlState.pitchWheelSensitivity = 2;
 
-			controlState.registeredParameterCoarse = controlDefaultValue(CTL.REGISTERED_PARAMETER_COARSE);
-			 
+			controlState.registeredParameter = controlDefaultValue(CTL.REGISTERED_PARAMETER);
+			controlState.dataEntry = controlDefaultValue(CTL.DATA_ENTRY);
+
 			controlState.modWheel = controlDefaultValue(CTL.MODWHEEL);
             controlState.volume = controlDefaultValue(CTL.VOLUME);
             controlState.pan = controlDefaultValue(CTL.PAN);
@@ -1242,19 +1239,19 @@ WebMIDI.residentWAFSynth = (function(window)
 				that.allSoundOff(channel);
 			}
 
-			// This function must always be called immediately before calling setDataEntryCoarse(...).
-			function setRegisteredParameterCoarse(channel, value)
+			// This function must always be called immediately before calling setDataEntry(...).
+			function setRegisteredParameter(channel, value)
 			{
-				checkControlExport(CTL.REGISTERED_PARAMETER_COARSE);
-				// console.log("residentWAFSynth RegisteredParameterCoarse: channel:" + channel + " value:" + value);
-				that.registeredParameterCoarse(channel, value);
+				checkControlExport(CTL.REGISTERED_PARAMETER);
+				// console.log("residentWAFSynth RegisteredParameter: channel:" + channel + " value:" + value);
+				that.registeredParameter(channel, value);
 			}
-			// setRegisteredParameterCoarse(...) must always be called immediately before calling this function.
-			function setDataEntryCoarse(channel, value)
+			// setRegisteredParameter(...) must always be called immediately before calling this function.
+			function setDataEntry(channel, value)
 			{
-				checkControlExport(CTL.DATA_ENTRY_COARSE);
-				// console.log("residentWAFSynth DataEntryCoarse: channel:" + channel + " value:" + semitones);
-				that.dataEntryCoarse(channel, value);
+				checkControlExport(CTL.DATA_ENTRY);
+				// console.log("residentWAFSynth DataEntry: channel:" + channel + " value:" + semitones);
+				that.dataEntry(channel, value);
 			}
 
 			checkCommandExport(CMD.CONTROL_CHANGE);
@@ -1282,16 +1279,17 @@ WebMIDI.residentWAFSynth = (function(window)
 				case CTL.ALL_SOUND_OFF:
 					setAllSoundOff(channel);
 					break;
-				// CTL.REGISTERED_PARAMETER_FINE and CTL.DATA_ENTRY_FINE are not supported (i.e. are ignored by) this synth.
-				case CTL.REGISTERED_PARAMETER_COARSE:
-					setRegisteredParameterCoarse(channel, data2);
+				// CTL.REGISTERED_PARAMETER is always set immediately before setting CTL.DATA_ENTRY.
+				case CTL.REGISTERED_PARAMETER:
+					setRegisteredParameter(channel, data2);
 					break;
-				// CTL.REGISTERED_PARAMETER_COARSE is always set immediately before setting CTL.DATA_ENTRY_COARSE.
-				case CTL.DATA_ENTRY_COARSE:
-					setDataEntryCoarse(channel, data2);
+				// CTL.REGISTERED_PARAMETER is always set immediately before setting CTL.DATA_ENTRY.
+				case CTL.DATA_ENTRY:
+					setDataEntry(channel, data2);
 					break;
 
 				default:
+					// FINE versions of controllers are not supported (i.e. are ignored by) this synth.
                     console.warn(`Controller ${data1.toString(10)} (0x${data1.toString(16)}) is not supported.`);
 			}
 		}
@@ -1360,8 +1358,8 @@ WebMIDI.residentWAFSynth = (function(window)
         state.push({ ccIndex: CTL.PAN, ccValue: controlsInfo.pan });
 		state.push({ ccIndex: CTL.REVERBERATION, ccValue: controlsInfo.reverberation });
 		// Repeat the following two lines for each registered parameter
-		state.push({ ccIndex: CTL.REGISTERED_PARAMETER_COARSE, ccValue: 0 }); // 0 is pitchWheelSensitivity
-		state.push({ ccIndex: CTL.DATA_ENTRY_COARSE, ccValue: controlsInfo.pitchWheelSensitivity });
+		state.push({ ccIndex: CTL.REGISTERED_PARAMETER, ccValue: 0 }); // 0 is pitchWheelSensitivity
+		state.push({ ccIndex: CTL.DATA_ENTRY, ccValue: controlsInfo.pitchWheelSensitivity });
 
         return state;
     };
@@ -1586,13 +1584,13 @@ WebMIDI.residentWAFSynth = (function(window)
 		channelControls[channel].reverberation = reverberation;
 	};
 
-	// This function must always be called immediately before calling ResidentWAFSynth.prototype.dataEntryCoarse(...)
-	ResidentWAFSynth.prototype.registeredParameterCoarse = function(channel, value)
+	// This function must always be called immediately before calling ResidentWAFSynth.prototype.dataEntry(...)
+	ResidentWAFSynth.prototype.registeredParameter = function(channel, value)
 	{
-		channelControls[channel].registeredParameterCoarse = value;
+		channelControls[channel].registeredParameter = value;
 	};
-	// ResidentWAFSynth.prototype.registeredParameterCoarse must always be called immediately before calling this function.
-	ResidentWAFSynth.prototype.dataEntryCoarse = function(channel, value)
+	// ResidentWAFSynth.prototype.registeredParameter must always be called immediately before calling this function.
+	ResidentWAFSynth.prototype.dataEntry = function(channel, value)
 	{
 		function updatePitchWheelSensitivity(controls, semitones)
 		{
@@ -1630,7 +1628,7 @@ WebMIDI.residentWAFSynth = (function(window)
 
 		let control = WebMIDI.constants.CONTROL;
 
-		switch(channelControls[channel].registeredParameterCoarse)
+		switch(channelControls[channel].registeredParameter)
 		{
 			case control.INGRAM_REGPARAM_SET_PITCHWHEEL_SENSITIVITY:
 				let semitones = value;

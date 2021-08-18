@@ -494,10 +494,10 @@ var
 							CMD = constants.COMMAND,
 							CTL = constants.CONTROL;
 
-						msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.REGISTERED_PARAMETER_COARSE, 0);
+						msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.REGISTERED_PARAMETER, 0);
 						sendMIDIMessage(msg.data);
 
-						msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.DATA_ENTRY_COARSE, deviation);
+						msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.DATA_ENTRY, deviation);
 						sendMIDIMessage(msg.data);
 					}
 
