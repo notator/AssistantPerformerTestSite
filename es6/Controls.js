@@ -1943,6 +1943,10 @@ export class Controls
 
 		setConductingLayer();
 
+		score.sendStartMarkerToStart();
+		score.sendEndMarkerToEnd();
+		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+
 		if(isKeyboard1Performance)
 		{
 			player = options.inputHandler; // keyboard1 -- the "prepared piano"
@@ -1968,10 +1972,6 @@ export class Controls
 		}
 
 		score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
-
-		score.sendStartMarkerToStart();
-		score.sendEndMarkerToEnd();
-		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
 		setSvgControlsState('stopped');
 
