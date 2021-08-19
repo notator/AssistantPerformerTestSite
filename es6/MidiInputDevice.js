@@ -1722,7 +1722,7 @@ var
 		return outputTracks;
 	};
 
-export class MasterKeyboard
+export class MidiInputDevice
 {
 	constructor()
 	{
