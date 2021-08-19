@@ -190,6 +190,7 @@ export class Track
 							midiChord.setToStartMarker(startMarkerMsPositionInScore);
 							if(midiChord.currentMoment !== undefined)
 							{
+								//midiChord.setToStartAtBeginning();
 								index = i;
 								break;
 							}
@@ -198,6 +199,7 @@ export class Track
 				}
 				else
 				{
+					midiObject.setToStartAtBeginning();
 					index = i;
 					break;
 				}
@@ -217,7 +219,7 @@ export class Track
 				// (If the performance is set to start inside a rest, that.currentMoment will be at a
 				// position later than the startMarker.)
 				// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
-				for(i = index; i < nMidiObjects; ++i)
+				for(i = index + 1; i < nMidiObjects; ++i)
 				{
 					midiObject = that.midiObjects[i];
 					if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
