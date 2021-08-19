@@ -172,33 +172,16 @@ export class Track
 			{
 				let midiObject = that.midiObjects[i];
 
-				if(midiObject instanceof MidiRest)
+				if(midiObject.msPositionInScore <= startMarkerMsPositionInScore)
 				{
-					let midiRest = midiObject;
-					if(midiRest.msPositionInScore < startMarkerMsPositionInScore)
+					// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
+					// in the midiObject.moments that _precede_ startMarkerMsPositionInScore. 
+					moControlMessages = getControlMessages(midiObject, startMarkerMsPositionInScore);
+					collectMessages(moControlMessages, trackInitMessages);
+
+					if(midiObject instanceof MidiChord)
 					{
-						// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
-						// in the midiChord.moments that precede startMarkerMsPositionInScore. 
-						moControlMessages = getControlMessages(midiObject, startMarkerMsPositionInScore);
-						collectMessages(moControlMessages, trackInitMessages);
-					}
-					else
-					{
-						midiRest.setToStartAtBeginning();
-						index = i;
-						break;
-					}
-                }
-				else // midiObject is MidiChord
-				{
-					let midiChord = midiObject;
-					if(midiChord.msPositionInScore <= startMarkerMsPositionInScore)
-					{
-						// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
-						// in the midiChord.moments that _precede_ startMarkerMsPositionInScore. 
-						moControlMessages = getControlMessages(midiChord, startMarkerMsPositionInScore);
-						collectMessages(moControlMessages, trackInitMessages); 
-						
+						let midiChord = midiObject;
 						// if the MidiChord is at or straddles the startMarkerMsPositionInScore
 						// set its moment pointers to startMarkerMsPositionInScore
 						// midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
@@ -211,13 +194,12 @@ export class Track
 								break;
 							}
 						}
-					}
-					else
-					{ 
-						midiChord.setToStartAtBeginning();
-						index = i;
-						break;
-					}
+                    }
+				}
+				else
+				{
+					index = i;
+					break;
 				}
 			}
 
@@ -235,7 +217,7 @@ export class Track
 				// (If the performance is set to start inside a rest, that.currentMoment will be at a
 				// position later than the startMarker.)
 				// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
-				for(i = index + 1; i < nMidiObjects; ++i)
+				for(i = index; i < nMidiObjects; ++i)
 				{
 					midiObject = that.midiObjects[i];
 					if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
