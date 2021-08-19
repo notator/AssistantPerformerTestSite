@@ -233,7 +233,12 @@ export class Track
 				that.currentMoment = that._currentMidiObject.currentMoment; // a MidiChord or MidiRest
 				that.currentMoment = (that.currentMoment === undefined) ? null : that.currentMoment;
 			}
-  
+
+			// These three are used to reset the track to begin at the startMarker.
+			that._midiObjectIndexAtStartMarker = that._currentMidiObjectIndex;
+			that._midiObjectAtStartMarker = that._currentMidiObject;
+			that._momentAtStartMarker = that.currentMoment;
+
 			that.hasEndedRegion = false;
 
 			return trackInitMessages;
@@ -345,6 +350,13 @@ index, even if there are no NoteOn messages in the channel.`
 		let trackInitMessages = setInitialTrackState(this, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
 
 		return trackInitMessages;
+	}
+
+	resetToStartMarker()
+	{
+		this._currentMidiObjectIndex = this._midiObjectIndexAtStartMarker;
+		this._currentMidiObject = this._midiObjectAtStartMarker;
+		this.currentMoment = this._momentAtStartMarker;
 	}
 
 	// ** Compare this code with setInitialTrackState() inside setOutputSpan() above. **

@@ -436,6 +436,37 @@ export class Sequence
 		return tracks;
 	}
 
+	// This function will be called by:
+	//	this.init(...) -- with all arguments set correctly (trackIsOnArray is set to all tracks on).
+	// and when any of the first three parameters are changed.
+	// 
+	// Sets each (output) track's isOn attribute.
+	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
+	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
+	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
+	initTracks = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore)
+	{
+		let i, nTracks = tracks.length, track;
+		// Note that the trackIsOnArray will also include input tracks if the score has any,
+		// but that these are ignored here because _tracks_ only contains the _output_ tracks.
+
+		for(i = 0; i < nTracks; ++i)
+		{
+			track = tracks[i];
+			track.isOn = trackIsOnArray[i];
+
+			if(track.isOn)
+			{
+				let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+
+				for(var j = 0; j < trackInitMessages.length; j++)
+				{
+					outputDevice.send(trackInitMessages[j].data, performance.now());
+				}
+			}
+		}
+	}
+
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
@@ -449,7 +480,7 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(outputDevice, outputTracks, startMarkerMsPosition, endMarkerMsPosition,
+	init(outputDevice, outputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore,
 		regionSequenceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
 	{
 		function getRegionStartMsPositionsInScore(regionSequence)
@@ -489,6 +520,14 @@ export class Sequence
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
 		reportTickOverload = reportTickOverloadCallback;
 
+		let trackIsOnArray = [];
+        for(var i = 0; i < outputTracks.length; i++)
+		{
+			trackIsOnArray.push(true);
+        }
+
+		this.initTracks(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+
 		setState("stopped");
 	}
 
@@ -513,33 +552,6 @@ export class Sequence
 	// of tracks as this (calling) sequence.
 	play(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, baseSpeed, recording)
 	{
-		// Sets each (output) track's isOn attribute.
-		// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
-		// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
-		// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore)
-		{
-			let i, nTracks = tracks.length, track;
-			// Note that the trackIsOnArray will also include input tracks if the score has any,
-			// but that these are ignored here because _tracks_ only contains the _output_ tracks.
-
-			for(i = 0; i < nTracks; ++i)
-			{
-				track = tracks[i];
-				track.isOn = trackIsOnArray[i];
-
-				if(track.isOn)
-				{
-					let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
-
-					for(var j = 0; j < trackInitMessages.length; j++)
-					{
-						outputDevice.send(trackInitMessages[j].data, performance.now());
-                    }					
-				}
-			}
-		}
-
 		// In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)
 		// In normal Sequence or Keyboard1 performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
 		speed = baseSpeed;
@@ -556,7 +568,10 @@ export class Sequence
 		lastReportedMsPosition = -1;
 		endOfConductedPerformance = false;
 
-		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+        for(var i = 0; i < tracks.length; i++)
+		{
+			tracks[i].resetToStartMarker();
+        }
 
 		performanceStartTime = timer.now();
 		startTimeAdjustedForPauses = performanceStartTime;
