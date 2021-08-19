@@ -431,11 +431,6 @@ export class Sequence
 		this.isRunning = isRunning;
 	}
 
-	setOutputTracks(outputTracksArg)
-	{
-		outputTracks = outputTracksArg;
-	}
-
 	getOutputTracks()
 	{
 		return tracks;
@@ -454,7 +449,8 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback, regionSequenceArg)
+	init(outputDevice, outputTracks, startMarkerMsPosition, endMarkerMsPosition,
+		regionSequenceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
 	{
 		function getRegionStartMsPositionsInScore(regionSequence)
 		{
@@ -472,7 +468,7 @@ export class Sequence
 			return rval;
 		}
 
-		if(outputDeviceArg === undefined || outputDeviceArg === null)
+		if(outputDevice === undefined || outputDevice === null)
 		{
 			throw "The midi output device must be defined.";
 		}
@@ -484,7 +480,6 @@ export class Sequence
 		}
 
 		timer = performance; // performance.now() is the default timer
-		outputDevice = outputDeviceArg; // default output device is the one selected in the outputDevice selector 
 		tracks = outputTracks;
 		regionSequence = regionSequenceArg.slice(); // clone the array
 		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionSequence);

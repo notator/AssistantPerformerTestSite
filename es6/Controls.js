@@ -49,7 +49,7 @@ var
 	cl = {}, // control layers
 
 	// options set in the top dialog
-	options = {},
+	deviceOptions = {},
 
 	// deletes the 'save' button created by createSaveMIDIFileLink() 
 	deleteSaveLink = function()
@@ -238,8 +238,8 @@ var
 							&& scoreIndex > 0 && outputDeviceIndex > 0)
 						{
 							globalElements.startRuntimeButton.style.display = "initial";
-							if(options.inputHandler instanceof Keyboard1
-								|| (options.inputHandler instanceof MidiInputDevice && outputDeviceName === "ResidentWAFSynth"))
+							if(deviceOptions.inputHandler instanceof Keyboard1
+								|| (deviceOptions.inputHandler instanceof MidiInputDevice && outputDeviceName === "ResidentWAFSynth"))
 							{
 								inputDeviceSelect.disabled = false;
 							}
@@ -458,7 +458,7 @@ var
 
 		setPage2ControlsDisabled();
 
-		switch(options.performanceMode)
+		switch(deviceOptions.performanceMode)
 		{
 			case performanceMode.score:
 				cl.goDisabled.setAttribute("opacity", GLASS);
@@ -481,7 +481,7 @@ var
 				break;
 		}
 
-		if(options.performanceMode === performanceMode.score && player.isPaused())
+		if(deviceOptions.performanceMode === performanceMode.score && player.isPaused())
 		{
 			player.resume();
 		}
@@ -489,7 +489,7 @@ var
 		{
 			sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-			if(options.performanceMode === performanceMode.score)
+			if(deviceOptions.performanceMode === performanceMode.score)
 			{
 				score.setCursor();
 			}
@@ -503,7 +503,7 @@ var
 			endRegionIndex = score.getEndRegionIndex();
 			endMarkerMsPosition = score.endMarkerMsPosition();
 
-			if(options.performanceMode === performanceMode.conductingTimer || options.performanceMode === performanceMode.conductingCreep )
+			if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep )
 			{
 				baseSpeed = 1;
 				player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
@@ -511,14 +511,14 @@ var
 			else // options.performanceMode === score or keyboard1)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
-				if(options.performanceMode === performanceMode.score)
+				if(deviceOptions.performanceMode === performanceMode.score)
 				{
-					player.setTimerAndOutputDevice(performance, options.outputDevice); // Sequence can use conductor or performance timer
+					player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
 				}
 				// Keyboard1 *always* uses performance timer
 			}
 
-			options.outputDevice.setAllChannelControllersOff();
+			deviceOptions.outputDevice.setAllChannelControllersOff();
 
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
@@ -552,13 +552,13 @@ var
 			conductor = undefined;
 		}
 
-		if(options.inputHandler instanceof Keyboard1)
+		if(deviceOptions.inputHandler instanceof Keyboard1)
 		{
-			options.performanceMode = performanceMode.keyboard1;
+			deviceOptions.performanceMode = performanceMode.keyboard1;
 		}
 		else
 		{
-			options.performanceMode = performanceMode.score;
+			deviceOptions.performanceMode = performanceMode.score;
 		}
 
 		score.hideCursor();
@@ -693,7 +693,7 @@ var
 		// The moment.timestamps do not need to be restored to their original values here
 		// because they will be re-assigned next time sequenceRecording.nextMoment() is called.
 
-		options.outputDevice.setAllChannelSoundOff();
+		deviceOptions.outputDevice.setAllChannelSoundOff();
 
 		setStopped();
 		// the following line is important, because the stop button is also the pause button.
@@ -741,7 +741,7 @@ var
 
 		function setPaused()
 		{
-			if(options.performanceMode !== performanceMode.score)
+			if(deviceOptions.performanceMode !== performanceMode.score)
 			{
 				throw "Error: Assisted performances are never paused.";
 			}
@@ -751,7 +751,7 @@ var
 				player.pause();
 			}
 
-			options.outputDevice.setAllChannelSoundOff();
+			deviceOptions.outputDevice.setAllChannelSoundOff();
 
 			setPage2ControlsDisabled();
 
@@ -784,7 +784,7 @@ var
 
 		function setConductingTimer()
 		{
-			options.performanceMode = performanceMode.conductingTimer;
+			deviceOptions.performanceMode = performanceMode.conductingTimer;
 
 			setPage2ControlsDisabled();
 
@@ -799,7 +799,7 @@ var
 			{
 				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
 				// and null if there are input devices that are not selected.
-				conductor = new TimerConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
+				conductor = new TimerConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
 			}
 
 			setConducting(speed);
@@ -809,7 +809,7 @@ var
 
 		function setConductingCreep()
 		{
-			options.performanceMode = performanceMode.conductingCreep;
+			deviceOptions.performanceMode = performanceMode.conductingCreep;
 
 			setPage2ControlsDisabled();
 
@@ -824,7 +824,7 @@ var
 			{
 				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
 				// and null if there are input devices that are not selected.
-				conductor = new CreepConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
+				conductor = new CreepConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
 			}
 			
 			setConducting(speed);
@@ -843,7 +843,7 @@ var
 				setStopped();
 				break;
 			case 'paused':
-				if(options.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
+				if(deviceOptions.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
 				{
 					setPaused();
 				}
@@ -1490,15 +1490,15 @@ export class Controls
 			{
 				if(scoreInfoInputHandler === "keyboard1")
 				{
-					options.inputHandler = new Keyboard1();
+					deviceOptions.inputHandler = new Keyboard1();
 				}
 				else if(scoreInfoInputHandler === "masterKeyboard")
 				{
-					options.inputHandler = new MidiInputDevice();
+					deviceOptions.inputHandler = new MidiInputDevice();
 				}
 				else
 				{
-					options.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
+					deviceOptions.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
 				}
 			}
 
@@ -1931,11 +1931,11 @@ export class Controls
 			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
 		}
 
-		let isKeyboard1Performance = options.inputHandler instanceof Keyboard1;		 
+		let isKeyboard1Performance = deviceOptions.inputHandler instanceof Keyboard1;		 
 
-		setMIDIDevices(options);
+		setMIDIDevices(deviceOptions);
 
-		setOutputDeviceFunctions(options.outputDevice);
+		setOutputDeviceFunctions(deviceOptions.outputDevice);
 
 		// This function can throw an exception
 		// (e.g. if an attempt is made to create an event that has no duration).
@@ -1949,17 +1949,22 @@ export class Controls
 
 		if(isKeyboard1Performance)
 		{
-			player = options.inputHandler; // keyboard1 -- the "prepared piano"
+			player = deviceOptions.inputHandler; // keyboard1 -- the "prepared piano"
 			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
 			player.cursor = score.getCursor(); // contains sims
-			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+			player.init(deviceOptions.inputDevice, deviceOptions.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 		}
 		else
 		{
-			let outputTracks = score.getTracksData().outputTracks;
+			let outputTracks = score.getTracksData().outputTracks,
+				startMarkerMsPosition = score.startMarkerMsPosition(),
+				endMarkerMsPosition = score.endMarkerMsPosition(),
+				regionSequence = score.getRegionSequence(),
+				reportTickOverload = score.reportTickOverload; // callback;
+
 			player = new Sequence();
-			player.setOutputTracks(outputTracks);
-			player.init(options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload, score.getRegionSequence());
+			player.init(deviceOptions.outputDevice,	outputTracks, startMarkerMsPosition, endMarkerMsPosition,
+				regionSequence, reportEndOfRegion, reportEndOfPerformance, reportMsPos, reportTickOverload);
 		}
 
 		setSpeedControl(tracksControl.width());
