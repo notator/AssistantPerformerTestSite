@@ -7,7 +7,7 @@ import { Sequence } from "./Sequence.js";
 import { SequenceRecording } from "./SequenceRecording.js";
 import { sequenceToSMF } from "./StandardMidiFile.js";
 import { Keyboard1 } from "./Keyboard1.js";
-import { MasterKeyboard } from "./MasterKeyboard.js";
+import { MidiInputDevice } from "./MidiInputDevice.js";
 
 const
 	// constants for control layer opacity values
@@ -239,7 +239,7 @@ var
 						{
 							globalElements.startRuntimeButton.style.display = "initial";
 							if(options.inputHandler instanceof Keyboard1
-								|| (options.inputHandler instanceof MasterKeyboard && outputDeviceName === "ResidentWAFSynth"))
+								|| (options.inputHandler instanceof MidiInputDevice && outputDeviceName === "ResidentWAFSynth"))
 							{
 								inputDeviceSelect.disabled = false;
 							}
@@ -1494,7 +1494,7 @@ export class Controls
 				}
 				else if(scoreInfoInputHandler === "masterKeyboard")
 				{
-					options.inputHandler = new MasterKeyboard();
+					options.inputHandler = new MidiInputDevice();
 				}
 				else
 				{
