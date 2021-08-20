@@ -759,16 +759,16 @@ let midiChannelPerOutputTrack = [], // only output tracks
 	},
 
 	setActiveInfoStringsStyle = function(regionIndex)
-    {
-        // setActiveInfoStringsStyle is only defined if there are InfoStrings whose style needs to be set.
-        // There are no InfoStrings if the score contains no regionInfoStringElems. This is the case for
-        // all scores prior to Tombeau 1.
-        // see Score.getRegionData(svgElem).
-        if(regionSequence[regionIndex].setActiveInfoStringsStyle !== undefined)
-        {
-            console.assert(regionSequence.length > 1, "console assertion failed!");
-            regionSequence[regionIndex].setActiveInfoStringsStyle(true);
-        }
+	{
+		// setActiveInfoStringsStyle is only defined if there are InfoStrings whose style needs to be set.
+		// There are no InfoStrings if the score contains no regionInfoStringElems. This is the case for
+		// all scores prior to Tombeau 1.
+		// see Score.getRegionData(svgElem).
+		if(regionSequence[regionIndex].setActiveInfoStringsStyle !== undefined)
+		{
+			console.assert(regionSequence.length > 1, "console assertion failed!");
+			regionSequence[regionIndex].setActiveInfoStringsStyle(true);
+		}
 	},
 
 	leaveRegion = function(regionIndex)
@@ -1280,7 +1280,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
 		getRegionData(svgElem); // sets regionSequence and default values for startRegionIndex, endRegionIndex. 
- 
+
 		for(let systemIndex = 0; systemIndex < pageSystemElems.length; ++systemIndex)
 		{
 			systemElem = pageSystemElems[systemIndex];
@@ -1292,7 +1292,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// markersLayer is a new layer in (on top of) the svg of the score
 		setMarkersLayer(svgElem, systems, regionSequence, viewBox.scale);
-		
+
 		initializeTrackIsOnArray(systems[0]);
 	},
 
@@ -1339,12 +1339,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 				barlineTimeObjects = timeObjects.filter(x => (x.msDurationInScore === 0));
 
 			return barlineTimeObjects;
-        }
+		}
 
 		var endMsPosInScore = regionSequence[regionSequence.length - 1].endMsPosInScore,
 			endSystemIndex = getSystemIndex(endMsPosInScore),
 			barlineTimeObjects = getSystemBarlineTimeObjects(systems[endSystemIndex]),
-			barlineTimeObject = barlineTimeObjects.find(x => x.msPositionInScore === endMsPosInScore); 
+			barlineTimeObject = barlineTimeObjects.find(x => x.msPositionInScore === endMsPosInScore);
 
 		endMarker = systems[endSystemIndex].endMarker;
 		endMarker.setName(regionSequence[regionSequence.length - 1].name);
@@ -1850,7 +1850,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 							{
 								barlineX1 = thickBarlines[0].getAttribute('x1');
 							}
-							alignment = parseFloat(barlineX1, 10) / viewBoxScale; 
+							alignment = parseFloat(barlineX1, 10) / viewBoxScale;
 							if(alignment > currentAlignment)
 							{
 								barlineObj = {};
@@ -1925,9 +1925,9 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					system = systems[systemIndex];
 					systemElem = systemElems[systemIndex];
 					voiceTimeObjects = system.staves[0].voices[0].timeObjects,
-					//allNoteObjectElems = systemElems[systemIndex].getElementsByClassName("voice")[0].children;
+						//allNoteObjectElems = systemElems[systemIndex].getElementsByClassName("voice")[0].children;
 
-					system.barlines = getBarlineObjects(voiceTimeObjects, systemElem);
+						system.barlines = getBarlineObjects(voiceTimeObjects, systemElem);
 				}
 			}
 
@@ -2207,9 +2207,20 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return markersLayer; // is undefined before a score is loaded
 	},
 
-	getStartMarker = function()
+	regionStartMsPositions = function()
 	{
-		return startMarker; // is undefined before a score is loaded
+		let rval = [];
+		rval.push(0); // always include the beginning of the score
+		for(let i = 0; i < regionSequence.length; ++i)
+		{
+			let rl = regionSequence[i];
+			if(rval.indexOf(rl.startMsPosInScore) < 0)
+			{
+				rval.push(rl.startMsPosInScore);
+			}
+		}
+		rval.sort(function(a, b) { return a - b; });
+		return rval;
 	},
 
 	getRegionNamesPerMsPosInScore = function()
@@ -2284,9 +2295,9 @@ export class Score
 		this.getMarkersLayer = getMarkersLayer;
 		this.getSystems = getSystems;
 		this.getCursor = getCursor;
-		this.getStartMarker = getStartMarker;
 		this.getRegionSequence = getRegionSequence;
 		this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
+		this.regionStartMsPositions = regionStartMsPositions;
 		this.getStartRegionIndex = getStartRegionIndex;
 		this.getEndRegionIndex = getEndRegionIndex;
 

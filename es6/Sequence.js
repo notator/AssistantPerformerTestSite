@@ -4,6 +4,7 @@ import { Conductor } from "./Conductor.js";
 let
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
+	score,
 	tracks,
 
 	previousTimestamp = null, // nextMoment()
@@ -14,8 +15,6 @@ let
 
 	//startMarkerMsPositionInScore,
 	endMarkerMsPositionInScore,
-
-	outputTracks,
 
 	// used by setState()
 	pausedMoment = null, // set by pause(), used by resume()
@@ -32,7 +31,6 @@ let
 	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
 
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
-	regionStartMsPositionsInScore, // the state of all the controls is restored in the moments at these positions.
 	currentRegionIndex, // the index in the regionSequence and in the track._regionLinks arrays
 	endRegionIndex, // the index of the final region that will play (< regionSequence.length)
 
@@ -436,17 +434,25 @@ export class Sequence
 		return tracks;
 	}
 
-	// This function will be called by:
-	//	this.init(...) -- with all arguments set correctly (trackIsOnArray is set to all tracks on).
-	// and when any of the first three parameters are changed.
+	// This function is called
+	// 1. by this.init(...)
+	// 2. when either the startMarker or endMarker has been moved.
+	// 3. as a callback, when the tracksControl is changed.
 	// 
 	// Sets each (output) track's isOn attribute.
 	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
 	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
 	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-	initTracks = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore)
+	initTracks = function()
 	{
-		let i, nTracks = tracks.length, track;
+		let i, nTracks = tracks.length, track,
+			startMarkerMsPosInScore = score.startMarkerMsPosition(),
+			endMarkerMsPosInScore = score.endMarkerMsPosition(),
+			regionStartMsPositionsInScore = score.regionStartMsPositions(),
+			trackIsOnArray = [];
+
+		score.getReadOnlyTrackIsOnArray(trackIsOnArray);
+
 		// Note that the trackIsOnArray will also include input tracks if the score has any,
 		// but that these are ignored here because _tracks_ only contains the _output_ tracks.
 
@@ -480,53 +486,39 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(outputDevice, outputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore,
-		regionSequenceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
+	init(outputDeviceArg, scoreArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
 	{
-		function getRegionStartMsPositionsInScore(regionSequence)
-		{
-			let rval = [];
-			rval.push(0); // always include the beginning of the score
-			for(let i = 0; i < regionSequence.length; ++i)
-			{
-				let rl = regionSequence[i];
-				if(rval.indexOf(rl.startMsPosInScore) < 0)
-				{
-					rval.push(rl.startMsPosInScore);
-				}
-			}
-			rval.sort(function(a, b) { return a - b; });
-			return rval;
-		}
-
-		if(outputDevice === undefined || outputDevice === null)
+		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
 			throw "The midi output device must be defined.";
 		}
 
-		if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
-			|| reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null)
+		if(scoreArg === undefined || scoreArg === null)
 		{
-			throw "Error: both the position reporting callbacks must be defined.";
+			throw "The score must be defined!";
 		}
 
-		timer = performance; // performance.now() is the default timer
-		tracks = outputTracks;
-		regionSequence = regionSequenceArg.slice(); // clone the array
-		regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(regionSequence);
+		if(reportEndOfRegionCallback === undefined || reportEndOfRegionCallback === null
+			|| reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
+			|| reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null)
+		{
+			throw "Error: all callbacks must be defined.";
+		}
+
+		outputDevice = outputDeviceArg;
+		score = scoreArg;
+
+		tracks = score.getTracksData().outputTracks;
+		regionSequence = score.getRegionSequence();
+
+		this.initTracks(); // called again when the start and end markers move.
 
 		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
-		reportTickOverload = reportTickOverloadCallback;
+		reportTickOverload = score.reportTickOverload;
 
-		let trackIsOnArray = [];
-        for(var i = 0; i < outputTracks.length; i++)
-		{
-			trackIsOnArray.push(true);
-        }
-
-		this.initTracks(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+		timer = performance; // performance.now() is the default timer
 
 		setState("stopped");
 	}

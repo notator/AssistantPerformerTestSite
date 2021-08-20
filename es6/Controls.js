@@ -1553,7 +1553,7 @@ export class Controls
 			else if(svgControlsState === 'settingStart')
 			{
 				setSvgControlsState('stopped');
-				score.hideCursor();
+				player.initTracks();
 			}
 		}
 
@@ -1566,6 +1566,7 @@ export class Controls
 			else if(svgControlsState === 'settingEnd')
 			{
 				setSvgControlsState('stopped');
+				player.initTracks();
 			}
 		}
 
@@ -1827,7 +1828,7 @@ export class Controls
 			// changing the value of score.isKeyboard1Performance.
 			// Repainting includes using the correct staff colours, but the score may also update the position of
 			// its start marker (which always starts on a chord) if a track is turned off.
-			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance, score.refreshDisplay);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance);
 
 			return tracksData;
 		}
@@ -1953,18 +1954,15 @@ export class Controls
 			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
 			player.cursor = score.getCursor(); // contains sims
 			player.init(deviceOptions.inputDevice, deviceOptions.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+
+			tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
 		}
 		else
 		{
-			let outputTracks = score.getTracksData().outputTracks,
-				startMarkerMsPosition = score.startMarkerMsPosition(),
-				endMarkerMsPosition = score.endMarkerMsPosition(),
-				regionSequence = score.getRegionSequence(),
-				reportTickOverload = score.reportTickOverload; // callback;
-
 			player = new Sequence();
-			player.init(deviceOptions.outputDevice,	outputTracks, startMarkerMsPosition, endMarkerMsPosition,
-				regionSequence, reportEndOfRegion, reportEndOfPerformance, reportMsPos, reportTickOverload);
+			player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
+
+			tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
 		}
 
 		setSpeedControl(tracksControl.width());
