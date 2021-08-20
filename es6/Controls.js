@@ -518,7 +518,7 @@ var
 				// Keyboard1 *always* uses performance timer
 			}
 
-			deviceOptions.outputDevice.setAllChannelControllersOff();
+			deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
@@ -1577,6 +1577,7 @@ export class Controls
 				toggleBack(cl.sendStartToBeginningControlSelected);
 				score.sendStartMarkerToStart();
 				score.hideCursor();
+				player.initTracks();
 			}
 		}
 
@@ -1586,6 +1587,7 @@ export class Controls
 			{
 				toggleBack(cl.sendStopToEndControlSelected);
 				score.sendEndMarkerToEnd();
+				player.initTracks();
 			}
 		}
 
@@ -1876,12 +1878,15 @@ export class Controls
 				}
 			}
 
-			function setAllChannelControllersOff()
+			function setAllChannelControllersOff(trackIsOnArray)
 			{
 				var i;
-				for(i = 0; i < allControllersOffMessages.length; i++)
+				for(i = 0; i < trackIsOnArray.length; i++)
 				{
-					this.send(allControllersOffMessages[i], performance.now());
+					if(trackIsOnArray[i] === true)
+					{
+						this.send(allControllersOffMessages[i], performance.now());
+					}
 				}
 			}
 
