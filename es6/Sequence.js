@@ -356,8 +356,6 @@ let
 	},
 
 	// Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
-	// The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
-	// So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
 	resume = function()
 	{
 		var pauseMsDuration;
@@ -367,7 +365,7 @@ let
 			throw "Error: pausedMoment and pauseStartTime must be defined here.";
 		}
 
-		currentMoment = pausedMoment; // the last moment whose messages were sent.
+		currentMoment = pausedMoment; // the moment that is about to be sent.
 		pauseMsDuration = timer.now() - pauseStartTime;
 
 		setState("running"); // sets pausedMoment to null.
@@ -376,12 +374,6 @@ let
 		previousTimestamp += pauseMsDuration;
 		startTimeAdjustedForPauses += pauseMsDuration;
 
-		currentMoment = nextMoment();
-		if(currentMoment === null)
-		{
-			return;
-		}
-		currentMoment.timestamp = timer.now();
 		tick();
 	},
 
@@ -467,7 +459,7 @@ export class Sequence
 
 				for(var j = 0; j < trackInitMessages.length; j++)
 				{
-					outputDevice.send(trackInitMessages[j].data, performance.now());
+					outputDevice.send(trackInitMessages[j].data, timer.now());
 				}
 			}
 		}
