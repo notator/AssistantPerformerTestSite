@@ -440,7 +440,7 @@ export class Sequence
 		let i, nTracks = tracks.length, track,
 			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
 			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
-			regionStartMsPositionsInScore = score.regionStartMsPositions(),
+			regionStartMsPositionsInScore = score.getRegionStartMsPositionsInScore(),
 			trackIsOnArray = [];
 
 		score.getReadOnlyTrackIsOnArray(trackIsOnArray);

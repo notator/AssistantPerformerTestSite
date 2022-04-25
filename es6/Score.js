@@ -2207,7 +2207,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		return markersLayer; // is undefined before a score is loaded
 	},
 
-	regionStartMsPositions = function()
+	getRegionStartMsPositionsInScore = function()
 	{
 		let rval = [];
 		rval.push(0); // always include the beginning of the score
@@ -2297,7 +2297,7 @@ export class Score
 		this.getCursor = getCursor;
 		this.getRegionSequence = getRegionSequence;
 		this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
-		this.regionStartMsPositions = regionStartMsPositions;
+		this.getRegionStartMsPositionsInScore = getRegionStartMsPositionsInScore;
 		this.getStartRegionIndex = getStartRegionIndex;
 		this.getEndRegionIndex = getEndRegionIndex;
 
