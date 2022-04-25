@@ -438,8 +438,8 @@ export class Sequence
 	initTracks = function()
 	{
 		let i, nTracks = tracks.length, track,
-			startMarkerMsPosInScore = score.startMarkerMsPosition(),
-			endMarkerMsPosInScore = score.endMarkerMsPosition(),
+			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
+			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
 			regionStartMsPositionsInScore = score.regionStartMsPositions(),
 			trackIsOnArray = [];
 

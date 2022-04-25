@@ -1354,12 +1354,12 @@ let midiChannelPerOutputTrack = [], // only output tracks
 		endRegionIndex = regionSequence.length - 1;
 	},
 
-	startMarkerMsPosition = function()
+	getStartMarkerMsPositionInScore = function()
 	{
 		return startMarker.msPositionInScore;
 	},
 
-	endMarkerMsPosition = function()
+	getEndMarkerMsPositionInScore = function()
 	{
 		return endMarker.msPositionInScore;
 	},
@@ -2255,8 +2255,8 @@ export class Score
 		this.sendStartMarkerToStart = sendStartMarkerToStart;
 		this.sendEndMarkerToEnd = sendEndMarkerToEnd;
 
-		this.startMarkerMsPosition = startMarkerMsPosition;
-		this.endMarkerMsPosition = endMarkerMsPosition;
+		this.getStartMarkerMsPositionInScore = getStartMarkerMsPositionInScore;
+		this.getEndMarkerMsPositionInScore = getEndMarkerMsPositionInScore;
 		this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
 
 		// Called when the start button is clicked in the top options panel,

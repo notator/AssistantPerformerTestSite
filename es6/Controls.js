@@ -499,9 +499,9 @@ var
 
 			startRegionIndex = score.getStartRegionIndex();
 			score.setActiveInfoStringsStyle(startRegionIndex);
-			startMarkerMsPosition = score.startMarkerMsPosition();
+			startMarkerMsPosition = score.getStartMarkerMsPositionInScore();
 			endRegionIndex = score.getEndRegionIndex();
-			endMarkerMsPosition = score.endMarkerMsPosition();
+			endMarkerMsPosition = score.getEndMarkerMsPositionInScore();
 
 			if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep )
 			{
