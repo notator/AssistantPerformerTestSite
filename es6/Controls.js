@@ -489,7 +489,7 @@ var
 		{
 			sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-			if(deviceOptions.performanceMode === performanceMode.score)
+			if(deviceOptions.performanceMode === performanceMode.score || deviceOptions.performanceMode === performanceMode.keyboard1)
 			{
 				score.setCursor();
 			}
