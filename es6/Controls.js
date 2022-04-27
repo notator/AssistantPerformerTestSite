@@ -22,11 +22,10 @@ const
 	STUDY2_2STAVES_SCORE_INDEX = 5,
 	STUDY3_SKETCH1_SCORE_INDEX = 6,
 	STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
-	STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX = 8,
-	ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 9,
-	THREE_CRASHES_SCORE_INDEX = 10,
-	TOMBEAU1_SCORE_INDEX = 11,
-	STUDY4_SCORE_INDEX = 12,
+	ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 8,
+	THREE_CRASHES_SCORE_INDEX = 9,
+	TOMBEAU1_SCORE_INDEX = 10,
+	STUDY4_SCORE_INDEX = 11,
 
 	RESIDENT_SF2SYNTH_INDEX = 2,
 
@@ -879,7 +878,7 @@ var
 		option = document.createElement("option");
 		if(midiAccess !== null)
 		{
-			option.text = "choose a MIDI input device";
+			option.text = "MIDI input is not currently supported"; // "choose a MIDI input device";
 			is.add(option, null);
 			midiAccess.inputs.forEach(function(port)
 			{
@@ -1326,12 +1325,6 @@ export class Controls
 					case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
 						scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
 						scoreInfo.inputHandler = "none";
-						scoreInfo.aboutText = "about Study 3 Sketch";
-						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-						break;
-					case STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX:
-						scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
-						scoreInfo.inputHandler = "keyboard1";
 						scoreInfo.aboutText = "about Study 3 Sketch";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 						break;
