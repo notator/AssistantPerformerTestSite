@@ -38,9 +38,9 @@
 		systemStartBars="1, 3" />
 	<krystals>
 		<krystal
-			name="pk4(12)-2.krys" />
+			name="12.7_28_74_246.2.perm.krys" />
 		<krystal
-			name="lk1(12)-2.krys" />
+			name="12.1_12.2.line.krys" />
 	</krystals>
 	<palettes>
 		<palette

@@ -39,9 +39,9 @@
 		systemStartBars="1, 13, 25, 37, 49, 61, 73, 85, 97, 109" />
 	<krystals>
 		<krystal
-			name="xk3(7.7.18)-2.krys" />
+			name="7.7_28_196.36.2.exp.krys" />
 		<krystal
-			name="xk3(7.7.21)-1.krys" />
+			name="7.7_28_196.40.1.exp.krys" />
 	</krystals>
 	<palettes>
 		<palette

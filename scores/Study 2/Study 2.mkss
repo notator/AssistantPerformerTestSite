@@ -38,11 +38,11 @@
 		systemStartBars="1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68" />
 	<krystals>
 		<krystal
-			name="pk4(12)-2.krys" />
+			name="12.7_28_74_246.2.perm.krys" />
 		<krystal
-			name="pk4(12)-3.krys" />
+			name="12.7_28_74_518.3.perm.krys" />
 		<krystal
-			name="pk4(12)-1.krys" />
+			name="12.7_28_74_518.1.perm.krys" />
 	</krystals>
 	<palettes>
 		<palette
