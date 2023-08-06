@@ -1242,7 +1242,7 @@ export class Controls
 		if(midiAccess !== null)
 		{
 			// update the device selectors when devices get connected, disconnected, opened or closed
-			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+			midiAccess.onstatechange = onMIDIDeviceStateChange;
 		}
 
 		initScoreSelector(systemChanged);
@@ -1747,6 +1747,10 @@ export class Controls
 	{
 		function setMIDIDevices(options)
 		{
+			function wait(delay)
+			{
+				setTimeout(() => { }, delay);
+			}
 			var i,
 				inSelector = document.getElementById("inputDeviceSelect"),
 				scoreSelector = document.getElementById("scoreSelect"),
@@ -1773,7 +1777,15 @@ export class Controls
 			{
 				if(outSelector.options[i].outputDevice)
 				{
-					outSelector.options[i].outputDevice.close();
+					let promise = outSelector.options[i].outputDevice.close();
+					if(promise !== undefined)
+					{
+						promise.then(() => { });
+					}
+					else
+					{
+						wait(500);
+					}
 				}
 			}
 
@@ -1784,7 +1796,15 @@ export class Controls
 			else
 			{
 				options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
-				options.outputDevice.open();
+				let promise = options.outputDevice.open();
+				if(promise !== undefined)
+				{
+					promise.then(() => { });
+				}
+				else
+				{
+					wait(500);
+				}
 			}
 
             if(options.outputDevice === residentSf2Synth)
@@ -1969,7 +1989,7 @@ export class Controls
 
 		if(midiAccess !== null)
 		{
-			midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+			midiAccess.onstatechange = undefined;
 		}
 
 		score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
