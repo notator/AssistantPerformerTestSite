@@ -1747,10 +1747,6 @@ export class Controls
 	{
 		function setMIDIDevices(options)
 		{
-			function wait(delay)
-			{
-				setTimeout(() => { }, delay);
-			}
 			var i,
 				inSelector = document.getElementById("inputDeviceSelect"),
 				scoreSelector = document.getElementById("scoreSelect"),
@@ -1775,16 +1771,20 @@ export class Controls
 
 			for(i = 1; i < outSelector.options.length; ++i)
 			{
-				if(outSelector.options[i].outputDevice)
+				let outputDevice = outSelector.options[i].outputDevice;
+				if(outputDevice)
 				{
-					let promise = outSelector.options[i].outputDevice.close();
+					let name = outputDevice.name,
+						promise = outputDevice.close();
+
 					if(promise !== undefined)
 					{
-						promise.then(() => { });
+						promise.then(() => {console.log("Closed " + name);})
+							.catch(() => {console.error("Error closing " + name);});
 					}
-					else
+					else // my earlier synths don't have an async close() (that returns a promise).
 					{
-						wait(500);
+						console.log("Closed " + name);
 					}
 				}
 			}
@@ -1796,14 +1796,19 @@ export class Controls
 			else
 			{
 				options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
-				let promise = options.outputDevice.open();
+
+				let outputDevice = options.outputDevice,
+					name = outputDevice.name,
+				    promise = outputDevice.open();
+
 				if(promise !== undefined)
 				{
-					promise.then(() => { });
+					promise.then(() => {console.log("Opened " + name);})
+							.catch(() => {console.error("Error opening " + name);});
 				}
-				else
+				else // my earlier synths don't have an async open() (that returns a promise).
 				{
-					wait(500);
+					console.log("Opened " + name);
 				}
 			}
 
