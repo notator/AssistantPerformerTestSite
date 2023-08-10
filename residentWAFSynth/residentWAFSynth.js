@@ -1039,7 +1039,7 @@ WebMIDI.residentWAFSynth = (function(window)
 	// WebMIDIAPI §4.6 -- MIDIPort interface
 	// See https://github.com/notator/WebMIDISynthHost/issues/24
 	// This is called after user interaction with the page.
-	ResidentWAFSynth.prototype.open = function()
+	ResidentWAFSynth.prototype.open = async function()
     {
         function audioNodesConfig(audioContext, finalGainNode)
         {
@@ -1104,7 +1104,7 @@ WebMIDI.residentWAFSynth = (function(window)
 
 	// WebMIDIAPI §4.6 -- MIDIPort interface
 	// See https://github.com/notator/WebMIDISynthHost/issues/24
-	ResidentWAFSynth.prototype.close = function()
+	ResidentWAFSynth.prototype.close = async function()
     {
         if(channelAudioNodes.length > 0)
         {

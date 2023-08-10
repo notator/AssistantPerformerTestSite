@@ -1774,18 +1774,10 @@ export class Controls
 				let outputDevice = outSelector.options[i].outputDevice;
 				if(outputDevice)
 				{
-					let name = outputDevice.name,
-						promise = outputDevice.close();
-
-					if(promise !== undefined)
-					{
-						promise.then(() => {console.log("Closed " + name);})
-							.catch(() => {console.error("Error closing " + name);});
-					}
-					else // my earlier synths don't have an async close() (that returns a promise).
-					{
-						console.log("Closed " + name);
-					}
+					let name = outputDevice.name;
+					outputDevice.close()
+						.then(() => {console.log("Closed " + name);})
+						.catch(() => {console.error("Error closing " + name);});
 				}
 			}
 
@@ -1798,18 +1790,11 @@ export class Controls
 				options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
 
 				let outputDevice = options.outputDevice,
-					name = outputDevice.name,
-				    promise = outputDevice.open();
+					name = outputDevice.name;
 
-				if(promise !== undefined)
-				{
-					promise.then(() => {console.log("Opened " + name);})
-							.catch(() => {console.error("Error opening " + name);});
-				}
-				else // my earlier synths don't have an async open() (that returns a promise).
-				{
-					console.log("Opened " + name);
-				}
+				outputDevice.open()
+					.then(() => {console.log("Opened " + name);})
+					.catch(() => {console.error("Error opening " + name);});
 			}
 
             if(options.outputDevice === residentSf2Synth)

@@ -163,7 +163,7 @@ WebMIDI.residentSf2Synth = (function(window)
 	// See https://github.com/notator/WebMIDISynthHost/issues/24
 	// This is called when the start button is clicked on page 1 of the Assistant Performer,
 	// and the synth is selected in the outputDeviceSelector.
-	ResidentSf2Synth.prototype.open = function()
+	ResidentSf2Synth.prototype.open = async function()
 	{
 		// console.log("residentSf2Synth opened.");
 		ctx = getAudioContext();
@@ -193,7 +193,7 @@ WebMIDI.residentSf2Synth = (function(window)
 
 	// WebMIDIAPI §4.6 -- MIDIPort interface
 	// See https://github.com/notator/WebMIDISynthHost/issues/24
-	ResidentSf2Synth.prototype.close = function()
+	ResidentSf2Synth.prototype.close = async function()
 	{
 		// console.log("residentSf2Synth closed.");
 	};
