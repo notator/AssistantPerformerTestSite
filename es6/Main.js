@@ -5,11 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/Main.js
- *  Chris Wilson's ap/WebMIDIAPI.js has been included as a script in
- *  ../assistantPerformer.html, so the Web MIDI API is available.
- *  When browsers implement the Web MIDI API natively, the code in
- *  ap/WebMIDIAPI.js is ignored (does nothing). In this function,
+ *  es6/Main.js
+ *  This function
  *  1. Adds a new Controls object to the global _AP object defined earlier.
  *  2. Retrieves the midiAccess object by calling
  *       window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
