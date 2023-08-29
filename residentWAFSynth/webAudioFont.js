@@ -18,7 +18,7 @@
 
 /*global WebMIDI */
 
-WebMIDI.namespace('webAudioFont');
+WebMIDI.namespace('WebMIDI.webAudioFont');
 
 WebMIDI.webAudioFont = (function()
 {

@@ -19,7 +19,7 @@
 
 WebMIDI.namespace('wafReverberator');
 
-WebMIDI.wafReverberator = (function()
+WebMIDI.wafReverberator = (function(window)
 {
 	"use strict";
 

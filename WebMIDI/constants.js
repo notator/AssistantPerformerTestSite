@@ -12,15 +12,14 @@
 /*jslint bitwise, white */
 /*global WebMIDI */
 
-WebMIDI.namespace('constants');
+WebMIDI.namespace('WebMIDI.constants');
 
 WebMIDI.constants = (function()
 {
-	"use strict";
-	const MIDI_0_FREQUENCY = 8.1758; // Hertz
-	var	
+    "use strict";
+    var
     COMMAND = {},
-	CONTROL = {},
+    CONTROL = {},
 	// These GM_PRESET_NAMES are written here exactly as defined at MIDI.org: 
 	// http://midi.org/techspecs/gm1sound.php
 	GM_PRESET_NAMES =
@@ -181,10 +180,15 @@ WebMIDI.constants = (function()
 				return ("allControllersOff");
 			case CONTROL.ALL_NOTES_OFF:
 			    return ("allNotesOff");
-		    case CONTROL.REGISTERED_PARAMETER:
-		        return ("registeredParameter");
-		    case CONTROL.DATA_ENTRY:
-		        return ("dataEntry");
+
+		    case CONTROL.REGISTERED_PARAMETER_FINE:
+		        return ("registeredParameterFine");
+		    case CONTROL.REGISTERED_PARAMETER_COARSE:
+		        return ("registeredParameterCoarse");
+		    case CONTROL.DATA_ENTRY_FINE:
+		        return ("dataEntryFine");
+		    case CONTROL.DATA_ENTRY_COARSE:
+		        return ("dataEntryCoarse");
 		}
 	},
 	// Only 3-byte controls have default values.
@@ -201,10 +205,15 @@ WebMIDI.constants = (function()
 				return (100);
 			case CONTROL.PAN:
 				return (64);
-		    case CONTROL.REGISTERED_PARAMETER:
-		        return (0); // 0 is pitchWheelDeviation (=semitones)
-		    case CONTROL.DATA_ENTRY:
-		        return (2); // default pitchWheelDeviation is 2 semitones
+
+		    case CONTROL.REGISTERED_PARAMETER_FINE:
+		        return (0); // fine parameter is fine pitchWheelDeviation (=cents)
+		    case CONTROL.REGISTERED_PARAMETER_COARSE:
+		        return (0); // coarse parameter is coarse pitchWheelDeviation (=semitones)
+		    case CONTROL.DATA_ENTRY_FINE:
+		        return (0); // default fine pitchWheelDeviation is 0 cents
+		    case CONTROL.DATA_ENTRY_COARSE:
+		        return (2); // default coarse pitchWheelDeviation is 2 semitones
 			default:
 				break;	// return undefined
 		}
@@ -245,8 +254,7 @@ WebMIDI.constants = (function()
     API =
     {
         COMMAND: COMMAND,
-		CONTROL: CONTROL,
-		MIDI_0_FREQUENCY: MIDI_0_FREQUENCY, // Hertz
+        CONTROL: CONTROL,
         commandName: commandName,
         commandDefaultValue: commandDefaultValue,
         controlName: controlName,
@@ -262,27 +270,24 @@ WebMIDI.constants = (function()
     Object.defineProperty(COMMAND, "CONTROL_CHANGE", { value: 0xB0, writable: false });
     Object.defineProperty(COMMAND, "PRESET", { value: 0xC0, writable: false });
     Object.defineProperty(COMMAND, "CHANNEL_PRESSURE", { value: 0xD0, writable: false });
-	Object.defineProperty(COMMAND, "PITCHWHEEL", { value: 0xE0, writable: false });
+    Object.defineProperty(COMMAND, "PITCHWHEEL", { value: 0xE0, writable: false });
 
     // CONTROL
-	// Only the "coarse" versions of these controls are supported.
-	// (Moritz does not write the "fine" versions either.)
+	// Note that I am currently only using the "coarse" versions of these controls.
+	// I think the corresponding "fine" controls should be named with a "_LO" suffix
+	// (e.g. MODWHEEL_LO).
     Object.defineProperty(CONTROL, "BANK", { value: 0, writable: false });
-	Object.defineProperty(CONTROL, "MODWHEEL", { value: 1, writable: false });
-	Object.defineProperty(CONTROL, "DATA_ENTRY", { value: 6, writable: false });
-	Object.defineProperty(CONTROL, "VOLUME", { value: 7, writable: false });
-	Object.defineProperty(CONTROL, "PAN", { value: 10, writable: false });
-	Object.defineProperty(CONTROL, "EXPRESSION", { value: 11, writable: false });
+    Object.defineProperty(CONTROL, "MODWHEEL", { value: 1, writable: false });
+    Object.defineProperty(CONTROL, "VOLUME", { value: 7, writable: false });
+    Object.defineProperty(CONTROL, "PAN", { value: 10, writable: false });
+    Object.defineProperty(CONTROL, "DATA_ENTRY_FINE", { value: 38, writable: false });
+	Object.defineProperty(CONTROL, "DATA_ENTRY_COARSE", { value: 6, writable: false });
 	Object.defineProperty(CONTROL, "REVERBERATION", { value: 91, writable: false });
-    Object.defineProperty(CONTROL, "REGISTERED_PARAMETER", { value: 101, writable: false });
+    Object.defineProperty(CONTROL, "REGISTERED_PARAMETER_FINE", { value: 100, writable: false });
+    Object.defineProperty(CONTROL, "REGISTERED_PARAMETER_COARSE", { value: 101, writable: false });
     Object.defineProperty(CONTROL, "ALL_SOUND_OFF", { value: 120, writable: false });
     Object.defineProperty(CONTROL, "ALL_CONTROLLERS_OFF", { value: 121, writable: false });
-	Object.defineProperty(CONTROL, "ALL_NOTES_OFF", { value: 123, writable: false });
-
-	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SET_PITCHWHEEL_SENSITIVITY", { value: 0x00, writable: false });
-	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SELECT_TUNING_BANK", { value: 0x03, writable: false });
-	Object.defineProperty(CONTROL, "INGRAM_REGPARAM_SELECT_TUNING_PRESET", { value: 0x04, writable: false });
-
+    Object.defineProperty(CONTROL, "ALL_NOTES_OFF", { value: 123, writable: false });
 	return API;
 } ());
 

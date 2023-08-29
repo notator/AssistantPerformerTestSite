@@ -133,13 +133,13 @@ export class TimeMarker
 {
 	constructor(score, isConductingTimer)
 	{
-		let startMarkerMsPositionInScore = score.getStartMarkerMsPositionInScore(),
+		let startMarker = score.getStartMarker(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
 			startRegionIndex = score.getStartRegionIndex(),
 			endRegionIndex = score.getEndRegionIndex(),
 			msPosDataArray = cursor.msPosDataArray,
-			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPositionInScore === startMarkerMsPositionInScore),
+			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPositionInScore === startMarker.msPositionInScore),
 			msPosData = msPosDataArray[currentMsPosDataIndex],
 			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // the final barline is in msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
@@ -154,7 +154,7 @@ export class TimeMarker
 		Object.defineProperty(this, "_endRegionIndex", { value: endRegionIndex, writable: false });
 
 		 // updated while running
-		Object.defineProperty(this, "_smoothMsPositionInScore", { value: startMarkerMsPositionInScore, writable: true });	
+		Object.defineProperty(this, "_smoothMsPositionInScore", { value: startMarker.msPositionInScore, writable: true });	
 		Object.defineProperty(this, "_msPosData", { value: msPosData, writable: true });
 		Object.defineProperty(this, "_nextMsPosData", { value: nextMsPosData, writable: true });
 		Object.defineProperty(this, "_regionIndex", { value: startRegionIndex, writable: true });

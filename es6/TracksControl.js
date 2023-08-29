@@ -28,8 +28,7 @@ let
 
 	trackCtlElems = [], // the controls for individual tracks
 
-	scoreRefresh = undefined, // a callback that tells the score to redraw itself
-	initTracks = undefined, // a callback that sets the tracks for performance
+	scoreRefresh = null, // a callback that tells the score to redraw itself
 
 	setTrackCtlState = function(trackIndex, state)
 	{
@@ -78,7 +77,7 @@ export class TracksControl
 	}
 
 	// Called after loading a particular score.
-	init(outputTracks, inputTracks, isLivePerf)
+	init(outputTracks, inputTracks, isLivePerf, scoreRefreshCallback)
 	{
 		var nOutputTracks = outputTracks.length, nInputTracks = inputTracks.length,
 			trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
@@ -192,6 +191,7 @@ export class TracksControl
 		}
 
 		isLivePerformance = isLivePerf;
+		scoreRefresh = scoreRefreshCallback;
 
 		nTrackControls = nOutputTracks + nInputTracks;
 		trackControlsWidth = ((nTrackControls * 16) + 6).toString(); // individual controls are 10 pixels wide, with 6px between them.
@@ -273,16 +273,9 @@ export class TracksControl
 		}
 	}
 
-	setOnChangeCallbacks(scoreRefreshDisplayCallback, initTracksCallback)
-	{
-		scoreRefresh = scoreRefreshDisplayCallback;
-		initTracks = initTracksCallback;
-	}	
-
 	// Called if the user clicks a trackControl.
 	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
-	// callback which tells the score to redraw itself, and
-	// the initTracks callback that sets the tracks for performance.
+	// callback which tells the score to redraw itself.
 	trackOnOff(trackNumberStr, bulletOffID)
 	{
 		var
@@ -347,17 +340,11 @@ export class TracksControl
 				}
 
 				// scoreRefresh is a callback that tells the score to redraw itself
-				if(scoreRefresh !== undefined)
+				if(scoreRefresh !== null)
 				{
 					getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray);
 					scoreRefresh(undefined, readOnlyTrackIsOnArray);  // arg 1 is undefined so score.isKeyboard1Performance does not change.
 				}
-
-				// initTracks is a callback that sets the tracks for performance
-				if(initTracks !== undefined)
-				{
-					initTracks();
-                }
 			}
 		}
 	}

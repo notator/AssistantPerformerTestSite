@@ -12,47 +12,28 @@
 *        ResidentWAFSynthNote(ctx, gainMaster, keyLayers) 
 */
 
-WebMIDI.namespace('residentWAFSynthNote');
+WebMIDI.namespace('WebMIDI.residentWAFSynthNote');
 
 WebMIDI.residentWAFSynthNote = (function()
 {
     "use strict";
 
 	var
-		ResidentWAFSynthNote = function(audioContext, zone, midi, channelControls, channelAudioNodes)
+		ResidentWAFSynthNote = function(audioContext, noteGainNode, zone, midi)
 		{
 			if(!(this instanceof ResidentWAFSynthNote))
 			{
-				return new ResidentWAFSynthNote(audioContext, noteGainNode, zone, midi);
+				return new ResidentWAFSynthNote(audioContext, noteGainNode, envelopeType, zone, midi);
 			}
-
-			let noteGainNode = audioContext.createGain(),
-				channelInputNode = channelAudioNodes.inputNode;
-
-			noteGainNode.connect(channelInputNode);
 
 			this.audioContext = audioContext;
-			this.noteGainNode = noteGainNode;
-			this.channelInputNode = channelInputNode;
+			this.noteGainNode = noteGainNode; // this node has been connected to a channel inputNode
 			this.zone = zone;
 
-			this.offKey = midi.offKey; // the noteOff key that stops this note.
-			this.keyPitch = midi.keyPitch;
+			this.key = midi.key;
 			this.velocityFactor = midi.velocity / 127;
-
-			this.pitchWheel14Bit = channelControls.pitchWheel14Bit; // a value in range [-8192..+8191]
-			this.aftertouch14Bit = 0; // the default value = no aftertouch (in range [-8192..+8191])
-			this.pitchWheelSensitivity = channelControls.pitchWheelSensitivity;
-			if(channelAudioNodes.modNode !== undefined)
-			{
-				this.updateModWheel(channelAudioNodes.modNode, channelAudioNodes.modGainNode, channelControls.modWheel);
-			}
-			//else
-			//{
-			//	this.modVal = undefined;
-			//	this.modulationFrequency = undefined;
-			//	this.modGain = undefined;
-			//}
+            this.pitchBend14bit = midi.pitchBend14bit;  // a value in range [-8192..+8191]
+			this.pitchBendSensitivity = midi.pitchBendSensitivity;
 		},
 
 	API =
@@ -83,7 +64,7 @@ WebMIDI.residentWAFSynthNote = (function()
 			gain.linearRampToValueAtTime(0, decayEndTime); // decay
 		}
 
-		function getBufferSourceNode(audioContext, keyPitch, zone)
+		function getBufferSourceNode(audioContext, key, zone)
 		{
 			let doLoop = (zone.loopStart < 1 || zone.loopStart >= zone.loopEnd) ? false : true,
 				baseDetune = zone.originalPitch - 100.0 * zone.coarseTune - zone.fineTune,
@@ -101,7 +82,7 @@ WebMIDI.residentWAFSynthNote = (function()
 				bufferSourceNode.loop = false;
 			}
 
-			bufferSourceNode.standardPlaybackRate = Math.pow(2, (100.0 * keyPitch - baseDetune) / 1200.0);
+			bufferSourceNode.standardPlaybackRate = Math.pow(2, (100.0 * key - baseDetune) / 1200.0);
 
 			return bufferSourceNode;
 		}
@@ -111,19 +92,19 @@ WebMIDI.residentWAFSynthNote = (function()
 			noteGainNode = this.noteGainNode,
 			now = this.audioContext.currentTime;
 
-		this.startTime = now; // used in updatePitchWheel
+		this.startTime = now; // used in updatePlaybackRate
 
-		this.envelopeDuration = zone.vEnvData.envelopeDuration; // used in setTimeout below, and in updatePitchWheel()
+		this.envelopeDuration = zone.vEnvData.envelopeDuration; // used in setTimeout below, and in updatePlaybackRate()
 		this.noteOffReleaseDuration = zone.vEnvData.noteOffReleaseDuration; 
 		setNoteEnvelope(noteGainNode.gain, now, this.velocityFactor, zone.vEnvData);
 
-		this.bufferSourceNode = getBufferSourceNode(audioContext, this.keyPitch, zone);
-		this.updatePitchWheel(this.pitchWheel14Bit);
+		this.bufferSourceNode = getBufferSourceNode(audioContext, this.key, zone);
+		this.updatePlaybackRate(this.pitchBend14bit);		
 		this.bufferSourceNode.onended = function()
 		{
 			// see https://stackoverflow.com/questions/46203191/should-i-disconnect-nodes-that-cant-be-used-anymore
-			noteGainNode.disconnect(this.channelInputNode);
-			//console.log("The note's bufferSourceNode has stopped, and its noteGainNode has been disconnected.");
+			noteGainNode.disconnect();
+			console.log("The note's bufferSourceNode has stopped, and its noteGainNode has been disconnected.");
 		};
 		this.bufferSourceNode.connect(noteGainNode);
 
@@ -141,57 +122,27 @@ WebMIDI.residentWAFSynthNote = (function()
 		noteGainNode.gain.cancelScheduledValues(0);
 		noteGainNode.gain.linearRampToValueAtTime(0, stopTime);
 
-		this.bufferSourceNode.stop(stopTime);
-
-		return stopTime;
+		this.bufferSourceNode.stop(stopTime + 0.5);
 	};
 
 	// This function is called when the bufferSourceNode has just been created, and
 	// can be called again to shift the pitch while the note is still playing.
-	ResidentWAFSynthNote.prototype.updatePlaybackRate = function()
+	// The pitchBend argument is a 14-bit int value (in range [-8192..+8191]). 
+	ResidentWAFSynthNote.prototype.updatePlaybackRate = function(pitchBend14bit)
 	{
+		if(pitchBend14bit < -8192 || pitchBend14bit > 8191)
+		{
+			throw "Illegal pitchBend value.";
+		}
+
 		if((this.startTime + this.envelopeDuration) > this.audioContext.currentTime)
 		{
-			let pitchBend = this.pitchWheel14Bit + this.aftertouch14Bit,
-				factor = Math.pow(Math.pow(2, 1 / 12), (this.pitchWheelSensitivity * (pitchBend / (pitchBend < 0 ? 8192 : 8191)))),
+			let factor = Math.pow(Math.pow(2, 1 / 12), (this.pitchBendSensitivity * (pitchBend14bit / (pitchBend14bit < 0 ? 8192 : 8191)))),
 				bufferSourceNode = this.bufferSourceNode,
 				newPlaybackRate = bufferSourceNode.standardPlaybackRate * factor;
 
 			bufferSourceNode.playbackRate.setValueAtTime(newPlaybackRate, 0);
 		}
-	};
-
-	// This function is called when the bufferSourceNode has just been created, and
-	// can be called again to shift the pitch while the note is still playing.
-	// The pitchWheel14Bit argument is a 14-bit int value (in range [-8192..+8191]).
-	ResidentWAFSynthNote.prototype.updatePitchWheel = function(pitchWheel14Bit)
-	{
-		this.pitchWheel14Bit = pitchWheel14Bit;
-		this.updatePlaybackRate();
-	};
-
-	// The argument will be added to the pitchWheel14Bit (from the pitchWheel value) to give
-	// the pitch deviation
-	ResidentWAFSynthNote.prototype.updateAftertouch = function(aftertouch14Bit)
-	{
-		this.aftertouch14Bit = aftertouch14Bit;
-		this.updatePlaybackRate();
-	};
-
-	ResidentWAFSynthNote.prototype.updateModWheel = function(modNode, modGainNode, value)
-	{
-		let modVal = value / 127,
-			modulationFrequency = Math.pow(this.keyPitch, 1 + modVal) + modVal,
-			modGain = modVal;
-
-		modNode.frequency.setValueAtTime(modulationFrequency, this.audioContext.currentTime);
-		modGainNode.gain.setValueAtTime(modGain, this.audioContext.currentTime);
-
-
-
-		//this.modVal = modVal;
-		//this.modulationFrequency = modulationFrequency;
-		//this.modGain = modGain;
 	};
 
 	return API;

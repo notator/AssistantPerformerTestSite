@@ -7,7 +7,6 @@ import { Sequence } from "./Sequence.js";
 import { SequenceRecording } from "./SequenceRecording.js";
 import { sequenceToSMF } from "./StandardMidiFile.js";
 import { Keyboard1 } from "./Keyboard1.js";
-import { MidiInputDevice } from "./MidiInputDevice.js";
 
 const
 	// constants for control layer opacity values
@@ -22,10 +21,11 @@ const
 	STUDY2_2STAVES_SCORE_INDEX = 5,
 	STUDY3_SKETCH1_SCORE_INDEX = 6,
 	STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
-	ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 8,
-	THREE_CRASHES_SCORE_INDEX = 9,
-	TOMBEAU1_SCORE_INDEX = 10,
-	STUDY4_SCORE_INDEX = 11,
+	STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 8,
+	ERRATUM_MUSICAL_I_VIII = 9,
+	THREE_CRASHES = 10,
+	TOMBEAU1_SCORE_INDEX = 11,
+	STUDY4_SCORE_INDEX = 12,
 
 	RESIDENT_SF2SYNTH_INDEX = 2,
 
@@ -48,7 +48,7 @@ var
 	cl = {}, // control layers
 
 	// options set in the top dialog
-	deviceOptions = {},
+	options = {},
 
 	// deletes the 'save' button created by createSaveMIDIFileLink() 
 	deleteSaveLink = function()
@@ -185,21 +185,14 @@ var
 		}
 	},
 
-	isPlayableScore = function(scoreIndex)
+	residentSf2SynthCanPlayScore = function(scoreIndex)
 	{
 		var rval = false,
-			playableScores =
-				[
-					PIANOLA_MUSIC_SCORE_INDEX,
-					STUDY1_SCORE_INDEX,
-					TOMBEAU1_SCORE_INDEX,
-					PIANOLA_MUSIC_3STAVES_SCORE_INDEX,
-					ERRATUM_MUSICAL_I_VIII_SCORE_INDEX,
-					THREE_CRASHES_SCORE_INDEX,
-					STUDY4_SCORE_INDEX
-				];
+			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX];
 
-		if(playableScores.indexOf(scoreIndex) >= 0 && scoreIndex < playableScores.length)
+		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
+
+		if(playableScores.indexOf(scoreIndex) >= 0)
 		{
 			rval = true;
 		}
@@ -210,10 +203,7 @@ var
 	{
 		var
 			scoreIndex = globalElements.scoreSelect.selectedIndex,
-			inputDeviceSelect = globalElements.inputDeviceSelect,
-			outputDeviceSelect = globalElements.outputDeviceSelect,
-			outputDeviceIndex = outputDeviceSelect.selectedIndex,
-			outputDeviceName = outputDeviceSelect.options[outputDeviceIndex].innerHTML;
+			outputDeviceIndex = globalElements.outputDeviceSelect.selectedIndex;
 
 		switch(mainOptionsState)
 		{
@@ -229,24 +219,12 @@ var
 				{
 					globalElements.aboutLinkDiv.style.display = "block";
 
-					if(isPlayableScore(scoreIndex) === true || (isPlayableScore(scoreIndex) === false && midiAccess !== null))
+					if(residentSf2SynthCanPlayScore(scoreIndex) === true || (residentSf2SynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
 					{
-						outputDeviceSelect.disabled = false;
-
 						if(globalElements.waitingForSoundFontDiv.style.display === "none"
 							&& scoreIndex > 0 && outputDeviceIndex > 0)
 						{
 							globalElements.startRuntimeButton.style.display = "initial";
-							if(deviceOptions.inputHandler instanceof Keyboard1
-								|| (deviceOptions.inputHandler instanceof MidiInputDevice && outputDeviceName === "ResidentWAFSynth"))
-							{
-								inputDeviceSelect.disabled = false;
-							}
-							else
-							{
-								inputDeviceSelect.selectedIndex = 0;
-								inputDeviceSelect.disabled = true;
-                            }
 						}
 					}
 					else
@@ -254,11 +232,6 @@ var
 						globalElements.needsMIDIAccessDiv.style.display = "block";
 					}
 				}
-				else
-				{
-					inputDeviceSelect.disabled = true;
-					outputDeviceSelect.disabled = true;
-                }
 				break;
 			case "toBack": // set svg controls and score visible
 				globalElements.titleOptionsDiv.style.visibility = "hidden";
@@ -457,7 +430,7 @@ var
 
 		setPage2ControlsDisabled();
 
-		switch(deviceOptions.performanceMode)
+		switch(options.performanceMode)
 		{
 			case performanceMode.score:
 				cl.goDisabled.setAttribute("opacity", GLASS);
@@ -480,7 +453,7 @@ var
 				break;
 		}
 
-		if(deviceOptions.performanceMode === performanceMode.score && player.isPaused())
+		if(options.performanceMode === performanceMode.score && player.isPaused())
 		{
 			player.resume();
 		}
@@ -488,7 +461,7 @@ var
 		{
 			sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-			if(deviceOptions.performanceMode === performanceMode.score || deviceOptions.performanceMode === performanceMode.keyboard1)
+			if(options.performanceMode === performanceMode.score)
 			{
 				score.setCursor();
 			}
@@ -498,11 +471,11 @@ var
 
 			startRegionIndex = score.getStartRegionIndex();
 			score.setActiveInfoStringsStyle(startRegionIndex);
-			startMarkerMsPosition = score.getStartMarkerMsPositionInScore();
+			startMarkerMsPosition = score.startMarkerMsPosition();
 			endRegionIndex = score.getEndRegionIndex();
-			endMarkerMsPosition = score.getEndMarkerMsPositionInScore();
+			endMarkerMsPosition = score.endMarkerMsPosition();
 
-			if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep )
+			if(options.performanceMode === performanceMode.conductingTimer || options.performanceMode === performanceMode.conductingCreep )
 			{
 				baseSpeed = 1;
 				player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
@@ -510,14 +483,14 @@ var
 			else // options.performanceMode === score or keyboard1)
 			{
 				baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
-				if(deviceOptions.performanceMode === performanceMode.score)
+				if(options.performanceMode === performanceMode.score)
 				{
-					player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
+					player.setTimerAndOutputDevice(performance, options.outputDevice); // Sequence can use conductor or performance timer
 				}
 				// Keyboard1 *always* uses performance timer
 			}
 
-			deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
+			options.outputDevice.reset();
 
 			player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
 		}
@@ -542,6 +515,8 @@ var
 
 	setStopped = function()
 	{
+		options.outputDevice.reset();
+
 		player.stop();
 
 		if(conductor !== undefined)
@@ -551,13 +526,13 @@ var
 			conductor = undefined;
 		}
 
-		if(deviceOptions.inputHandler instanceof Keyboard1)
+		if(options.inputHandler instanceof Keyboard1)
 		{
-			deviceOptions.performanceMode = performanceMode.keyboard1;
+			options.performanceMode = performanceMode.keyboard1;
 		}
 		else
 		{
-			deviceOptions.performanceMode = performanceMode.score;
+			options.performanceMode = performanceMode.score;
 		}
 
 		score.hideCursor();
@@ -692,8 +667,6 @@ var
 		// The moment.timestamps do not need to be restored to their original values here
 		// because they will be re-assigned next time sequenceRecording.nextMoment() is called.
 
-		deviceOptions.outputDevice.setAllChannelSoundOff();
-
 		setStopped();
 		// the following line is important, because the stop button is also the pause button.
 		svgControlsState = "stopped";
@@ -740,7 +713,7 @@ var
 
 		function setPaused()
 		{
-			if(deviceOptions.performanceMode !== performanceMode.score)
+			if(options.performanceMode !== performanceMode.score)
 			{
 				throw "Error: Assisted performances are never paused.";
 			}
@@ -750,7 +723,7 @@ var
 				player.pause();
 			}
 
-			deviceOptions.outputDevice.setAllChannelSoundOff();
+			options.outputDevice.reset();
 
 			setPage2ControlsDisabled();
 
@@ -783,7 +756,7 @@ var
 
 		function setConductingTimer()
 		{
-			deviceOptions.performanceMode = performanceMode.conductingTimer;
+			options.performanceMode = performanceMode.conductingTimer;
 
 			setPage2ControlsDisabled();
 
@@ -798,7 +771,7 @@ var
 			{
 				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
 				// and null if there are input devices that are not selected.
-				conductor = new TimerConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
+				conductor = new TimerConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
 
 			setConducting(speed);
@@ -808,7 +781,7 @@ var
 
 		function setConductingCreep()
 		{
-			deviceOptions.performanceMode = performanceMode.conductingCreep;
+			options.performanceMode = performanceMode.conductingCreep;
 
 			setPage2ControlsDisabled();
 
@@ -823,7 +796,7 @@ var
 			{
 				// midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
 				// and null if there are input devices that are not selected.
-				conductor = new CreepConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
+				conductor = new CreepConductor(score, startPlaying, options.inputDevice, options.outputDevice, speed);
 			}
 			
 			setConducting(speed);
@@ -842,7 +815,7 @@ var
 				setStopped();
 				break;
 			case 'paused':
-				if(deviceOptions.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
+				if(options.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
 				{
 					setPaused();
 				}
@@ -878,7 +851,7 @@ var
 		option = document.createElement("option");
 		if(midiAccess !== null)
 		{
-			option.text = "MIDI input is not currently supported"; // "choose a MIDI input device";
+			option.text = "choose a MIDI input device";
 			is.add(option, null);
 			midiAccess.inputs.forEach(function(port)
 			{
@@ -888,11 +861,13 @@ var
 				option.text = port.name;
 				is.add(option, null);
 			});
+			globalElements.inputDeviceSelect.disabled = false;
 		}
 		else
 		{
 			option.text = "MIDI input devices are not available";
 			is.add(option, null);
+			globalElements.inputDeviceSelect.disabled = true;
 		}
 	},
 
@@ -972,7 +947,7 @@ var
 				break;
 		}
 
-		if(isPlayableScore(globalElements.scoreSelect.selectedIndex))
+		if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
 		{
 			globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
 		}
@@ -1098,7 +1073,7 @@ export class Controls
 					//	name: "Study3Sketch",
 					//	url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
 					//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
-					//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_SCORE_INDEX]
+					//	scoreSelectIndices: [STUDY3_SKETCH1_SCORE_INDEX, STUDY3_SKETCH1_4STAVES_SCORE_INDEX, STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX]
 					//},
 					//{   
 					//	name: "Study2", /**** This soundFont does not load properly. The bug could be in either the file or the parser... ****/
@@ -1110,13 +1085,8 @@ export class Controls
 						name: "Grand Piano",
 						url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, 
-							STUDY1_SCORE_INDEX,
-							TOMBEAU1_SCORE_INDEX, 
-							PIANOLA_MUSIC_3STAVES_SCORE_INDEX,
-							ERRATUM_MUSICAL_I_VIII_SCORE_INDEX,
-							THREE_CRASHES_SCORE_INDEX,
-							STUDY4_SCORE_INDEX]
+                        //scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES, STUDY4_SCORE_INDEX]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES]
 					}
 					];
 
@@ -1242,7 +1212,7 @@ export class Controls
 		if(midiAccess !== null)
 		{
 			// update the device selectors when devices get connected, disconnected, opened or closed
-			midiAccess.onstatechange = onMIDIDeviceStateChange;
+			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 		}
 
 		initScoreSelector(systemChanged);
@@ -1255,10 +1225,6 @@ export class Controls
 	// called when the user clicks a control in the GUI
 	doControl(controlID)
 	{
-		let outputDeviceSelect = globalElements.outputDeviceSelect,
-			inputDeviceSelect = globalElements.inputDeviceSelect,
-			scoreSelect = globalElements.scoreSelect;
-
 		// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
 		// and uses the information to load the score's svg files into the "svgPagesFrame" div,
 		// The score is actually analysed when the Start button is clicked.
@@ -1300,7 +1266,7 @@ export class Controls
 						break;
 					case STUDY1_SCORE_INDEX:
 						scoreInfo.path = "Study 1/Study 1 (scroll)";
-						scoreInfo.inputHandler = "masterKeyboard";
+						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Study 1";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
 						break;
@@ -1328,19 +1294,25 @@ export class Controls
 						scoreInfo.aboutText = "about Study 3 Sketch";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 						break;
+					case STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX:
+						scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
+						scoreInfo.inputHandler = "keyboard1";
+						scoreInfo.aboutText = "about Study 3 Sketch";
+						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+						break;
 					case TOMBEAU1_SCORE_INDEX:
 						scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Tombeau 1";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
 						break;
-					case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
+					case ERRATUM_MUSICAL_I_VIII:
 						scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Erratum Musical I-VIII";
 						scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
 						break;
-					case THREE_CRASHES_SCORE_INDEX:
+					case THREE_CRASHES:
 						scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
 						scoreInfo.inputHandler = "none";
 						scoreInfo.aboutText = "about Three Crashes";
@@ -1403,7 +1375,7 @@ export class Controls
 				if(nPagesLoading === 0)
 				{
 					globalElements.waitingForScoreDiv.style.display = "none";
-					outputDeviceSelect.disabled = false;
+					globalElements.outputDeviceSelect.disabled = false;
 				}
 			}
 
@@ -1412,7 +1384,7 @@ export class Controls
 				if(nPagesLoading === 0)
 				{
 					globalElements.waitingForScoreDiv.style.display = "block";
-					outputDeviceSelect.disabled = true;
+					globalElements.outputDeviceSelect.disabled = true;
 				}
 				nPagesLoading++;
 			}
@@ -1483,15 +1455,11 @@ export class Controls
 			{
 				if(scoreInfoInputHandler === "keyboard1")
 				{
-					deviceOptions.inputHandler = new Keyboard1();
-				}
-				else if(scoreInfoInputHandler === "masterKeyboard")
-				{
-					deviceOptions.inputHandler = new MidiInputDevice();
+					options.inputHandler = new Keyboard1();
 				}
 				else
 				{
-					deviceOptions.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
+					options.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
 				}
 			}
 
@@ -1499,7 +1467,7 @@ export class Controls
 
 			setAboutLink(scoreInfo);
 
-			if(isPlayableScore(scoreIndex) === true || (isPlayableScore(scoreIndex) === false && midiAccess !== null))
+			if(residentSf2SynthCanPlayScore(scoreIndex) === true || (residentSf2SynthCanPlayScore(scoreIndex) === false && midiAccess !== null))
 			{
 				setPages(scoreInfo);
 
@@ -1546,7 +1514,7 @@ export class Controls
 			else if(svgControlsState === 'settingStart')
 			{
 				setSvgControlsState('stopped');
-				player.initTracks();
+				score.hideCursor();
 			}
 		}
 
@@ -1559,7 +1527,6 @@ export class Controls
 			else if(svgControlsState === 'settingEnd')
 			{
 				setSvgControlsState('stopped');
-				player.initTracks();
 			}
 		}
 
@@ -1570,7 +1537,6 @@ export class Controls
 				toggleBack(cl.sendStartToBeginningControlSelected);
 				score.sendStartMarkerToStart();
 				score.hideCursor();
-				player.initTracks();
 			}
 		}
 
@@ -1580,46 +1546,41 @@ export class Controls
 			{
 				toggleBack(cl.sendStopToEndControlSelected);
 				score.sendEndMarkerToEnd();
-				player.initTracks();
 			}
 		}
 
 		function waitForSoundFont(that)
 		{
-			if(isPlayableScore(scoreSelect.selectedIndex)
-				&& scoreSelect.options[scoreSelect.selectedIndex].soundFont === undefined)
+			if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				globalElements.waitingForSoundFontDiv.style.display = "block";
-				outputDeviceSelect.disabled = true;
+				globalElements.outputDeviceSelect.disabled = true;
 			}
 			else
 			{
 				globalElements.waitingForSoundFontDiv.style.display = "none";
-				outputDeviceSelect.disabled = false;
+				globalElements.outputDeviceSelect.disabled = false;
 			}
 			that.doControl("scoreSelect");
 		}
 
 		if(controlID === "scoreSelect")
 		{
-			inputDeviceSelect.disabled = true;
-			inputDeviceSelect.selectedIndex = 0;
+			globalElements.outputDeviceSelect.selectedIndex = 0;
 
-			outputDeviceSelect.disabled = true;
-			outputDeviceSelect.selectedIndex = 0;			
-
-			if(scoreSelect.selectedIndex > 0)
+			if(globalElements.scoreSelect.selectedIndex > 0)
 			{
-				if(isPlayableScore(scoreSelect.selectedIndex))
+				if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
 				{
-					outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
+					globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = false;
 				}
 				else
 				{
-					outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = true;
+					globalElements.outputDeviceSelect.options[RESIDENT_SF2SYNTH_INDEX].disabled = true;
 				}
 
-				setScore(scoreSelect.selectedIndex);
+				setScore(globalElements.scoreSelect.selectedIndex);
 			}
 			else
 			{
@@ -1635,8 +1596,8 @@ export class Controls
 
 		if(controlID === "scoreSelect")
 		{
-			if(isPlayableScore(scoreSelect.selectedIndex)
-				&& scoreSelect.options[scoreSelect.selectedIndex].soundFont === undefined)
+			if(residentSf2SynthCanPlayScore(globalElements.scoreSelect.selectedIndex)
+				&& globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].soundFont === undefined)
 			{
 				setTimeout(waitForSoundFont, 200, this);
 			}
@@ -1771,13 +1732,9 @@ export class Controls
 
 			for(i = 1; i < outSelector.options.length; ++i)
 			{
-				let outputDevice = outSelector.options[i].outputDevice;
-				if(outputDevice)
+				if(outSelector.options[i].outputDevice)
 				{
-					let name = outputDevice.name;
-					outputDevice.close()
-						.then(() => {console.log("Closed " + name);})
-						.catch(() => {console.error("Error closing " + name);});
+					outSelector.options[i].outputDevice.close();
 				}
 			}
 
@@ -1788,13 +1745,7 @@ export class Controls
 			else
 			{
 				options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
-
-				let outputDevice = options.outputDevice,
-					name = outputDevice.name;
-
-				outputDevice.open()
-					.then(() => {console.log("Opened " + name);})
-					.catch(() => {console.error("Error opening " + name);});
+				options.outputDevice.open();
 			}
 
             if(options.outputDevice === residentSf2Synth)
@@ -1833,70 +1784,44 @@ export class Controls
 			// changing the value of score.isKeyboard1Performance.
 			// Repainting includes using the correct staff colours, but the score may also update the position of
 			// its start marker (which always starts on a chord) if a track is turned off.
-			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance, score.refreshDisplay);
 
 			return tracksData;
 		}
 
 		function setOutputDeviceFunctions(outputDevice)
 		{
-			let allSoundOffMessages = [],
-				allControllersOffMessages = [];
+			var resetMessages = [];
 
-			function getAllSoundOffMessages()
+			function getResetMessages()
 			{
 				var byte1, channelIndex,
 					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+					ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
 					ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
 
 				for(channelIndex = 0; channelIndex < 16; channelIndex++)
 				{
 					byte1 = CONTROL_CHANGE + channelIndex;
-					allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
+					resetMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+					resetMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
 				}
 			}
 
-			function getAllControllersOffMessages()
-			{
-				var byte1, channelIndex,
-					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-					ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF;
-
-				for(channelIndex = 0; channelIndex < 16; channelIndex++)
-				{
-					byte1 = CONTROL_CHANGE + channelIndex;
-					allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-				}
-			}
-
-			getAllSoundOffMessages();
-			getAllControllersOffMessages();
-
-			function setAllChannelSoundOff()
+			function reset()
 			{
 				var i;
-				for(i = 0; i < allSoundOffMessages.length; i++)
+				for(i = 0; i < resetMessages.length; i++)
 				{
-					this.send(allSoundOffMessages[i], performance.now());
+					this.send(resetMessages[i], performance.now());
 				}
 			}
 
-			function setAllChannelControllersOff(trackIsOnArray)
-			{
-				var i;
-				for(i = 0; i < trackIsOnArray.length; i++)
-				{
-					if(trackIsOnArray[i] === true)
-					{
-						this.send(allControllersOffMessages[i], performance.now());
-					}
-				}
-			}
+			getResetMessages();
 
 			if(outputDevice !== null)
 			{
-				outputDevice.setAllChannelSoundOff = setAllChannelSoundOff;
-				outputDevice.setAllChannelControllersOff = setAllChannelControllersOff;
+				outputDevice.reset = reset;
 			}
 		}
 
@@ -1940,11 +1865,11 @@ export class Controls
 			conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
 		}
 
-		let isKeyboard1Performance = deviceOptions.inputHandler instanceof Keyboard1;		 
+		let isKeyboard1Performance = options.inputHandler instanceof Keyboard1;		 
 
-		setMIDIDevices(deviceOptions);
+		setMIDIDevices(options);
 
-		setOutputDeviceFunctions(deviceOptions.outputDevice);
+		setOutputDeviceFunctions(options.outputDevice);
 
 		// This function can throw an exception
 		// (e.g. if an attempt is made to create an event that has no duration).
@@ -1952,25 +1877,19 @@ export class Controls
 
 		setConductingLayer();
 
-		score.sendStartMarkerToStart();
-		score.sendEndMarkerToEnd();
-		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-
 		if(isKeyboard1Performance)
 		{
-			player = deviceOptions.inputHandler; // keyboard1 -- the "prepared piano"
+			player = options.inputHandler; // keyboard1 -- the "prepared piano"
 			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
 			player.cursor = score.getCursor(); // contains sims
-			player.init(deviceOptions.inputDevice, deviceOptions.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
-
-			tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
+			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 		}
 		else
 		{
+			let outputTracks = score.getTracksData().outputTracks;
 			player = new Sequence();
-			player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
-
-			tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
+			player.setOutputTracks(outputTracks);
+			player.init(options.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload, score.getRegionSequence());
 		}
 
 		setSpeedControl(tracksControl.width());
@@ -1979,10 +1898,14 @@ export class Controls
 
 		if(midiAccess !== null)
 		{
-			midiAccess.onstatechange = undefined;
+			midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
 		}
 
 		score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
+
+		score.sendStartMarkerToStart();
+		score.sendEndMarkerToEnd();
+		score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
 		setSvgControlsState('stopped');
 
