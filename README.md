@@ -35,6 +35,7 @@ Unfortunately, Study 2 can't yet be performed on the <em>Resident Sf2 Synth</em>
 <a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2VideoSlowBlueSection.html">View online (with comments)</a> /
 <a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_slow_conducted_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
 <br />
-12th June 2017<br />
+
+29th August 2023<br />
 James Ingram
 
