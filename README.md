@@ -1,8 +1,13 @@
-
 Introduction
 ------------
-This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. The lastest stable version can be tried out on the web at<br />
-https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html
+
+This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
+
+This repository contains two major branches:  
+&nbsp;&nbsp;&nbsp;&nbsp;**main**: the current stable version of the AssistantPerformer, which can be used [here](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
+&nbsp;&nbsp;&nbsp;&nbsp;**testSite**: the unstable development version of the AssistantPerformer, which can be tested [here](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).  
+
+---
 
 This application is normally tested in the latest version of Chrome on Windows 10.<br />
 I will be testing it again on Firefox, when they have completed their implementation of the Web MIDI API (currently in the pipeline).
