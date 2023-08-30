@@ -1,7 +1,11 @@
 Introduction
 ------------
 
-This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
+This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format that contains embedded MIDI information.  
+
+The application is normally tested in the latest versions of Chrome and Firefox on Windows 10.
+To find out which other browsers might be tried, go to
+<a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>.
 
 This repository contains two major branches:  
 &nbsp;&nbsp;&nbsp;&nbsp;**main**: the current stable version of the AssistantPerformer, which can be used [here](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
@@ -9,11 +13,6 @@ This repository contains two major branches:
 
 ---
 
-This application is normally tested in the latest version of Chrome on Windows 10.<br />
-I will be testing it again on Firefox, when they have completed their implementation of the Web MIDI API (currently in the pipeline).
-To find out which other browsers might be tried, go to
-<a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>.
-<br /><br />
 
 Note that it is not possible to display or play scores in this application unless a MIDI output device has been selected.<br />
 The <a target="_blank" href="https://github.com/notator/residentSf2Synth"> <em>Resident Sf2 Synth</em></a> should always be available, since it only requires the Web <em>Audio</em> API, and that interface is always implemented when the Web <em>MIDI</em> API is implemented (go to <a target="_blank" href="http://caniuse.com/#feat=audio-api">check Web <em>Audio</em> API</a>).<br />
