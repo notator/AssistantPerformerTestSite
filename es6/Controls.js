@@ -34,6 +34,7 @@ const
 	performanceMode = Object.freeze({ score: 0, keyboard1: 1, conductingTimer: 2, conductingCreep: 4 });
 
 var
+    residentSynth,
     residentWAFSynth,
     residentSf2Synth,
 	player, // player can be set to Sequence, or to Keyboard1 objects.
@@ -1231,6 +1232,8 @@ export class Controls
 
 		midiAccess = mAccess;
 
+		// eslint-disable-next-line no-undef
+		residentSynth = new ResSynth.residentSynth.ResidentSynth(); 
         residentWAFSynth = new WebMIDI.residentWAFSynth.ResidentWAFSynth();
 		residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
 
