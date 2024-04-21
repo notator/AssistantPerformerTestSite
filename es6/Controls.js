@@ -899,7 +899,7 @@ var
 
 	// sets the options in the output device selector
 	// midiAccess can be null
-    setMIDIOutputDeviceSelector = function(midiAccess, residentWAFynth, residentSf2Synth)
+    setMIDIOutputDeviceSelector = function(midiAccess, residentSynth, residentWAFynth, residentSf2Synth)
 	{
 		var
 			option,
@@ -911,10 +911,15 @@ var
 		option.text = "choose a MIDI output device";
 		os.add(option, null);
 
-        option = document.createElement("option");
-        option.outputDevice = residentWAFSynth;
-        option.text = "ResidentWAFSynth";
-        os.add(option, null);
+		option = document.createElement("option");
+		option.outputDevice = residentSynth;
+		option.text = "ResidentSynth";
+		os.add(option, null);
+
+		option = document.createElement("option");
+		option.outputDevice = residentWAFSynth;
+		option.text = "ResidentWAFSynth";
+		os.add(option, null);
 
         option = document.createElement("option");
         option.outputDevice = residentSf2Synth;
@@ -1240,7 +1245,7 @@ export class Controls
 		getGlobalElements();
 
 		setMIDIInputDeviceSelector(midiAccess);
-        setMIDIOutputDeviceSelector(midiAccess, residentWAFSynth, residentSf2Synth);
+        setMIDIOutputDeviceSelector(midiAccess, residentSynth, residentWAFSynth, residentSf2Synth);
 
 		if(midiAccess !== null)
 		{
