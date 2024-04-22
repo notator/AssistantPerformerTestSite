@@ -1851,39 +1851,52 @@ export class Controls
 			let allSoundOffMessages = [],
 				allControllersOffMessages = [];
 
-			function getAllSoundOffMessages()
+			function getAllSoundOffMessages(outputDevice)
 			{
 				var byte1, channelIndex,
 					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
 					ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
 
-				for(channelIndex = 0; channelIndex < 16; channelIndex++)
+				if(outputDevice === residentSynth)
 				{
-					byte1 = CONTROL_CHANGE + channelIndex;
-					allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
+					allSoundOffMessages.push(new Uint8Array([CONTROL_CHANGE, ALL_SOUND_OFF, 0]));
+				}
+				else
+				{
+					for(channelIndex = 0; channelIndex < 16; channelIndex++)
+					{
+						byte1 = CONTROL_CHANGE + channelIndex;
+						allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
+					}
 				}
 			}
 
-			function getAllControllersOffMessages()
+			function getAllControllersOffMessages(outputDevice)
 			{
 				var byte1, channelIndex,
 					CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
 					ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF;
-
-				for(channelIndex = 0; channelIndex < 16; channelIndex++)
+									
+			    if(outputDevice === residentSynth)
 				{
-					byte1 = CONTROL_CHANGE + channelIndex;
-					allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+					allControllersOffMessages.push(new Uint8Array([CONTROL_CHANGE, ALL_CONTROLLERS_OFF, 0]));
+				}
+				else
+				{
+					for(channelIndex = 0; channelIndex < 16; channelIndex++)
+					{
+						byte1 = CONTROL_CHANGE + channelIndex;
+						allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+					}
 				}
 			}
 
-			getAllSoundOffMessages();
-			getAllControllersOffMessages();
+			getAllSoundOffMessages(outputDevice);
+			getAllControllersOffMessages(outputDevice);
 
 			function setAllChannelSoundOff()
 			{
-				var i;
-				for(i = 0; i < allSoundOffMessages.length; i++)
+				for(let i = 0; i < allSoundOffMessages.length; i++)
 				{
 					this.send(allSoundOffMessages[i], performance.now());
 				}
@@ -1891,12 +1904,18 @@ export class Controls
 
 			function setAllChannelControllersOff(trackIsOnArray)
 			{
-				var i;
-				for(i = 0; i < trackIsOnArray.length; i++)
+				if(this === residentSynth)
 				{
-					if(trackIsOnArray[i] === true)
+					this.send(allControllersOffMessages[0], performance.now());
+				}
+				else
+				{
+					for(let i = 0; i < trackIsOnArray.length; i++)
 					{
-						this.send(allControllersOffMessages[i], performance.now());
+						if(trackIsOnArray[i] === true)
+						{
+							this.send(allControllersOffMessages[i], performance.now());
+						}
 					}
 				}
 			}
