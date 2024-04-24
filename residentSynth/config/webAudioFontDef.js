@@ -20,7 +20,7 @@ ResSynth.webAudioFontDef =
                     // Study 1, Pianola Music etc.
                     "_tone_0000_FluidR3_GM_sf2_file", // instr: 0, piano -- old presetIndex:0
                     , , , , , , ,	                  // instr: 1,2,3,4,5,6,7, -- undefined 
-                    // The rest are used in Study 2
+                    // The rest are used in Study 2 and Study 3
                     "_tone_0080_FluidR3_GM_sf2_file", // instr: 8,  celesta      -- old presetIndex:8,  
                     "_tone_0090_FluidR3_GM_sf2_file", // instr: 9,  glockenspiel -- old presetIndex:9,  
                     "_tone_0100_FluidR3_GM_sf2_file", // instr: 10,  musicBox     -- old presetIndex:10, 
@@ -33,7 +33,19 @@ ResSynth.webAudioFontDef =
                     "_tone_0240_FluidR3_GM_sf2_file", // instr: 24,  nylonGuitar  -- old presetIndex:24, 
                     "_tone_0250_FluidR3_GM_sf2_file", // instr: 25,  steelGuitar  -- old presetIndex:25, 
                     "_tone_0260_FluidR3_GM_sf2_file", // instr: 26, electricGuitarJazz  -- old presetIndex:26, 
-                    "_tone_0270_FluidR3_GM_sf2_file"  // instr: 27, electricGuitarClean -- old presetIndex:27, 
+                    "_tone_0270_FluidR3_GM_sf2_file", // instr: 27, electricGuitarClean -- old presetIndex:27,
+                    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, // instr: 28-71  -- undefined 
+                    "_tone_0720_FluidR3_GM_sf2_file",  // instr: 72, piccolo     -- old presetIndex:72,
+                    ,,,,,                              // instr: 73,74,75,76,77,  -- undefined
+                    "_tone_0780_FluidR3_GM_sf2_file",  // instr: 78, whistle   -- old presetIndex:78,
+                    "_tone_0790_FluidR3_GM_sf2_file",  // instr: 79, ocarina      -- old presetIndex:79,
+                    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  // instr: 80-112           -- undefined 
+                    "_tone_1130_FluidR3_GM_sf2_file",  // instr: 113, agogo   -- old presetIndex:113,
+                    ,                                  // instr: 114              -- undefined 
+                    "_tone_1150_FluidR3_GM_sf2_file",  // instr: 115, woodblock   -- old presetIndex:115,
+                    ,                                  // instr: 116              -- undefined
+                    "_tone_1170_FluidR3_GM_sf2_file",  // instr: 117, melodic tom  -- old presetIndex:117,
+                    "_tone_1180_FluidR3_GM_sf2_file"   // instr: 118, synth drum -- old presetIndex:118,
                 ]
         }
     ];
