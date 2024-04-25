@@ -1192,10 +1192,9 @@ ResSynth.residentSynth = (function(window)
                 let midi = {}; 
 
                 midi.preset = chanPresets[chanControls.presetIndex];
-                if(midi.preset === undefined)
-                {
-                    console.log(`preset ${chanControls.presetIndex} is missing, but required.`);
-                }
+                
+                console.assert((midi.preset !== undefined), `preset ${chanControls.presetIndex} is missing, but required.`);
+
                 midi.inKey = inKey;  // the note stops when the inKey's noteOff arrives                
                 midi.inVelocity = inVelocity;
                 midi.midiPitchOffset = chanControls.semitonesOffset + (chanControls.centsOffset / 100); // valid throughout a mixture
