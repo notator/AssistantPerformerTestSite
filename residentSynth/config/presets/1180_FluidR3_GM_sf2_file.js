@@ -1,4 +1,4 @@
-console.log('load _tone_1180_FluidR3_GM_sf2_file');
+//console.log('load _tone_1180_FluidR3_GM_sf2_file');
 var _tone_1180_FluidR3_GM_sf2_file={
 	zones:[
 		// ji: 08.2021: This block commented out since its not contiguous with the rest
