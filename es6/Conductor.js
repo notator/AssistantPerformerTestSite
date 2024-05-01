@@ -31,27 +31,7 @@ let
 
 		if(uint8Array instanceof Uint8Array && uint8Array.length <= 3)
 		{
-			// If uint8Array.length === 0, an exception is thrown on the next line. This should never happen.
-			if(uint8Array[0] === constants.SYSTEM_EXCLUSIVE.START)
-			{
-				if(!(uint8Array.length > 2 && uint8Array[uint8Array.length - 1] === constants.SYSTEM_EXCLUSIVE.END))
-				{
-					throw "Error in System Exclusive inputEvent.";
-				}
-				// SysExMessages are ignored by the assistant, so do nothing here and return an empty object.
-				// Note that SysExMessages may contain realTime messages at this point (they
-				// would have to be removed somehow before creating a sysEx event), but since
-				// we are ignoring both realTime and sysEx, nothing needs doing here.
-			}
-			else if((uint8Array[0] & 0xF0) === 0xF0)
-			{
-				if(!(constants.isRealTimeStatus.isRealTimeStatus(uint8Array[0])))
-				{
-					throw "Error: illegal data.";
-				}
-				// RealTime messages are ignored by the assistant, so do nothing here and return an empty object.
-			}
-			else if(uint8Array.length === 2)
+			if(uint8Array.length === 2)
 			{
 				inputMessage = new Message(uint8Array[0], uint8Array[1], 0);
 			}
@@ -68,131 +48,13 @@ let
 		return inputMessage;
 	},
 
-	_handleQwertyKeyDown = function(e)
-	{
-		console.log(`qwerty: key is ${e.key}`);
-	},
-
-	// This handler changes the state of various performance filters...
-	_handleMIDIInputDeviceEvent = function(midiEvent)
-	{
-		// This function is called either by a real performed NoteOff or by a performed NoteOn having zero velocity.
-		function handleNoteOff(note)
-		{
-			console.log(`noteOff: note:${note}`);
-		}
-
-		// performedVelocity is always greater than 0 (otherwise handleNoteOff() is called)
-		function handleNoteOn(note, velocity)
-		{
-			console.log(`noteOn: note:${note} velocity:${velocity}`);
-		}
-
-		// called when channel pressure changes
-		// Achtung: value is data[1]
-		function handleChannelPressure(value)
-		{
-			console.log(`channelPressure: value: ${value}`);
-		}
-
-		// called when the pitchWheel changes
-		function handlePitchWheel(data1, data2)
-		{
-			function doOption(option)
-			{
-				switch(option)
-				{
-					case "pitch":
-						break;
-					case "pan":
-						break;
-					case "speed":
-						break;
-				}
-			}
-
-			let combinedValue = constants.pitchwheelCombinedValue(data1, data2);
-			console.log(`pitchWheel, data[1]:${data1} data[2]:${data2} (combinedValue:${combinedValue})`);
-
-			doOption("pitch");
-		}
-
-		// called when modulation wheel changes
-		// Achtung: value is data[2]
-		function handleModWheel(value)
-		{
-			console.log(`modWheel value:${value}`);
-		}
-
-		// called when one of the E-MU knobs is turned (in 16 channel mode)
-		function handleKnob(knobIndex, value)
-		{
-			console.log(`knob: index:${knobIndex} value:${value}`);
-		}
-
-		let inputMessage = _getInputMessage(midiEvent.data);
-
-		//console.log("MIDI Input Device Event received: " + inputMessage.toString());
-
-		if(inputMessage.data !== undefined)
-		{
-			let data = inputMessage.data,
-				command = inputMessage.command(),
-				CMD = constants.COMMAND;
-
-			switch(command)
-			{
-				case CMD.NOTE_ON:
-					if(data[2] !== 0)
-					{
-						handleNoteOn(data[1], data[2]);
-					}
-					else
-					{
-						handleNoteOff(data[1]);
-					}
-					break;
-				case CMD.NOTE_OFF:
-					handleNoteOff(data[1]);
-					break;
-				case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
-					// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-					handleChannelPressure(data[1]);
-					break;
-				case CMD.AFTERTOUCH: // produced by the EWI breath controller
-					// AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch
-					// AFTERTOUCH.data[2] is the amount of pressure 0..127.
-					// not supported
-					break;
-				case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-					handlePitchWheel(data[1], data[2]);
-					break;
-				case CMD.CONTROL_CHANGE:
-					if(data[1] === constants.CONTROL.MODWHEEL) // received when the EMU ModWheel changes.
-					{
-						handleModWheel(data[2]);
-					}
-					else
-					{
-						// If the E-MU is in 16 channel mode, each knob is identified by its channel index (a value in range[0..15]).
-						// 13.12.2018: The E-MU currently sends control 0 (=BANK_CHANGE) from each knob. This control value is ignored here.
-						let knobIndex = inputMessage.channel(), value = data[2]; 
-						handleKnob(knobIndex, value);
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	},
-
 	// This handler sends possibly altered messages to the _outputDevice.
 	// The received messages may be
 	// a) simply sent on without change,
 	// b) altered before being sent on,
 	// c) suppressed completely (i.e. not sent on),
 	// d) sent on (modified or not) together with new midi messages.    
-	_handleMIDIScoreEvent = function(uint8Array, timestamp)
+	_handleScoreMIDIEvent = function(uint8Array, timestamp)
 	{
 		let inputMessage = _getInputMessage(uint8Array);
 
@@ -204,27 +66,16 @@ let
 			switch(command)
 			{
 				case CMD.NOTE_ON:
-					_outputDevice.send(uint8Array, timestamp);
-					break;
 				case CMD.NOTE_OFF:
+				case CMD.CHANNEL_PRESSURE:
+				case CMD.AFTERTOUCH:
+				case CMD.PITCH_WHEEL:
+				case CMD.CONTROL_CHANGE:
+				case CMD.PROGRAM_CHANGE:
 					_outputDevice.send(uint8Array, timestamp);
-					break;
-				case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
-					// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-					_outputDevice.send(uint8Array, timestamp);
-					break;
-				case CMD.AFTERTOUCH: // produced by the EWI breath controller
-					_outputDevice.send(uint8Array, timestamp);
-					break;
-				case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-					_outputDevice.send(uint8Array, timestamp);
-					// handlePitchWheel(inputEvent.data, timestamp);
-					break;
-				case CMD.CONTROL_CHANGE: // sent when the EMU ModWheel changes.
-					_outputDevice.send(uint8Array, timestamp);
-					// handleModWheel(inputEvent.data, timestamp);
 					break;
 				default:
+					console.warn("Unknown MIDI command in score.");
 					break;
 			}
 		}
@@ -232,16 +83,8 @@ let
 
 export class Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
+	constructor(startPlayingCallback, midiOutputDevice, globalSpeed)
 	{
-		// midiInputDevice will be undefined if there are no devices in the inputDeviceSelector.
-		if(midiInputDevice === null) 
-		{
-			alert(
-`No input device has been selected in the Input Device Selector.
-(The conductor can be used anyway.)`);
-		}
-
 		_outputDevice = midiOutputDevice;
 
 		// The rate at which setInterval calls doConducting(...).
@@ -255,7 +98,6 @@ export class Conductor
 		Object.defineProperty(this, "_conductingLayer", { value: document.getElementById("conductingLayer"), writable: false });
 		Object.defineProperty(this, "_setIntervalHandles", { value: [], writable: false });
 		Object.defineProperty(this, "_startPlaying", { value: startPlayingCallback, writable: false });
-		Object.defineProperty(this, "_midiInputDevice", { value: midiInputDevice, writable: false });
 
 		// variables that can change while performing
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
@@ -267,15 +109,6 @@ export class Conductor
 	initConducting()
 	{
 		this._prevX = -1;
-		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
-		{
-			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
-			this._midiInputDevice.addEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
-			console.log(`Listening to ${this._midiInputDevice.name} MIDI device.`);
-		}
-		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
-		document.addEventListener("keydown", _handleQwertyKeyDown, false);
-		console.log("Listening to qwerty keyboard device.");
 	}
 
 	addTimeMarkerToMarkersLayer(markersLayer)
@@ -301,7 +134,7 @@ export class Conductor
 	// called by Sequence. Is MIDI Thru...
 	send(msg, timestamp)
 	{
-		_handleMIDIScoreEvent(msg, timestamp);
+		_handleScoreMIDIEvent(msg, timestamp);
 	}
 
 	stopConducting()
@@ -311,22 +144,14 @@ export class Conductor
 			clearInterval(handle);
 		}
 		this._setIntervalHandles.length = 0;
-
-		if(this._midiInputDevice !== null && this._midiInputDevice !== undefined)
-		{
-			this._midiInputDevice.removeEventListener("midimessage", _handleMIDIInputDeviceEvent, false);
-			console.log(`No longer listening to ${this._midiInputDevice.name} MIDI device.`);
-		}
-		document.removeEventListener("keydown", _handleQwertyKeyDown, false);
-		console.log("No longer listening to qwerty keyboard device.");
 	}
 }
 
 export class TimerConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
+	constructor(score, startPlayingCallback, midiOutputDevice, globalSpeed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed);
+		super(startPlayingCallback, midiOutputDevice, globalSpeed);
 
 		let timeMarker = new TimeMarker(score, true);
 
@@ -385,9 +210,9 @@ export class TimerConductor extends Conductor
 
 export class CreepConductor extends Conductor
 {
-	constructor(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed)
+	constructor(score, startPlayingCallback, midiOutputDevice, globalSpeed)
 	{
-		super(score, startPlayingCallback, midiInputDevice, midiOutputDevice, globalSpeed);
+		super(startPlayingCallback, midiOutputDevice, globalSpeed);
 
 		let timeMarker = new TimeMarker(score, false);
 

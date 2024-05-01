@@ -6,8 +6,6 @@ import {TimerConductor, CreepConductor} from "./Conductor.js";
 import {Sequence} from "./Sequence.js";
 import {SequenceRecording} from "./SequenceRecording.js";
 import {sequenceToSMF} from "./StandardMidiFile.js";
-import {Keyboard1} from "./Keyboard1.js";
-import {MidiInputDevice} from "./MidiInputDevice.js";
 
 const
     // constants for control layer opacity values
@@ -28,11 +26,11 @@ const
 
     SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
-    performanceMode = Object.freeze({score: 0, keyboard1: 1, conductingTimer: 2, conductingCreep: 4});
+    performanceMode = Object.freeze({score: 0, conductingTimer: 1, conductingCreep: 2});
 
 var
     residentSynth,
-    player, // player can be set to Sequence, or to Keyboard1 objects.
+    player, // player is always a Sequence
     tracksControl = new TracksControl(),
 
     midiAccess,
@@ -185,7 +183,6 @@ var
     {
         var
             scoreIndex = globalElements.scoreSelect.selectedIndex,
-            inputDeviceSelect = globalElements.inputDeviceSelect,
             outputDeviceSelect = globalElements.outputDeviceSelect,
             outputDeviceIndex = outputDeviceSelect.selectedIndex;
 
@@ -209,13 +206,10 @@ var
                         && scoreIndex > 0 && outputDeviceIndex > 0)
                     {
                         globalElements.startRuntimeButton.style.display = "initial";
-                            inputDeviceSelect.selectedIndex = 0;
-                            inputDeviceSelect.disabled = true;
                     }
                 }
                 else
                 {
-                    inputDeviceSelect.disabled = true;
                     outputDeviceSelect.disabled = true;
                 }
                 break;
@@ -253,7 +247,6 @@ var
 
     setConductTimerControlClicked = function()
     {
-        // The conductor control is disabled if this is a keyboard1 performance.
         if(cl.setConductTimerControlDisabled.getAttribute("opacity") === GLASS)
         {
             // the button is enabled 
@@ -270,7 +263,6 @@ var
 
     setConductCreepControlClicked = function()
     {
-        // The conductor control is disabled if this is a keyboard1 performance.
         if(cl.setConductCreepControlDisabled.getAttribute("opacity") === GLASS)
         {
             // the button is enabled 
@@ -425,10 +417,6 @@ var
                 cl.stopControlSelected.setAttribute("opacity", GLASS);
                 cl.stopControlDisabled.setAttribute("opacity", GLASS);
                 break;
-            case performanceMode.keyboard1:
-                cl.stopControlSelected.setAttribute("opacity", GLASS);
-                cl.stopControlDisabled.setAttribute("opacity", GLASS);
-                break;
             case performanceMode.conductingTimer:
                 cl.conductTimerSelected.setAttribute("opacity", METAL);
                 cl.setConductTimerControlDisabled.setAttribute("opacity", GLASS);
@@ -447,7 +435,7 @@ var
         {
             sequenceRecording = new SequenceRecording(player.getOutputTracks());
 
-            if(deviceOptions.performanceMode === performanceMode.score || deviceOptions.performanceMode === performanceMode.keyboard1)
+            if(deviceOptions.performanceMode === performanceMode.score)
             {
                 score.setCursor();
             }
@@ -466,14 +454,10 @@ var
                 baseSpeed = 1;
                 player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
             }
-            else // options.performanceMode === score or keyboard1)
+            else // options.performanceMode === score)
             {
                 baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
-                if(deviceOptions.performanceMode === performanceMode.score)
-                {
-                    player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
-                }
-                // Keyboard1 *always* uses performance timer
+                player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
             }
 
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
@@ -510,14 +494,7 @@ var
             conductor = undefined;
         }
 
-        if(deviceOptions.inputHandler instanceof Keyboard1)
-        {
-            deviceOptions.performanceMode = performanceMode.keyboard1;
-        }
-        else
-        {
-            deviceOptions.performanceMode = performanceMode.score;
-        }
+        deviceOptions.performanceMode = performanceMode.score;        
 
         score.hideCursor();
         score.resetRegionInfoStrings();
@@ -755,9 +732,7 @@ var
 
             if(conductor === undefined)
             {
-                // midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
-                // and null if there are input devices that are not selected.
-                conductor = new TimerConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
+                conductor = new TimerConductor(score, startPlaying, deviceOptions.outputDevice, speed);
             }
 
             setConducting(speed);
@@ -780,9 +755,7 @@ var
 
             if(conductor === undefined)
             {
-                // midiInputDevice will be undefined if there are no input devices in the inputDeviceSelector,
-                // and null if there are input devices that are not selected.
-                conductor = new CreepConductor(score, startPlaying, deviceOptions.inputDevice, deviceOptions.outputDevice, speed);
+                conductor = new CreepConductor(score, startPlaying, deviceOptions.outputDevice, speed);
             }
 
             setConducting(speed);
@@ -801,7 +774,7 @@ var
                 setStopped();
                 break;
             case 'paused':
-                if(deviceOptions.performanceMode === performanceMode.score) // keyboard1 and conducted performances cannot be paused
+                if(deviceOptions.performanceMode === performanceMode.score) // conducted performances cannot be paused
                 {
                     setPaused();
                 }
@@ -821,37 +794,6 @@ var
             case 'conductingCreep':
                 setConductingCreep();
                 break;
-        }
-    },
-
-    // sets the options in the input device selector
-    // midiAccess can be null
-    setMIDIInputDeviceSelector = function(midiAccess)
-    {
-        var
-            option,
-            is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
-
-        is.options.length = 0; // important when called by midiAccess.onstatechange 
-
-        option = document.createElement("option");
-        if(midiAccess !== null)
-        {
-            option.text = "MIDI input is not currently supported"; // "choose a MIDI input device";
-            is.add(option, null);
-            midiAccess.inputs.forEach(function(port)
-            {
-                //console.log('input id:', port.id, ' input name:', port.name);
-                option = document.createElement("option");
-                option.inputDevice = port;
-                option.text = port.name;
-                is.add(option, null);
-            });
-        }
-        else
-        {
-            option.text = "MIDI input devices are not available";
-            is.add(option, null);
         }
     },
 
@@ -890,26 +832,11 @@ var
     onMIDIDeviceStateChange = function(e)
     {
         var
-            is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
             os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
-            inputOptionsLength = is.options.length,
             currentOutputDeviceIndex = os.selectedIndex;
 
         switch(e.port.type)
         {
-            case "input":
-                setMIDIInputDeviceSelector(midiAccess);
-                if(inputOptionsLength < is.options.length)
-                {
-                    // input device added
-                    is.selectedIndex = is.options.length - 1;
-                }
-                else
-                {
-                    // input device removed
-                    is.selectedIndex = 0;
-                }
-                break;
             case "output":
                 // Output devices are currently handled differently from the input devices...
                 // (I don't want the output device selector's selected index to change 
@@ -944,7 +871,6 @@ var
     {
         if(player.setSpeed !== undefined)
         {
-            // Keyboard1 does nothing here if the trackWorkers have not yet been initialised.
             player.setSpeed(1);
         }
         globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
@@ -967,7 +893,6 @@ export class Controls
         function getGlobalElements()
         {
             globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
-            globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
             globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
@@ -1046,7 +971,6 @@ export class Controls
 
             getGlobalElements();
 
-            setMIDIInputDeviceSelector(midiAccess);
             setMIDIOutputDeviceSelector(midiAccess, residentSynth);
 
             if(midiAccess !== null)
@@ -1066,12 +990,11 @@ export class Controls
         doControl(controlID)
         {
             let outputDeviceSelect = globalElements.outputDeviceSelect,
-                inputDeviceSelect = globalElements.inputDeviceSelect,
                 scoreSelect = globalElements.scoreSelect;
 
             // This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
             // and uses the information to load the score's svg files into the "svgPagesFrame" div,
-            // The score is actually analysed when the Start button is clicked.
+            // The score is actually analyzed when the Start button is clicked.
             function setScore(scoreIndex)
             {
                 var scoreInfo, nPagesLoading;
@@ -1079,7 +1002,6 @@ export class Controls
                 // The scoreSelectIndex argument is the index of the score in the score selector
                 // Returns a scoreInfo object having the following fields:
                 //    scoreInfo.path -- the path to the score's file
-                //    scoreInfo.inputHandler
                 //    scoreInfo.aboutText
                 //    scoreInfo.aboutURL
                 // The path setting includes the complete path from the Assistant Performer's "scores" folder
@@ -1088,79 +1010,61 @@ export class Controls
                 // "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
                 // Note that if annotated page(s) are to be used, their path value will include the name of their
                 // folder (e.g. "Song Six/annotated/Song Six (14 pages)").
-                // If the score contains input voices, the inputHandler= option will be defined: It selects one of the
-                // Assistant Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
                 function getScoreInfo(scoreSelectIndex)
                 {
-                    var scoreInfo = {path: "", inputHandler: "none", aboutText: "", aboutURL: ""};
+                    var scoreInfo = {path: "", aboutText: "", aboutURL: ""};
 
                     switch(scoreSelectIndex)
                     {
                         case PIANOLA_MUSIC_SCORE_INDEX:
                             scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Pianola Music";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                             break;
                         case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
                             scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Pianola Music";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                             break;
                         case STUDY1_SCORE_INDEX:
                             scoreInfo.path = "Study 1/Study 1 (scroll)";
-                            scoreInfo.inputHandler = "masterKeyboard";
                             scoreInfo.aboutText = "about Study 1";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
                             break;
                         case STUDY2_SCORE_INDEX:
                             scoreInfo.path = "Study 2/Study 2 (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Study 2";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                             break;
                         case STUDY2_2STAVES_SCORE_INDEX:
                             scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Study 2";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                             break;
                         case STUDY3_SKETCH1_SCORE_INDEX:
                             scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Study 3 Sketch";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
                             break;
                         case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
                             scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Study 3 Sketch";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
                             break;
                         case TOMBEAU1_SCORE_INDEX:
                             scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Tombeau 1";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
                             break;
                         case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
                             scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Erratum Musical I-VIII";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
                             break;
                         case THREE_CRASHES_SCORE_INDEX:
                             scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
-                            scoreInfo.inputHandler = "none";
                             scoreInfo.aboutText = "about Three Crashes";
                             scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
-                            break;
-                        case STUDY4_SCORE_INDEX:
-                            scoreInfo.path = "Study 4/Study 4 (scroll)";
-                            scoreInfo.inputHandler = "none";
-                            scoreInfo.aboutText = "about Study 4";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study4/aboutStudy4.html";
                             break;
                         default:
                             break;
@@ -1289,29 +1193,11 @@ export class Controls
                     }
                 }
 
-                function setOptionsInputHandler(scoreInfoInputHandler)
-                {
-                    if(scoreInfoInputHandler === "keyboard1")
-                    {
-                        deviceOptions.inputHandler = new Keyboard1();
-                    }
-                    else if(scoreInfoInputHandler === "masterKeyboard")
-                    {
-                        deviceOptions.inputHandler = new MidiInputDevice();
-                    }
-                    else
-                    {
-                        deviceOptions.inputHandler = undefined; // console.warn("Using inputHandler defined in Conductor.");
-                    }
-                }
-
                 scoreInfo = getScoreInfo(scoreIndex);
 
                 setAboutLink(scoreInfo);
 
                 setPages(scoreInfo);
-
-                setOptionsInputHandler(scoreInfo.inputHandler);
 
                 globalElements.svgPagesFrame.scrollTop = 0;
             }
@@ -1393,9 +1279,6 @@ export class Controls
 
             if(controlID === "scoreSelect")
             {
-                inputDeviceSelect.disabled = true;
-                inputDeviceSelect.selectedIndex = 0;
-
                 outputDeviceSelect.disabled = true;
                 outputDeviceSelect.selectedIndex = 0;
 
@@ -1410,7 +1293,7 @@ export class Controls
             }
 
             /**** controls in options panel ***/
-            if(controlID === "inputDeviceSelect" || controlID === "outputDeviceSelect")
+            if(controlID === "outputDeviceSelect")
             {
                 setMainOptionsState("toFront"); // enables only the appropriate controls
             }
@@ -1519,32 +1402,12 @@ export class Controls
         // Called when the Start button is clicked.
         // The score selector sets the array of svgScorePage urls.
         // The Start button is enabled when a score and MIDI output have been selected.
-        // It does not require a MIDI input.
         beginRuntime()
         {
             function setMIDIDevices(options)
             {
                 var i,
-                    inSelector = document.getElementById("inputDeviceSelect"),
-                    scoreSelector = document.getElementById("scoreSelect"),
                     outSelector = document.getElementById("outputDeviceSelect");
-
-                // inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
-                if(inSelector.selectedIndex === 0)
-                {
-                    if(inSelector.options.length === 1)
-                    {
-                        options.inputDevice = undefined;
-                    }
-                    else
-                    {
-                        options.inputDevice = null;
-                    }
-                }
-                else
-                {
-                    options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
-                }
 
                 for(i = 1; i < outSelector.options.length; ++i)
                 {
@@ -1575,35 +1438,26 @@ export class Controls
                 }
             }
 
-            // tracksData is set up inside score (where it can be retrieved
-            // again later) and returned by this function.
-            function getTracksData(score, isKeyboard1Performance)
+            // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
+            function getTracksData(score)
             {
                 let tracksData;
 
                 // Get everything except the timeObjects (which have to take account of speed)
-                // This function also sets staffline colours depending on isKeyboard1Performance.
-                score.getEmptySystems(isKeyboard1Performance);
+                score.getEmptySystems();
 
                 score.setTracksData();
-                // tracksData contains the following attributes:
-                //        inputTracks[]
-                //        outputTracks[]
-                //        if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
-                //            inputKeyRange.bottomKey
-                //            inputKeyRange.topKey
+
+                // tracksData has a single outputTracks[] attribute containing tracks containing midiChords and midRests
                 tracksData = score.getTracksData();
 
                 // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
                 // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
                 // of its track controls is turned on or off.
-                // score.refreshDisplay(undefined, trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray without
-                // changing the value of score.isKeyboard1Performance.
+                // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
                 // Repainting includes using the correct staff colours, but the score may also update the position of
                 // its start marker (which always starts on a chord) if a track is turned off.
-                tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, isKeyboard1Performance);
-
-                return tracksData;
+                tracksControl.init(tracksData.outputTracks);
             }
 
             function setOutputDeviceFunctions(outputDevice)
@@ -1727,15 +1581,13 @@ export class Controls
                 conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
             }
 
-            let isKeyboard1Performance = deviceOptions.inputHandler instanceof Keyboard1;
-
             setMIDIDevices(deviceOptions);
 
             setOutputDeviceFunctions(deviceOptions.outputDevice);
 
             // This function can throw an exception
             // (e.g. if an attempt is made to create an event that has no duration).
-            let tracksData = getTracksData(score, isKeyboard1Performance);
+            getTracksData(score);
 
             setConductingLayer();
 
@@ -1743,22 +1595,10 @@ export class Controls
             score.sendEndMarkerToEnd();
             score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
-            if(isKeyboard1Performance)
-            {
-                player = deviceOptions.inputHandler; // keyboard1 -- the "prepared piano"
-                player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-                player.cursor = score.getCursor(); // contains sims
-                player.init(deviceOptions.inputDevice, deviceOptions.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
+            player = new Sequence();
+            player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
 
-                tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
-            }
-            else
-            {
-                player = new Sequence();
-                player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
-
-                tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
-            }
+            tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
 
             setSpeedControl(tracksControl.width());
 
@@ -1769,14 +1609,9 @@ export class Controls
                 midiAccess.onstatechange = undefined;
             }
 
-            score.refreshDisplay(isKeyboard1Performance, undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
+            score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
             setSvgControlsState('stopped');
-
-            if(isKeyboard1Performance)
-            {
-                goControlClicked();
-            }
         }
     }
 

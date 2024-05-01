@@ -24,8 +24,6 @@ const
 	GLASS = "0"; // control layer is completely transparent
 
 let
-	isLivePerformance, // set in init()
-
 	trackCtlElems = [], // the controls for individual tracks
 
 	scoreRefresh = undefined, // a callback that tells the score to redraw itself
@@ -78,9 +76,9 @@ export class TracksControl
 	}
 
 	// Called after loading a particular score.
-	init(outputTracks, inputTracks, isLivePerf)
+	init(outputTracks)
 	{
-		var nOutputTracks = outputTracks.length, nInputTracks = inputTracks.length,
+		var nOutputTracks = outputTracks.length,
 			trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
 			controlPanel = document.getElementById("svgRuntimeControls"),
 			firstControlPanelChild,
@@ -191,9 +189,7 @@ export class TracksControl
 			}
 		}
 
-		isLivePerformance = isLivePerf;
-
-		nTrackControls = nOutputTracks + nInputTracks;
+		nTrackControls = nOutputTracks;
 		trackControlsWidth = ((nTrackControls * 16) + 6).toString(); // individual controls are 10 pixels wide, with 6px between them.
 
 		trackControlsMainElem = getTrackControlsMainElem(trackControlsWidth);
@@ -228,10 +224,7 @@ export class TracksControl
 			trackCtlElems[i].previousState = "on";
 		}
 
-		if(isLivePerformance === false)
-		{
-			disableTrkOptions();
-		}
+		disableTrkOptions();
 	}
 
 	// the width of the bounding box (set by init())
@@ -350,7 +343,7 @@ export class TracksControl
 				if(scoreRefresh !== undefined)
 				{
 					getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray);
-					scoreRefresh(undefined, readOnlyTrackIsOnArray);  // arg 1 is undefined so score.isKeyboard1Performance does not change.
+					scoreRefresh(readOnlyTrackIsOnArray);
 				}
 
 				// initTracks is a callback that sets the tracks for performance
