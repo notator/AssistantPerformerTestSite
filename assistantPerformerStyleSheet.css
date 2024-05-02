@@ -13,39 +13,21 @@ a:visited
     color: #00AA00;
 }
 
-.note /* a div note in a blue frame */
+.boldTitle
 {
-    font-size: 8.25pt;
-    line-height: 150%;
-	text-align:left;
-	width:605px;
-	margin:8px auto 12px auto;
-    padding: 12px 14px 12px 14px; 
-    border: 1px solid #1010C6
+    font-weight: bold;
+    font-size: 16px;
 }
 
-.helpText /* a div help text */
+.subtitle
 {
-	font-size: 12px;
+    font-size: 12px;
 }
 
-.blueHelpText /* span */
+.boldSubtitle
 {
-    color: #8888FF;
-}
-
-.redHelpText /* span */
-{
-    color: #f20d0d;
-}
-
-.deviceSelector /* select */
-{
-    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
-    font-size: 11px; 
-    width: 222px;
-    margin: 6px 7px 6px 7px;
-    padding: 0; 
+    font-weight: bold;
+    font-size: 11px;
 }
 
 .options /* div */
@@ -53,10 +35,24 @@ a:visited
     font-size: 12px;
     background-color: #F6F6F6;
     border: 1px solid #008000;
-	width:740px;
+    width: 740px;
     margin: 4px auto 0 auto;
-    padding: 6px 10px 6px 10px;
-    text-align:center;
+    padding: 10px 20px 20px 20px;
+    text-align: center;
+}
+
+.helpText /* a div help text */
+{
+	font-size: 12px;
+}
+
+.deviceSelector /* select */
+{
+    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
+    font-size: 11px; 
+    width: 245px;
+    margin: 6px 3px 6px 0px;
+    padding: 0; 
 }
 
 .checkBoxCell /* div */
@@ -79,5 +75,5 @@ a:visited
 
 .startRuntimeButton /* input */
 {
-    margin:5px 0 2px 0;
+    margin:15px 0 0 0;
 }

@@ -2,120 +2,72 @@
 <html lang="en"
       xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Assistant Performer</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="assistantPerformerStyleSheet.css"
-		  media="all"
-		  rel="stylesheet"
-		  type="text/css" />
+    <title>Assistant Performer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="assistantPerformerStyleSheet.css"
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
     <link href="sliderStyleSheet.css"
-		  media="all"
-		  rel="stylesheet"
-		  type="text/css" />
-	<link rel="shortcut icon" href="https://james-ingram-act-two.de/open-source/assistantPerformer/AP3.ico" />
-	<!-- Javascript files are included at the end of the body element -->
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
+    <link rel="shortcut icon" href="https://james-ingram-act-two.de/open-source/assistantPerformer/AP3.ico" />
+    <!-- Javascript files are included at the end of the body element -->
 </head>
 <body style="text-align: center; font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; padding: 0; margin: 0; overflow:hidden">
-    <div id="titleOptionsDiv" style="text-align: center; visibility: visible; margin:0;">
-        <div style="height:265px; font-size:12px; ">
-            <table style="width:766px; margin:10px auto 0 auto; padding:0;">
-                <colgroup>
-                    <col style="width:200px;" />
-                    <col style="width:370px;" />
-                    <col style="width:200px;" />
-                </colgroup>
-                <tr>
-                    <td class="helpText" style="padding:7px 0 0 0; text-align:left">
-                        <a id="aboutAssistantPerformerLink"
-                           target="_blank"
-                           href="https://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
-                            about the Assistant Performer
-                        </a>
-                    </td>
-                    <td style="padding:0; margin:0; font-size:22px;">Assistant Performer</td>
-                    <td class="helpText" style="padding:7px 0 0 0; text-align:right">
-                        <a id="assistantPerformerOnGitHubLink"
-                           target="_blank"
-                           href="https://github.com/notator/assistant-performer">
-                            open source on GitHub
-                        </a>
-                    </td>
-                </tr>
-            </table>
-            <div id="options" class="options">
-                <div id="deviceAndScoreSelectors" style="margin: 0">
-                    <select id="scoreSelect"
-                            class="deviceSelector" style="width: 240px" onchange="_AP.controls.doControl('scoreSelect')">
-                        <option>choose a score</option>
-                        <option>Pianola Music (1967)</option>
-                        <option>Pianola Music (1967) on 3 staves</option>
-                        <option>Study 1 (2005)</option>
-                        <option>Study 2 (2010-2011)</option>
-                        <option>Study 2 (2010-2011) on 2 staves</option>
-                        <option>Study 3 sketch 1 (2012-2014)</option>
-                        <option>Study 3 sketch 1 (2012-2014) on 4 staves</option>
-                        <!--<option>Study 3 sketch 2.1 - with input (2015)</option>-->
-                        <optgroup label="Erratum Musical">
-                            <option value="Erratum Musical">Erratum Musical I-VIII</option>
-                            <option value="Three Crashes">Three Crashes</option>
-                        </optgroup>
-                        <optgroup label="Work in Progress">
-                            <option>Tombeau 1</option>
-                        </optgroup>                        
-                    </select>
-                    <select id="outputDeviceSelect"
-                            class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')" disabled="disabled"></select>
-                </div>
-                <div id="aboutLinkDiv" class="helpText" style="display:none;"></div>
-                <div id="waitingForSoundFontDiv" class="helpText" style="display:none;">Please wait, the soundFont is still loading...</div>
-                <div id="waitingForScoreDiv" class="helpText" style="display:none;">Please wait, the score is loading...</div>
-                <div id="needsMIDIAccessDiv" class="helpText" style="display:none;">This score can only be played on a browser that supports Web MIDI.</div>
-                <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
-                       onclick="_AP.controls.beginRuntime()"
-                       style="display:none;" />
-            </div>
+    <div id="titleOptionsDiv" class="options">
+        <!-- width 740px -->
+        <table>
+            <colgroup>
+                <col width="150px" />
+                <col width="440px" />
+                <col width="150px" />
+            </colgroup>
+            <tr style="vertical-align:baseline;">
+                <td style="text-align: left;">
+                    <span class="subtitle"><a href="https://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">Documentation</a></span>
+                </td>
+                <td style="text-align: center">
+                    <span class="boldTitle">Assistant Performer</span><br />
+                    <span class="subtitle">SVG-MIDI score player</span>
+                </td>
+                <td style="text-align: right;">
+                    <span class="subtitle"><a href="https://github.com/notator/AssistantPerformerTestSite">open source on GitHub</a></span>
+                </td>
+            </tr>
+        </table>
+        <div style="padding-top: 3px">
+            <span class="boldSubtitle">Score:</span>
+            <select id="scoreSelect"
+                    class="deviceSelector" onchange="_AP.controls.doControl('scoreSelect')">
+                <option>choose a score</option>
+                <option>Pianola Music (1967)</option>
+                <option>Pianola Music (1967) on 3 staves</option>
+                <option>Study 1 (2005)</option>
+                <option>Study 2 (2010-2011)</option>
+                <option>Study 2 (2010-2011) on 2 staves</option>
+                <option>Study 3 sketch 1 (2012-2014)</option>
+                <option>Study 3 sketch 1 (2012-2014) on 4 staves</option>
+                <!--<option>Study 3 sketch 2.1 - with input (2015)</option>-->
+                <optgroup label="Erratum Musical">
+                    <option value="Erratum Musical">Erratum Musical I-VIII</option>
+                    <option value="Three Crashes">Three Crashes</option>
+                </optgroup>
+                <optgroup label="Work in Progress">
+                    <option>Tombeau 1</option>
+                </optgroup>
+            </select>
+            <span>
+                <span class="boldSubtitle">&nbsp;&nbsp;&nbsp;MIDI Output Device:</span>
+                <select id="outputDeviceSelect" class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')" disabled="disabled"></select>
+            </span>
         </div>
-        <div class="note">
-            This experimental Web MIDI application is normally tested in the latest version of Chrome on Windows 10.<br />
-            I will be testing it again on Firefox, when they have completed their implementation of the Web MIDI API.<br />
-            Note that:<br />
-            <ul style="margin-top:0px">
-                <li>
-                    The <b>ResidentWAFSynth</b> (a <b>software MIDI <i>output</i> device</b>) can play all the scores in this application,<br />
-                    so the Web MIDI API only really needs to be implemented by the browser in order to access a <b>hardware MIDI <i>input</i> device</b>.
-                    This synthesizer is also used by three other applications:
-                    <ul>
-                        <li>
-                            WebMIDISynthHost (<a id="WebMIDISynthHostGitHubLink" target="_blank" href="https://github.com/notator/WebMIDISynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/WebMIDISynthHost/host.html">application</a>)
-                        </li>
-                        <li>
-                            SimpleWebAudioFontSynthHost (<a target="_blank" href="https://james-ingram-act-two.de/open-source/SimpleWebAudioFontSynthHost/host.html">application</a>)
-                        </li>
-                        <li>
-                            ResidentWAFSynthHost (<a target="_blank" href="https://github.com/notator/ResidentWAFSynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/ResidentWAFSynthHost/host.html">application</a>)
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    The <b>ResidentSf2Synth</b> uses a soundFont containing only a single GM Grand Piano preset (to save loading time). It can therefore only play the following scores:<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i>Pianola Music</i> (1967), <i>Study 1</i> (2005), <i>Erratum Musical I-VIII</i> (2019) and the <i>Three Crashes</i> (2019).<br />
-                    This synth is also used by two other applications:<br />
-                    <ul>
-                        <li>
-                            WebMIDISynthHost (<a id="WebMIDISynthHostGitHubLink" target="_blank" href="https://github.com/notator/WebMIDISynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/WebMIDISynthHost/host.html">application</a>)
-                        </li>
-                        <li>
-                            SimpleSoundFontSynthHost (<a target="_blank" href="https://james-ingram-act-two.de/open-source/SimpleSoundFontSynthHost/host.html">application</a>)
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth"><b>Virtual MIDI Synth</b></a> plugin
-                    can also be used to play any of the available scores.
-                </li>
-            </ul>
-            <span style="font-size:9px">ji www april 2020.</span>
-        </div>
+        <div id="aboutLinkDiv" class="helpText" style="display:none;"></div>
+        <div id="waitingForSoundFontDiv" class="helpText" style="display:none;">Please wait, the soundFont is still loading...</div>
+        <div id="waitingForScoreDiv" class="helpText" style="display:none;">Please wait, the score is loading...</div>
+        <div id="needsMIDIAccessDiv" class="helpText" style="display:none;">This score can only be played on a browser that supports Web MIDI.</div>
+        <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start" onclick="_AP.controls.beginRuntime()" style="display:none;" />
     </div>
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
         <div id="speedControlDiv"
