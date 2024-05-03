@@ -48,13 +48,15 @@ let
 		return inputMessage;
 	},
 
-	// This handler sends possibly altered messages to the _outputDevice.
-	// The received messages may be
-	// a) simply sent on without change,
-	// b) altered before being sent on,
-	// c) suppressed completely (i.e. not sent on),
-	// d) sent on (modified or not) together with new midi messages.    
-	_handleScoreMIDIEvent = function(uint8Array, timestamp)
+	// This handler sends COMMAND messages defined in the score to the _outputDevice.
+	// The timestamp is the msPositionInScore of the message definition in the score.
+    // (The msPositionInScore is calculated from the msDuration attributes of the Moments.)
+	//
+	// May 2024 note about SYSEX, CHANNEL_PRESSURE and AFTERTOUCH messages:
+	// Neither the AssistantPerformer nor the ResidentSynth currently support these messages,
+	// and they are not used in any of the current SVG-MIDI scores. If any of them are sent
+	// to the ResidentSynth, it will throw an exception and print a diagnostic message to the console.
+	_handleConductedEvent = function(uint8Array, timestamp)
 	{
 		let inputMessage = _getInputMessage(uint8Array);
 
@@ -65,13 +67,13 @@ let
 
 			switch(command)
 			{
-				case CMD.NOTE_ON:
 				case CMD.NOTE_OFF:
-				case CMD.CHANNEL_PRESSURE:
+				case CMD.NOTE_ON:
 				case CMD.AFTERTOUCH:
-				case CMD.PITCH_WHEEL:
 				case CMD.CONTROL_CHANGE:
 				case CMD.PROGRAM_CHANGE:
+				case CMD.CHANNEL_PRESSURE:				
+				case CMD.PITCH_WHEEL:			
 					_outputDevice.send(uint8Array, timestamp);
 					break;
 				default:
@@ -134,7 +136,7 @@ export class Conductor
 	// called by Sequence. Is MIDI Thru...
 	send(msg, timestamp)
 	{
-		_handleScoreMIDIEvent(msg, timestamp);
+		_handleConductedEvent(msg, timestamp);
 	}
 
 	stopConducting()
