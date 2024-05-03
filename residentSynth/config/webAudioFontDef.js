@@ -1,10 +1,13 @@
 console.log('load webAudioFontDef.js');
 
-// This webAudioFontDef contains an array of banks containing the instrument presets.
+// This webAudioFontDef file defines an array of banks and the presets they contain.
 // Each bank should be given a descriptive name.
-// Presets are given names automatically, using their source and General MIDI name.
-// (The sources used here are either FluidR3 or GeneralUserGS. The GeneralMIDI name is found
-// using the original presetIndex -- the number part of Surikov's file name.)
+// Presets are given names automatically, using their source and GeneralMIDI name.
+// The preset names, in the comments, are the names of the presets in the GeneralMIDI standard.
+// (The number in Surikov's file names is the original preset index.)
+//
+// The sources used in this particular webAudioFontDef are all taken from the FluidR3 soundFont.
+//
 // The MIDI BANK control message sets the current bank using its index in this array.
 // The MIDI PRESET command message will set the preset using the index in the bank's presets array.
 
