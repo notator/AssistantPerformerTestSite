@@ -24,7 +24,7 @@ Code for _event symbols_ in the scores contain both spatial (SVG) and temporal (
 &nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;&nbsp;synchronize the position of running cursors with live audio output  
 &nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;give the user control over the start- and end-points of playback.
 
-Currently, the scores are all written using a simplified version of standard notation. This could, in principle, change in future: _All_ music notations contain _event symbols_ whose appearance (in space) is independent of their meaning (in time), so any music notation (designed for writing on paper) could be extended (when stored in a computer file) to contain temporal information.
+Currently, the scores are all written using a simplified version of standard Western music notation. This could, in principle, change in future: _All_ music notations contain _event symbols_ whose appearance (in space) is independent of their meaning (in time), so any music notation (designed for writing on paper) could be extended (when stored in a computer file) to contain temporal information.
 
 James Ingram  
 May 2024
