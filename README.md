@@ -6,10 +6,10 @@ This application is an experimental music score player with conducting options.<
 &nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;the ways in which users can interact with playback.
 
 This repository has two major branches:  
-&nbsp;&nbsp;&nbsp;&nbsp;**main**: the current [stable application](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
-&nbsp;&nbsp;&nbsp;&nbsp;**testSite**: the [unstable development application](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).
+&nbsp;&nbsp;&nbsp;&nbsp;**stable**: the current [stable application](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
+&nbsp;&nbsp;&nbsp;&nbsp;**dev**: the [unstable development application](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).
 
-The **testSite** has been fully merged into the **main** branch in May 2024, and the two online web applications are now identical. There is, however, no guarantee that this will always be the case.
+The **dev** branch has been fully merged into the **stable** branch in May 2024, and the two online web applications are now identical. There is, however, no guarantee that this will always be the case.
 
 The _Assistant Performer_ allows the user to select an output device from any of the available virtual or hardware MIDI synthesizers it can currently find in the system.<br>These now always include the permanently installed **_ResidentSynth_** (**[GitHub](https://github.com/notator/ResidentSynthHostTestSite), [Documentation](https://james-ingram-act-two.de/open-source/aboutResidentSynthHost.html)**). 
 
