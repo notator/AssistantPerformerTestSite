@@ -1,40 +1,30 @@
-Introduction
+Assistant Performer
 ------------
 
-This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format that contains embedded MIDI information.  
+This application is an experimental music score player with conducting options.<br>Its purpose is to test and develop  
+&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;&nbsp;the **_SVG-MIDI_** format in which the scores are stored  
+&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;the ways in which users can interact with playback.
 
-The application is normally tested in the latest versions of Chrome and Firefox on Windows 10.
-To find out which other browsers might be tried, go to
-<a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>.
+This repository has two major branches:  
+&nbsp;&nbsp;&nbsp;&nbsp;**main**: the current [stable application](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
+&nbsp;&nbsp;&nbsp;&nbsp;**testSite**: the [unstable development application](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).
 
-This repository contains two major branches:  
-&nbsp;&nbsp;&nbsp;&nbsp;**main**: the current stable version of the AssistantPerformer, which can be used [here](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
-&nbsp;&nbsp;&nbsp;&nbsp;**testSite**: the unstable development version of the AssistantPerformer, which can be tested [here](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).  
+The **testSite** has been fully merged into the **main** branch in May 2024, and the two online web applications are now identical. There is, however, no guarantee that this will always be the case.
+
+The _Assistant Performer_ allows the user to select an output device from any of the available virtual or hardware MIDI synthesizers it can currently find in the system.<br>These now always include the permanently installed **_ResidentSynth_** (**[GitHub](https://github.com/notator/ResidentSynthHostTestSite), [Documentation](https://james-ingram-act-two.de/open-source/aboutResidentSynthHost.html)**). 
 
 ---
 
+This project is designed to be an investigation of the concepts involved. It is not intended to be a finished product. Its top-level architecture and _what it does_ is much more important than the actual code. Both the _Assistant Performer_ and the _ResidentSynth_ are working _prototypes_ whose actual code might well be improved.
 
-Note that it is not possible to display or play scores in this application unless a MIDI output device has been selected.<br />
-The <a target="_blank" href="https://github.com/notator/residentSf2Synth"> <em>Resident Sf2 Synth</em></a> should always be available, since it only requires the Web <em>Audio</em> API, and that interface is always implemented when the Web <em>MIDI</em> API is implemented (go to <a target="_blank" href="http://caniuse.com/#feat=audio-api">check Web <em>Audio</em> API</a>).<br />
-Currently, the only scores that can be played on the <em>Resident Sf2 Synth</em> are the Pianola Music (1967) and Study 1 (2005).
-All the other scores require hardware or software output devices that are (or depend on) plugins.<br />
-On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth"><em>Virtual MIDI Synth</em></a> plugin can be used to play any of the available scores.<br />
-Scores, recordings and some videos of the Assistant Performer performing can however be found via the link that appears when a score is selected.<br /><br />
+Neither the _Assistant Performer_ nor the _ResidentSynth_ require use of the Web _MIDI_ API. The synthesizer _implements_ the Web MIDI MIDIOutput interface using the Web _Audio_ API.
 
-The following <b>mp4 videos featuring Study 2</b> illustrate some of this software's more advanced features for those who don't want to install the <em>Virtual MIDI Synth</em>.
-Unfortunately, Study 2 can't yet be performed on the <em>Resident Sf2 Synth</em>:
+The **_SVG-MIDI_** format is SVG containing embedded MIDI information.  
+Code for _event symbols_ in the scores contain both spatial (SVG) and temporal (MIDI) information. This allows the _Assistant Performer_ to  
+&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;&nbsp;synchronize the position of running cursors with live audio output  
+&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;give the user control over the start- and end-points of playback.
 
-* A complete performance of Study 2 (at the speed stored in the score):<br />
-<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2Video100.html">View online (with comments)</a> /
-<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_100pc_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
-* A demonstration of the Assistant Performer's basic functions (track selection, speed etc.):<br />
-<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2VideoSelectionDemos.html">View online (with comments)</a> /
-<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_selections_09.06.2017.mp4">right-click to download mp4 (for better rendering))</a>.
-* A demonstration of the Assistant Performer's live conducting option:<br />
-<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2VideoSlowBlueSection.html">View online (with comments)</a> /
-<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_slow_conducted_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
-<br />
+Currently, the scores are all written using a simplified version of standard notation. This could, in principle, change in future: _All_ music notations contain _event symbols_ whose appearance (in space) is independent of their meaning (in time), so any music notation (designed for writing on paper) could be extended (when stored in a computer file) to contain temporal information.
 
-29th August 2023<br />
-James Ingram
-
+James Ingram  
+May 2024
