@@ -33,7 +33,6 @@ var
     player, // player is always a Sequence
     tracksControl = new TracksControl(),
 
-    midiAccess,
     score,
     conductor,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd', conducting.
@@ -797,38 +796,6 @@ var
         }
     },
 
-    // sets the options in the output device selector
-    // midiAccess can be null
-    setMIDIOutputDeviceSelector = function(midiAccess, residentSynth)
-    {
-        var
-            option,
-            os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
-
-        os.options.length = 0; // important when called by midiAccess.onstatechange
-
-        option = document.createElement("option");
-        option.text = "choose a MIDI output device";
-        os.add(option, null);
-
-        option = document.createElement("option");
-        option.outputDevice = residentSynth;
-        option.text = "ResidentSynth";
-        os.add(option, null);
-
-        if(midiAccess !== null)
-        {
-            midiAccess.outputs.forEach(function(port)
-            {
-                //console.log('output id:', port.id, ' output name:', port.name);
-                option = document.createElement("option");
-                option.outputDevice = port;
-                option.text = port.name;
-                os.add(option, null);
-            });
-        }
-    },
-
     onMIDIDeviceStateChange = function(e)
     {
         var
@@ -884,11 +851,8 @@ export class Controls
     constructor()
     { }
 
-    // Defines the window.svgLoaded(...) function.
-    // Sets up the pop-up menus for scores and MIDI input and output devices.
-    // Loads SoundFonts, adding them to the relevant scoreSelect option(s).
-    // mAccess is null if the browser does not support the Web MIDI API
-    init(mAccess)
+    // Sets up the pop-up menu for scores.
+    init()
     {
         function getGlobalElements()
         {
@@ -909,6 +873,24 @@ export class Controls
 
             globalElements.conductingLayer = document.getElementById("conductingLayer");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
+        }
+
+        // sets the options in the output device selector
+        function setMIDIOutputDeviceSelector(residentSynth)
+        {
+            let option,
+                os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
+
+            os.options.length = 0;
+
+            option = document.createElement("option");
+            option.text = "choose a MIDI output device";
+            os.add(option, null);
+
+            option = document.createElement("option");
+            option.outputDevice = residentSynth;
+            option.text = "ResidentSynth";
+            os.add(option, null);
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -964,20 +946,12 @@ export class Controls
                 }
             }
 
-            midiAccess = mAccess;
-
             // eslint-disable-next-line no-undef
             residentSynth = new ResSynth.residentSynth.ResidentSynth();
 
             getGlobalElements();
 
-            setMIDIOutputDeviceSelector(midiAccess, residentSynth);
-
-            if(midiAccess !== null)
-            {
-                // update the device selectors when devices get connected, disconnected, opened or closed
-                midiAccess.onstatechange = onMIDIDeviceStateChange;
-            }
+            setMIDIOutputDeviceSelector(residentSynth);
 
             initScoreSelector(systemChanged);
 
@@ -1341,11 +1315,6 @@ export class Controls
             {
                 deleteSaveLink();
 
-                if(midiAccess !== null)
-                {
-                    midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
-                }
-
                 if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
                 {
                     setSvgControlsState('disabled');
@@ -1603,11 +1572,6 @@ export class Controls
             setSpeedControl(tracksControl.width());
 
             resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
-
-            if(midiAccess !== null)
-            {
-                midiAccess.onstatechange = undefined;
-            }
 
             score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
