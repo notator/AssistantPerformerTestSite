@@ -11,7 +11,7 @@ This repository has two major branches:
 
 The **dev** branch has been fully merged into the **stable** branch in May 2024, and the two online web applications are now identical. There is, however, no guarantee that this will always be the case.
 
-The _Assistant Performer_ allows the user to select an output device from any of the available virtual or hardware MIDI synthesizers it can currently find in the system.<br>These now always include the permanently installed **_ResidentSynth_** (**[GitHub](https://github.com/notator/ResidentSynthHostTestSite), [Documentation](https://james-ingram-act-two.de/open-source/aboutResidentSynthHost.html)**).
+The _Assistant Performer_ now uses the **_ResidentSynth_** (**[GitHub](https://github.com/notator/ResidentSynthHostTestSite), [Documentation](https://james-ingram-act-two.de/open-source/aboutResidentSynthHost.html)**) as its only MIDI output device. This means that it no longer requires use of the **Web MIDI API**. The _ResidentSynth_ is  a MIDI output device that is implemented using the **Web Audio API** .
 
 ---
 
