@@ -58,15 +58,9 @@
                     <option>Tombeau 1</option>
                 </optgroup>
             </select>
-            <span>
-                <span class="boldSubtitle">&nbsp;&nbsp;&nbsp;MIDI Output Device:</span>
-                <select id="outputDeviceSelect" class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')" disabled="disabled"></select>
-            </span>
         </div>
         <div id="aboutLinkDiv" class="helpText" style="display:none;"></div>
-        <div id="waitingForSoundFontDiv" class="helpText" style="display:none;">Please wait, the soundFont is still loading...</div>
         <div id="waitingForScoreDiv" class="helpText" style="display:none;">Please wait, the score is loading...</div>
-        <div id="needsMIDIAccessDiv" class="helpText" style="display:none;">This score can only be played on a browser that supports Web MIDI.</div>
         <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start" onclick="_AP.controls.beginRuntime()" style="display:none;" />
     </div>
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">

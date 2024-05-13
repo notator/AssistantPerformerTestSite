@@ -180,36 +180,66 @@ var
 
     setMainOptionsState = function(mainOptionsState)
     {
-        var
-            scoreIndex = globalElements.scoreSelect.selectedIndex,
-            outputDeviceSelect = globalElements.outputDeviceSelect,
-            outputDeviceIndex = outputDeviceSelect.selectedIndex;
+        function setResidentSynthFunctions(residentSynth)
+        {
+            let CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+                ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF,
+                ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
+                allSoundOffMessage = new Uint8Array([CONTROL_CHANGE, ALL_SOUND_OFF, 0]),
+                allControllersOffMessage = new Uint8Array([CONTROL_CHANGE, ALL_CONTROLLERS_OFF, 0]);
+
+            function setAllChannelSoundOff()
+            {
+                this.send(allSoundOffMessage, performance.now());
+            }
+
+            function setAllChannelControllersOff()
+            {
+                this.send(allControllersOffMessage, performance.now());
+            }
+
+            if(residentSynth)
+            {
+                residentSynth.setAllChannelSoundOff = setAllChannelSoundOff;
+                residentSynth.setAllChannelControllersOff = setAllChannelControllersOff;
+            }
+        }
+
+        async function asyncResetResidentSynth()
+        {
+            let name = undefined;
+
+            if(residentSynth)
+            {
+                name = residentSynth.name;
+                await residentSynth.close();
+                console.log("Closed " + name);
+                await residentSynth.open();
+                console.log("Opened " + name);
+            }
+        }
+
+        var scoreIndex = globalElements.scoreSelect.selectedIndex;
 
         switch(mainOptionsState)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
                 globalElements.titleOptionsDiv.style.visibility = "visible";
-                globalElements.needsMIDIAccessDiv.style.display = "none";
                 globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
 
-                if(scoreIndex > 0)
+                if(scoreIndex > 0 && globalElements.waitingForScoreDiv.style.display === "none")
                 {
                     globalElements.aboutLinkDiv.style.display = "block";
+                    globalElements.startRuntimeButton.style.display = "initial";
 
-                    outputDeviceSelect.disabled = false;
+                    setResidentSynthFunctions(residentSynth);
 
-                    if(globalElements.waitingForSoundFontDiv.style.display === "none"
-                        && scoreIndex > 0 && outputDeviceIndex > 0)
-                    {
-                        globalElements.startRuntimeButton.style.display = "initial";
-                    }
-                }
-                else
-                {
-                    outputDeviceSelect.disabled = true;
+                    asyncResetResidentSynth();
+
+                    deviceOptions.outputDevice = residentSynth;
                 }
                 break;
             case "toBack": // set svg controls and score visible
@@ -796,30 +826,6 @@ var
         }
     },
 
-    onMIDIDeviceStateChange = function(e)
-    {
-        var
-            os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
-            currentOutputDeviceIndex = os.selectedIndex;
-
-        switch(e.port.type)
-        {
-            case "output":
-                // Output devices are currently handled differently from the input devices...
-                // (I don't want the output device selector's selected index to change 
-                // every time an input device is connected or disconnected.)
-                if(currentOutputDeviceIndex < os.options.length)
-                {
-                    os.selectedIndex = currentOutputDeviceIndex;
-                }
-                else
-                {
-                    os.SelectedIndex = 0;
-                }
-                break;
-        }
-    },
-
     // The Go control can be clicked directly.
     // Also, it is called automatically when assisted performances start.
     goControlClicked = function()
@@ -858,11 +864,8 @@ export class Controls
         {
             globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
-            globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
-            globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
             globalElements.waitingForScoreDiv = document.getElementById("waitingForScoreDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
-            globalElements.needsMIDIAccessDiv = document.getElementById("needsMIDIAccessDiv");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
 
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
@@ -875,708 +878,558 @@ export class Controls
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
-        // sets the options in the output device selector
-        function setMIDIOutputDeviceSelector(residentSynth)
-        {
-            let option,
-                os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
-
-            os.options.length = 0;
-
-            option = document.createElement("option");
-            option.text = "choose a MIDI output device";
-            os.add(option, null);
-
-            option = document.createElement("option");
-            option.outputDevice = residentSynth;
-            option.text = "ResidentSynth";
-            os.add(option, null);
-        }
-
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(systemChanged)
         {
-                globalElements.scoreSelect.selectedIndex = 0;
-                score = new Score(systemChanged); // an empty score, with callback function            
-            }
-
-            function getControlLayers(document)
-            {
-                cl.gotoOptionsDisabled = document.getElementById("gotoOptionsDisabled");
-
-                cl.performanceButtonsDisabled = document.getElementById("performanceButtonsDisabled");
-
-                cl.pauseUnselected = document.getElementById("pauseUnselected");
-                cl.pauseSelected = document.getElementById("pauseSelected");
-                cl.goDisabled = document.getElementById("goDisabled");
-
-                cl.stopControlSelected = document.getElementById("stopControlSelected");
-                cl.stopControlDisabled = document.getElementById("stopControlDisabled");
-
-                cl.setStartControlSelected = document.getElementById("setStartControlSelected");
-                cl.setStartControlDisabled = document.getElementById("setStartControlDisabled");
-
-                cl.setEndControlSelected = document.getElementById("setEndControlSelected");
-                cl.setEndControlDisabled = document.getElementById("setEndControlDisabled");
-
-                cl.sendStartToBeginningControlSelected = document.getElementById("sendStartToBeginningControlSelected");
-                cl.sendStartToBeginningControlDisabled = document.getElementById("sendStartToBeginningControlDisabled");
-
-                cl.sendStopToEndControlSelected = document.getElementById("sendStopToEndControlSelected");
-                cl.sendStopToEndControlDisabled = document.getElementById("sendStopToEndControlDisabled");
-
-                cl.conductTimerSelected = document.getElementById("conductTimerSelected");
-                cl.setConductTimerControlDisabled = document.getElementById("setConductTimerControlDisabled");
-
-                cl.conductCreepSelected = document.getElementById("conductCreepSelected");
-                cl.setConductCreepControlDisabled = document.getElementById("setConductCreepControlDisabled");
-
-            }
-
-            // callback passed to score, which passes it to cursor. Called when the running cursor moves to a new system.
-            function systemChanged(runningMarkerYCoordinates)
-            {
-                var div = globalElements.svgPagesFrame,
-                    height = Math.round(parseFloat(div.style.height));
-
-                if(((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
-                    || ((runningMarkerYCoordinates.top) < (div.scrollTop)))
-                {
-                    div.scrollTop = runningMarkerYCoordinates.top - 10;
-                }
-            }
-
-            // eslint-disable-next-line no-undef
-            residentSynth = new ResSynth.residentSynth.ResidentSynth();
-
-            getGlobalElements();
-
-            setMIDIOutputDeviceSelector(residentSynth);
-
-            initScoreSelector(systemChanged);
-
-            getControlLayers(document);
-
-            setSvgControlsState('disabled');
+            globalElements.scoreSelect.selectedIndex = 0;
+            score = new Score(systemChanged); // an empty score, with callback function            
         }
 
-        // called when the user clicks a control in the GUI
-        doControl(controlID)
+        function getControlLayers(document)
         {
-            let outputDeviceSelect = globalElements.outputDeviceSelect,
-                scoreSelect = globalElements.scoreSelect;
+            cl.gotoOptionsDisabled = document.getElementById("gotoOptionsDisabled");
 
-            // This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
-            // and uses the information to load the score's svg files into the "svgPagesFrame" div,
-            // The score is actually analyzed when the Start button is clicked.
-            function setScore(scoreIndex)
+            cl.performanceButtonsDisabled = document.getElementById("performanceButtonsDisabled");
+
+            cl.pauseUnselected = document.getElementById("pauseUnselected");
+            cl.pauseSelected = document.getElementById("pauseSelected");
+            cl.goDisabled = document.getElementById("goDisabled");
+
+            cl.stopControlSelected = document.getElementById("stopControlSelected");
+            cl.stopControlDisabled = document.getElementById("stopControlDisabled");
+
+            cl.setStartControlSelected = document.getElementById("setStartControlSelected");
+            cl.setStartControlDisabled = document.getElementById("setStartControlDisabled");
+
+            cl.setEndControlSelected = document.getElementById("setEndControlSelected");
+            cl.setEndControlDisabled = document.getElementById("setEndControlDisabled");
+
+            cl.sendStartToBeginningControlSelected = document.getElementById("sendStartToBeginningControlSelected");
+            cl.sendStartToBeginningControlDisabled = document.getElementById("sendStartToBeginningControlDisabled");
+
+            cl.sendStopToEndControlSelected = document.getElementById("sendStopToEndControlSelected");
+            cl.sendStopToEndControlDisabled = document.getElementById("sendStopToEndControlDisabled");
+
+            cl.conductTimerSelected = document.getElementById("conductTimerSelected");
+            cl.setConductTimerControlDisabled = document.getElementById("setConductTimerControlDisabled");
+
+            cl.conductCreepSelected = document.getElementById("conductCreepSelected");
+            cl.setConductCreepControlDisabled = document.getElementById("setConductCreepControlDisabled");
+
+        }
+
+        // callback passed to score, which passes it to cursor. Called when the running cursor moves to a new system.
+        function systemChanged(runningMarkerYCoordinates)
+        {
+            var div = globalElements.svgPagesFrame,
+                height = Math.round(parseFloat(div.style.height));
+
+            if(((runningMarkerYCoordinates.bottom) > (height + div.scrollTop))
+                || ((runningMarkerYCoordinates.top) < (div.scrollTop)))
             {
-                var scoreInfo, nPagesLoading;
-
-                // The scoreSelectIndex argument is the index of the score in the score selector
-                // Returns a scoreInfo object having the following fields:
-                //    scoreInfo.path -- the path to the score's file
-                //    scoreInfo.aboutText
-                //    scoreInfo.aboutURL
-                // The path setting includes the complete path from the Assistant Performer's "scores" folder
-                // to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
-                // "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
-                // "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
-                // Note that if annotated page(s) are to be used, their path value will include the name of their
-                // folder (e.g. "Song Six/annotated/Song Six (14 pages)").
-                function getScoreInfo(scoreSelectIndex)
-                {
-                    var scoreInfo = {path: "", aboutText: "", aboutURL: ""};
-
-                    switch(scoreSelectIndex)
-                    {
-                        case PIANOLA_MUSIC_SCORE_INDEX:
-                            scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
-                            scoreInfo.aboutText = "about Pianola Music";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
-                            break;
-                        case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
-                            scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
-                            scoreInfo.aboutText = "about Pianola Music";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
-                            break;
-                        case STUDY1_SCORE_INDEX:
-                            scoreInfo.path = "Study 1/Study 1 (scroll)";
-                            scoreInfo.aboutText = "about Study 1";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
-                            break;
-                        case STUDY2_SCORE_INDEX:
-                            scoreInfo.path = "Study 2/Study 2 (scroll)";
-                            scoreInfo.aboutText = "about Study 2";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
-                            break;
-                        case STUDY2_2STAVES_SCORE_INDEX:
-                            scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
-                            scoreInfo.aboutText = "about Study 2";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
-                            break;
-                        case STUDY3_SKETCH1_SCORE_INDEX:
-                            scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
-                            scoreInfo.aboutText = "about Study 3 Sketch";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                            break;
-                        case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
-                            scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
-                            scoreInfo.aboutText = "about Study 3 Sketch";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                            break;
-                        case TOMBEAU1_SCORE_INDEX:
-                            scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
-                            scoreInfo.aboutText = "about Tombeau 1";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
-                            break;
-                        case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
-                            scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
-                            scoreInfo.aboutText = "about Erratum Musical I-VIII";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
-                            break;
-                        case THREE_CRASHES_SCORE_INDEX:
-                            scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
-                            scoreInfo.aboutText = "about Three Crashes";
-                            scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return scoreInfo;
-                }
-
-                function getPathData(path)
-                {
-                    var pathData = {}, components;
-
-                    components = path.split("(");
-                    if(components[0][components[0].length - 1] !== ' ')
-                    {
-                        alert("Error in pages path string:\nThere must be a space character before the '('");
-                    }
-                    pathData.basePath = components[0] + "page ";
-
-                    // the second search argument is a regular expression for a single ')' character.
-                    if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0)
-                    {
-                        alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
-                    }
-
-                    pathData.nPages = parseInt(components[1], 10);
-                    if(pathData.nPages === null || pathData.nPages === undefined || pathData.nPages < 1)
-                    {
-                        alert("Error in pages path string:\nIllegal number of pages.");
-                    }
-
-                    return pathData;
-                }
-
-                function setAboutLink(scoreInfo)
-                {
-                    var linkDivElem = document.getElementById('aboutLinkDiv');
-
-                    linkDivElem.style.display = "none";
-                    if(scoreInfo.aboutURL !== undefined)
-                    {
-                        linkDivElem.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
-                        linkDivElem.style.display = "block";
-                    }
-                }
-
-                function setScoreLoadedState()
-                {
-                    nPagesLoading--;
-                    if(nPagesLoading === 0)
-                    {
-                        globalElements.waitingForScoreDiv.style.display = "none";
-                        outputDeviceSelect.disabled = false;
-                    }
-                }
-
-                function setLoadingScoreState()
-                {
-                    if(nPagesLoading === 0)
-                    {
-                        globalElements.waitingForScoreDiv.style.display = "block";
-                        outputDeviceSelect.disabled = true;
-                    }
-                    nPagesLoading++;
-                }
-
-                function getNewSvgPageElem(pageURL)
-                {
-                    var newNode;
-
-                    newNode = document.createElement("object");
-
-                    newNode.setAttribute("data", pageURL);
-                    newNode.setAttribute("type", "image/svg+xml");
-                    newNode.setAttribute("class", "svgPage");
-                    newNode.addEventListener('load', function() {setScoreLoadedState();});
-
-                    return newNode;
-                }
-
-                // Returns the URL of the scores directory. This can either be a file:
-                // e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
-                // served from IIS:
-                // e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-                // or on the web:
-                // e.g. "https://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-                // Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
-                function getScoresURL()
-                {
-                    var documentURL = document.URL,
-                        apIndex = documentURL.search("assistantPerformer.html"),
-                        url = documentURL.slice(0, apIndex) + "scores/";
-
-                    return url;
-                }
-
-                function setPages(scoreInfo)
-                {
-                    var i, scoresURL, newNode,
-                        svgPagesFrame,
-                        pathData,
-                        pageURL;
-
-                    scoresURL = getScoresURL();
-                    svgPagesFrame = document.getElementById('svgPagesFrame');
-                    svgPagesFrame.innerHTML = "";
-                    nPagesLoading = 0;
-
-                    if(scoreInfo.path.search("(scroll)") >= 0)
-                    {
-                        setLoadingScoreState();
-                        pageURL = scoresURL + scoreInfo.path + ".svg";
-                        newNode = getNewSvgPageElem(pageURL);
-                        svgPagesFrame.appendChild(newNode);
-                    }
-                    else
-                    {
-                        pathData = getPathData(scoreInfo.path);
-                        for(i = 0; i < pathData.nPages; ++i)
-                        {
-                            setLoadingScoreState();
-                            pageURL = scoresURL + pathData.basePath + (i + 1).toString(10) + ".svg";
-                            newNode = getNewSvgPageElem(pageURL);
-                            svgPagesFrame.appendChild(newNode);
-                        }
-                    }
-                }
-
-                scoreInfo = getScoreInfo(scoreIndex);
-
-                setAboutLink(scoreInfo);
-
-                setPages(scoreInfo);
-
-                globalElements.svgPagesFrame.scrollTop = 0;
+                div.scrollTop = runningMarkerYCoordinates.top - 10;
             }
+        }
 
-            // used when the control automatically toggles back
-            // toggleBack('setStartControlSelected')
-            function toggleBack(selected)
+        // eslint-disable-next-line no-undef
+        residentSynth = new ResSynth.residentSynth.ResidentSynth();
+
+        getGlobalElements();
+
+        initScoreSelector(systemChanged);
+
+        getControlLayers(document);
+
+        setSvgControlsState('disabled');
+    }
+
+    // called when the user clicks a control in the GUI
+    doControl(controlID)
+    {
+        let scoreSelect = globalElements.scoreSelect;
+
+        // This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
+        // and uses the information to load the score's svg files into the "svgPagesFrame" div,
+        // The score is actually analyzed when the Start button is clicked.
+        function setScore(scoreIndex)
+        {
+            var scoreInfo, nPagesLoading;
+
+            // The scoreSelectIndex argument is the index of the score in the score selector
+            // Returns a scoreInfo object having the following fields:
+            //    scoreInfo.path -- the path to the score's file
+            //    scoreInfo.aboutText
+            //    scoreInfo.aboutURL
+            // The path setting includes the complete path from the Assistant Performer's "scores" folder
+            // to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
+            // "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
+            // "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
+            // Note that if annotated page(s) are to be used, their path value will include the name of their
+            // folder (e.g. "Song Six/annotated/Song Six (14 pages)").
+            function getScoreInfo(scoreSelectIndex)
             {
-                selected.setAttribute("opacity", "1");
-                window.setTimeout(function()
-                {
-                    selected.setAttribute("opacity", "0");
-                }, 200);
-            }
+                var scoreInfo = {path: "", aboutText: "", aboutURL: ""};
 
-            // goControlClicked is an outer function
-
-            function stopControlClicked()
-            {
-                if(svgControlsState === 'paused')
+                switch(scoreSelectIndex)
                 {
-                    toggleBack(cl.stopControlSelected);
-                    setSvgControlsState('stopped');
-                }
-
-                if(svgControlsState === 'playing')
-                {
-                    toggleBack(cl.stopControlSelected);
-                    setSvgControlsState('stopped');
-                }
-            }
-
-            function setStartControlClicked()
-            {
-                if(svgControlsState === 'stopped')
-                {
-                    setSvgControlsState('settingStart');
-                }
-                else if(svgControlsState === 'settingStart')
-                {
-                    setSvgControlsState('stopped');
-                    player.initTracks();
-                }
-            }
-
-            function setEndControlClicked()
-            {
-                if(svgControlsState === 'stopped')
-                {
-                    setSvgControlsState('settingEnd');
-                }
-                else if(svgControlsState === 'settingEnd')
-                {
-                    setSvgControlsState('stopped');
-                    player.initTracks();
-                }
-            }
-
-            function sendStartToBeginningControlClicked()
-            {
-                if(svgControlsState === 'stopped')
-                {
-                    toggleBack(cl.sendStartToBeginningControlSelected);
-                    score.sendStartMarkerToStart();
-                    score.hideCursor();
-                    player.initTracks();
-                }
-            }
-
-            function sendStopToEndControlClicked()
-            {
-                if(svgControlsState === 'stopped')
-                {
-                    toggleBack(cl.sendStopToEndControlSelected);
-                    score.sendEndMarkerToEnd();
-                    player.initTracks();
-                }
-            }
-
-            if(controlID === "scoreSelect")
-            {
-                outputDeviceSelect.disabled = true;
-                outputDeviceSelect.selectedIndex = 0;
-
-                if(scoreSelect.selectedIndex > 0)
-                {
-                    setScore(scoreSelect.selectedIndex);
-                }
-                else
-                {
-                    setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
-                }
-            }
-
-            /**** controls in options panel ***/
-            if(controlID === "outputDeviceSelect")
-            {
-                setMainOptionsState("toFront"); // enables only the appropriate controls
-            }
-
-            if(controlID === "scoreSelect")
-            {
-                setMainOptionsState("toFront"); // enables only the appropriate controls
-            }
-
-            /*** SVG controls ***/
-            if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
-            {
-                switch(controlID)
-                {
-                    case "goControl":
-                        goControlClicked();
+                    case PIANOLA_MUSIC_SCORE_INDEX:
+                        scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
+                        scoreInfo.aboutText = "about Pianola Music";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
-                    case "stopControl":
-                        stopControlClicked();
+                    case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
+                        scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
+                        scoreInfo.aboutText = "about Pianola Music";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
-                    case "setStartControl":
-                        setStartControlClicked();
+                    case STUDY1_SCORE_INDEX:
+                        scoreInfo.path = "Study 1/Study 1 (scroll)";
+                        scoreInfo.aboutText = "about Study 1";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
                         break;
-                    case "setEndControl":
-                        setEndControlClicked();
+                    case STUDY2_SCORE_INDEX:
+                        scoreInfo.path = "Study 2/Study 2 (scroll)";
+                        scoreInfo.aboutText = "about Study 2";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                         break;
-                    case "sendStartToBeginningControl":
-                        sendStartToBeginningControlClicked();
+                    case STUDY2_2STAVES_SCORE_INDEX:
+                        scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
+                        scoreInfo.aboutText = "about Study 2";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                         break;
-                    case "sendStopToEndControl":
-                        sendStopToEndControlClicked();
+                    case STUDY3_SKETCH1_SCORE_INDEX:
+                        scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
                         break;
-                    case "setConductTimerControl":
-                        setConductTimerControlClicked();
+                    case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
+                        scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
                         break;
-                    case "setConductCreepControl":
-                        setConductCreepControlClicked();
+                    case TOMBEAU1_SCORE_INDEX:
+                        scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
+                        scoreInfo.aboutText = "about Tombeau 1";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+                        break;
+                    case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
+                        scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
+                        scoreInfo.aboutText = "about Erratum Musical I-VIII";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
+                        break;
+                    case THREE_CRASHES_SCORE_INDEX:
+                        scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
+                        scoreInfo.aboutText = "about Three Crashes";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
                         break;
                     default:
                         break;
                 }
+
+                return scoreInfo;
             }
 
-            if(controlID === "gotoOptions")
+            function getPathData(path)
             {
-                deleteSaveLink();
+                var pathData = {}, components;
 
-                if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+                components = path.split("(");
+                if(components[0][components[0].length - 1] !== ' ')
                 {
-                    setSvgControlsState('disabled');
-                    score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+                    alert("Error in pages path string:\nThere must be a space character before the '('");
+                }
+                pathData.basePath = components[0] + "page ";
+
+                // the second search argument is a regular expression for a single ')' character.
+                if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0)
+                {
+                    alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
+                }
+
+                pathData.nPages = parseInt(components[1], 10);
+                if(pathData.nPages === null || pathData.nPages === undefined || pathData.nPages < 1)
+                {
+                    alert("Error in pages path string:\nIllegal number of pages.");
+                }
+
+                return pathData;
+            }
+
+            function setAboutLink(scoreInfo)
+            {
+                globalElements.aboutLinkDiv.style.display = "none";
+                globalElements.startRuntimeButton.style.display = "none";
+
+                if(scoreInfo.aboutURL !== undefined)
+                {
+                    globalElements.aboutLinkDiv.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
                 }
             }
 
-            if(controlID === "speedControlMousemove")
+            function setScoreLoadedState()
             {
-                var speed = speedSliderValue(globalElements.speedControlInput.value);
-                if(player.setSpeed !== undefined)
+                nPagesLoading--;
+                if(nPagesLoading === 0)
                 {
-                    player.setSpeed(speed);
+                    globalElements.waitingForScoreDiv.style.display = "none";
+                    setMainOptionsState("toFront");
                 }
+            }
 
-                if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
+            function setLoadingScoreState()
+            {
+                if(nPagesLoading === 0)
                 {
-                    globalElements.speedControlCheckbox.checked = true;
-                    globalElements.speedControlCheckbox.disabled = true;
+                    globalElements.waitingForScoreDiv.style.display = "block";
+                }
+                nPagesLoading++;
+            }
+
+            function getNewSvgPageElem(pageURL)
+            {
+                var newNode;
+
+                newNode = document.createElement("object");
+
+                newNode.setAttribute("data", pageURL);
+                newNode.setAttribute("type", "image/svg+xml");
+                newNode.setAttribute("class", "svgPage");
+                newNode.addEventListener('load', function() {setScoreLoadedState();});
+
+                return newNode;
+            }
+
+            // Returns the URL of the scores directory. This can either be a file:
+            // e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
+            // served from IIS:
+            // e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // or on the web:
+            // e.g. "https://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+            // Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
+            function getScoresURL()
+            {
+                var documentURL = document.URL,
+                    apIndex = documentURL.search("assistantPerformer.html"),
+                    url = documentURL.slice(0, apIndex) + "scores/";
+
+                return url;
+            }
+
+            function setPages(scoreInfo)
+            {
+                var i, scoresURL, newNode,
+                    svgPagesFrame,
+                    pathData,
+                    pageURL;
+
+                scoresURL = getScoresURL();
+                svgPagesFrame = document.getElementById('svgPagesFrame');
+                svgPagesFrame.innerHTML = "";
+                nPagesLoading = 0;
+
+                if(scoreInfo.path.search("(scroll)") >= 0)
+                {
+                    setLoadingScoreState();
+                    pageURL = scoresURL + scoreInfo.path + ".svg";
+                    newNode = getNewSvgPageElem(pageURL);
+                    svgPagesFrame.appendChild(newNode);
                 }
                 else
                 {
-                    globalElements.speedControlCheckbox.checked = false;
-                    globalElements.speedControlCheckbox.disabled = false;
+                    pathData = getPathData(scoreInfo.path);
+                    for(i = 0; i < pathData.nPages; ++i)
+                    {
+                        setLoadingScoreState();
+                        pageURL = scoresURL + pathData.basePath + (i + 1).toString(10) + ".svg";
+                        newNode = getNewSvgPageElem(pageURL);
+                        svgPagesFrame.appendChild(newNode);
+                    }
                 }
-                globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
             }
 
-            if(controlID === "speedControlCheckboxClick")
+            scoreInfo = getScoreInfo(scoreIndex);
+
+            setAboutLink(scoreInfo);
+
+            setPages(scoreInfo);
+
+            globalElements.svgPagesFrame.scrollTop = 0;
+        }
+
+        // used when the control automatically toggles back
+        // toggleBack('setStartControlSelected')
+        function toggleBack(selected)
+        {
+            selected.setAttribute("opacity", "1");
+            window.setTimeout(function()
             {
-                resetSpeed();
+                selected.setAttribute("opacity", "0");
+            }, 200);
+        }
+
+        // goControlClicked is an outer function
+
+        function stopControlClicked()
+        {
+            if(svgControlsState === 'paused')
+            {
+                toggleBack(cl.stopControlSelected);
+                setSvgControlsState('stopped');
+            }
+
+            if(svgControlsState === 'playing')
+            {
+                toggleBack(cl.stopControlSelected);
+                setSvgControlsState('stopped');
             }
         }
 
-        // functions for adjusting the appearance of the score options
-        showOverRect(overRectID, disabledID)
+        function setStartControlClicked()
         {
-            var overRectElem = document.getElementById(overRectID),
-                disabledElem = document.getElementById(disabledID),
-                disabledOpacity = disabledElem.getAttribute("opacity");
-
-            if(disabledOpacity !== SMOKE)
+            if(svgControlsState === 'stopped')
             {
-                overRectElem.setAttribute("opacity", METAL);
+                setSvgControlsState('settingStart');
+            }
+            else if(svgControlsState === 'settingStart')
+            {
+                setSvgControlsState('stopped');
+                player.initTracks();
             }
         }
-        hideOverRect(overRectID)
-        {
-            var overRect = document.getElementById(overRectID);
 
-            overRect.setAttribute("opacity", GLASS);
+        function setEndControlClicked()
+        {
+            if(svgControlsState === 'stopped')
+            {
+                setSvgControlsState('settingEnd');
+            }
+            else if(svgControlsState === 'settingEnd')
+            {
+                setSvgControlsState('stopped');
+                player.initTracks();
+            }
         }
 
-        // Called when the Start button is clicked.
-        // The score selector sets the array of svgScorePage urls.
-        // The Start button is enabled when a score and MIDI output have been selected.
-        beginRuntime()
+        function sendStartToBeginningControlClicked()
         {
-            function setMIDIDevices(options)
+            if(svgControlsState === 'stopped')
             {
-                var i,
-                    outSelector = document.getElementById("outputDeviceSelect");
+                toggleBack(cl.sendStartToBeginningControlSelected);
+                score.sendStartMarkerToStart();
+                score.hideCursor();
+                player.initTracks();
+            }
+        }
 
-                for(i = 1; i < outSelector.options.length; ++i)
-                {
-                    let outputDevice = outSelector.options[i].outputDevice;
-                    if(outputDevice)
-                    {
-                        let name = outputDevice.name;
-                        outputDevice.close()
-                            .then(() => {console.log("Closed " + name);})
-                            .catch(() => {console.error("Error closing " + name);});
-                    }
-                }
+        function sendStopToEndControlClicked()
+        {
+            if(svgControlsState === 'stopped')
+            {
+                toggleBack(cl.sendStopToEndControlSelected);
+                score.sendEndMarkerToEnd();
+                player.initTracks();
+            }
+        }
 
-                if(outSelector.selectedIndex === 0)
-                {
-                    options.outputDevice = null;
-                }
-                else
-                {
-                    options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
+        if(controlID === "scoreSelect")
+        {
+            if(scoreSelect.selectedIndex > 0)
+            {
+                setScore(scoreSelect.selectedIndex);
+            }
+            else
+            {
+                setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
+            }
+        }
 
-                    let outputDevice = options.outputDevice,
-                        name = outputDevice.name;
+        /**** controls in options panel ***/
+        if(controlID === "scoreSelect")
+        {
+            setMainOptionsState("toFront"); // enables only the appropriate controls
+        }
 
-                    outputDevice.open()
-                        .then(() => {console.log("Opened " + name);})
-                        .catch(() => {console.error("Error opening " + name);});
-                }
+        /*** SVG controls ***/
+        if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
+        {
+            switch(controlID)
+            {
+                case "goControl":
+                    goControlClicked();
+                    break;
+                case "stopControl":
+                    stopControlClicked();
+                    break;
+                case "setStartControl":
+                    setStartControlClicked();
+                    break;
+                case "setEndControl":
+                    setEndControlClicked();
+                    break;
+                case "sendStartToBeginningControl":
+                    sendStartToBeginningControlClicked();
+                    break;
+                case "sendStopToEndControl":
+                    sendStopToEndControlClicked();
+                    break;
+                case "setConductTimerControl":
+                    setConductTimerControlClicked();
+                    break;
+                case "setConductCreepControl":
+                    setConductCreepControlClicked();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if(controlID === "gotoOptions")
+        {
+            deleteSaveLink();
+
+            if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+            {
+                setSvgControlsState('disabled');
+                score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+            }
+        }
+
+        if(controlID === "speedControlMousemove")
+        {
+            var speed = speedSliderValue(globalElements.speedControlInput.value);
+            if(player.setSpeed !== undefined)
+            {
+                player.setSpeed(speed);
             }
 
-            // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
-            function getTracksData(score)
+            if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
             {
-                let tracksData;
-
-                // Get everything except the timeObjects (which have to take account of speed)
-                score.getEmptySystems();
-
-                score.setTracksData();
-
-                // tracksData has a single outputTracks[] attribute containing tracks containing midiChords and midRests
-                tracksData = score.getTracksData();
-
-                // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-                // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
-                // of its track controls is turned on or off.
-                // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
-                // Repainting includes using the correct staff colours, but the score may also update the position of
-                // its start marker (which always starts on a chord) if a track is turned off.
-                tracksControl.init(tracksData.outputTracks);
+                globalElements.speedControlCheckbox.checked = true;
+                globalElements.speedControlCheckbox.disabled = true;
             }
-
-            function setOutputDeviceFunctions(outputDevice)
+            else
             {
-                let allSoundOffMessages = [],
-                    allControllersOffMessages = [];
-
-                function getAllSoundOffMessages(outputDevice)
-                {
-                    var byte1, channelIndex,
-                        CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-                        ALL_SOUND_OFF = constants.CONTROL.ALL_SOUND_OFF;
-
-                    if(outputDevice === residentSynth)
-                    {
-                        allSoundOffMessages.push(new Uint8Array([CONTROL_CHANGE, ALL_SOUND_OFF, 0]));
-                    }
-                    else
-                    {
-                        for(channelIndex = 0; channelIndex < 16; channelIndex++)
-                        {
-                            byte1 = CONTROL_CHANGE + channelIndex;
-                            allSoundOffMessages.push(new Uint8Array([byte1, ALL_SOUND_OFF, 0]));
-                        }
-                    }
-                }
-
-                function getAllControllersOffMessages(outputDevice)
-                {
-                    var byte1, channelIndex,
-                        CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-                        ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF;
-
-                    if(outputDevice === residentSynth)
-                    {
-                        allControllersOffMessages.push(new Uint8Array([CONTROL_CHANGE, ALL_CONTROLLERS_OFF, 0]));
-                    }
-                    else
-                    {
-                        for(channelIndex = 0; channelIndex < 16; channelIndex++)
-                        {
-                            byte1 = CONTROL_CHANGE + channelIndex;
-                            allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-                        }
-                    }
-                }
-
-                getAllSoundOffMessages(outputDevice);
-                getAllControllersOffMessages(outputDevice);
-
-                function setAllChannelSoundOff()
-                {
-                    for(let i = 0; i < allSoundOffMessages.length; i++)
-                    {
-                        this.send(allSoundOffMessages[i], performance.now());
-                    }
-                }
-
-                function setAllChannelControllersOff(trackIsOnArray)
-                {
-                    if(this === residentSynth)
-                    {
-                        this.send(allControllersOffMessages[0], performance.now());
-                    }
-                    else
-                    {
-                        for(let i = 0; i < trackIsOnArray.length; i++)
-                        {
-                            if(trackIsOnArray[i] === true)
-                            {
-                                this.send(allControllersOffMessages[i], performance.now());
-                            }
-                        }
-                    }
-                }
-
-                if(outputDevice !== null)
-                {
-                    outputDevice.setAllChannelSoundOff = setAllChannelSoundOff;
-                    outputDevice.setAllChannelControllersOff = setAllChannelControllersOff;
-                }
+                globalElements.speedControlCheckbox.checked = false;
+                globalElements.speedControlCheckbox.disabled = false;
             }
+            globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
+        }
 
-            function setSpeedControl(tracksControlWidth)
-            {
-                var
-                    speedControlDiv = document.getElementById("speedControlDiv"),
-                    performanceButtonsSVG = document.getElementById("performanceButtonsSVG"),
-                    speedControlSmokeDivWidth = parseInt(globalElements.speedControlSmokeDiv.style.width, 10),
-                    performanceButtonsSVGLeft = parseInt(performanceButtonsSVG.style.left, 10),
-                    margin = Math.round((performanceButtonsSVGLeft - tracksControlWidth - speedControlSmokeDivWidth) / 2),
-                    speedControlDivLeft;
-
-                margin = (margin < 4) ? 4 : margin;
-
-                speedControlDivLeft = tracksControlWidth + margin - 1;
-                performanceButtonsSVGLeft = speedControlDivLeft + speedControlSmokeDivWidth + margin;
-                speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
-                performanceButtonsSVG.style.left = performanceButtonsSVGLeft.toString(10) + "px";
-
-                globalElements.speedControlSmokeDiv.style.display = "none";
-            }
-
-            function setConductingLayer()
-            {
-                var
-                    svgPagesFrame = document.getElementById("svgPagesFrame"),
-                    conductingLayer = document.getElementById("conductingLayer"),
-                    pfWidth = parseInt(svgPagesFrame.style.width, 10),
-                    pfLeft = parseInt(svgPagesFrame.style.left, 10);
-
-                conductingLayer.style.top = svgPagesFrame.style.top;
-                conductingLayer.style.left = "0";
-                conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
-                conductingLayer.style.height = svgPagesFrame.style.height;
-
-                // conducting stops if
-                //     e.clientX <= conductingLimit.left
-                // or  e.clientX >= conductingLimit.right
-                conductingLimit.left = parseInt(conductingLayer.style.left) + 2;
-                conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
-            }
-
-            setMIDIDevices(deviceOptions);
-
-            setOutputDeviceFunctions(deviceOptions.outputDevice);
-
-            // This function can throw an exception
-            // (e.g. if an attempt is made to create an event that has no duration).
-            getTracksData(score);
-
-            setConductingLayer();
-
-            score.sendStartMarkerToStart();
-            score.sendEndMarkerToEnd();
-            score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-
-            player = new Sequence();
-            player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
-
-            tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
-
-            setSpeedControl(tracksControl.width());
-
-            resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
-
-            score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
-
-            setSvgControlsState('stopped');
+        if(controlID === "speedControlCheckboxClick")
+        {
+            resetSpeed();
         }
     }
+
+    // functions for adjusting the appearance of the score options
+    showOverRect(overRectID, disabledID)
+    {
+        var overRectElem = document.getElementById(overRectID),
+            disabledElem = document.getElementById(disabledID),
+            disabledOpacity = disabledElem.getAttribute("opacity");
+
+        if(disabledOpacity !== SMOKE)
+        {
+            overRectElem.setAttribute("opacity", METAL);
+        }
+    }
+    hideOverRect(overRectID)
+    {
+        var overRect = document.getElementById(overRectID);
+
+        overRect.setAttribute("opacity", GLASS);
+    }
+
+    // Called when the Start button is clicked.
+    // The score selector sets the array of svgScorePage urls.
+    // The Start button is enabled when a score and MIDI output have been selected.
+    beginRuntime()
+    {
+        // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
+        function getTracksData(score)
+        {
+            let tracksData;
+
+            // Get everything except the timeObjects (which have to take account of speed)
+            score.getEmptySystems();
+
+            score.setTracksData();
+
+            // tracksData has a single outputTracks[] attribute containing tracks containing midiChords and midRests
+            tracksData = score.getTracksData();
+
+            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
+            // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
+            // of its track controls is turned on or off.
+            // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
+            // Repainting includes using the correct staff colours, but the score may also update the position of
+            // its start marker (which always starts on a chord) if a track is turned off.
+            tracksControl.init(tracksData.outputTracks);
+        }
+
+        function setSpeedControl(tracksControlWidth)
+        {
+            var
+                speedControlDiv = document.getElementById("speedControlDiv"),
+                performanceButtonsSVG = document.getElementById("performanceButtonsSVG"),
+                speedControlSmokeDivWidth = parseInt(globalElements.speedControlSmokeDiv.style.width, 10),
+                performanceButtonsSVGLeft = parseInt(performanceButtonsSVG.style.left, 10),
+                margin = Math.round((performanceButtonsSVGLeft - tracksControlWidth - speedControlSmokeDivWidth) / 2),
+                speedControlDivLeft;
+
+            margin = (margin < 4) ? 4 : margin;
+
+            speedControlDivLeft = tracksControlWidth + margin - 1;
+            performanceButtonsSVGLeft = speedControlDivLeft + speedControlSmokeDivWidth + margin;
+            speedControlDiv.style.left = speedControlDivLeft.toString(10) + "px";
+            performanceButtonsSVG.style.left = performanceButtonsSVGLeft.toString(10) + "px";
+
+            globalElements.speedControlSmokeDiv.style.display = "none";
+        }
+
+        function setConductingLayer()
+        {
+            var
+                svgPagesFrame = document.getElementById("svgPagesFrame"),
+                conductingLayer = document.getElementById("conductingLayer"),
+                pfWidth = parseInt(svgPagesFrame.style.width, 10),
+                pfLeft = parseInt(svgPagesFrame.style.left, 10);
+
+            conductingLayer.style.top = svgPagesFrame.style.top;
+            conductingLayer.style.left = "0";
+            conductingLayer.style.width = (pfLeft + pfWidth + pfLeft).toString(10) + "px";
+            conductingLayer.style.height = svgPagesFrame.style.height;
+
+            // conducting stops if
+            //     e.clientX <= conductingLimit.left
+            // or  e.clientX >= conductingLimit.right
+            conductingLimit.left = parseInt(conductingLayer.style.left) + 2;
+            conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
+        }
+
+        // This function can throw an exception
+        // (e.g. if an attempt is made to create an event that has no duration).
+        getTracksData(score);
+
+        setConductingLayer();
+
+        score.sendStartMarkerToStart();
+        score.sendEndMarkerToEnd();
+        score.moveStartMarkerToTop(globalElements.svgPagesFrame);
+
+        player = new Sequence();
+        player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
+
+        tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
+
+        setSpeedControl(tracksControl.width());
+
+        resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
+
+        score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
+
+        setSvgControlsState('stopped');
+    }
+}
 
 
