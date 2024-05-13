@@ -205,20 +205,6 @@ var
             }
         }
 
-        async function asyncResetResidentSynth()
-        {
-            let name = undefined;
-
-            if(residentSynth)
-            {
-                name = residentSynth.name;
-                await residentSynth.close();
-                console.log("Closed " + name);
-                await residentSynth.open();
-                console.log("Opened " + name);
-            }
-        }
-
         var scoreIndex = globalElements.scoreSelect.selectedIndex;
 
         switch(mainOptionsState)
@@ -235,11 +221,22 @@ var
                     globalElements.aboutLinkDiv.style.display = "block";
                     globalElements.startRuntimeButton.style.display = "initial";
 
+                    deviceOptions.outputDevice = residentSynth;
                     setResidentSynthFunctions(residentSynth);
 
-                    asyncResetResidentSynth();
-
-                    deviceOptions.outputDevice = residentSynth;
+                    // Its important to do the following _after_ user interaction with the GUI.
+                    residentSynth.close()
+                        .then(() =>
+                        {
+                            console.log("Closed ResidentSynth");
+                            residentSynth.open()
+                                .then(() =>
+                                {
+                                    console.log("Opened ResidentSynth");                                    
+                                })
+                                .catch(() => {console.error("Error opening ResidentSynth");});
+                        })
+                        .catch(() => {console.error("Error closing ResidentSynth");});                    
                 }
                 break;
             case "toBack": // set svg controls and score visible
