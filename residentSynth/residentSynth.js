@@ -1629,7 +1629,7 @@ ResSynth.residentSynth = (function(window)
     // See https://github.com/notator/WebMIDISynthHost/issues/24
     // This is called after user interaction with the page.
     // This function sets internal default values for all the synth's commands, and controls in all channels.
-    // As per the Web MIDI API, this function returns a promise that needs to be handled (its async).
+    // As per the Web MIDI API, this function returns a promise (its async).
     ResidentSynth.prototype.open = async function()
     {
         // Create and connect the channel AudioNodes:
@@ -1677,7 +1677,7 @@ ResSynth.residentSynth = (function(window)
     };
 
     // WebMIDIAPI §6.2 -- MIDIPort interface
-    // As per the Web MIDI API, this function returns a promise that needs to be handled (its async).
+    // As per the Web MIDI API, this function returns a promise (its async).
     ResidentSynth.prototype.close = async function()
     {
         if(channelAudioNodes.length > 0)
@@ -1690,7 +1690,6 @@ ResSynth.residentSynth = (function(window)
             }
             channelAudioNodes.finalGainNode.disconnect();
             channelAudioNodes.length = 0;
-            console.log("residentSynth closed.");
         }
     };
 
