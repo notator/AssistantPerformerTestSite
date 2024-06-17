@@ -37,6 +37,20 @@
 		shortStaffNames="1, 2, 3"
 		systemStartBars="1, 7, 13, 19, 25, 31, 38, 44, 50, 56, 62, 68" />
 	<krystals>
+        <!--
+        ACHTUNG:16.06.2024:
+        These are old krystal names.
+        I´ve temporarily created copies of the newly named krystals
+        with the old names in the laptop krystals folder
+        E:\JamesDokumente\Moritz\krystals\krystals
+        so that the Studies will compile on the laptop.
+        When revising Moritz, rename the krystals here with their new names,
+        and delete the copies in the above folder 
+		         old Name                     new Name
+		"12.7_28_74_246.2.perm.krys" <==> "pk4(12)-2.krys"
+		"12.7_28_74_518.3.perm.krys" <==> "pk4(12)-3.krys"
+		"12.7_28_74_518.1.perm.krys" <==> "pk4(12)-1.krys"        
+        -->
 		<krystal
 			name="12.7_28_74_246.2.perm.krys" />
 		<krystal
