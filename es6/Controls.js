@@ -16,13 +16,8 @@ const
     PIANOLA_MUSIC_SCORE_INDEX = 1,
     PIANOLA_MUSIC_3STAVES_SCORE_INDEX = 2,
     STUDY1_SCORE_INDEX = 3,
-    STUDY2_SCORE_INDEX = 4,
-    STUDY2_2STAVES_SCORE_INDEX = 5,
-    STUDY3_SKETCH1_SCORE_INDEX = 6,
-    STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
-    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 8,
-    THREE_CRASHES_SCORE_INDEX = 9,
-    TOMBEAU1_SCORE_INDEX = 10,
+    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 4,
+    THREE_CRASHES_SCORE_INDEX = 5,
 
     SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
@@ -954,7 +949,7 @@ export class Controls
 
             // The scoreSelectIndex argument is the index of the score in the score selector
             // Returns a scoreInfo object having the following fields:
-            //    scoreInfo.path -- the path to the score's file
+            //    scoreInfo.filename -- the score's file name
             //    scoreInfo.aboutText
             //    scoreInfo.aboutURL
             // The path setting includes the complete path from the Assistant Performer's "scores" folder
@@ -970,52 +965,27 @@ export class Controls
                 switch(scoreSelectIndex)
                 {
                     case PIANOLA_MUSIC_SCORE_INDEX:
-                        scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
+                        scoreInfo.filename = "Pianola Music (version 2025)/Pianola Music (version 2025) (scroll).svg";
                         scoreInfo.aboutText = "about Pianola Music";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
                     case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
-                        scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
+                        scoreInfo.filename = "Pianola Music (version 2025) - 3 staves/Pianola Music (version 2025) (scroll).svg";
                         scoreInfo.aboutText = "about Pianola Music";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
                     case STUDY1_SCORE_INDEX:
-                        scoreInfo.path = "Study 1/Study 1 (scroll)";
+                        scoreInfo.filename = "Study 1 (version 2025)/Study 1 (version 2025) (scroll).svg";
                         scoreInfo.aboutText = "about Study 1";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
                         break;
-                    case STUDY2_SCORE_INDEX:
-                        scoreInfo.path = "Study 2/Study 2 (scroll)";
-                        scoreInfo.aboutText = "about Study 2";
-                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
-                        break;
-                    case STUDY2_2STAVES_SCORE_INDEX:
-                        scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
-                        scoreInfo.aboutText = "about Study 2";
-                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
-                        break;
-                    case STUDY3_SKETCH1_SCORE_INDEX:
-                        scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
-                        scoreInfo.aboutText = "about Study 3 Sketch";
-                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                        break;
-                    case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
-                        scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
-                        scoreInfo.aboutText = "about Study 3 Sketch";
-                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                        break;
-                    case TOMBEAU1_SCORE_INDEX:
-                        scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
-                        scoreInfo.aboutText = "about Tombeau 1";
-                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
-                        break;
                     case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
-                        scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
+                        scoreInfo.filename = "Erratum Musical/Erratum Musical (scroll).svg";
                         scoreInfo.aboutText = "about Erratum Musical I-VIII";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
                         break;
                     case THREE_CRASHES_SCORE_INDEX:
-                        scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
+                        scoreInfo.filename = "Three Crashes/Three Crashes (scroll).svg";
                         scoreInfo.aboutText = "about Three Crashes";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
                         break;
@@ -1112,11 +1082,10 @@ export class Controls
                 return url;
             }
 
-            function setPages(scoreInfo)
+            function setPage(scoreInfo)
             {
                 var i, scoresURL, newNode,
                     svgPagesFrame,
-                    pathData,
                     pageURL;
 
                 scoresURL = getScoresURL();
@@ -1124,31 +1093,17 @@ export class Controls
                 svgPagesFrame.innerHTML = "";
                 nPagesLoading = 0;
 
-                if(scoreInfo.path.search("(scroll)") >= 0)
-                {
-                    setLoadingScoreState();
-                    pageURL = scoresURL + scoreInfo.path + ".svg";
-                    newNode = getNewSvgPageElem(pageURL);
-                    svgPagesFrame.appendChild(newNode);
-                }
-                else
-                {
-                    pathData = getPathData(scoreInfo.path);
-                    for(i = 0; i < pathData.nPages; ++i)
-                    {
-                        setLoadingScoreState();
-                        pageURL = scoresURL + pathData.basePath + (i + 1).toString(10) + ".svg";
-                        newNode = getNewSvgPageElem(pageURL);
-                        svgPagesFrame.appendChild(newNode);
-                    }
-                }
+                setLoadingScoreState();
+                pageURL = scoresURL + scoreInfo.filename;
+                newNode = getNewSvgPageElem(pageURL);
+                svgPagesFrame.appendChild(newNode);
             }
 
             scoreInfo = getScoreInfo(scoreIndex);
 
             setAboutLink(scoreInfo);
 
-            setPages(scoreInfo);
+            setPage(scoreInfo);
 
             globalElements.svgPagesFrame.scrollTop = 0;
         }
