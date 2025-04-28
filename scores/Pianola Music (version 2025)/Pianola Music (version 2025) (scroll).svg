@@ -16,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music (version 2025) (scroll)</dc:title>
-				<dc:date>Wednesday 23.04.2025, 20:52:09</dc:date>
+				<dc:date>Monday 28.04.2025, 14:15:15</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -249,7 +249,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		<text
 			class="timeStamp"
 			x="32"
-			y="72">Pianola Music (version 2025) (scroll), Wednesday 23.04.2025, 20:52:08</text>
+			y="72">Pianola Music (version 2025) (scroll), Monday 28.04.2025, 14:15:15</text>
 		<g
 			class="titles">
 			<text
@@ -579,7 +579,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 80 80" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -646,7 +646,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 84 84" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -711,7 +711,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5760">
@@ -797,7 +797,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 91 91" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -885,7 +885,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -995,7 +995,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 121 121" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -1230,7 +1230,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 93 93" />
+										m="0xE0 107 107" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -1459,7 +1459,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 111 111" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -1545,7 +1545,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 91 91" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -1645,7 +1645,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -1812,7 +1812,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 98 98" />
+										m="0xE0 110 110" />
 								</controls>
 								<noteOns
 									msDuration="4608">
@@ -2049,7 +2049,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 67 67" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -2120,7 +2120,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -2379,7 +2379,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 66 66" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -2473,7 +2473,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 111 111" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -2674,7 +2674,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 120 120" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -2944,7 +2944,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -3072,7 +3072,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 111 111" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -3182,7 +3182,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 122 122" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -3253,7 +3253,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 77 77" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -3329,7 +3329,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 71 71" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -3399,7 +3399,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 101 101" />
 								</controls>
 								<noteOns
 									msDuration="3888">
@@ -3493,7 +3493,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 68 68" />
+										m="0xE0 77 77" />
 								</controls>
 								<noteOns
 									msDuration="4320">
@@ -3587,7 +3587,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 119 119" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -3812,7 +3812,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 95 95" />
+										m="0xE0 79 79" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -3940,7 +3940,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -4137,7 +4137,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -4204,7 +4204,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 80 80" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -4290,7 +4290,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 113 113" />
+										m="0xE0 114 114" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -4394,7 +4394,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 90 90" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -4494,7 +4494,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 104 104" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -4606,7 +4606,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 122 122" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -4688,7 +4688,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 65 65" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -5126,7 +5126,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 122 122" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -5301,7 +5301,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -5401,7 +5401,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 81 81" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -5468,7 +5468,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 97 97" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -5584,7 +5584,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 126 126" />
+										m="0xE0 88 88" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -5763,7 +5763,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -5851,7 +5851,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 76 76" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -5985,7 +5985,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -6091,7 +6091,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 117 117" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -6197,7 +6197,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="528">
@@ -6283,7 +6283,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 100 100" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -6363,7 +6363,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 86 86" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -6469,7 +6469,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 90 90" />
+										m="0xE0 109 109" />
 								</controls>
 								<noteOns
 									msDuration="5808">
@@ -6536,7 +6536,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 115 115" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -6980,7 +6980,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -7137,7 +7137,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 126 126" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5760">
@@ -7225,7 +7225,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -7377,7 +7377,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 83 83" />
+										m="0xE0 110 110" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -7538,7 +7538,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -7927,7 +7927,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 87 87" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -7988,7 +7988,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 108 108" />
+										m="0xE0 67 67" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -8080,7 +8080,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 77 77" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -8186,7 +8186,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -8468,7 +8468,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 115 115" />
+										m="0xE0 69 69" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -8535,7 +8535,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="96">
@@ -8684,7 +8684,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="48">
@@ -8782,7 +8782,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 122 122" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -8882,7 +8882,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 92 92" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -8953,7 +8953,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="336">
@@ -9039,7 +9039,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 77 77" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -9328,7 +9328,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 88 88" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -9584,7 +9584,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -9696,7 +9696,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 94 94" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -9869,7 +9869,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 82 82" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1200">
@@ -10074,7 +10074,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 108 108" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -10141,7 +10141,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 95 95" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -10350,7 +10350,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2640">
@@ -10560,7 +10560,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -10640,7 +10640,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 111 111" />
+										m="0xE0 120 120" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -10831,7 +10831,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 94 94" />
 								</controls>
 								<noteOns
 									msDuration="3024">
@@ -11018,7 +11018,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 81 81" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -11085,7 +11085,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -11273,7 +11273,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 97 97" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -11383,7 +11383,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 91 91" />
+										m="0xE0 114 114" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -11471,7 +11471,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 105 105" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -11563,7 +11563,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -11725,7 +11725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 68 68" />
+										m="0xE0 107 107" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -11858,7 +11858,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 103 103" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -12067,7 +12067,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="336">
@@ -12143,7 +12143,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -12312,7 +12312,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 96 96" />
 								</controls>
 								<noteOns
 									msDuration="2352">
@@ -12406,7 +12406,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -12518,7 +12518,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 80 80" />
 								</controls>
 								<noteOns
 									msDuration="2688">
@@ -12585,7 +12585,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -12652,7 +12652,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 92 92" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -12919,7 +12919,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 113 113" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -13084,7 +13084,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 76 76" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2640">
@@ -13227,7 +13227,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 98 98" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -13319,7 +13319,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 64 64" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -13450,7 +13450,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 86 86" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5280">
@@ -13572,7 +13572,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 100 100" />
 								</controls>
 								<noteOns
 									msDuration="4320">
@@ -13660,7 +13660,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 111 111" />
 								</controls>
 								<noteOns
 									msDuration="3840">
@@ -13754,7 +13754,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -13917,7 +13917,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -14017,7 +14017,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -14084,7 +14084,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 96 96" />
+										m="0xE0 112 112" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -14212,7 +14212,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 65 65" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -14348,7 +14348,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 77 77" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -14419,7 +14419,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 74 74" />
 								</controls>
 								<noteOns
 									msDuration="720">
@@ -14507,7 +14507,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 93 93" />
+										m="0xE0 102 102" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -14781,7 +14781,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 103 103" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -15058,7 +15058,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -15158,7 +15158,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 100 100" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -15225,7 +15225,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 119 119" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -15320,7 +15320,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 125 125" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -15406,7 +15406,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 95 95" />
+										m="0xE0 78 78" />
 								</controls>
 								<noteOns
 									msDuration="720">
@@ -15604,7 +15604,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -15671,7 +15671,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 115 115" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -16030,7 +16030,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 97 97" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -16136,7 +16136,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 115 115" />
 								</controls>
 								<noteOns
 									msDuration="3840">
@@ -16234,7 +16234,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 103 103" />
 								</controls>
 								<noteOns
 									msDuration="4320">
@@ -16295,7 +16295,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 65 65" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5280">
@@ -16430,7 +16430,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -16491,7 +16491,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 86 86" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -16789,7 +16789,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4752">
@@ -16889,7 +16889,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -17001,7 +17001,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 123 123" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -17215,7 +17215,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 113 113" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -17421,7 +17421,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -17492,7 +17492,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 113 113" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2352">
@@ -17761,7 +17761,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 74 74" />
 								</controls>
 								<noteOns
 									msDuration="336">
@@ -18004,7 +18004,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 103 103" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -18145,7 +18145,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 92 92" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -18267,7 +18267,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 101 101" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -18338,7 +18338,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 83 83" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -18466,7 +18466,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -18730,7 +18730,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 76 76" />
+										m="0xE0 86 86" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -18810,7 +18810,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -18908,7 +18908,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="4752">
@@ -19008,7 +19008,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="3024">
@@ -19403,7 +19403,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 97 97" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -19554,7 +19554,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 91 91" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="2640">
@@ -19659,7 +19659,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 68 68" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="720">
@@ -19726,7 +19726,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -19812,7 +19812,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -19924,7 +19924,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2160">
@@ -19991,7 +19991,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 80 80" />
+										m="0xE0 74 74" />
 								</controls>
 								<noteOns
 									msDuration="1200">
@@ -20079,7 +20079,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 116 116" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2400">
@@ -20319,7 +20319,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -20736,7 +20736,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -20848,7 +20848,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -20940,7 +20940,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -21181,7 +21181,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 111 111" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -21252,7 +21252,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 125 125" />
+										m="0xE0 84 84" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -21352,7 +21352,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 69 69" />
+										m="0xE0 76 76" />
 								</controls>
 								<noteOns
 									msDuration="48">
@@ -21495,7 +21495,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="96">
@@ -21717,7 +21717,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 76 76" />
 								</controls>
 								<noteOns
 									msDuration="528">
@@ -21805,7 +21805,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 83 83" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -21870,7 +21870,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 96 96" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -21956,7 +21956,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -22056,7 +22056,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -22117,7 +22117,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 108 108" />
 								</controls>
 								<noteOns
 									msDuration="4608">
@@ -22251,7 +22251,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 97 97" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -22455,7 +22455,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 93 93" />
+										m="0xE0 114 114" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -22623,7 +22623,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 85 85" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -22728,7 +22728,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -22799,7 +22799,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 75 75" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -22946,7 +22946,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="2400">
@@ -23168,7 +23168,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -23588,7 +23588,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 89 89" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -23777,7 +23777,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 100 100" />
+										m="0xE0 114 114" />
 								</controls>
 								<noteOns
 									msDuration="528">
@@ -23977,7 +23977,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 79 79" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -24083,7 +24083,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -24150,7 +24150,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 103 103" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -24284,7 +24284,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 65 65" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -24422,7 +24422,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -24540,7 +24540,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 96 96" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -24650,7 +24650,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -24848,7 +24848,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -25095,7 +25095,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 96 96" />
+										m="0xE0 91 91" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -25371,7 +25371,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -25499,7 +25499,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -25637,7 +25637,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -25825,7 +25825,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -25935,7 +25935,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 76 76" />
+										m="0xE0 77 77" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -26378,7 +26378,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="3888">
@@ -26445,7 +26445,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 80 80" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -26531,7 +26531,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -26659,7 +26659,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 93 93" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -26945,7 +26945,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 112 112" />
+										m="0xE0 107 107" />
 								</controls>
 								<noteOns
 									msDuration="1344">
@@ -27132,7 +27132,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 117 117" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -27338,7 +27338,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 116 116" />
+										m="0xE0 122 122" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -27670,7 +27670,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 100 100" />
+										m="0xE0 82 82" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -27971,7 +27971,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 65 65" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -28089,7 +28089,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 93 93" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -28160,7 +28160,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -28353,7 +28353,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="2688">
@@ -28420,7 +28420,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 112 112" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -28518,7 +28518,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -28767,7 +28767,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 76 76" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -28838,7 +28838,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -28996,7 +28996,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 82 82" />
+										m="0xE0 98 98" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -29083,7 +29083,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 112 112" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -29458,7 +29458,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 108 108" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -29552,7 +29552,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -29967,7 +29967,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 66 66" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -30043,7 +30043,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 103 103" />
+										m="0xE0 96 96" />
 								</controls>
 								<noteOns
 									msDuration="4800">
@@ -30110,7 +30110,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 65 65" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -30251,7 +30251,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -30351,7 +30351,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -30559,7 +30559,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 117 117" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -30677,7 +30677,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 123 123" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -30744,7 +30744,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -30845,7 +30845,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -31046,7 +31046,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 86 86" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -31152,7 +31152,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 94 94" />
+										m="0xE0 83 83" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -31264,7 +31264,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -31352,7 +31352,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 87 87" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -31511,7 +31511,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 66 66" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -31737,7 +31737,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 122 122" />
 								</controls>
 								<noteOns
 									msDuration="5808">
@@ -31916,7 +31916,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 121 121" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -32154,7 +32154,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 107 107" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -32335,7 +32335,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -32519,7 +32519,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 103 103" />
+										m="0xE0 93 93" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -32590,7 +32590,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 108 108" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -32894,7 +32894,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 94 94" />
+										m="0xE0 110 110" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -33070,7 +33070,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -33146,7 +33146,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 101 101" />
+										m="0xE0 88 88" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -33280,7 +33280,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -33553,7 +33553,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 118 118" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -33740,7 +33740,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 113 113" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -33822,7 +33822,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 109 109" />
 								</controls>
 								<noteOns
 									msDuration="1344">
@@ -33922,7 +33922,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 112 112" />
+										m="0xE0 117 117" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -34026,7 +34026,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 121 121" />
+										m="0xE0 67 67" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -34154,7 +34154,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 119 119" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -34307,7 +34307,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -34368,7 +34368,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 96 96" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3888">
@@ -34709,7 +34709,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -34776,7 +34776,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 93 93" />
+										m="0xE0 67 67" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -35040,7 +35040,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -35158,7 +35158,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 99 99" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -35286,7 +35286,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 73 73" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -35459,7 +35459,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3072">
@@ -35544,7 +35544,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 88 88" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -35630,7 +35630,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 107 107" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -35789,7 +35789,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="6912">
@@ -35876,7 +35876,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -35952,7 +35952,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 90 90" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -36034,7 +36034,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 84 84" />
 								</controls>
 								<noteOns
 									msDuration="5760">
@@ -36105,7 +36105,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 94 94" />
+										m="0xE0 99 99" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -36345,7 +36345,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 87 87" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -36543,7 +36543,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 97 97" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5280">
@@ -36641,7 +36641,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 98 98" />
+										m="0xE0 70 70" />
 								</controls>
 								<noteOns
 									msDuration="4320">
@@ -36747,7 +36747,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="3840">
@@ -36859,7 +36859,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 72 72" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -36957,7 +36957,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -37024,7 +37024,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 109 109" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -37106,7 +37106,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 124 124" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -37173,7 +37173,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 125 125" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -37277,7 +37277,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 105 105" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -37481,7 +37481,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 117 117" />
 								</controls>
 								<noteOns
 									msDuration="720">
@@ -37552,7 +37552,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 99 99" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -37619,7 +37619,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 117 117" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -37725,7 +37725,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -37853,7 +37853,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -38160,7 +38160,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 82 82" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4752">
@@ -38278,7 +38278,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2640">
@@ -38378,7 +38378,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 79 79" />
 								</controls>
 								<noteOns
 									msDuration="5280">
@@ -38439,7 +38439,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 78 78" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -38513,7 +38513,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 109 109" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -38669,7 +38669,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 103 103" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -38784,7 +38784,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 106 106" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -39093,7 +39093,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 117 117" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -39181,7 +39181,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 115 115" />
 								</controls>
 								<noteOns
 									msDuration="1344">
@@ -39252,7 +39252,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2352">
@@ -39364,7 +39364,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 120 120" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -39458,7 +39458,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 90 90" />
 								</controls>
 								<noteOns
 									msDuration="2688">
@@ -39525,7 +39525,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 66 66" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -39617,7 +39617,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 91 91" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -39844,7 +39844,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 82 82" />
 								</controls>
 								<noteOns
 									msDuration="3024">
@@ -39942,7 +39942,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4752">
@@ -40089,7 +40089,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 105 105" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -40183,7 +40183,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2160">
@@ -40286,7 +40286,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 119 119" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -40414,7 +40414,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -40997,7 +40997,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 79 79" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -41085,7 +41085,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 75 75" />
 								</controls>
 								<noteOns
 									msDuration="2400">
@@ -41152,7 +41152,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 87 87" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1200">
@@ -41264,7 +41264,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 123 123" />
+										m="0xE0 112 112" />
 								</controls>
 								<noteOns
 									msDuration="2160">
@@ -41350,7 +41350,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 105 105" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -41417,7 +41417,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 106 106" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -41673,7 +41673,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -41901,7 +41901,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 106 106" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -42291,7 +42291,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 115 115" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -42356,7 +42356,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -42604,7 +42604,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="528">
@@ -42732,7 +42732,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -42808,7 +42808,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 122 122" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="96">
@@ -42875,7 +42875,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 107 107" />
+										m="0xE0 122 122" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -42975,7 +42975,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 110 110" />
 								</controls>
 								<noteOns
 									msDuration="48">
@@ -43046,7 +43046,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 87 87" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -43128,7 +43128,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -43216,7 +43216,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 97 97" />
 								</controls>
 								<noteOns
 									msDuration="336">
@@ -43287,7 +43287,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 91 91" />
+										m="0xE0 71 71" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -43379,7 +43379,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -43601,7 +43601,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 122 122" />
+										m="0xE0 79 79" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -44099,7 +44099,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -44185,7 +44185,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 100 100" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -44356,7 +44356,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 121 121" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -44454,7 +44454,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 126 126" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -44536,7 +44536,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 84 84" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="48">
@@ -44670,7 +44670,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 81 81" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="96">
@@ -44774,7 +44774,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 94 94" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -44886,7 +44886,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="528">
@@ -45084,7 +45084,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -45145,7 +45145,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 73 73" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -45227,7 +45227,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 113 113" />
+										m="0xE0 109 109" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -45288,7 +45288,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 87 87" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4608">
@@ -45545,7 +45545,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 103 103" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="240">
@@ -45645,7 +45645,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 116 116" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -45952,7 +45952,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="720">
@@ -46090,7 +46090,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -46224,7 +46224,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 125 125" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2160">
@@ -46291,7 +46291,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 80 80" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1200">
@@ -46397,7 +46397,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="2400">
@@ -46509,7 +46509,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 64 64" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -46597,7 +46597,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 94 94" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -46679,7 +46679,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 72 72" />
+										m="0xE0 81 81" />
 								</controls>
 								<noteOns
 									msDuration="3840">
@@ -46750,7 +46750,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 112 112" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -46897,7 +46897,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 71 71" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -46989,7 +46989,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 74 74" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -47099,7 +47099,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 121 121" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -47175,7 +47175,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 103 103" />
+										m="0xE0 113 113" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -47287,7 +47287,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 81 81" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2160">
@@ -47419,7 +47419,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 69 69" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -47717,7 +47717,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="5184">
@@ -47839,7 +47839,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 79 79" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1680">
@@ -47906,7 +47906,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 91 91" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -48018,7 +48018,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2688">
@@ -48112,7 +48112,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="1008">
@@ -48210,7 +48210,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 94 94" />
 								</controls>
 								<noteOns
 									msDuration="2352">
@@ -48281,7 +48281,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 94 94" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1344">
@@ -48462,7 +48462,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 99 99" />
 								</controls>
 								<noteOns
 									msDuration="336">
@@ -48566,7 +48566,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 106 106" />
 								</controls>
 								<noteOns
 									msDuration="3024">
@@ -48699,7 +48699,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -48779,7 +48779,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 76 76" />
 								</controls>
 								<noteOns
 									msDuration="4032">
@@ -48846,7 +48846,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -48993,7 +48993,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 111 111" />
 								</controls>
 								<noteOns
 									msDuration="3696">
@@ -49054,7 +49054,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4224">
@@ -49136,7 +49136,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 95 95" />
 								</controls>
 								<noteOns
 									msDuration="5280">
@@ -49236,7 +49236,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 90 90" />
 								</controls>
 								<noteOns
 									msDuration="2640">
@@ -49301,7 +49301,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 86 86" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="4752">
@@ -49553,7 +49553,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 101 101" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -49724,7 +49724,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 85 85" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="432">
@@ -49806,7 +49806,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 88 88" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -49994,7 +49994,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 84 84" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="144">
@@ -50305,7 +50305,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 90 90" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -50372,7 +50372,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 117 117" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -50729,7 +50729,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 89 89" />
+										m="0xE0 90 90" />
 								</controls>
 								<noteOns
 									msDuration="1296">
@@ -50817,7 +50817,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3840">
@@ -50939,7 +50939,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="4320">
@@ -51298,7 +51298,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 96 96" />
 								</controls>
 								<noteOns
 									msDuration="6336">
@@ -51384,7 +51384,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 102 102" />
+										m="0xE0 119 119" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -51449,7 +51449,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 96 96" />
 								</controls>
 								<noteOns
 									msDuration="5760">
@@ -51516,7 +51516,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 74 74" />
+										m="0xE0 88 88" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -51621,7 +51621,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 84 84" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -51966,7 +51966,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 85 85" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -52100,7 +52100,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3072">
@@ -52267,7 +52267,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 89 89" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -52367,7 +52367,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -52749,7 +52749,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 97 97" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -52829,7 +52829,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 105 105" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -53111,7 +53111,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 90 90" />
 								</controls>
 								<noteOns
 									msDuration="3888">
@@ -53187,7 +53187,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1536">
@@ -53368,7 +53368,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 80 80" />
+										m="0xE0 93 93" />
 								</controls>
 								<noteOns
 									msDuration="2112">
@@ -53496,7 +53496,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 118 118" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -53578,7 +53578,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 68 68" />
 								</controls>
 								<noteOns
 									msDuration="1920">
@@ -53678,7 +53678,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 118 118" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1344">
@@ -53855,7 +53855,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -54061,7 +54061,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 115 115" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -54390,7 +54390,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 98 98" />
+										m="0xE0 87 87" />
 								</controls>
 								<noteOns
 									msDuration="1728">
@@ -54472,7 +54472,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2016">
@@ -54584,7 +54584,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 114 114" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2592">
@@ -54684,7 +54684,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 83 83" />
+										m="0xE0 71 71" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -54788,7 +54788,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 69 69" />
+										m="0xE0 106 106" />
 								</controls>
 								<noteOns
 									msDuration="2304">
@@ -54874,7 +54874,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 118 118" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -54941,7 +54941,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 112 112" />
 								</controls>
 								<noteOns
 									msDuration="3168">
@@ -55040,7 +55040,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 66 66" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -55138,7 +55138,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 86 86" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -55266,7 +55266,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 69 69" />
+										m="0xE0 110 110" />
 								</controls>
 								<noteOns
 									msDuration="864">
@@ -55342,7 +55342,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 80 80" />
 								</controls>
 								<noteOns
 									msDuration="288">
@@ -55407,7 +55407,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 67 67" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="3456">
@@ -55632,7 +55632,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 105 105" />
 								</controls>
 								<noteOns
 									msDuration="1584">
@@ -55904,7 +55904,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 70 70" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -56146,7 +56146,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 94 94" />
 								</controls>
 								<noteOns
 									msDuration="384">
@@ -56280,7 +56280,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 116 116" />
+										m="0xE0 72 72" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -56368,7 +56368,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 71 71" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="672">
@@ -56435,7 +56435,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 99 99" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="192">
@@ -56547,7 +56547,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="576">
@@ -56800,7 +56800,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 83 83" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1152">
@@ -56895,7 +56895,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 86 86" />
 								</controls>
 								<noteOns
 									msDuration="768">
@@ -56975,7 +56975,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 108 108" />
+										m="0xE0 98 98" />
 								</controls>
 								<noteOns
 									msDuration="96">
@@ -57093,7 +57093,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 104 104" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="1056">
@@ -57191,7 +57191,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="960">
@@ -57328,7 +57328,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 78 78" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2880">
@@ -57487,7 +57487,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 127 127" />
+										m="0xE0 64 64" />
 								</controls>
 								<noteOns
 									msDuration="3360">
@@ -57574,7 +57574,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 76 76" />
+										m="0xE0 80 80" />
 								</controls>
 								<noteOns
 									msDuration="480">
@@ -57727,7 +57727,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 124 124" />
+										m="0xE0 112 112" />
 								</controls>
 								<noteOns
 									msDuration="5760">
@@ -57819,7 +57819,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 92 92" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="2400">
@@ -57931,7 +57931,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 120 120" />
+										m="0xE0 125 125" />
 								</controls>
 								<noteOns
 									msDuration="1440">
@@ -58041,7 +58041,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							<midiChord>
 								<controls>
 									<msg
-										m="0xE0 110 110" />
+										m="0xE0 127 127" />
 								</controls>
 								<noteOns
 									msDuration="960">

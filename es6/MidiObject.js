@@ -652,21 +652,8 @@ function _getMoments(scoreMidiElem)
 
 class MidiObject
 {
-	constructor(scoreMidiElem)
+	constructor()
 	{
-		let moments = _getMoments(scoreMidiElem);
-
-		// moments is an ordered array of Moment objects.
-		// A Moment is a list of logically synchronous Messages.
-		// The msDurationInScore and msPositionInScore properties are not changed by the global speed option!
-		// These values are used, but not changed, either when moving Markers about or during performances.)
-		Object.defineProperty(this, "moments", { value: moments, writable: false });
-		Object.defineProperty(this, "msDurationInScore", { value: moments.msDurationInScore, writable: false });
-		//Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
-
-		// used at runtime
-		Object.defineProperty(this, "currentMoment", { value: moments[0], writable: true });
-		Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
 	}
 
 	/***** The following functions are defined for both MidiChords and MidiRests *****************/
@@ -725,24 +712,130 @@ class MidiObject
 	}
 }
 
-export class MidiChord extends MidiObject
+export class MidiChord
 {
-	// A MidiChord contains a private array of Moments containing all
-	// the midi messages required for playing an (ornamented) chord.
-	// A Moment is a collection of logically synchronous MIDI Messages.
-	constructor(scoreMidiElem)
+	constructor(midiChordElem)
 	{
-		super(scoreMidiElem);
+		function getMsgfromElem(msgElem)
+		{
+			function getUInt8Msg(bytes)
+			{
+				var msg;
+
+				switch(bytes.length)
+				{
+					case 1:
+						msg = new Message(bytes[0]);
+						break;
+					case 2:
+						msg = new Message(bytes[0], bytes[1]);
+						break;
+					case 3:
+						msg = new Message(bytes[0], bytes[1], bytes[2]);
+						break;
+					default:
+						//msg = new SysExMessage(bytes);
+						throw "Unknown Message type.\n\n(The AssistantPerformer does not support SysExMessages.";
+				}
+				return msg;
+			}
+
+			let UInt8Msg = undefined, msDuration = 0;
+			if(msgElem.nodeName === "msg")
+			{
+				let msgStr = msgElem.getAttribute("m");
+				let byteStrs = msgStr.split(' ');
+				let bytes = [], byteStr, byte;
+				for(let j = 0; j < byteStrs.length; ++j)
+				{
+					byteStr = byteStrs[j];
+					if(byteStr.indexOf("0x") >= 0)
+					{
+						byte = parseInt(byteStr, 16);
+					}
+					else
+					{
+						byte = parseInt(byteStr, 10);
+					}
+					bytes.push(byte);
+				}
+				UInt8Msg = getUInt8Msg(bytes);
+
+				let msgMsDurAttr = msgElem.getAttribute("msDur");
+				if(msgMsDurAttr !== null)
+				{
+					msDuration = parseInt(msgMsDurAttr, 10);
+				}					
+			}
+			
+			return {UInt8Msg, msDuration};
+		}
+
+		let msgs = [], midiChordMsDuration = 0,
+		midiChordChildren = midiChordElem.children;
+
+		for(let i=0; i < midiChordChildren.length; ++i)
+		{
+			let midiChordChildElem = midiChordChildren[i],
+			msgElems = midiChordChildElem.children;
+			switch(midiChordChildElem.nodeName)
+			{ 				
+				case "controls":
+				{
+					for(let j = 0; j < msgElems.length; ++j)
+					{
+						msgs.push(getMsgfromElem(msgElems[j]));
+					}
+					break;
+				}
+				case "noteOns":
+				{
+					midiChordMsDuration += parseInt(midiChordChildElem.getAttribute("msDuration"));
+					for(let j = 0; j < msgElems.length; ++j)
+					{
+						let msMsg = getMsgfromElem(msgElems[j]);
+						msgs.push(msMsg);
+					}
+					break;
+				}
+				case "envelope":
+				{
+					for(let j = 0; j < msgElems.length; ++j)
+					{
+						let msMsg = getMsgfromElem(msgElems[j]);
+						midiChordMsDuration += msMsg.msDuration;
+						msgs.push(msMsg);
+					}
+					break;
+				}
+				case "noteOffs":
+				{
+					for(let j = 0; j < msgElems.length; ++j)
+					{
+						msgs.push(getMsgfromElem(msgElems[j]));
+					}
+					break;
+				}
+				default:
+					throw("unknown element type");
+			}
+		}
+
+		Object.defineProperty(this, "midiMsgs", { value: msgs, writable: false });
+		Object.defineProperty(this, "msDurationInScore", { value: midiChordMsDuration, writable: false });
 	}
+
+
+
+
 }
 
-export class MidiRest extends MidiObject
+export class MidiRest
 {
-	// A MidiRest is functionally identical to a MidiChord.
-	// Use instanceof to distinguish between the two.
-	constructor(scoreMidiElem)
+	constructor(midiRestElem)
 	{
-		super(scoreMidiElem);
+		let msDurationInScore = midiRestElem.GetAttribute("MsDuration");
+		Object.defineProperty(this, "msDurationInScore", { value: msDurationInScore, writable: false });
 	}
 }
 
