@@ -7,7 +7,7 @@ class Moment
 
 	// Moment constructor
 	// The moment.msPositionInChord is the position of the moment wrt its MidiChord or MidiRest.
-	// it is initially set to the value sored in the score, but changes if the performance speed is not 100%.
+	// it is initially set to the value stored in the score, but changes if the performance speed is not 100%.
 	// During performances (when the absolute DOMHRT time is known) moment.msPositionInChord is used, with
 	// the msPosition of the containing MidiChord or MidiRest, to set moment.timestamp. 
 	constructor(msPositionInChord)

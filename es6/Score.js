@@ -1334,35 +1334,17 @@ let numberOfTracks = 0,
 
 			function getVoiceTimeObjects()
 			{
-
-				//function getStaffElems(systemElem)
-				//{
-				//	var staffElems = systemElem.getElementsByClassName("staff"),
-				//		//inputStaffElems = systemElem.getElementsByClassName("inputStaff"),
-				//		i, staffElems = [];
-				//
-				//	for(i = 0; i < staffElems.length; ++i)
-				//	{
-				//		staffElems.push(staffElems[i]);
-				//	}
-				//	//for(i = 0; i < inputStaffElems.length; ++i)
-				//	//{
-				//	//	staffElems.push(inputStaffElems[i]);
-				//	//}
-				//	return staffElems;
-				//}
-
 				function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
 				{
 					var noteObjectElems, noteObjectClass,
 						timeObjects = [], noteObjectAlignment,
-						interpretations = [],
-						i, j, k, noteObjectElem, noteObjectChildren,
-						scoreMidiElem;
+						i, j, k, noteObjectElem, noteObjectChildren;
 
 					noteObjectElems = voiceElem.children;
 					for(i = 0; i < noteObjectElems.length; ++i)
 					{
+						let timeObject = [];
+
 						noteObjectElem = noteObjectElems[i];
 						noteObjectClass = noteObjectElem.getAttribute('class');
 						// noteObjectAlignment will be null if this is not a chord or rest
@@ -1378,7 +1360,7 @@ let numberOfTracks = 0,
 									let midiChordsChildren = noteObjectChildren[j].children;
 									for (k = 0; k < midiChordsChildren.length; ++k)
 									{
-										interpretations.push(new MidiChord(midiChordsChildren[k], systemIndex));
+										timeObject.push(new MidiChord(midiChordsChildren[k], systemIndex));
 									} 
 									break;
 								}
@@ -1387,22 +1369,22 @@ let numberOfTracks = 0,
 									let midiRestsChildren = noteObjectChildren[j].children;
 									for (k = 0; k < midiRestsChildren.length; ++k)
 									{
-										interpretations.push(new MidiRest(midiRestsChildren[k], systemIndex)); // see MidiChord constructor.
+										timeObject.push(new MidiRest(midiRestsChildren[k], systemIndex)); // see MidiChord constructor.
 									}
 									break;
 								}
 							}
 
-							if (interpretations[0].msDurationInScore < 1)
+							if (timeObject[0].msDurationInScore < 1)
 							{
 								throw "Error: The score contains chords having zero duration!";
 							}
 
 							if (noteObjectAlignment !== null)
 							{
-								interpretations[0].alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+								timeObject[0].alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
 							}
-							timeObjects.push(interpretations);
+							timeObjects.push(timeObject);
 						}
 					}
 
@@ -1446,7 +1428,7 @@ let numberOfTracks = 0,
 						voiceElem = voiceElems[voiceIndex];
 						voice = staff.voices[voiceIndex];
 						voice.timeObjects = getTimeObjects(systemIndex, voiceElem, viewBoxScale1);
-						if(voice.timeObjects[0].alignment !== undefined)  // is undefined if the voice is invisible
+						if(voice.timeObjects[0][0].alignment !== undefined)  // is undefined if the voice is invisible
 						{
 							voice.graphicElements = getGraphicElements(systemIndex, voiceElem); // will be used to set opacity when the voice is disabled
 							if(isFirstVoiceInStaff === true)
@@ -1513,7 +1495,7 @@ let numberOfTracks = 0,
 				function setMsPositions(systems)
 				{
 					var nStaves, staffIndex, nVoices, voiceIndex, nSystems, systemIndex, msPosition,
-						timeObject, timeObjects, nTimeObjects, tIndex;
+						timeObject0, timeObjects, nTimeObjects, tIndex;
 
 					nSystems = systems.length;
 					nStaves = systems[0].staves.length;
@@ -1531,14 +1513,14 @@ let numberOfTracks = 0,
 									nTimeObjects = timeObjects.length;
 									for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
 									{
-										timeObject = timeObjects[tIndex];
+										timeObject0 = timeObjects[tIndex][0]; // default interpretation object
 
-										if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
+										if(timeObject0 instanceof MidiChord || timeObject0 instanceof MidiRest)
 										{
-											Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
+											Object.defineProperty(timeObject0, "msPositionInScore", { value: msPosition, writable: false });
 										}
 
-										msPosition += timeObject.msDurationInScore;
+										msPosition += timeObject0.msDurationInScore;
 									}
 								}
 							}
