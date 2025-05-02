@@ -1,10 +1,9 @@
 import { Message } from "./Message.js";
 import { UNDEFINED_TIMESTAMP, Moment } from "./Moment.js";
 
-// returns strongly classed Moment objects containing strongly classed Message objects
-// Each moments array is an ordered array of Moment objects.
+// Returns an ordered array of strongly classed Moment objects.
 // Each Moment is a strongly classed object containing strongly classed Message objects.
-function _getMoments(scoreMidiChordElem)
+function _getMoments(midiChordElem)
 {
 	function getMsg(bytes)
 	{
@@ -109,11 +108,11 @@ function _getMoments(scoreMidiChordElem)
 
 	let scoreMidiChordChildren;
 
-	if(scoreMidiChordElem !== undefined)
+	if(midiChordElem !== undefined)
 	{
-		scoreMidiChordChildren = scoreMidiChordElem.children;
+		scoreMidiChordChildren = midiChordElem.children;
 	}
-	if(!(scoreMidiChordElem && scoreMidiChordChildren))
+	if(!(midiChordElem && scoreMidiChordChildren))
 	{
 		throw new Error("Illegal argument");
 	}
@@ -169,9 +168,20 @@ function _getMoments(scoreMidiChordElem)
 
 class MidiObject
 {
-	constructor(scoreMidiChordElem)
+	constructor(midiObjectElem)
 	{
-		let moments = _getMoments(scoreMidiChordElem);
+		let moments = [];
+
+		if (midiObjectElem.nodeName === "midiChord")
+		{
+			moments = _getMoments(midiObjectElem);
+		}
+		else if (midiObjectElem.nodeName === "midiRest")
+		{
+			let moment = new Moment(0); // There are no messages in the moment.messages array.
+			moments.push(moment);
+			moments.msDurationInScore = parseInt(midiObjectElem.GetAttribute("msDuration"));
+		}
 
      	// Each moments array is an ordered array of Moment objects.
 		// A Moment is a list of logically synchronous Messages.
@@ -179,7 +189,6 @@ class MidiObject
 		// These values are used, but not changed, either when moving Markers about or during performances.)
 		Object.defineProperty(this, "moments", { value: moments, writable: false });
 		Object.defineProperty(this, "msDurationInScore", { value: moments.msDurationInScore, writable: false });
-		//Object.defineProperty(that, "msPositionInScore", { value: 0, writable: true });
 
 		// used at runtime
 		Object.defineProperty(this, "currentMoment", { value: moments[0], writable: true });
@@ -188,8 +197,8 @@ class MidiObject
 
 	/***** The following functions are defined for both MidiChords and MidiRests *****************/
 
-	// The chord must be at or straddle the start marker.
-	// This function sets the chord to the state it should have when a performance starts.
+	// The chord or rest must be at or straddle the start marker.
+	// This function sets the chord or rest to the state it should have when a performance starts.
 	// this.currentMoment is set to the first moment at or after startMarkerMsPositionInScore.
 	// this.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore. 
 	setToStartMarker(startMarkerMsPositionInScore)
@@ -245,11 +254,11 @@ class MidiObject
 export class MidiChord extends MidiObject
 {
 	// A MidiChord contains a private array of Moments containing all
-	// the midi messages required for playing an (ornamented) chord.
+	// the midi messages required for playing the chord (including a possible envelope).
 	// A Moment is a collection of logically synchronous MIDI Messages.
-	constructor(scoreMidiChordElem)
+	constructor(midiChordElem)
 	{
-		super(scoreMidiChordElem);
+		super(midiChordElem);
 	}
 }
 
@@ -257,9 +266,11 @@ export class MidiRest extends MidiObject
 {
 	// A MidiRest is functionally identical to a MidiChord.
 	// Use instanceof to distinguish between the two.
-	constructor(scoreMidiElem)
+	// However, MidiRest.moments always contains a single Moment,
+	// whose messages array is empty.
+	constructor(midiRestElem)
 	{
-		super(scoreMidiElem);
+		super(midiRestElem);
 	}
 }
 
