@@ -1326,12 +1326,9 @@ let numberOfTracks = 0,
 			staffIndex, nStaves, staff,
 			sysIndex, nSystems = systems.length, system, systemElem;
 
-		// Gets the chord and rest timeObjects for the voices, and
-		// the barline timeObjects for each system. 
+		// Gets the chord, rest and barline timeObjects for the voices in each system. 
 		function getVoiceAndSystemTimeObjects()
 		{
-			var i;
-
 			function getVoiceTimeObjects()
 			{
 				function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
@@ -1375,15 +1372,20 @@ let numberOfTracks = 0,
 								}
 							}
 
-							if (timeObject[0].msDurationInScore < 1)
+							timeObject.forEach((midiObject) =>
 							{
-								throw "Error: The score contains chords having zero duration!";
-							}
+								if (midiObject.msDurationInScore === undefined || midiObject.msDurationInScore < 1)
+								{
+									throw "Error: Chords and Rests must have a duration greater than 0!";
+								}
 
-							if (noteObjectAlignment !== null)
-							{
-								timeObject[0].alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-							}
+								if (noteObjectAlignment !== null)
+								{
+									midiObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+								}
+							});
+
+
 							timeObjects.push(timeObject);
 						}
 					}
@@ -1494,175 +1496,50 @@ let numberOfTracks = 0,
 				// Sets the msPosition of each timeObject (rests and chords) in the voice.timeObjects arrays.
 				function setMsPositions(systems)
 				{
-					var nStaves, staffIndex, nVoices, voiceIndex, nSystems, systemIndex, msPosition,
-						timeObject0, timeObjects, nTimeObjects, tIndex;
+					var nStaves, nVoices, nSystems,
+						timeObjects, nTimeObjects, nInterpretations;
 
 					nSystems = systems.length;
 					nStaves = systems[0].staves.length;
-					msPosition = 0;
-					for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+					nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
+					
+					for (let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
 					{
-						nVoices = systems[0].staves[staffIndex].voices.length;
-						for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+						let msPosition = 0;
+						for (let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 						{
-							for(systemIndex = 0; systemIndex < nSystems; ++systemIndex)
+							nVoices = systems[0].staves[staffIndex].voices.length;
+							for (let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 							{
-								timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
-								if(timeObjects !== undefined)
+								for (let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
 								{
-									nTimeObjects = timeObjects.length;
-									for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
+									timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
+									if (timeObjects !== undefined)
 									{
-										timeObject0 = timeObjects[tIndex][0]; // default interpretation object
-
-										if(timeObject0 instanceof MidiChord || timeObject0 instanceof MidiRest)
+										nTimeObjects = timeObjects.length;
+										for (let tIndex = 0; tIndex < nTimeObjects; ++tIndex)
 										{
-											Object.defineProperty(timeObject0, "msPositionInScore", { value: msPosition, writable: false });
+											let midiObject = timeObjects[tIndex][interpIndex];
+
+											if (midiObject instanceof MidiChord || midiObject instanceof MidiRest)
+											{
+												Object.defineProperty(midiObject, "msPositionInScore", {value: msPosition, writable: false});
+											}
+
+											msPosition += midiObject.msDurationInScore;
 										}
-
-										msPosition += timeObject0.msDurationInScore;
 									}
-								}
-							}
-							msPosition = 0;
-						}
-
-					}
-				}
-
-				// If the first timeObject in a voice has no Alignment attribute,
-				// it is set to the value for the system.
-				function setFirstTimeObjectAlignment(systems)
-				{
-					var i, nSystems = systems.length, system,
-						firstAlignment;
-
-					function getFirstAlignment(system)
-					{
-						var j, k, staff, nStaves = system.staves.length,
-							voice, nVoices, firstAlignment = -1;
-
-						for(j = 0; j < nStaves; ++j)
-						{
-							staff = system.staves[j];
-							nVoices = staff.voices.length;
-							for(k = 0; k < nVoices; ++k)
-							{
-								voice = staff.voices[k];
-								if(voice.timeObjects[0].alignment !== undefined)
-								{
-									firstAlignment = voice.timeObjects[0].alignment;
-									break;
-								}
-							}
-							if(firstAlignment > -1)
-							{
-								break;
-							}
-						}
-						return firstAlignment;
-					}
-
-					function setFirstAlignment(system, firstAlignment)
-					{
-						var j, k, staff, nStaves = system.staves.length,
-							voice, nVoices;
-
-						for(j = 0; j < nStaves; ++j)
-						{
-							staff = system.staves[j];
-							nVoices = staff.voices.length;
-							for(k = 0; k < nVoices; ++k)
-							{
-								voice = staff.voices[k];
-								if(voice.timeObjects !== undefined && voice.timeObjects[0].alignment === undefined)
-								{
-									voice.timeObjects[0].alignment = firstAlignment;
-								}
-							}
-						}
-					}
-
-					for(i = 0; i < nSystems; ++i)
-					{
-						system = systems[i];
-						firstAlignment = getFirstAlignment(system);
-						setFirstAlignment(system, firstAlignment);
-					}
-				}
-
-				// These are needed for aligning start and end markers.
-				function appendVoiceEndTimeObjects(systems)
-				{
-					var systemIndex, nSystems = systems.length, system,
-						j, nStaves, staff,
-						k, nVoices, voice,
-						rightmostAlignment = systems[0].right,
-						startMsPositionOfNextSystem,
-						lastTimeObject,
-						endMsPositionInScore;
-
-					function getStartMsPositionOfNextSystem(staves)
-					{
-						var i, j, firstMsPos, nStaves = staves.length, minMsPos = Number.MAX_VALUE;
-
-						for(i = 0; i < nStaves; ++i)
-						{
-							staff = staves[i];
-							for(j = 0; j < staff.voices.length; ++j)
-							{
-								if(staff.voices[j].timeObjects !== undefined)
-								{
-									firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
-									minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
-								}
-							}
-						}
-						return minMsPos;
-					}
-
-					for(systemIndex = 0; systemIndex < nSystems; ++systemIndex)
-					{
-						system = systems[systemIndex];
-						if(systemIndex < nSystems - 1)
-						{
-							startMsPositionOfNextSystem = getStartMsPositionOfNextSystem(systems[systemIndex + 1].staves);
-						}
-						nStaves = system.staves.length;
-						for(j = 0; j < nStaves; ++j)
-						{
-							staff = system.staves[j];
-							nVoices = staff.voices.length;
-							for(k = 0; k < nVoices; ++k)
-							{
-								voice = staff.voices[k];
-								if(voice.timeObjects !== undefined)
-								{
-									timeObject = {}; // the final barline in the voice (used when changing speed)
-									Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
-									Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
-									Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
-									if(systemIndex < nSystems - 1)
-									{
-										Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
-									}
-									else
-									{
-										lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1];
-										endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
-										Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
-									}
-
-									voice.timeObjects.push(timeObject);
 								}
 							}
 						}
 					}
 				}
+
+
 
 				/*************** end of getVoiceAndSystemTimeObjects function definitions *****************************/
 
-				for(i = 0; i < systemElems.length; ++i)
+				for(let i = 0; i < systemElems.length; ++i)
 				{
 					systemElem = systemElems[i];
 					system = systems[i];
@@ -1671,8 +1548,88 @@ let numberOfTracks = 0,
 				}
 
 				setMsPositions(systems);
-				setFirstTimeObjectAlignment(systems);
-				appendVoiceEndTimeObjects(systems);
+
+			}
+
+			// These are needed for aligning start and end markers.
+			function appendVoiceEndBarlineTimeObject(systems)
+			{
+				let systemIndex, nSystems = systems.length, system,
+					j, nStaves, staff,
+					k, nVoices, voice,
+					rightmostAlignment = systems[0].right,
+					startMsPositionOfNextSystem,
+					finalMidiObject,
+					endMsPositionInScore;
+
+				function getStartMsPositionOfNextSystem(staves, interpretationIndex)
+				{
+					let firstMsPos, nStaves = staves.length, minMsPos = Number.MAX_VALUE;
+
+					for (let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+					{
+						staff = staves[staffIndex];
+						for (let voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+						{
+							if (staff.voices[voiceIndex].timeObjects !== undefined)
+							{
+								firstMsPos = staff.voices[voiceIndex].timeObjects[0][interpretationIndex].msPositionInScore;
+								minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+							}
+						}
+					}
+					return minMsPos;
+				}
+
+				let nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
+
+				for (let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
+				{
+					for (systemIndex = 0; systemIndex < nSystems; ++systemIndex)
+					{
+						system = systems[systemIndex];
+						if (systemIndex < nSystems - 1)
+						{
+							startMsPositionOfNextSystem = getStartMsPositionOfNextSystem(systems[systemIndex + 1].staves, interpIndex);
+						}
+						nStaves = system.staves.length;
+						for (let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+						{
+							staff = system.staves[staffIndex];
+							nVoices = staff.voices.length;
+							for (let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+							{
+								voice = staff.voices[voiceIndex];
+								if (voice.timeObjects !== undefined)
+								{
+									if (interpIndex === 0)
+									{
+										// contains one final barlineObject per interpretation (used when changing speed)
+										let timeObject = [];
+										voice.timeObjects.push(timeObject);
+									}
+
+									let barlineObject = {};
+									voice.timeObjects[voice.timeObjects.length - 1].push(barlineObject);
+
+									Object.defineProperty(barlineObject, "msDurationInScore", {value: 0, writable: false});
+									Object.defineProperty(barlineObject, "systemIndex", {value: systemIndex, writable: false});
+									Object.defineProperty(barlineObject, "alignment", {value: rightmostAlignment, writable: false});
+									if (systemIndex < nSystems - 1)
+									{
+										Object.defineProperty(barlineObject, "msPositionInScore", {value: startMsPositionOfNextSystem, writable: false});
+									}
+									else
+									{
+										finalMidiObject = voice.timeObjects[voice.timeObjects.length - 2][interpIndex];
+										endMsPositionInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
+										Object.defineProperty(barlineObject, "msPositionInScore", {value: endMsPositionInScore, writable: false});
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			function getSystemBarlineTimeObjects(systemElems, systemElem)
@@ -1772,13 +1729,13 @@ let numberOfTracks = 0,
 					system = systems[systemIndex];
 					systemElem = systemElems[systemIndex];
 					voiceTimeObjects = system.staves[0].voices[0].timeObjects,
-						//allNoteObjectElems = systemElems[systemIndex].getElementsByClassName("voice")[0].children;
-
-						system.barlines = getBarlineObjects(voiceTimeObjects, systemElem);
+					system.barlines = getBarlineObjects(voiceTimeObjects, systemElem);
 				}
 			}
 
 			getVoiceTimeObjects();
+
+			appendVoiceEndBarlineTimeObject(systems);
 
 			getSystemBarlineTimeObjects(systemElems, systems);
 		}
@@ -1800,29 +1757,21 @@ let numberOfTracks = 0,
 			sendEndMarkerToEnd();
 		}
 
-		function setTrackAttributes(tracks, system0staves)
+		function getEmptyTrackObjects(system0staves)
 		{
-			var trackIndex = 0, staffIndex, voiceIndex, nStaves = system0staves.length, staff;
+			var tracks = [],
+				staffIndex, voiceIndex, nStaves = system0staves.length, staff;
+
 			for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 			{
 				staff = system0staves[staffIndex];
+				let nInterpretations = staff.voices[0].timeObjects[0].length;
 				for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
 				{
-					//voice = staff.voices[voiceIndex];
-					//if(voice.isOutput === true)
-					//{
-						tracks.push(new Track());
-						tracks[trackIndex].midiObjects = [];
-						trackIndex++;
-					//}
-					//else // voice.isOutput === false 
-					//{
-					//	inputTracks.push(new Track());
-					//	inputTracks[inputTrackIndex].inputObjects = [];
-					//	inputTrackIndex++;
-					//}
+					tracks.push(new Track(nInterpretations));
 				}
 			}
+			return tracks;
 		}
 
 		function setRegionData(tracks, systems)
@@ -1906,7 +1855,7 @@ let numberOfTracks = 0,
 
 		getVoiceAndSystemTimeObjects();
 
-		setTrackAttributes(tracks, systems[0].staves);
+		tracks = getEmptyTrackObjects(systems[0].staves);
 
 		nStaves = systems[0].staves.length;
 
@@ -1921,20 +1870,22 @@ let numberOfTracks = 0,
 				for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 				{
 					voice = staff.voices[voiceIndex];
-					//if(voice.isOutput === true)
-					//{
-						nTimeObjects = voice.timeObjects.length;
-						track = tracks[trackIndex];
-						for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
+
+					nTimeObjects = voice.timeObjects.length;
+					let nInterpretations = voice.timeObjects[0].length;
+					track = tracks[trackIndex];
+					for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
+					{
+						for (let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
 						{
-							timeObject = voice.timeObjects[timeObjectIndex];
-							if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
+							let midiObject = voice.timeObjects[timeObjectIndex][interpIndex];
+							if (midiObject instanceof MidiChord || midiObject instanceof MidiRest)
 							{
-								track.midiObjects.push(timeObject);
+								track.interpretations[interpIndex].midiObjects.push(midiObject);
 							}
 						}
-						++trackIndex;
-					//}
+					}
+					++trackIndex;
 				}
 			}
 		}
