@@ -176,17 +176,19 @@ export class Track
             }
 
 			var i, index = -1, midiObject, nMidiObjects,
-				trackInitMessages = [], moControlMessages;
+				trackInitMessages = [], moControlMessages,
+				currentInterpretation = that.currentInterpretation,
+				midiObjects = currentInterpretation.midiObjects;
 
-			if(that.midiObjects === undefined)
+			if(midiObjects === undefined)
 			{
 				throw "Can't set OutputSpan!";
 			}
 
-			nMidiObjects = that.midiObjects.length;
+			nMidiObjects = midiObjects.length;
 			for(i = 0; i < nMidiObjects; ++i)
 			{
-				let midiObject = that.midiObjects[i];
+				let midiObject = midiObjects[i];
 
 				if(midiObject.msPositionInScore <= startMarkerMsPositionInScore)
 				{
@@ -223,11 +225,11 @@ export class Track
 
 			if(index === -1)
 			{
-				// Set that._currentMidiObject to null if there are no more moments to play in the track.
-				// (The last midiObject in the track has no moments between the start and endMarkers.)
-				that._currentMidiObjectIndex = -1;
-				that._currentMidiObject = null;
-				that.currentMoment = null;
+				// Set currentInterpretation._currentMidiObject to null if there are no more moments to play.
+				// (The last midiObject in the currentInterpretation has no moments between the start and endMarkers.)
+				currentInterpretation._currentMidiObjectIndex = -1;
+				currentInterpretation._currentMidiObject = null;
+				currentInterpretation.currentMoment = null;
 			}
 			else
 			{
@@ -237,25 +239,25 @@ export class Track
 				// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
 				for(i = index + 1; i < nMidiObjects; ++i)
 				{
-					midiObject = that.midiObjects[i];
+					midiObject = midiObjects[i];
 					if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
 					{
 						break;
 					}
 					midiObject.setToStartAtBeginning();
 				}
-				that._currentMidiObjectIndex = index;
-				that._currentMidiObject = that.midiObjects[index];
-				that.currentMoment = that._currentMidiObject.currentMoment; // a MidiChord or MidiRest
-				that.currentMoment = (that.currentMoment === undefined) ? null : that.currentMoment;
+				currentInterpretation._currentMidiObjectIndex = index;
+				currentInterpretation._currentMidiObject = currentInterpretation.midiObjects[index];
+				currentInterpretation.currentMoment = currentInterpretation._currentMidiObject.currentMoment; // a MidiChord or MidiRest
+				currentInterpretation.currentMoment = (currentInterpretation.currentMoment === undefined) ? null : currentInterpretation.currentMoment;
 			}
 
 			// These three are used to reset the track to begin at the startMarker.
-			that._midiObjectIndexAtStartMarker = that._currentMidiObjectIndex;
-			that._midiObjectAtStartMarker = that._currentMidiObject;
-			that._momentAtStartMarker = that.currentMoment;
+			currentInterpretation._midiObjectIndexAtStartMarker = currentInterpretation._currentMidiObjectIndex;
+			currentInterpretation._midiObjectAtStartMarker = currentInterpretation._currentMidiObject;
+			currentInterpretation._momentAtStartMarker = currentInterpretation.currentMoment;
 
-			that.hasEndedRegion = false;
+			currentInterpretation.hasEndedRegion = false;
 
 			return trackInitMessages;
 		}

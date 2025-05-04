@@ -500,7 +500,7 @@ export class Sequence
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		tracks = score.getTracksData().outputTracks;
+		tracks = score.getTracksData().tracks;
 		regionSequence = score.getRegionSequence();
 
 		this.initTracks(); // called again when the start and end markers move.

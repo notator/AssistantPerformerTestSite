@@ -1316,7 +1316,7 @@ export class Controls
             // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
             // Repainting includes using the correct staff colours, but the score may also update the position of
             // its start marker (which always starts on a chord) if a track is turned off.
-            tracksControl.init(tracksData.outputTracks);
+            tracksControl.init(tracksData.tracks);
         }
 
         function setSpeedControl(tracksControlWidth)
