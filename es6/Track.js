@@ -2,40 +2,26 @@
 import { constants } from "./Constants.js";
 import { RegionLink } from "./RegionLink.js";
 import { MidiRest, MidiChord } from "./MidiObject.js";
-import { RegionControls } from "./RegionControls.js";
+import {RegionControls} from "./RegionControls.js";
 
-export class Track
+class Interpretation
 {
-	constructor(nInterpretations)
+	constructor()
 	{
-		this.interpretations = [];
-		for (let i = 0; i < nInterpretations; ++i)
-		{
-			let interpretation = {};
-
-			interpretation.currentMoment = null;
-			interpretation.midiObjects = [];
-			interpretation.isOn = true;
-			interpretation.hasEndedRegion = false;
-			interpretation._regionLinks = [];
-			interpretation._currentMidiObjectIndex = -1;
-			interpretation._currentMidiObject = null;
-
-			this.interpretations.push(interpretation);
-		}
-		this.currentInterpretation = this.interpretations[0]; // default 
-	}
-
-	setCurrentInterpretation(interpIndex)
-	{
-		this.currentInterpretation = this.interpretations[interpIndex];
+		this.currentMoment = null;
+		this.midiObjects = [];
+		this.isOn = true;
+		this.hasEndedRegion = false;
+		this._regionLinks = [];
+		this._currentMidiObjectIndex = -1;
+		this._currentMidiObject = null;
 	}
 
 	finalBarlineMsPosition()
 	{
 		let lastMidiObject, finalBarlineMsPos;
-		let midiObjects = this.currentInterpretation.midiObjects;
-		if(midiObjects === undefined)
+		let midiObjects = this.midiObjects;
+		if (midiObjects === undefined)
 		{
 			throw "Can't get finalBarlineMsPosition!";
 		}
@@ -47,15 +33,15 @@ export class Track
 	setRegionLinks(regionSequence)
 	{
 		let prevRegionLink = undefined;
-		let midiObjects = this.currentInterpretation.midiObjects;
-		for(let i = 0; i < regionSequence.length; ++i)
+		let midiObjects = this.midiObjects;
+		for (let i = 0; i < regionSequence.length; ++i)
 		{
 			let regionDef = regionSequence[i],
 				regionLink = new RegionLink(midiObjects, regionDef, prevRegionLink);
 
 			prevRegionLink = regionLink;
-			this.currentInterpretation._regionLinks.push(regionLink);
-		} 
+			this._regionLinks.push(regionLink);
+		}
 	}
 
 	setOutputSpan(trackIndex, startMarkerMsPositionInScore, endMarkerMsPositionInScore, regionStartMsPositionsInScore)
@@ -86,25 +72,25 @@ export class Track
 
 				isRegParamIndex = false;
 
-				if(cmd === CMD.CONTROL_CHANGE)
+				if (cmd === CMD.CONTROL_CHANGE)
 				{
 					let ctl = msg.data[1];
 
-					if(ctl === CTL.REGISTERED_PARAMETER)
+					if (ctl === CTL.REGISTERED_PARAMETER)
 					{
 						let regParamValue = msg.data[2];
-						index = messages.findIndex(x => { (x.data[0] === cmd) && (x.data[1] === ctl) && (x.data[2] === regParamValue); });
+						index = messages.findIndex(x => {(x.data[0] === cmd) && (x.data[1] === ctl) && (x.data[2] === regParamValue);});
 						regParamIndex = index;
 						isRegParamIndex = true;
 					}
-					else if(ctl === CTL.DATA_ENTRY)
+					else if (ctl === CTL.DATA_ENTRY)
 					{
 						index = regParamIndex + 1; // regParamIndex must have been set by the previous message
 						regParamIndex = undefined;
 					}
 					else
 					{
-						index = messages.findIndex(x => { (x.data[0] === cmd) && (x.data[1] === ctl); });
+						index = messages.findIndex(x => {(x.data[0] === cmd) && (x.data[1] === ctl);});
 					}
 				}
 				else
@@ -112,13 +98,13 @@ export class Track
 					index = messages.findIndex(x => (x.data[0] === cmd));
 				}
 
-				if(index === -1)
+				if (index === -1)
 				{
 					messages.push(msg);
-					if(isRegParamIndex === true)
+					if (isRegParamIndex === true)
 					{
 						regParamIndex = messages.length - 1;
-                    }
+					}
 				}
 				else
 				{
@@ -136,20 +122,20 @@ export class Track
 					moments = midiObject.moments,
 					objPosInScore = midiObject.msPositionInScore;
 
-				if(objPosInScore < startMarkerMsPositionInScore)
+				if (objPosInScore < startMarkerMsPositionInScore)
 				{
-					for(var i = 0; i < moments.length; i++)
+					for (var i = 0; i < moments.length; i++)
 					{
 						let moment = moments[i];
 
-						if((objPosInScore + moment.msPositionInChord) < startMarkerMsPositionInScore)
+						if ((objPosInScore + moment.msPositionInChord) < startMarkerMsPositionInScore)
 						{
 							let messages = moment.messages;
-							for(var j = 0; j < messages.length; j++)
+							for (var j = 0; j < messages.length; j++)
 							{
 								let msg = messages[j];
 								let cmd = msg.command();
-								if(cmd !== CMD.NOTE_ON && cmd !== CMD.NOTE_OFF)
+								if (cmd !== CMD.NOTE_ON && cmd !== CMD.NOTE_OFF)
 								{
 									addUnique(msg, controlMessages);
 								}
@@ -158,7 +144,7 @@ export class Track
 						else
 						{
 							break;
-                        }
+						}
 					}
 				}
 
@@ -169,51 +155,50 @@ export class Track
 			// replacing messages for the same control, if they exist.
 			function collectMessages(moControlMessages, trackInitMessages)
 			{
-				for(var i = 0; i < moControlMessages.length; i++)
+				for (var i = 0; i < moControlMessages.length; i++)
 				{
 					addUnique(moControlMessages[i], trackInitMessages);
-                }
-            }
+				}
+			}
 
 			var i, index = -1, midiObject, nMidiObjects,
 				trackInitMessages = [], moControlMessages,
-				currentInterpretation = that.currentInterpretation,
-				midiObjects = currentInterpretation.midiObjects;
+				midiObjects = that.midiObjects;
 
-			if(midiObjects === undefined)
+			if (midiObjects === undefined)
 			{
 				throw "Can't set OutputSpan!";
 			}
 
 			nMidiObjects = midiObjects.length;
-			for(i = 0; i < nMidiObjects; ++i)
+			for (i = 0; i < nMidiObjects; ++i)
 			{
 				let midiObject = midiObjects[i];
 
-				if(midiObject.msPositionInScore <= startMarkerMsPositionInScore)
+				if (midiObject.msPositionInScore <= startMarkerMsPositionInScore)
 				{
 					// 17.08.2021: This function returns all messages (except noteOns and noteOffs)
 					// in the midiObject.moments that _precede_ startMarkerMsPositionInScore. 
 					moControlMessages = getControlMessages(midiObject, startMarkerMsPositionInScore);
 					collectMessages(moControlMessages, trackInitMessages);
 
-					if(midiObject instanceof MidiChord)
+					if (midiObject instanceof MidiChord)
 					{
 						let midiChord = midiObject;
 						// if the MidiChord is at or straddles the startMarkerMsPositionInScore
 						// set its moment pointers to startMarkerMsPositionInScore
 						// midiChord.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore.
-						if(midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore)
+						if (midiChord.msPositionInScore + midiChord.msDurationInScore > startMarkerMsPositionInScore)
 						{
 							midiChord.setToStartMarker(startMarkerMsPositionInScore);
-							if(midiChord.currentMoment !== undefined)
+							if (midiChord.currentMoment !== undefined)
 							{
 								//midiChord.setToStartAtBeginning();
 								index = i;
 								break;
 							}
 						}
-                    }
+					}
 				}
 				else
 				{
@@ -223,13 +208,13 @@ export class Track
 				}
 			}
 
-			if(index === -1)
+			if (index === -1)
 			{
-				// Set currentInterpretation._currentMidiObject to null if there are no more moments to play.
-				// (The last midiObject in the currentInterpretation has no moments between the start and endMarkers.)
-				currentInterpretation._currentMidiObjectIndex = -1;
-				currentInterpretation._currentMidiObject = null;
-				currentInterpretation.currentMoment = null;
+				// Set that._currentMidiObject to null if there are no more moments to play.
+				// (The last midiObject in the that has no moments between the start and endMarkers.)
+				that._currentMidiObjectIndex = -1;
+				that._currentMidiObject = null;
+				that.currentMoment = null;
 			}
 			else
 			{
@@ -237,27 +222,27 @@ export class Track
 				// (If the performance is set to start inside a rest, that.currentMoment will be at a
 				// position later than the startMarker.)
 				// Set all further MidiChords and MidiRests up to the endMarker to start at their beginnings.
-				for(i = index + 1; i < nMidiObjects; ++i)
+				for (i = index + 1; i < nMidiObjects; ++i)
 				{
 					midiObject = midiObjects[i];
-					if(midiObject.msPositionInScore >= endMarkerMsPositionInScore)
+					if (midiObject.msPositionInScore >= endMarkerMsPositionInScore)
 					{
 						break;
 					}
 					midiObject.setToStartAtBeginning();
 				}
-				currentInterpretation._currentMidiObjectIndex = index;
-				currentInterpretation._currentMidiObject = currentInterpretation.midiObjects[index];
-				currentInterpretation.currentMoment = currentInterpretation._currentMidiObject.currentMoment; // a MidiChord or MidiRest
-				currentInterpretation.currentMoment = (currentInterpretation.currentMoment === undefined) ? null : currentInterpretation.currentMoment;
+				that._currentMidiObjectIndex = index;
+				that._currentMidiObject = that.midiObjects[index];
+				that.currentMoment = that._currentMidiObject.currentMoment; // a MidiChord or MidiRest
+				that.currentMoment = (that.currentMoment === undefined) ? null : that.currentMoment;
 			}
 
 			// These three are used to reset the track to begin at the startMarker.
-			currentInterpretation._midiObjectIndexAtStartMarker = currentInterpretation._currentMidiObjectIndex;
-			currentInterpretation._midiObjectAtStartMarker = currentInterpretation._currentMidiObject;
-			currentInterpretation._momentAtStartMarker = currentInterpretation.currentMoment;
+			that._midiObjectIndexAtStartMarker = that._currentMidiObjectIndex;
+			that._midiObjectAtStartMarker = that._currentMidiObject;
+			that._momentAtStartMarker = that.currentMoment;
 
-			currentInterpretation.hasEndedRegion = false;
+			that.hasEndedRegion = false;
 
 			return trackInitMessages;
 		}
@@ -271,24 +256,24 @@ export class Track
 			function getChannelIndexFromNoteOnMessages(midiObjects)
 			{
 				let channel = -1;
-				for(let midiObject of midiObjects)
+				for (let midiObject of midiObjects)
 				{
-					for(let moment of midiObject.moments)
+					for (let moment of midiObject.moments)
 					{
-						for(let msg of moment.messages)
+						for (let msg of moment.messages)
 						{
-							if(msg.command() === constants.COMMAND.NOTE_ON)
+							if (msg.command() === constants.COMMAND.NOTE_ON)
 							{
 								channel = msg.channel();
 								break;
 							}
 						}
-						if(channel >= 0)
+						if (channel >= 0)
 						{
 							break;
 						}
 					}
-					if(channel >= 0)
+					if (channel >= 0)
 					{
 						break;
 					}
@@ -296,7 +281,7 @@ export class Track
 				return channel;
 			}
 
-			if(regionStartMsPositionsInScore.indexOf(0) < 0)
+			if (regionStartMsPositionsInScore.indexOf(0) < 0)
 			{
 				regionStartMsPositionsInScore.push(0);
 			}
@@ -304,54 +289,54 @@ export class Track
 			let prevStartMsPos = -1,
 				regionIndex = 0,
 				regionStartMsPos = regionStartMsPositionsInScore[regionIndex++],
-				noteOnsChannel = getChannelIndexFromNoteOnMessages(that.currentInterpretation.midiObjects);
+				noteOnsChannel = getChannelIndexFromNoteOnMessages(that.midiObjects);
 
-			if(noteOnsChannel !== -1 && noteOnsChannel !== trackIndex)
+			if (noteOnsChannel !== -1 && noteOnsChannel !== trackIndex)
 			{
 				throw new Error(`
 Error: The channel index must always be equal to the track
 index, even if there are no NoteOn messages in the channel.`
-				);				
+				);
 			}
- 
+
 			let regionControls = new RegionControls(trackIndex), // initially contains default values for the controls
 				done = false,
-				midiObjects = that.currentInterpretation.midiObjects;
+				midiObjects = that.midiObjects;
 
-			for(let midiObject of midiObjects)
+			for (let midiObject of midiObjects)
 			{
 				let moMsPos = midiObject.msPositionInScore;
-				if(moMsPos < startMarkerMsPositionInScore)
+				if (moMsPos < startMarkerMsPositionInScore)
 				{
 					continue;
 				}
-				if(moMsPos >= endMarkerMsPositionInScore)
+				if (moMsPos >= endMarkerMsPositionInScore)
 				{
 					break;
 				}
 				let moments = midiObject.moments;
-				for(let moment of moments)
+				for (let moment of moments)
 				{
 					// set the corresponding currentControls values to the specific values in the moment controls.
 					regionControls.updateFrom(moment);
-					if((moMsPos + moment.msPositionInChord) >= regionStartMsPos)
+					if ((moMsPos + moment.msPositionInChord) >= regionStartMsPos)
 					{
 						// set  moment controls to all the values in currentControls
 						regionControls.update(moment);
-						if(regionIndex === regionStartMsPositionsInScore.length)
+						if (regionIndex === regionStartMsPositionsInScore.length)
 						{
 							done = true;
 						}
 						prevStartMsPos = regionStartMsPos;
 						regionStartMsPos = regionStartMsPositionsInScore[regionIndex++];
-						if(regionStartMsPos <= prevStartMsPos)
+						if (regionStartMsPos <= prevStartMsPos)
 						{
 							// N.B. There is only one regionStartMsPos per region here (even if they repeat in the score)
 							throw "regionStartMsPos must be in chronological order.";
 						}
 					}
 				}
-				if(done)
+				if (done)
 				{
 					break;
 				}
@@ -367,10 +352,9 @@ index, even if there are no NoteOn messages in the channel.`
 
 	resetToStartMarker()
 	{
-		let interpretation = this.currentInterpretation;
-		interpretation._currentMidiObjectIndex = interpretation._midiObjectIndexAtStartMarker;
-		interpretation._currentMidiObject = interpretation._midiObjectAtStartMarker;
-		interpretation.currentMoment = interpretation._momentAtStartMarker;
+		this._currentMidiObjectIndex = this._midiObjectIndexAtStartMarker;
+		this._currentMidiObject = this._midiObjectAtStartMarker;
+		this.currentMoment = this._momentAtStartMarker;
 	}
 
 	// ** Compare this code with setInitialTrackState() inside setOutputSpan() above. **
@@ -384,9 +368,9 @@ index, even if there are no NoteOn messages in the channel.`
 	_setNextRegion(regionLink)
 	{
 		let i, startMidiObjectIndex = -1, momentIndex = -1, nMidiObjectsInRegion = -1, moIndex = -1,
-			midiObjects = this.currentInterpretation.midiObjects; 
+			midiObjects = this.midiObjects;
 
-		if(regionLink.nextRegionMidiObjectIndex === undefined
+		if (regionLink.nextRegionMidiObjectIndex === undefined
 			|| regionLink.nextRegionMomentIndex === undefined
 			|| regionLink.nextRegionMidiObjectsCount === undefined)
 		{
@@ -397,7 +381,7 @@ index, even if there are no NoteOn messages in the channel.`
 		nMidiObjectsInRegion = regionLink.nextRegionMidiObjectsCount;
 		// set all midiObjects in the region except the first (which is set by setting the 'current' values below)
 		moIndex = startMidiObjectIndex + 1;
-		for(i = 1; i < nMidiObjectsInRegion; ++i)
+		for (i = 1; i < nMidiObjectsInRegion; ++i)
 		{
 			midiObjects[moIndex++].setToStartAtBeginning();
 		}
@@ -416,22 +400,21 @@ index, even if there are no NoteOn messages in the channel.`
 		 *
 		 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
 		 */
-		let currentRegionLink = this.currentInterpretation._regionLinks[regionIndexInPerformance];
+		let currentRegionLink = this._regionLinks[regionIndexInPerformance];
 		this._setNextRegion(currentRegionLink);
 	}
 	// Called at the end of a performance to reset the initial state (for further performances).
 	setToFirstRegion()
 	{
-		let interpretation = this.currentInterpretation,
-			_regionLinks = interpretation._regionLinks,
-			midiObjects = interpretation.midiObjects;
-		
+		let _regionLinks = this._regionLinks,
+			midiObjects = this.midiObjects;
+
 		let regionLink = _regionLinks[0],
 			endMsPosInScore = regionLink.endOfRegionMsPositionInScore;
 
-		for(let midiObject of midiObjects)
+		for (let midiObject of midiObjects)
 		{
-			if(midiObject.msPositionInScore < endMsPosInScore)
+			if (midiObject.msPositionInScore < endMsPosInScore)
 			{
 				midiObject.setToStartAtBeginning();
 			}
@@ -445,57 +428,71 @@ index, even if there are no NoteOn messages in the channel.`
 	// Returns Number.MAX_VALUE at end of track.
 	currentMsPosition()
 	{
-		let interpretation = this.currentInterpretation,
-			_currentMidiObject = interpretation._currentMidiObject,
-			currentMoment = interpretation.currentMoment;
+		let _currentMidiObject = this._currentMidiObject,
+			currentMoment = this.currentMoment;
 
 		let msPos = Number.MAX_VALUE;
-		if(this._currentMidiObject !== null)
+		if (_currentMidiObject !== null)
 		{
 			msPos = _currentMidiObject.msPositionInScore;
-			if(currentMoment !== null)
+			if (currentMoment !== null)
 			{
 				msPos += currentMoment.msPositionInChord;
 			}
 		}
 		return msPos;
 	}
+
 	advanceCurrentMoment()
 	{
-		let interpretation = this.currentInterpretation;
-
-		if (interpretation._currentMidiObject === null)
+		if (this._currentMidiObject === null)
 		{
 			throw "Application error.";
 		}
 		var currentIndex;
-		interpretation.currentMoment = interpretation._currentMidiObject.advanceCurrentMoment();
+		this.currentMoment = this._currentMidiObject.advanceCurrentMoment();
 		// MidiRests, and MidiChords that have ended, return null.
-		if (interpretation.currentMoment === null)
+		if (this.currentMoment === null)
 		{
-			interpretation._currentMidiObjectIndex++;
-			currentIndex = interpretation._currentMidiObjectIndex;
-			if (currentIndex < interpretation.midiObjects.length)
+			this._currentMidiObjectIndex++;
+			currentIndex = this._currentMidiObjectIndex;
+			if (currentIndex < this.midiObjects.length)
 			{
-				interpretation._currentMidiObject = interpretation.midiObjects[currentIndex];
-				interpretation.currentMoment = interpretation._currentMidiObject.currentMoment; // is non-null and has zero or more messages
+				this._currentMidiObject = this.midiObjects[currentIndex];
+				this.currentMoment = this._currentMidiObject.currentMoment; // is non-null and has zero or more messages
 			}
 			else
 			{
-				interpretation._currentMidiObject = null;
-				interpretation.currentMoment = null;
+				this._currentMidiObject = null;
+				this.currentMoment = null;
 			}
 		}
 	}
 
 	_setState(midiObjectIndex, momentIndexInChord)
 	{
-		let interpretation = this.currentInterpretation;
+		this._currentMidiObjectIndex = midiObjectIndex;
+		this._currentMidiObject = this.midiObjects[midiObjectIndex]; // a MidiChord or MidiRest
+		this.currentMoment = this._currentMidiObject.moments[momentIndexInChord]; // in a MidiChord or MidiRest
+		this.currentMoment = (this.currentMoment === undefined) ? null : this.currentMoment;
+		this.hasEndedRegion = false; // is temporarily set to true when the track comes to the end of a region during a performance
+	}
+}
 
-		interpretation._currentMidiObjectIndex = midiObjectIndex;
-		interpretation._currentMidiObject = interpretation.midiObjects[midiObjectIndex]; // a MidiChord or MidiRest
-		interpretation.currentMoment = interpretation._currentMidiObject.moments[momentIndexInChord]; // in a MidiChord or MidiRest
-		interpretation.currentMoment = (interpretation.currentMoment === undefined) ? null : interpretation.currentMoment;
-		interpretation.hasEndedRegion = false; // is temporarily set to true when the track comes to the end of a region during a performance
+export class Track
+{
+	constructor(nInterpretations)
+	{
+		this.interpretations = [];
+		for (let i = 0; i < nInterpretations; ++i)
+		{
+			this.interpretations.push(new Interpretation());
+		}
+		this.currentInterpretation = this.interpretations[0]; // default 
+	}
+
+	setCurrentInterpretation(interpIndex)
+	{
+		this.currentInterpretation = this.interpretations[interpIndex];
 	}
 }
