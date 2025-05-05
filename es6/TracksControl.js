@@ -8,15 +8,10 @@ const
 	DISABLED_BULLET_STROKECOLOR = "#FFFFFF", // used with opacity
 	DISABLED_BULLET_FILLCOLOR = "#FFFFFF", // used with opacity
 
-	OUTPUT_TRACKNUMBER_COLOR = "#000000",
-	OUTPUT_BULLET_STROKECOLOR = "#000000",
-	OUTPUT_BULLET_FILLCOLOR = "#AAAAAA",
-	OUTPUT_OVERBULLET_STROKECOLOR = "#00CE00", // mouseover ring
-
-	INPUT_TRACKNUMBER_COLOR = "#0000FF",
-	INPUT_BULLET_STROKECOLOR = "#0000FF",
-	INPUT_BULLET_FILLCOLOR = "#BBBBFF",
-	INPUT_OVERBULLET_STROKECOLOR = "#7777FF", // mouseover ring
+	TRACKNUMBER_COLOR = "#000000",
+	BULLET_STROKECOLOR = "#000000",
+	BULLET_FILLCOLOR = "#AAAAAA",
+	OVERBULLET_STROKECOLOR = "#00CE00", // mouseover ring
 
 	// constants for track control opacity values
 	METAL = "1", // control layer is completely opaque
@@ -76,14 +71,12 @@ export class TracksControl
 	}
 
 	// Called after loading a particular score.
-	init(outputTracks)
+	init(nTrackControls)
 	{
-		var nOutputTracks = outputTracks.length,
-			trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
+		let trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
 			controlPanel = document.getElementById("svgRuntimeControls"),
 			firstControlPanelChild,
 			i, parentElem,
-			nTrackControls,
 			trackControlsWidth;
 
 		function getTrackControlsMainElem(trackControlsWidth)
@@ -131,14 +124,14 @@ export class TracksControl
 			trackControlsMainElem.appendChild(disabledFrameElem);
 		}
 
-		function trackControlElem(trackIndexStr, isOutputTrackControl)
+		function trackControlElem(trackIndexStr)
 		{
 			var trackIndex = parseInt(trackIndexStr, 10),
-				trackNumberColor = isOutputTrackControl ? OUTPUT_TRACKNUMBER_COLOR : INPUT_TRACKNUMBER_COLOR,
-				overBulletStrokeColor = isOutputTrackControl ? OUTPUT_OVERBULLET_STROKECOLOR : INPUT_OVERBULLET_STROKECOLOR,
-				bulletOnStrokeColor = isOutputTrackControl ? OUTPUT_BULLET_STROKECOLOR : INPUT_BULLET_STROKECOLOR,
-				bulletOnFillColor = isOutputTrackControl ? OUTPUT_BULLET_FILLCOLOR : INPUT_BULLET_FILLCOLOR,
-				bulletOffStrokeColor = isOutputTrackControl ? OUTPUT_BULLET_STROKECOLOR : INPUT_BULLET_STROKECOLOR,
+				trackNumberColor = TRACKNUMBER_COLOR,
+				overBulletStrokeColor = OVERBULLET_STROKECOLOR,
+				bulletOnStrokeColor = BULLET_STROKECOLOR,
+				bulletOnFillColor = BULLET_FILLCOLOR,
+				bulletOffStrokeColor = BULLET_STROKECOLOR,
 				bulletOffFillColor = TRACKOFF_FILLCOLOR,
 				bulletDisabledStrokeColor = DISABLED_BULLET_STROKECOLOR,
 				bulletDisabledFillColor = DISABLED_BULLET_FILLCOLOR,
@@ -170,26 +163,6 @@ export class TracksControl
 			return svgElem(html);
 		}
 
-		// Called if this is not a live performance 
-		function disableTrkOptions()
-		{
-			var i;
-
-			for(i = 0; i < trackCtlElems.length; ++i)
-			{
-				if(trackCtlElems[i].isOutput === false)
-				{
-					trackCtlElems[i].onmouseover = null;
-					trackCtlElems[i].onmouseout = null;
-					trackCtlElems[i].onmousedown = null;
-
-					setTrackCtlState(i, "disabled");
-					trackCtlElems[i].previousState = "disabled";
-				}
-			}
-		}
-
-		nTrackControls = nOutputTracks;
 		trackControlsWidth = ((nTrackControls * 16) + 6).toString(); // individual controls are 10 pixels wide, with 6px between them.
 
 		trackControlsMainElem = getTrackControlsMainElem(trackControlsWidth);
@@ -206,25 +179,15 @@ export class TracksControl
 
 		for(i = 0; i < nTrackControls; ++i)
 		{
-			if(i < nOutputTracks)
-			{
-				trackCtlElem = trackControlElem(i, true); // an output track control
-			}
-			else
-			{
-				trackCtlElem = trackControlElem(i, false); // an input track control
-			}
+			trackCtlElem = trackControlElem(i);
 
 			svgTrackControlsElem.appendChild(trackCtlElem);
 
 			trackCtlElems.push(trackCtlElem);
-			trackCtlElems[i].isOutput = (i < nOutputTracks);
 
 			setTrackCtlState(i, "on");
 			trackCtlElems[i].previousState = "on";
 		}
-
-		disableTrkOptions();
 	}
 
 	// the width of the bounding box (set by init())
@@ -286,16 +249,16 @@ export class TracksControl
 			disabledFrame = document.getElementById(DISABLED_FRAME_ID),
 			isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
-		function isTheLastPlayingInputOrOutputTrack(trackIndex)
+		function isTheLastPlayingTrack(trackIndex)
 		{
-			var i, rVal = true, isOutput = trackCtlElems[trackIndex].isOutput;
+			var i, rVal = true;
 
 			if(trackCtlElems[trackIndex].state === "on") // about to toggle it off
 			{
 				for(i = 0; i < trackCtlElems.length; ++i)
 				{
 
-					if(i !== trackIndex && trackCtlElems[i].isOutput === isOutput && trackCtlElems[i].state === "on")
+					if(i !== trackIndex && trackCtlElems[i].state === "on")
 					{
 						rVal = false;
 						break;
@@ -309,13 +272,9 @@ export class TracksControl
 
 			if(rVal === true)
 			{
-				if(trackCtlElems[trackIndex].isOutput)
+				if(trackCtlElems[trackIndex])
 				{
-					alert("Can't turn off the last output track!");
-				}
-				else
-				{
-					alert("Can't turn off the last input track!");
+					alert("Can't turn off the last track!");
 				}
 			}
 
@@ -324,7 +283,7 @@ export class TracksControl
 
 		if(!isCurrentlyDisabled)
 		{
-			thisIsTheLastPlayingInputOrOutputTrack = isTheLastPlayingInputOrOutputTrack(trackIndex);
+			thisIsTheLastPlayingInputOrOutputTrack = isTheLastPlayingTrack(trackIndex);
 
 			if(!thisIsTheLastPlayingInputOrOutputTrack)
 			{
