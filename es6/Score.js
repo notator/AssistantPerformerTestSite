@@ -1858,15 +1858,16 @@ let numberOfTracks = 0,
 
 			if(regionSequence.length === 1)
 			{
-				let finalTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
-					finalBarline = finalTimeObjects[finalTimeObjects.length - 1];
+				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
+					finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
+					finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
 
-				regionSequence[0].endMsPosInScore = finalBarline.msPositionInScore;
+				regionSequence[0].endMsPosInScore = finalBarlineMsPosInScore;
 			}
 
 			for(let track of tracks)
 			{
-				track.setRegionLinks(regionSequence);
+				track.currentInterpretation.setRegionLinks(regionSequence);
 			}
 		}
 
@@ -1935,9 +1936,15 @@ let numberOfTracks = 0,
 		return regionSequence;
 	},
 
-	getTracksData = function()
+	getCurrentTrackInterpretations = function()
 	{
-		return tracksData;
+		let allTracks = tracksData.tracks,
+			currentTrackInterpretations = [];
+		for (let i = 0; i < allTracks.length; ++i)
+		{
+			currentTrackInterpretations.push(allTracks[i].currentInterpretation);
+		}
+		return currentTrackInterpretations;
 	},
 
 	getMarkersLayer = function()
@@ -2018,10 +2025,10 @@ export class Score
 
 		this.getEmptySystems = getEmptySystems;
 
-		// tracksData is an object having a single array attribute:
-		//        tracks[] - an array of tracks containing midiChords and midiRests
+		// tracksData is an object having a single tracks array attribute:
+		// Each track in the array has one or more interpretations.
 		this.setTracksData = setTracksData;
-		this.getTracksData = getTracksData;
+		this.getCurrentTrackInterpretations = getCurrentTrackInterpretations;
 
 		// The markersLayer is set when a specific score is loaded.
 		// It contains the cursor line and the start- and endMarkers for each system in the score.
