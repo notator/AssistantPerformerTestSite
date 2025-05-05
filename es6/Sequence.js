@@ -5,7 +5,7 @@ let
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 	score,
-	tracks,
+	trackInterpretations,
 
 	previousTimestamp = null, // nextMoment()
 	startOfRegion,
@@ -86,7 +86,7 @@ let
 			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-			for(let track of tracks)
+			for(let track of trackInterpretations)
 			{
 				if(track.isOn)
 				{
@@ -154,7 +154,7 @@ let
 			return nextTrack;
 		}
 
-		track = getNextTrack(tracks);
+		track = getNextTrack(trackInterpretations);
 
 		if(document.hidden === true)
 		{
@@ -421,9 +421,9 @@ export class Sequence
 		this.isRunning = isRunning;
 	}
 
-	getOutputTracks()
+	getTracks()
 	{
-		return tracks;
+		return trackInterpretations;
 	}
 
 	// This function is called
@@ -431,13 +431,13 @@ export class Sequence
 	// 2. when either the startMarker or endMarker has been moved.
 	// 3. as a callback, when the tracksControl is changed.
 	// 
-	// Sets each (output) track's isOn attribute.
+	// Sets each track's isOn attribute.
 	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
 	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
 	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-	initTracks = function()
+	initTracks()
 	{
-		let i, nTracks = tracks.length, track,
+		let i, nTracks = trackInterpretations.length, track,
 			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
 			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
 			regionStartMsPositionsInScore = score.getRegionStartMsPositionsInScore(),
@@ -450,7 +450,7 @@ export class Sequence
 
 		for(i = 0; i < nTracks; ++i)
 		{
-			track = tracks[i];
+			track = trackInterpretations[i];
 			track.isOn = trackIsOnArray[i];
 
 			if(track.isOn)
@@ -497,10 +497,12 @@ export class Sequence
 			throw "Error: all callbacks must be defined.";
 		}
 
+		timer = performance; // performance.now() is the default timer
+
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		tracks = score.getTracksData().tracks;
+		trackInterpretations = score.getCurrentTrackInterpretations();
 		regionSequence = score.getRegionSequence();
 
 		this.initTracks(); // called again when the start and end markers move.
@@ -509,8 +511,6 @@ export class Sequence
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
 		reportTickOverload = score.reportTickOverload;
-
-		timer = performance; // performance.now() is the default timer
 
 		setState("stopped");
 	}
@@ -552,9 +552,9 @@ export class Sequence
 		lastReportedMsPosition = -1;
 		endOfConductedPerformance = false;
 
-        for(var i = 0; i < tracks.length; i++)
+        for(var i = 0; i < trackInterpretations.length; i++)
 		{
-			tracks[i].resetToStartMarker();
+			trackInterpretations[i].resetToStartMarker();
         }
 
 		performanceStartTime = timer.now();

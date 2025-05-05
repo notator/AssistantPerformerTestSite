@@ -454,7 +454,7 @@ var
         }
         else if(player.isStopped())
         {
-            sequenceRecording = new SequenceRecording(player.getOutputTracks());
+            sequenceRecording = new SequenceRecording(player.getTracks());
 
             if(deviceOptions.performanceMode === performanceMode.score)
             {
@@ -1300,15 +1300,14 @@ export class Controls
         // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
         function getTracksData(score)
         {
-            let tracksData;
-
             // Get everything except the timeObjects (which have to take account of speed)
             score.getEmptySystems();
 
             score.setTracksData();
 
-            // tracksData has a single outputTracks[] attribute containing tracks containing midiChords and midRests
-            tracksData = score.getTracksData();
+            // Each track has a currentTrackInterpretation containing midiChords and midRests
+            let currentTrackInterpretations = score.getCurrentTrackInterpretations(),
+                nTracks = currentTrackInterpretations.length;
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
@@ -1316,7 +1315,7 @@ export class Controls
             // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
             // Repainting includes using the correct staff colours, but the score may also update the position of
             // its start marker (which always starts on a chord) if a track is turned off.
-            tracksControl.init(tracksData.tracks);
+            tracksControl.init(nTracks);
         }
 
         function setSpeedControl(tracksControlWidth)
