@@ -30,7 +30,7 @@ export class Cursor
 		Object.defineProperty(this, "yCoordinates", { value: { top: -1, bottom: -1 }, writable: true }); // set in moveElementTo() in init()		
 	}
 
-	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray)
+	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray, interpIndex)
 	{
 		// Returns an array containing an msPosData object for every distinct msPositionInScore.
 		// An msPosData object contains the following fields:
@@ -40,12 +40,12 @@ export class Cursor
 		//	.pixelsPerMs
 		// The msPosData objects are sorted in order of .msPositionInScore.
 		// The last entry is an msPosData object for the final barline.
-		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray)
+		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray, interpIndex)
 		{
 			// This array, containing one msPosData object per system, is needed
 			// for the case that when tracks are disabled, there are no midiObjects
 			// at the beginning of the system.
-			function getDefaultSystemStartMsPosDataArray(systems, viewBoxScale)
+			function getDefaultSystemStartMsPosDataArray(systems, viewBoxScale, interpIndex)
 			{
 				let msPosDataPerSystem = [];
 
@@ -53,9 +53,9 @@ export class Cursor
 				{
 					let line = system.startMarker.line,
 						yCoordinates = {},
-						leftmostTimeObject = system.staves[0].voices[0].timeObjects[0], 
+						leftmostMidiObject = system.staves[0].voices[0].timeObjects[0][interpIndex], 
 						// The pixelsPerMs field is set properly later.
-						msPosData = { msPositionInScore: leftmostTimeObject.msPositionInScore, alignment: leftmostTimeObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+						msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 
 					yCoordinates.top = line.y1.baseVal.value;
 					yCoordinates.bottom = line.y2.baseVal.value;
@@ -64,11 +64,11 @@ export class Cursor
 					{
 						for(let voice of staff.voices)
 						{
-							if(voice.timeObjects[0].alignment < leftmostTimeObject.alignment)
+							if(voice.timeObjects[0][interpIndex].alignment < leftmostMidiObject.alignment)
 							{
-								leftmostTimeObject = voice.timeObjects[0];
+								leftmostMidiObject = voice.timeObjects[0][interpIndex];
 								// The pixelsPerMs field is set properly later.
-								msPosData = { msPositionInScore: leftmostTimeObject.msPositionInScore, alignment: leftmostTimeObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+								msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 							}
 						}
 					}
@@ -78,7 +78,7 @@ export class Cursor
 				return msPosDataPerSystem;
 			}
 
-			function getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray)
+			function getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray, interpIndex)
 			{
 				function setPixelsPerMs(systemMsPosDataArray)
 				{
@@ -108,11 +108,6 @@ export class Cursor
 					{
 						if(trackIsOnArray[trackIndex++] === true)
 						{
-							if(staff.voices[voiceIndex].timeObjects === undefined)
-							{
-								// this can happen if the voice is an InputVoice, and the input device is not selected.
-								continue;
-							}
 							let timeObjects = staff.voices[voiceIndex].timeObjects,
 								nTimeObjects = timeObjects.length; // timeObjects includes the final barline in the voice
 
@@ -120,7 +115,7 @@ export class Cursor
 							{
 								for(let ti = 0; ti < nTimeObjects; ++ti)
 								{
-									let tObj = timeObjects[ti], msPos = tObj.msPositionInScore,
+									let tObj = timeObjects[ti][interpIndex], msPos = tObj.msPositionInScore,
 										// pixelsPerMs is set properly later in this functon
 										msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 
@@ -131,7 +126,7 @@ export class Cursor
 							{
 								for(let ti = nTimeObjects - 1; ti >= 0; --ti)
 								{
-									let tObj = timeObjects[ti], msPos = tObj.msPositionInScore;
+									let tObj = timeObjects[ti][interpIndex], msPos = tObj.msPositionInScore;
 									if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
 									{
 										// pixelsPerMs is set properly later in this functon
@@ -150,14 +145,14 @@ export class Cursor
 				return systemMsPosDataArray;
 			}
 
-			let defaultSystemStartMsPosData = getDefaultSystemStartMsPosDataArray(systems, viewBoxScale); 
+			let defaultSystemStartMsPosData = getDefaultSystemStartMsPosDataArray(systems, viewBoxScale, interpIndex); 
 			let msPosDataArray = [];
 			let nSystems = systems.length;
 			for(let i = 0; i < nSystems; ++i)
 			{
 				let system = systems[i];
 				// The last entry in systemMsPosDataArray is an msPosData object for the final barline.
-				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray);
+				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray, interpIndex);
 				// If there was no msPosData object at the start of the system, insert the default value.
 				if(systemMsPosDataArray[0].alignment > defaultSystemStartMsPosData[i].alignment)
 				{
@@ -174,7 +169,7 @@ export class Cursor
 		}
 
 		// The last entry is an msPosData object for the final barline.
-		this.msPosDataArray = getScoreMsPosDataArray(systems, this.viewBoxScale, trackIsOnArray);
+		this.msPosDataArray = getScoreMsPosDataArray(systems, this.viewBoxScale, trackIsOnArray, interpIndex);
 
 		this.startMarkerMsPosInScore = startMarkerMsPositionInScore;
 		this.endMarkerMsPosInScore = endMarkerMsPositionInScore;

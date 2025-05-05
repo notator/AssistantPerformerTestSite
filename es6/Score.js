@@ -750,7 +750,7 @@ let numberOfTracks = 0,
 	// Called when the go button or a startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
 	},
 
 	// Constructs empty systems for all the pages.
@@ -1916,7 +1916,7 @@ let numberOfTracks = 0,
 
 		// cursor is accessed outside the score using a getter function
 		cursor = new Cursor(systemChanged, viewBoxScale);
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
 
 		markersLayer.appendChild(cursor.element);
 	},
