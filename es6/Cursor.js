@@ -96,31 +96,22 @@ export class Cursor
 							let timeObjects = staff.voices[voiceIndex].timeObjects,
 								nTimeObjects = timeObjects.length; // timeObjects does not include the final barline in the voice
 
-							if(staffIndex === 0 && voiceIndex === 0)
+							let msPos, msPosData;
+							for(let ti = 0; ti < nTimeObjects; ++ti)
 							{
-								let msPos, msPosData;
-								for(let ti = 0; ti < nTimeObjects; ++ti)
+								let midiObject = timeObjects[ti][interpIndex];
+								msPos = midiObject.msPositionInScore;								
+								if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
 								{
-									let tObj = timeObjects[ti][interpIndex];
-									msPos = tObj.msPositionInScore;
-									msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
+									msPosData = {msPositionInScore: msPos, alignment: midiObject.alignment * viewBoxScale, yCoordinates: yCoordinates};
 									systemMsPosDataArray.push(msPosData);
 								}
-								// push the final barline
+							}
+							// push the final barline
+							if(systemMsPosDataArray.find((e) => e.alignment === system.right) === undefined)
+							{
 								msPosData = {msPositionInScore: msPos, alignment: system.right * viewBoxScale, yCoordinates: yCoordinates};
 								systemMsPosDataArray.push(msPosData);
-							}
-							else
-							{
-								for(let ti = nTimeObjects - 1; ti >= 0; --ti)
-								{
-									let tObj = timeObjects[ti][interpIndex], msPos = tObj.msPositionInScore;
-									if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
-									{
-										let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
-										systemMsPosDataArray.push(msPosData);
-									}
-								}
 							}
 						}
 					}
