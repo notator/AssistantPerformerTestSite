@@ -37,7 +37,6 @@ export class Cursor
 		//	.msPositionInScore
 		//	.alignmentX
 		//	.yCoordinates
-		//	.pixelsPerMs
 		// The msPosData objects are sorted in order of .msPositionInScore.
 		// The last entry is an msPosData object for the final barline.
 		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray, interpIndex)
@@ -54,8 +53,7 @@ export class Cursor
 					let line = system.startMarker.line,
 						yCoordinates = {},
 						leftmostMidiObject = system.staves[0].voices[0].timeObjects[0][interpIndex], 
-						// The pixelsPerMs field is set properly later.
-						msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+						msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, yCoordinates: yCoordinates };
 
 					yCoordinates.top = line.y1.baseVal.value;
 					yCoordinates.bottom = line.y2.baseVal.value;
@@ -67,8 +65,7 @@ export class Cursor
 							if(voice.timeObjects[0][interpIndex].alignment < leftmostMidiObject.alignment)
 							{
 								leftmostMidiObject = voice.timeObjects[0][interpIndex];
-								// The pixelsPerMs field is set properly later.
-								msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+								msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, yCoordinates: yCoordinates };
 							}
 						}
 					}
@@ -80,18 +77,6 @@ export class Cursor
 
 			function getSystemMsPosDataArray(system, viewBoxScale, trackIsOnArray, interpIndex)
 			{
-				function setPixelsPerMs(systemMsPosDataArray)
-				{
-					let nMsPositions = systemMsPosDataArray.length - 1; // systemMsPosDataArray contains an entry for the final barline
-					for(let i = 0; i < nMsPositions; ++i)
-					{
-						let msPosData = systemMsPosDataArray[i],
-							nextMsPosData = systemMsPosDataArray[i + 1];
-
-						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextMsPosData.msPositionInScore - msPosData.msPositionInScore);
-					}
-				}
-
 				let systemMsPosDataArray = [],
 					nStaves = system.staves.length,
 					line = system.startMarker.line,
@@ -109,18 +94,21 @@ export class Cursor
 						if(trackIsOnArray[trackIndex++] === true)
 						{
 							let timeObjects = staff.voices[voiceIndex].timeObjects,
-								nTimeObjects = timeObjects.length; // timeObjects includes the final barline in the voice
+								nTimeObjects = timeObjects.length; // timeObjects does not include the final barline in the voice
 
 							if(staffIndex === 0 && voiceIndex === 0)
 							{
+								let msPos, msPosData;
 								for(let ti = 0; ti < nTimeObjects; ++ti)
 								{
-									let tObj = timeObjects[ti][interpIndex], msPos = tObj.msPositionInScore,
-										// pixelsPerMs is set properly later in this functon
-										msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
-
+									let tObj = timeObjects[ti][interpIndex];
+									msPos = tObj.msPositionInScore;
+									msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
 									systemMsPosDataArray.push(msPosData);
 								}
+								// push the final barline
+								msPosData = {msPositionInScore: msPos, alignment: system.right * viewBoxScale, yCoordinates: yCoordinates};
+								systemMsPosDataArray.push(msPosData);
 							}
 							else
 							{
@@ -129,8 +117,7 @@ export class Cursor
 									let tObj = timeObjects[ti][interpIndex], msPos = tObj.msPositionInScore;
 									if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
 									{
-										// pixelsPerMs is set properly later in this functon
-										let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+										let msPosData = { msPositionInScore: msPos, alignment: tObj.alignment * viewBoxScale, yCoordinates: yCoordinates };
 										systemMsPosDataArray.push(msPosData);
 									}
 								}
@@ -140,7 +127,6 @@ export class Cursor
 				}
 
 				systemMsPosDataArray.sort((a, b) => a.msPositionInScore - b.msPositionInScore);
-				setPixelsPerMs(systemMsPosDataArray);
 
 				return systemMsPosDataArray;
 			}
