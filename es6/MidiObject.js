@@ -226,18 +226,21 @@ class MidiObject
 
 	advanceCurrentMoment()
 	{
-		var returnMoment;
-
 		console.assert(this.currentMoment !== null, "CurrentMoment should never be null here!");
 
 		this._currentMomentIndex++;
-		returnMoment = null;
+
 		if(this._currentMomentIndex < this.moments.length)
 		{
 			this.currentMoment = this.moments[this._currentMomentIndex];
-			returnMoment = this.currentMoment;
+			return this.currentMoment;
 		}
-		return returnMoment;
+		else
+		{
+			this._currentMomentIndex = 0;
+			this.currentMoment = this.moments[0];
+			return null;
+		}
 	}
 
 	setToStartAtBeginning()
