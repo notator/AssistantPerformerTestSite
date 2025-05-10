@@ -49,10 +49,25 @@ a:visited
 .deviceSelector /* select */
 {
     font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
-    font-size: 11px; 
+    font-size: 11px;
     width: 245px;
     margin: 6px 3px 6px 0px;
-    padding: 0; 
+    padding: 0;
+}
+
+.interpretationSelector /* select */
+{
+    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
+    font-size: 11px;
+    position: absolute;
+    top: 4px;
+    left:10px;
+    width: 124px;
+    background-color:#eee;
+    border: 1px solid #444;
+    color:black;
+    margin: 0px;
+    padding-left: 10px;
 }
 
 .checkBoxCell /* div */
