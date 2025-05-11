@@ -866,6 +866,8 @@ export class Controls
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
+            globalElements.interpretationSelect = document.getElementById("interpretationSelect");
+
             globalElements.conductingLayer = document.getElementById("conductingLayer");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
@@ -1195,6 +1197,11 @@ export class Controls
             }
         }
 
+        if(controlID === "interpretationSelect")
+        {
+            score.setInterpretation(globalElements.interpretationSelect.selectedIndex);
+        }
+
         /**** controls in options panel ***/
         if(controlID === "scoreSelect")
         {
@@ -1303,7 +1310,7 @@ export class Controls
             // Get everything except the timeObjects (which have to take account of speed)
             score.getEmptySystems();
 
-            score.setTracksData();
+            score.setTracks();
 
             // Each track has a currentTrackInterpretation containing midiChords and midRests
             let currentTrackInterpretations = score.getCurrentTrackInterpretations(),

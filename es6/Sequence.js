@@ -541,6 +541,9 @@ export class Sequence
 		speed = baseSpeed;
 		sequenceRecording = recording; // can be undefined or null
 
+		trackInterpretations = score.getCurrentTrackInterpretations();
+		this.initTracks();
+
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
 		endMarkerMsPositionInScore = endMarkerMsPosInScore;
 

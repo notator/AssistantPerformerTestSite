@@ -12,7 +12,12 @@ let numberOfTracks = 0,
 	nInterpretations, // is set when an SVG-MIDI file is loaded
 	interpIndex = 0, // default value, will be reset by user control
 
-	tracksData = {},
+	// Contains an array of track.
+    // Each track contains:
+    //    1. an array of Interpretations, each of which contains midiChords and midiRests
+    //    2. the currentInterpretation -- a pointer to track.Interpretations[interpIndex]
+	tracks = [],
+
 	// This array is initialized to all tracks on (=true) when the score is loaded,
 	// and reset when the tracksControl calls refreshDisplay().
 	trackIsOnArray = [], // all tracks, including input tracks
@@ -138,8 +143,8 @@ let numberOfTracks = 0,
 	// Returns null or the performing midiChord, midiRest or barline closest to the startMarkerTool or endMarkerTool click position.
 	// Displays an alert if an attempt is made to position the start marker at the end of a system, or
 	// the end marker at the beginning of a system.
-	// Returns null if no midiObject can be found that matches the arguments.
-	findPerformingMidiObject = function(system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
+	// Returns null if no midiObject or barline can be found that matches the arguments.
+	findPerformingMidiObjectOrBarline = function(system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
 	{
 		function findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, firstMidiObject, lastMidiObject, deltaBefore, deltaAfter, settingStart)
 		{
@@ -335,7 +340,7 @@ let numberOfTracks = 0,
 
 		setView(trackIsOnArray);
 
-		midiObject = findPerformingMidiObject(system, timeObjectsArray, numberOfTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
+		midiObject = findPerformingMidiObjectOrBarline(system, timeObjectsArray, numberOfTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
 
 		startMarker.moveTo(midiObject); // can be a midiChord, midiRest or barline
 	},
@@ -344,10 +349,11 @@ let numberOfTracks = 0,
 	// It is called again by regionSelectControlMouseOut (above) after selecting a regionName
 	svgPageClicked = function(e, state)
 	{
-		var cursorX = e.pageX,
+		let ignoreOtherMarker = e.ignoreOtherMarker, // used when changing interpretations
+			cursorX = e.pageX,
 			cursorY = e.pageY,
 			systemIndex, system,
-			timeObjectsArray, midiObject, trackIndex, barlineTimeObject;
+			timeObjectsArray, midiObjectOrBarline, trackIndex, barlineTimeObject;
 
 		// Returns the system having stafflines closest to cursorY.
 		function findSystemIndex(cursorY)
@@ -488,7 +494,8 @@ let numberOfTracks = 0,
 			function findMsPositionForRegions(timeObject, settingEndMarker)
 			{
 				let msPos = timeObject.msPositionInScore;
-				if(settingEndMarker === true && timeObject.typeString !== undefined && timeObject.typeString.indexOf('Barline') > -1)
+				//if(settingEndMarker === true && timeObject.typeString !== undefined && timeObject.typeString.indexOf('Barline') > -1)
+				if(settingEndMarker === true)
 				{
 					msPos--;
 				}
@@ -588,7 +595,7 @@ let numberOfTracks = 0,
 				document.body.appendChild(selectRegionLayer);
 			}
 
-			function getPossibleRegionNames(msPositionInScore, regionNames, settingEndMarker)
+			function getPossibleRegionNames(msPositionInScore, regionNames, settingEndMarker, ignoreOtherMarker)
 			{
 				let possibleNames = [];
 				for(let name of regionNames)
@@ -596,21 +603,26 @@ let numberOfTracks = 0,
 					let index = indexInRegionSequence(name);
 					if(settingEndMarker === false)
 					{
-						if(index < endRegionIndex || (index === endRegionIndex && msPositionInScore < endMarker.msPositionInScore))
+						if(index < endRegionIndex
+						|| (ignoreOtherMarker === undefined && index === endRegionIndex && msPositionInScore < endMarker.msPositionInScore))
 						{
+							// ignoreOtherMarker is defined only when changing interpretations.
+							// In this case, the markers are not actually moving in the graphics, so the check does not need to be made,
+							// and the  marker.msPositionInScore values are currently invalid anyway (they are being reset).
 							possibleNames.push(name);
 						}
 					}
 					else // find end region names
 					{
-						if(index > startRegionIndex || (index === startRegionIndex && msPositionInScore > startMarker.msPositionInScore))
+						if(index > startRegionIndex
+						|| (ignoreOtherMarker === undefined && index === startRegionIndex && msPositionInScore > startMarker.msPositionInScore))
 						{
 							possibleNames.push(name);
 						}
 					}
 				}
 
-				if(possibleNames.length === 0)
+				if(possibleNames.length === 0 && ignoreOtherMarker === undefined)
 				{
 					if(settingEndMarker === false)
 					{
@@ -620,6 +632,7 @@ let numberOfTracks = 0,
 					{
 						alert("Can't position the endMarker on or before the startMarker.");
 					}
+					possibleNames = null; // illegal marker position click
 				}
 
 				return possibleNames;
@@ -627,10 +640,14 @@ let numberOfTracks = 0,
 
 			let msPositionForRegions = findMsPositionForRegions(timeObject, settingEndMarker),
 				regionNames = findRegionNamesAtMsPos(msPositionForRegions),
-				possibleRegionNames = getPossibleRegionNames(msPositionForRegions, regionNames, settingEndMarker),
-				regionIndex = -1;
+				possibleRegionNames = getPossibleRegionNames(msPositionForRegions, regionNames, settingEndMarker, ignoreOtherMarker),
+				regionIndex = 0; // default
 
-			if(possibleRegionNames.length > 1)
+			if(possibleRegionNames === null) // illegal marker position click
+			{
+				regionIndex = -1;
+			}
+			else if(possibleRegionNames.length > 1)
 			{
 				openRegionSelectControl(possibleRegionNames, cursorX, cursorY);
 			}
@@ -651,22 +668,19 @@ let numberOfTracks = 0,
 
 		trackIndex = findTrackIndex(cursorY, system);
 
-		midiObject = findPerformingMidiObject(system, timeObjectsArray, numberOfTracks, trackIsOnArray, cursorX, trackIndex, state);
+		midiObjectOrBarline = findPerformingMidiObjectOrBarline(system, timeObjectsArray, numberOfTracks, trackIsOnArray, cursorX, trackIndex, state);
 
 		// timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
 		// either in a live performers voice (if there is one and it is performing) or in a performing voice.
-		if(midiObject !== null)
+		if(midiObjectOrBarline !== null)
 		{
-			barlineTimeObject = system.barlinesPerInterpretation[interpIndex].find(x => x.msPositionInScore === midiObject.msPositionInScore);
-			midiObject = (barlineTimeObject === undefined) ? midiObject : barlineTimeObject;
-
 			let regionIndex = 0;
 			switch(state)
 			{
 				case 'settingStart':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(midiObject, false);
+						regionIndex = selectRegionIndex(midiObjectOrBarline, false);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
@@ -677,18 +691,18 @@ let numberOfTracks = 0,
 						startRegionIndex = regionIndex;
 						startMarker = system.startMarker;
 						hideStartMarkersExcept(startMarker);
-						startMarker.moveTo(midiObject);
+						startMarker.moveTo(midiObjectOrBarline);
 						if(regionSequence.length > 1)
 						{
 							startMarker.setName(regionSequence[startRegionIndex].name);
 						}
 					}
-					currentRegionIndex = regionIndex;
+					currentRegionIndex = (regionIndex === -1) ? currentRegionIndex : regionIndex;
 					break;
 				case 'settingEnd':
 					if(regionName.localeCompare("") === 0)
 					{
-						regionIndex = selectRegionIndex(midiObject, true);
+						regionIndex = selectRegionIndex(midiObjectOrBarline, true);
 						setMarkerEvent = e; // gobal: This function is called again with this event when a regionName has been selected.
 						setMarkerState = state; // gobal: This function is called again with this state when a regionName has been selected. 
 					}
@@ -699,7 +713,7 @@ let numberOfTracks = 0,
 						endRegionIndex = regionIndex;
 						endMarker = system.endMarker;
 						hideEndMarkersExcept(endMarker);
-						endMarker.moveTo(midiObject);
+						endMarker.moveTo(midiObjectOrBarline);
 						if(regionSequence.length > 1)
 						{
 							endMarker.setName(regionSequence[endRegionIndex].name);
@@ -886,26 +900,8 @@ let numberOfTracks = 0,
 					}
 				}
 
-				//function setBlackDisplay(staff)
-				//{
 				setStaffNameStyle(staff, BLACK_COLOR);
 				setStafflinesColor(staff, BLACK_COLOR);
-				//}
-
-				//function setDisabledInputDisplay(staff)
-				//{
-				//	setStaffNameStyle(staff, DISABLED_PINK_COLOR);
-				//	setStafflinesColor(staff, DISABLED_PINK_COLOR);
-				//}
-
-				//if(staff.isOutput === true)
-				//{
-				//	setBlackDisplay(staff);
-				//}
-				//if(staff.isOutput === false)
-				//{
-				//	setDisabledInputDisplay(staff);
-				//}
 			}
 
 			function getNameElem(staffChild)
@@ -1246,21 +1242,6 @@ let numberOfTracks = 0,
 
 	sendEndMarkerToEnd = function()
 	{
-		function getSystemIndex(endMsPosInScore)
-		{
-			var endSystemIndex = systems.length - 1;
-			for(var i = 0; i < systems.length; i++)
-			{
-				var timeObjects = systems[i].staves[0].voices[0].timeObjects;
-				if(timeObjects[timeObjects.length - 1].msPositionInScore >= endMsPosInScore)
-				{
-					endSystemIndex = i;
-					break;
-				}
-			}
-			return endSystemIndex;
-		}
-
 		let lastSystem = systems[systems.length - 1],
 			lastSystemBarlines = lastSystem.barlinesPerInterpretation[interpIndex],
 			lastSystemBarline = lastSystemBarlines[lastSystemBarlines.length - 1];
@@ -1321,13 +1302,129 @@ let numberOfTracks = 0,
 		}
 	},
 
-	// tracksData has a single array attribute:
-	//	tracks[] - an array of tracks containing midiChords and midiRests
-	setTracksData = function()
+	setInterpretationState = function(systems, interpIndex)
+	{
+		function setRegionData(systems, interpIndex)
+		{
+			// Sets regionNamesPerMsPosInScore (global in score),
+			// which is used by the SetStartMarker and SetEndMarker tools.
+			function setRegionNamesPerMsPosInScore(regionSequence)
+			{
+				// Returns an array containing one unique name per performed region.
+				// Uses Moritz' algorithm (A, A1, A2 etc.).
+				function getRegionNameSequence(regionSequence)
+				{
+					let names = [];
+					for(let region of regionSequence)
+					{
+						names.push(region.name);
+					}
+					return names;
+				}
+
+				function getRegionMsPosBounds(regionSequence)
+				{
+					let regionMsPosBounds = [];
+					for(let region of regionSequence)
+					{
+						let msPositionInScore = region.startMsPosInScore;
+						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
+						{
+							regionMsPosBounds.push(msPositionInScore);
+						}
+						msPositionInScore = region.endMsPosInScore;
+						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
+						{
+							regionMsPosBounds.push(msPositionInScore);
+						}
+					}
+					regionMsPosBounds.sort((a, b) => (a - b));
+
+					return regionMsPosBounds;
+				}
+
+				let regionNameSequence = getRegionNameSequence(regionSequence);
+				let regionMsPosBoundsInScore = getRegionMsPosBounds(regionSequence);
+
+				// global in Score.js: will contain objects of the form {startMsPosInScore, array of regionInstanceName}
+				regionNamesPerMsPosInScore = [];
+				for(let msPosInScore of regionMsPosBoundsInScore)
+				{
+					let regionNames = [];
+					for(let i = 0; i < regionSequence.length; ++i)
+					{
+						let region = regionSequence[i],
+							regionName = regionNameSequence[i],
+							duration = region.endMsPosInScore - region.startMsPosInScore;
+
+						if(msPosInScore >= region.startMsPosInScore && msPosInScore < (region.startMsPosInScore + duration))
+						{
+							regionNames.push(regionName);
+						}
+					}
+					let entry = {msPosInScore, regionNames};
+					regionNamesPerMsPosInScore.push(entry);
+				}
+			}
+
+			if(regionSequence.length === 1)
+			{
+				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
+
+					finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
+					finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
+
+				regionSequence[0].endMsPosInScore = finalBarlineMsPosInScore;
+			}
+
+			setRegionNamesPerMsPosInScore(regionSequence);
+
+			for(let track of tracks)
+			{
+				track.currentInterpretation.setRegionLinks(regionSequence);
+			}
+		}
+
+		function adjustMarkersMsPositions()
+		{
+			function getMidY(marker)
+			{
+				let ys = marker.yCoordinates,
+					midY = (ys.bottom + ys.top) / 2;
+
+				return midY;
+			}
+
+			let event = {};
+
+			event.ignoreOtherMarker = true;
+
+			event.pageX = startMarker.alignment;
+			event.pageY = getMidY(startMarker);
+			setStartMarkerClick(event);
+
+			event.pageX = endMarker.alignment;
+			event.pageY = getMidY(endMarker);
+			setEndMarkerClick(event);
+		}
+
+		for(let i = 0; i < tracks.length; ++i)
+		{
+			tracks[i].setCurrentInterpretation(interpIndex);
+		}
+
+		setRegionData(systems, interpIndex);
+
+		adjustMarkersMsPositions();
+
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
+	},
+
+	// Loads the global tracks array.
+	setTracks = function()
 	{
 		// systems->staves->voices->timeObjects
-		var
-			tracks = [],
+		let
 			trackIndex = 0, track,
 			nTimeObjects,
 			voiceIndex, nVoices, voice,
@@ -1543,8 +1640,6 @@ let numberOfTracks = 0,
 					}
 				}
 
-
-
 				/*************** end of getVoiceAndSystemTimeObjects function definitions *****************************/
 
 				for(let i = 0; i < systemElems.length; ++i)
@@ -1561,87 +1656,6 @@ let numberOfTracks = 0,
 				setMsPositions(systems);
 
 			}
-
-			//// These are needed for aligning start and end markers.
-			//function appendVoiceEndBarlineTimeObject(systems)
-			//{
-			//	let systemIndex, nSystems = systems.length, system,
-			//		j, nStaves, staff,
-			//		k, nVoices, voice,
-			//		rightmostAlignment = systems[0].right,
-			//		startMsPositionOfNextSystem,
-			//		finalMidiObject,
-			//		endMsPositionInScore;
-
-			//	function getStartMsPositionOfNextSystem(staves, interpretationIndex)
-			//	{
-			//		let firstMsPos, nStaves = staves.length, minMsPos = Number.MAX_VALUE;
-
-			//		for (let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-			//		{
-			//			staff = staves[staffIndex];
-			//			for (let voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
-			//			{
-			//				if (staff.voices[voiceIndex].timeObjects !== undefined)
-			//				{
-			//					firstMsPos = staff.voices[voiceIndex].timeObjects[0][interpretationIndex].msPositionInScore;
-			//					minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
-			//				}
-			//			}
-			//		}
-			//		return minMsPos;
-			//	}
-
-			//	let nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
-
-			//	for (let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
-			//	{
-			//		for (systemIndex = 0; systemIndex < nSystems; ++systemIndex)
-			//		{
-			//			system = systems[systemIndex];
-			//			if (systemIndex < nSystems - 1)
-			//			{
-			//				startMsPositionOfNextSystem = getStartMsPositionOfNextSystem(systems[systemIndex + 1].staves, interpIndex);
-			//			}
-			//			nStaves = system.staves.length;
-			//			for (let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-			//			{
-			//				staff = system.staves[staffIndex];
-			//				nVoices = staff.voices.length;
-			//				for (let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
-			//				{
-			//					voice = staff.voices[voiceIndex];
-			//					if (voice.timeObjects !== undefined)
-			//					{
-			//						if (interpIndex === 0)
-			//						{
-			//							// contains one final barlineObject per interpretation (used when changing speed)
-			//							let timeObject = [];
-			//							voice.timeObjects.push(timeObject);
-			//						}
-
-			//						let barlineObject = {};
-			//						voice.timeObjects[voice.timeObjects.length - 1].push(barlineObject);
-
-			//						Object.defineProperty(barlineObject, "msDurationInScore", {value: 0, writable: false});
-			//						Object.defineProperty(barlineObject, "systemIndex", {value: systemIndex, writable: false});
-			//						Object.defineProperty(barlineObject, "alignment", {value: rightmostAlignment, writable: false});
-			//						if (systemIndex < nSystems - 1)
-			//						{
-			//							Object.defineProperty(barlineObject, "msPositionInScore", {value: startMsPositionOfNextSystem, writable: false});
-			//						}
-			//						else
-			//						{
-			//							finalMidiObject = voice.timeObjects[voice.timeObjects.length - 2][interpIndex];
-			//							endMsPositionInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
-			//							Object.defineProperty(barlineObject, "msPositionInScore", {value: endMsPositionInScore, writable: false});
-			//						}
-			//					}
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
 
 			function getSystemBarlineTimeObjects(systemElems, systemElem)
 			{
@@ -1762,33 +1776,13 @@ let numberOfTracks = 0,
 
 			getVoiceTimeObjects();
 
-			//appendVoiceEndBarlineTimeObject(systems);
-
-
 			// Does the endMarker need the right barline to be at the end of each voice's timeObjects?
 			// If so, add it after calling the following function.
 			// Currently, there are only MidiChords and MidiRests in the timeObjects.
 			getSystemBarlineTimeObjects(systemElems, systems);
 		}
 
-		function setMarkers(systems)
-		{
-			var i, nSystems = systems.length, system;
-			for(i = 0; i < nSystems; ++i)
-			{
-				system = systems[i];
-				system.startMarker.setVisible(false);
-				system.endMarker.setVisible(false);
-			}
-
-			// When this function returns, startMarker is used to set the Cursor position.
-			// sendStartMarkerToStart() is called later to make startMarker visible and move it to the first barline.
-			startMarker = systems[0].startMarker;
-			startMarker.moveTo(systems[0].staves[0].voices[0].timeObjects[0][0]);
-			sendEndMarkerToEnd();
-		}
-
-		function getEmptyTrackObjects(system0staves)
+		function getEmptyTracks(system0staves)
 		{
 			var tracks = [],
 				staffIndex, voiceIndex, nStaves = system0staves.length, staff;
@@ -1805,134 +1799,70 @@ let numberOfTracks = 0,
 			return tracks;
 		}
 
-		function setRegionData(tracks, systems)
+		interpIndex = 0; // default
+
+		if(systems[0].staves[0].voices[0].timeObjects === undefined)
 		{
-			// Sets regionNamesPerMsPosInScore (global in score),
-			// which is used by the SetStartMarker and SetEndMarker tools.
-			function setRegionNamesPerMsPosInScore(regionSequence)
+			getVoiceAndSystemTimeObjects();
+
+			tracks = getEmptyTracks(systems[0].staves);
+
+			nStaves = systems[0].staves.length;
+
+			for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
 			{
-				// Returns an array containing one unique name per performed region.
-				// Uses Moritz' algorithm (A, A1, A2 etc.).
-				function getRegionNameSequence(regionSequence)
+				system = systems[sysIndex];
+				trackIndex = 0;
+				for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 				{
-					let names = [];
-					for(let region of regionSequence)
+					staff = system.staves[staffIndex];
+					nVoices = staff.voices.length;
+					for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 					{
-						names.push(region.name);
-					}
-					return names;
-				}
+						voice = staff.voices[voiceIndex];
 
-				function getRegionMsPosBounds(regionSequence)
-				{
-					let regionMsPosBounds = [];
-					for(let region of regionSequence)
-					{
-						let msPositionInScore = region.startMsPosInScore;
-						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
+						nTimeObjects = voice.timeObjects.length;
+						//let nInterpretations = voice.timeObjects[0].length;
+						track = tracks[trackIndex];
+						for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
 						{
-							regionMsPosBounds.push(msPositionInScore);
-						}
-						msPositionInScore = region.endMsPosInScore;
-						if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
-						{
-							regionMsPosBounds.push(msPositionInScore);
-						}
-					}
-					regionMsPosBounds.sort((a, b) => (a - b));
-
-					return regionMsPosBounds;
-				}
-
-				let regionNameSequence = getRegionNameSequence(regionSequence);
-				let regionMsPosBoundsInScore = getRegionMsPosBounds(regionSequence);
-
-				// global in Score.js: will contain objects of the form {startMsPosInScore, array of regionInstanceName}
-				regionNamesPerMsPosInScore = [];
-				for(let msPosInScore of regionMsPosBoundsInScore)
-				{
-					let regionNames = [];
-					for(let i = 0; i < regionSequence.length; ++i)
-					{
-						let region = regionSequence[i],
-							regionName = regionNameSequence[i],
-							duration = region.endMsPosInScore - region.startMsPosInScore;
-
-						if(msPosInScore >= region.startMsPosInScore && msPosInScore < (region.startMsPosInScore + duration))
-						{
-							regionNames.push(regionName);
-						}
-					}
-					let entry = {msPosInScore, regionNames};
-					regionNamesPerMsPosInScore.push(entry);
-				}
-			}
-
-			setRegionNamesPerMsPosInScore(regionSequence);
-
-			if(regionSequence.length === 1)
-			{
-				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
-					finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
-					finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
-
-				regionSequence[0].endMsPosInScore = finalBarlineMsPosInScore;
-			}
-
-			for(let track of tracks)
-			{
-				track.currentInterpretation.setRegionLinks(regionSequence);
-			}
-		}
-
-		getVoiceAndSystemTimeObjects();
-
-		tracks = getEmptyTrackObjects(systems[0].staves);
-
-		nStaves = systems[0].staves.length;
-
-		for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
-		{
-			system = systems[sysIndex];
-			trackIndex = 0;
-			for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-			{
-				staff = system.staves[staffIndex];
-				nVoices = staff.voices.length;
-				for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
-				{
-					voice = staff.voices[voiceIndex];
-
-					nTimeObjects = voice.timeObjects.length;
-					//let nInterpretations = voice.timeObjects[0].length;
-					track = tracks[trackIndex];
-					for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
-					{
-						for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
-						{
-							let midiObject = voice.timeObjects[timeObjectIndex][interpIndex];
-							if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
+							for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
 							{
-								track.interpretations[interpIndex].midiObjects.push(midiObject);
+								let midiObject = voice.timeObjects[timeObjectIndex][interpIndex];
+								if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
+								{
+									track.interpretations[interpIndex].midiObjects.push(midiObject);
+								}
 							}
 						}
+						++trackIndex;
 					}
-					++trackIndex;
 				}
 			}
 		}
+		function setMarkersToInitialPositions(systems)
+		{
+			for(let i = 0; i < systems.length; ++i)
+			{
+				let system = systems[i];
+				system.startMarker.setVisible(false);
+				system.endMarker.setVisible(false);
+			}
 
-		tracksData.tracks = tracks;
+			sendStartMarkerToStart();
+			sendEndMarkerToEnd();
+		}
 
-		setRegionData(tracks, systems);
+		if(cursor === undefined)
+		{
+			// cursor is accessed outside the score using a getter function
+			cursor = new Cursor(systemChanged, viewBoxScale);
+			markersLayer.appendChild(cursor.element);
+		}
 
-		setMarkers(systems);
+		setMarkersToInitialPositions(systems);
 
-		// cursor is accessed outside the score using a getter function
-		cursor = new Cursor(systemChanged, viewBoxScale);
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
-
-		markersLayer.appendChild(cursor.element);
+		setInterpretationState(systems, interpIndex);
 	},
 
 	getSystems = function()
@@ -1952,9 +1882,9 @@ let numberOfTracks = 0,
 
 	getCurrentTrackInterpretations = function()
 	{
-		let allTracks = tracksData.tracks,
+		let allTracks = tracks,
 			currentTrackInterpretations = [];
-		for(let i = 0; i < allTracks.length; ++i)
+		for(let i = 0; i < allTracks.length; ++i)																				  
 		{
 			currentTrackInterpretations.push(allTracks[i].currentInterpretation);
 		}
@@ -1995,6 +1925,12 @@ let numberOfTracks = 0,
 	getEndRegionIndex = function()
 	{
 		return endRegionIndex;
+	},
+
+	setInterpretation = function(interpretationIndex)
+	{
+		interpIndex = interpretationIndex;
+		setInterpretationState(systems, interpIndex);
 	};
 
 export class Score
@@ -2041,8 +1977,10 @@ export class Score
 
 		// tracksData is an object having a single tracks array attribute:
 		// Each track in the array has one or more interpretations.
-		this.setTracksData = setTracksData;
+		this.setTracks = setTracks;
 		this.getCurrentTrackInterpretations = getCurrentTrackInterpretations;
+
+		this.setInterpretation = setInterpretation;
 
 		// The markersLayer is set when a specific score is loaded.
 		// It contains the cursor line and the start- and endMarkers for each system in the score.
