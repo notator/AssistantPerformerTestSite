@@ -1,0 +1,68 @@
+
+AssistantPerformerRoadMap2025
+TODOs and Commentary about the changes being made before the Web Audio conference in Paris, November 2025.
+These changes are being implemented gradually, in conjunction with changes being made in Moritz and the ResidentSynth(Host).
+This file is intended to be a help when revising the main documentation for AssistantPerformer2025 when the TODOS2025 branch is merged
+into the stable branch.
+
+===========================================================================================================================================
+TODOs:
+1. Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
+
+2. Implement the performance of multiple interpretations of each score. This involves a change in the SVG-MIDI file format, and is being
+done incrementally.
+2a) (DONE) Moritz has been updated to create scores in the new format.
+2b) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
+"Interpretation Select" control at the top of page 2 of the AP's GUI.
+2c) (TODO) The "Interpretation Select" control needs to be
+      i) populated according to the number of interpretations in the score.
+     ii) Made invisible if there is only one interpretation.
+    iii) Disabled (greyed out) while performing.
+Comment: Also see the blue-boxed note apropos the remarks at the start of Part 4 of Retrospective 2024 (Also, see my 9th July notebook entry.):
+The descision to implement multiple interpretations of a score has to do with the way performance practice traditions develop (through the
+use of different recordings of the same piece). There is never a single, perfect performance of a score that is intended to be interpreted by
+humans.
+Performances using the Assistant Performer´s conducting options are problematic: its impossible to know _exactly_ when the next event will
+happen when the mouse is moved. One can´t see into the future. This is why I wrote the ResidentSynthHost´s ability to trigger events _exactly_
+when the performer presses a key on the keyboard, and to record the result.  When recording in the ResidentSynthHost, the performer decides
+_which_ key to press, and _when_, depending on his/her memory (of how to read, and all other previous experience). In other words, the decision
+of when to press the key depends on who the performer _is_ -- i.e. what his/her _memories_ are, who he/she has been trained to be. 
+Its a performer´s unique _mind_ (memory, spirit) that communicates in time. We don´t know how or where the performer´s memories are stored,
+but that´s actually irrelevant here. Its also irrelevant to ask whether "free-will" is involved: All we need to know is that it seems to be
+working (much in the same way that all that´s relevant about space, time and information is how we _experience_ them. What they, and "free will"
+"really" are (maybe when _mathematically_ defined) isn´t relevant to how we experience them. Experiencing someone's unique performance of a
+score is to experience "what it is like to be" someone else. Its comforting to know that we are not alone.
+
+3. I would like to be able to use the new AssistantPerformer2025 to play the scores (such as Study 2) that cannot be converted to the new format
+by recompiling them in Moritz. The only way to do that would be to write a special converter application that would take the old score as input,
+and write it out again in the new format. This could be a simple command line application written in C#:
+    convert inputOldScore.svg outputNewScore.svg
+I think Copilot could write most of the code if I describe the problem properly and supply some concrete examples. I need to follow, check and
+debug Copilot's code, but this would be a good project for getting to know what programming with Copilot is like. I'd probably learn a thing or
+two about C# too. This could also be done in a web application, developed using Node.js, but its not an application that has a long-term, on-line
+future, so C# is probably the simpler (quicker) option... But learning Node.js, in a not very public project, might be a good idea... See the
+"Add Recordings to SVG-MIDI" project (below).
+
+4. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
+I want to simplify Sequence.js if possible, but not to change the way it reports msPositions to the Cursor! Possibly, the use of PREQUEUE could
+be changed: Timestamped messages sent _between_the_changes_of_cursor_position_ could be sent all at once to the synth for scheduling. Use CoPilot
+for help, but be very careful! We already got into a mess with this. (Those changes have now been undone.)
+
+(Possibly after the conference)
+5. Ask Copilot to help me write an application that would add recordings made by the ResidentSynthHost to an existing SVG-MIDI score. My instinct
+is that this would best be done in a web application, so probably be developed using Node.js.
+
+6. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
+ways of doing things. Apart from doing simple things like changing vars into lets, it might even be worth converting the whole project to strongly
+typed Typescript.
+
+7. Implement an Annotations Editor in the AssistantPerformer2025. This may not be as large a project as it sounds. The "annotations" layer already
+exists in the SVG-MIDI scores, and anything written on it is simply ignored by the performance functions.
+I imagine it should be fairly easy to create a new editing, "non-performance", page that would have special tools instead of performance controls.
+The tools would react to clicks on the score in the same way as the "set marker" tools do on the performance page.
+There would be tools for
+     i) adding simple markings such as staccato dots, accents
+    ii) adding slurs and ties. Could I create an overlay that would replace the current way of notating ties? 
+   iii) adding text annotations (e.g. "faster", "carefully" etc.)
+
+
