@@ -7,14 +7,18 @@ into the stable branch.
 
 ===========================================================================================================================================
 TODOs:
-1. Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
+1. (done?) Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
+Especially check messages that have no duration attribute, and those that have a duration 0 ms. Both mean the same, and should work properly. 
 
 2. Implement the performance of multiple interpretations of each score. This involves a change in the SVG-MIDI file format, and is being
 done incrementally.
-2a) (DONE) Moritz has been updated to create scores in the new format.
-2b) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
+2a) (DONE) Write the ConvertSVGMIDI application in C#. This has created a new Study 2 score in the new format.
+TODO -- BUG FIX: Change Moritz so that it does NOT reverse the order of the graphics and midiChords elements inside chord elements!
+Then update all the SVG-MIDI scores used by the AP!
+2b) (TODO!) Add code for performing the new Study 2 score to the AP, so that it can be tested and performed.
+2c) (DONE -- but see BUG FIX) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
 "Interpretation Select" control at the top of page 2 of the AP's GUI.
-2c) (TODO) The "Interpretation Select" control needs to be
+2d) (TODO) The "Interpretation Select" control needs to be
       i) populated according to the number of interpretations in the score.
      ii) Made invisible if there is only one interpretation.
     iii) Disabled (greyed out) while performing.
@@ -33,24 +37,17 @@ working (much in the same way that all that´s relevant about space, time and inf
 "really" are (maybe when _mathematically_ defined) isn´t relevant to how we experience them. Experiencing someone's unique performance of a
 score is to experience "what it is like to be" someone else. Its comforting to know that we are not alone.
 
-3. I would like to be able to use the new AssistantPerformer2025 to play the scores (such as Study 2) that cannot be converted to the new format
-by recompiling them in Moritz. The only way to do that would be to write a special converter application that would take the old score as input,
-and write it out again in the new format. This could be a simple command line application written in C#:
-    convert inputOldScore.svg outputNewScore.svg
-I think Copilot could write most of the code if I describe the problem properly and supply some concrete examples. I need to follow, check and
-debug Copilot's code, but this would be a good project for getting to know what programming with Copilot is like. I'd probably learn a thing or
-two about C# too. This could also be done in a web application, developed using Node.js, but its not an application that has a long-term, on-line
-future, so C# is probably the simpler (quicker) option... But learning Node.js, in a not very public project, might be a good idea... See the
-"Add Recordings to SVG-MIDI" project (below).
+3. Add code to the AssistantPerformer that would react to a right-click on a chord symbol by displaying its temporal information
+in an Alert() box.
 
 4. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
 I want to simplify Sequence.js if possible, but not to change the way it reports msPositions to the Cursor! Possibly, the use of PREQUEUE could
 be changed: Timestamped messages sent _between_the_changes_of_cursor_position_ could be sent all at once to the synth for scheduling. Use CoPilot
 for help, but be very careful! We already got into a mess with this. (Those changes have now been undone.)
 
-(Possibly after the conference)
-5. Ask Copilot to help me write an application that would add recordings made by the ResidentSynthHost to an existing SVG-MIDI score. My instinct
-is that this would best be done in a web application, so probably be developed using Node.js.
+(Possibly after the November conference)
+5. Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
+This project would be part of the Moritz solution (written in C#)
 
 6. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
 ways of doing things. Apart from doing simple things like changing vars into lets, it might even be worth converting the whole project to strongly
