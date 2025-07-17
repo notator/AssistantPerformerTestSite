@@ -8,17 +8,19 @@ into the stable branch.
 ===========================================================================================================================================
 TODOs:
 1. (done?) Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
-Especially check messages that have no duration attribute, and those that have a duration 0 ms. Both mean the same, and should work properly. 
+Especially check messages that have no duration attribute, and those that have a duration 0 ms. Both mean the same, and should work properly.
+KNOWN BUG: The midiChords elements in the Erratum Musical score are empty! There must be a problem in its algorithm code...
 
 2. Implement the performance of multiple interpretations of each score. This involves a change in the SVG-MIDI file format, and is being
 done incrementally.
 2a) (DONE) Write the ConvertSVGMIDI application in C#. This has created a new Study 2 score in the new format.
-TODO -- BUG FIX: Change Moritz so that it does NOT reverse the order of the graphics and midiChords elements inside chord elements!
-Then update all the SVG-MIDI scores used by the AP!
-2b) (TODO!) Add code for performing the new Study 2 score to the AP, so that it can be tested and performed.
-2c) (DONE -- but see BUG FIX) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
+BUG FIX (DONE): Change Moritz so that it writes the midiChords element _before_ the graphics element inside chord elements!
+    Thus the score:midiChords element simply replaces the score:midi element, and new scores have the same structure as the converted scores.
+    (DONE) Update all the SVG-MIDI scores used by the AP and as demo scores in Visual Studio!
+2b) (TODO) Integrate the new Study 2 score into the AssistantPerformer's code. Test it and perform it.
+2c) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
 "Interpretation Select" control at the top of page 2 of the AP's GUI.
-2d) (TODO) The "Interpretation Select" control needs to be
+2d) (TODO) The AssistantPerformer's "Interpretation Select" control needs to be
       i) populated according to the number of interpretations in the score.
      ii) Made invisible if there is only one interpretation.
     iii) Disabled (greyed out) while performing.
