@@ -16,8 +16,9 @@ const
     PIANOLA_MUSIC_SCORE_INDEX = 1,
     PIANOLA_MUSIC_3STAVES_SCORE_INDEX = 2,
     STUDY1_SCORE_INDEX = 3,
-    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 4,
-    THREE_CRASHES_SCORE_INDEX = 5,
+    STUDY2_SCORE_INDEX = 4,
+    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 5,
+    THREE_CRASHES_SCORE_INDEX = 6,
 
     SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
@@ -365,6 +366,9 @@ var
     {
         let s = score,
             markersLayer = s.getMarkersLayer(),
+            currentURL = new URL(window.location.href),
+            // currentSiteURL is used to avoid cross site complications with the testSite            
+            currentSiteURL = currentURL.href.replace("assistantPerformer.html", ""),
             conductingLayer = globalElements.conductingLayer;
 
         if(markersLayer !== undefined)
@@ -373,15 +377,18 @@ var
             {
                 case 'settingStart':
                     markersLayer.addEventListener('click', s.setStartMarkerClick, false);
-                    markersLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
+                    currentSiteURL = currentSiteURL + 'cursors/setStartCursor.cur';
+                    markersLayer.style.cursor = "url(" + currentSiteURL + "), crosshair";
                     break;
                 case 'settingEnd':
                     markersLayer.addEventListener('click', s.setEndMarkerClick, false);
-                    markersLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
+                    currentSiteURL = currentSiteURL + 'cursors/setEndCursor.cur';
+                    markersLayer.style.cursor = "url(" + currentSiteURL + "), pointer";
                     break;
                 case 'conductingTimer':
                     conductingLayer.style.visibility = "visible";
-                    conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+                    currentSiteURL = currentSiteURL + 'cursors/conductor.cur';
+                    conductingLayer.style.cursor = "url(" + currentSiteURL + "), move";
                     conductingLayer.removeEventListener('mousedown', startConductTimer, {passive: true});
                     conductingLayer.removeEventListener('mouseup', stopConductTimer, {passive: true});
                     conductingLayer.addEventListener('mousedown', startConductTimer, {passive: true});
@@ -389,7 +396,9 @@ var
                     break;
                 case 'conductingCreep':
                     conductingLayer.style.visibility = "visible";
-                    conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+                    currentSiteURL = currentSiteURL + 'cursors/conductor.cur';
+                    conductingLayer.style.cursor = "url(" + currentSiteURL + "), move";
+                    //conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/cursors/conductor.cur'), move";
                     conductingLayer.removeEventListener('mousedown', startConductCreep, {passive: true});
                     conductingLayer.removeEventListener('mouseup', stopConductCreep, {passive: true});
                     conductingLayer.addEventListener('mousedown', startConductCreep, {passive: true});
@@ -980,6 +989,11 @@ export class Controls
                         scoreInfo.filename = "Study 1 (version 2025)/Study 1 (version 2025) (scroll).svg";
                         scoreInfo.aboutText = "about Study 1";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
+                        break;
+                    case STUDY2_SCORE_INDEX:
+                        scoreInfo.filename = "Study 2 (conversion 2025)/Study 2 (conversion 2025).svg";
+                        scoreInfo.aboutText = "about Study 2";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy2.html";
                         break;
                     case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
                         scoreInfo.filename = "Erratum Musical/Erratum Musical (scroll).svg";

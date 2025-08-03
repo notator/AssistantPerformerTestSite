@@ -1610,10 +1610,10 @@ let numberOfTracks = 0,
 
 					for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
 					{
-						let msPosition = 0;
 						for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 						{
 							nVoices = systems[0].staves[staffIndex].voices.length;
+							let msPosition = 0;
 							for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 							{
 								for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)

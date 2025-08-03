@@ -77,23 +77,38 @@ function _getMoments(midiChordElem)
 	}
 
 	// Returns an array of Moments.
-	// Each Moment is an array of messages that are sent "synchronously" and their position wrt the chord:
+	// Each Moment is an array of messages that are sent "synchronously" at their position wrt the chord:
 	//     .msPositionInChord
 	//     .messages 
 	function getMoments(initialMessages, envelopeMessages, noteOffMessages, noteOffsMsPosition)
 	{
 		let moments = [];
 
-		let initialMoment = new Moment(0);
-		initialMoment.messages = initialMessages;
-		moments.push(initialMoment);
-
-		for (let i = 0; i < envelopeMessages.length; ++i)
+		if(initialMessages.length > 0)
 		{
-			let envMsg = envelopeMessages[i];
-			let envMoment = new Moment(envMsg.msPosition);
-			envMoment.messages = envelopeMessages;
+			let initialMoment = new Moment(0);
+			initialMoment.messages = initialMessages;
+			moments.push(initialMoment);
+		}
+
+		if(envelopeMessages.length > 0)
+		{
+			let envMoment = new Moment(envelopeMessages[0].msPosition);
 			moments.push(envMoment);
+			for(let i = 0; i < envelopeMessages.length; ++i)
+			{
+				let envMsg = envelopeMessages[i];
+				if(envMsg.msPosition === envMoment.msPositionInChord)
+				{
+					envMoment.messages.push(envMsg);
+				}
+				else
+				{
+					envMoment = new Moment(envMsg.msPosition);
+					moments.push(envMoment);
+					envMoment.messages.push(envMsg);
+				}
+			}
 		}
 
 		if (noteOffMessages.length > 0)
@@ -128,12 +143,14 @@ function _getMoments(midiChordElem)
 		{ 				
 			case "controls":
 			{
+				// initialMessages are converted a moment in getMoments() (see below).
 				let ctlMessages = GetUInt8Msgs(msgElems);
 				initialMessages = initialMessages.concat(ctlMessages);
 				break;
 			}
 			case "noteOns":
 			{
+				// initialMessages are converted a moment in getMoments() (see below).
 				let noteOnMessages = GetUInt8Msgs(msgElems);
 				initialMessages = initialMessages.concat(noteOnMessages);
 				currentMsPosition = parseInt(midiChordChildElem.getAttribute("msDuration"));
@@ -141,6 +158,7 @@ function _getMoments(midiChordElem)
 			}
 			case "envelope":
 			{
+                // envelopeMessages are converted to moments in getMoments() (see below).
 				let envDurations = GetEnvelopeDurations(msgElems);
 				envelopeMessages = GetUInt8Msgs(msgElems);
 				for (let i = 0; i < envelopeMessages.length; ++i)
@@ -152,6 +170,7 @@ function _getMoments(midiChordElem)
 			}
 			case "noteOffs":
 			{
+				// noteOffMessages are converted to a moment in getMoments() (see below).
 				noteOffMessages = GetUInt8Msgs(msgElems);
 				break;
 			}
@@ -180,7 +199,7 @@ class MidiObject
 		{
 			let moment = new Moment(0); // There are no messages in the moment.messages array.
 			moments.push(moment);
-			moments.msDurationInScore = parseInt(midiObjectElem.GetAttribute("msDuration"));
+			moments.msDurationInScore = parseInt(midiObjectElem.getAttribute("msDuration"));
 		}
 
      	// Each moments array is an ordered array of Moment objects.
