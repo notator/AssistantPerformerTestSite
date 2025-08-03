@@ -9,7 +9,10 @@ into the stable branch.
 TODOs:
 1. (done?) Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
 Especially check messages that have no duration attribute, and those that have a duration 0 ms. Both mean the same, and should work properly.
-KNOWN BUG: The midiChords elements in the Erratum Musical score are empty! There must be a problem in its algorithm code...
+
+KNOWN BUGS:
+A) None of the current scores except Study 1 and Study 2 are running correctly in the AssistantPerformerTestSite.
+B) The midiChords elements in the Erratum Musical score are empty! There must be a problem in its algorithm code.
 
 2. Implement the performance of multiple interpretations of each score. This involves a change in the SVG-MIDI file format, and is being
 done incrementally.
@@ -17,7 +20,7 @@ done incrementally.
 BUG FIX (DONE): Change Moritz so that it writes the midiChords element _before_ the graphics element inside chord elements!
     Thus the score:midiChords element simply replaces the score:midi element, and new scores have the same structure as the converted scores.
     (DONE) Update all the SVG-MIDI scores used by the AP and as demo scores in Visual Studio!
-2b) (TODO) Integrate the new Study 2 score into the AssistantPerformer's code. Test it and perform it.
+2b) (DONE) Integrate the new Study 2 score into the AssistantPerformer's code. Test it and perform it.
 2c) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
 "Interpretation Select" control at the top of page 2 of the AP's GUI.
 2d) (TODO) The AssistantPerformer's "Interpretation Select" control needs to be
