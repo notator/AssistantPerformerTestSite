@@ -494,7 +494,6 @@ let numberOfTracks = 0,
 			function findMsPositionForRegions(timeObject, settingEndMarker)
 			{
 				let msPos = timeObject.msPositionInScore;
-				//if(settingEndMarker === true && timeObject.typeString !== undefined && timeObject.typeString.indexOf('Barline') > -1)
 				if(settingEndMarker === true)
 				{
 					msPos--;
@@ -879,15 +878,7 @@ let numberOfTracks = 0,
 				function setStaffNameStyle(staff, titleColor)
 				{
 					staff.nameElem.style.fill = titleColor;
-
-					//if(titleColor === ENABLED_INPUT_TITLE_COLOR)
-					//{
-					//	staff.nameElem.style.fontWeight = 'bold';
-					//}
-					//else
-					//{
 					staff.nameElem.style.fontWeight = 'normal';
-					//}
 				}
 
 				function setStafflinesColor(staff, color)
@@ -951,34 +942,17 @@ let numberOfTracks = 0,
 				staffElem = staffElems[i];
 				staff = {};
 				staffDy = systemDy + getDy(staffElem);
-				//staff.isOutput = (staffElem.getAttribute("class") === "staff");
 				staff.voices = [];
 				system.staves.push(staff);
 
-				//if(staff.isOutput === true)
-				//{
 				voiceElems = staffElem.getElementsByClassName("voice");
 				stafflinesElem = staffElem.getElementsByClassName("stafflines")[0];
 				staff.nameElem = getNameElem(voiceElems[0]);
 				for(j = 0; j < voiceElems.length; ++j)
 				{
 					voice = {};
-					//voice.isOutput = true;
 					staff.voices.push(voice);
 				}
-				//}
-				//else // input staff
-				//{
-				//	inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
-				//	stafflinesElem = staffElem.getElementsByClassName("inputStafflines")[0];
-				//	staff.nameElem = getNameElem(inputVoiceElems[0]);
-				//	for(j = 0; j < inputVoiceElems.length; ++j)
-				//	{
-				//		voice = {};
-				//		voice.isOutput = false;
-				//		staff.voices.push(voice);
-				//	}
-				//}
 
 				if(stafflinesElem !== undefined)
 				{
@@ -1121,14 +1095,7 @@ let numberOfTracks = 0,
 				staff = system.staves[i];
 				for(j = 0; j < staff.voices.length; ++j)
 				{
-					//if(staff.voices[j].isOutput === false)
-					//{
-					//	trackIsOnArray.push(false);
-					//}
-					//else
-					//{
 					trackIsOnArray.push(true);
-					//}
 				}
 			}
 		}
@@ -1566,10 +1533,6 @@ let numberOfTracks = 0,
 
 						for(staffIndex = 0; staffIndex < staves.length; staffIndex++)
 						{
-							//if(staves[staffIndex].isOutput === false)
-							//{
-							//	break;
-							//}
 							voices = staves[staffIndex].voices;
 							for(voiceIndex = 0; voiceIndex < voices.length; voiceIndex++)
 							{
@@ -1583,10 +1546,6 @@ let numberOfTracks = 0,
 					while(staffIndex < staffElems.length)
 					{
 						staff = system.staves[staffIndex];
-						//if(staff.isOutput === false)
-						//{
-						//	break;
-						//}
 						staffElem = staffElems[staffIndex];
 						setVoices(systemIndex, staff, staffElem, "voice", viewBoxScale1);
 						staffIndex++;
@@ -1612,10 +1571,10 @@ let numberOfTracks = 0,
 					{
 						for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 						{
-							nVoices = systems[0].staves[staffIndex].voices.length;
-							let msPosition = 0;
+							nVoices = systems[0].staves[staffIndex].voices.length;						
 							for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
 							{
+								let msPosition = 0;
 								for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
 								{
 									timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
@@ -1790,7 +1749,6 @@ let numberOfTracks = 0,
 			for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
 			{
 				staff = system0staves[staffIndex];
-				//let nInterpretations = staff.voices[0].timeObjects[0].length;
 				for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
 				{
 					tracks.push(new Track(nInterpretations));
@@ -1822,7 +1780,6 @@ let numberOfTracks = 0,
 						voice = staff.voices[voiceIndex];
 
 						nTimeObjects = voice.timeObjects.length;
-						//let nInterpretations = voice.timeObjects[0].length;
 						track = tracks[trackIndex];
 						for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
 						{

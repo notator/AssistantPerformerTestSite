@@ -17,8 +17,12 @@ const
     PIANOLA_MUSIC_3STAVES_SCORE_INDEX = 2,
     STUDY1_SCORE_INDEX = 3,
     STUDY2_SCORE_INDEX = 4,
-    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 5,
-    THREE_CRASHES_SCORE_INDEX = 6,
+    STUDY2_2STAVES_SCORE_INDEX = 5,
+    STUDY3_SKETCH1_SCORE_INDEX = 6,
+    STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 7,
+    ERRATUM_MUSICAL_I_VIII_SCORE_INDEX = 8,
+    THREE_CRASHES_SCORE_INDEX = 9,
+    TOMBEAU1_SCORE_INDEX = 10,
 
     SPEEDCONTROL_MIDDLE = 90, // range is 0..180
 
@@ -986,7 +990,7 @@ export class Controls
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
                     case STUDY1_SCORE_INDEX:
-                        scoreInfo.filename = "Study 1 (version 2025)/Study 1 (version 2025) (scroll).svg";
+                        scoreInfo.filename = "Study 1 (version 2025)/Study 1 (version 2025).svg";
                         scoreInfo.aboutText = "about Study 1";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
                         break;
@@ -994,17 +998,39 @@ export class Controls
                         scoreInfo.filename = "Study 2 (conversion 2025)/Study 2 (conversion 2025).svg";
                         scoreInfo.aboutText = "about Study 2";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy2.html";
+                        break; 
+                        
+                    case STUDY2_2STAVES_SCORE_INDEX:
+                        scoreInfo.filename = "Study 2 - 2 staves (conversion 2025)/Study 2 - 2 staves (conversion 2025).svg";
+                        scoreInfo.aboutText = "about Study 2";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                         break;
+                    //case STUDY3_SKETCH1_SCORE_INDEX:
+                    //    scoreInfo.filename = "Study 3 sketch 1/Study 3 sketch 1 (scroll).svg";
+                    //    scoreInfo.aboutText = "about Study 3 Sketch";
+                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                    //    break;
+                    //case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
+                    //    scoreInfo.filename = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll).svg";
+                    //    scoreInfo.aboutText = "about Study 3 Sketch";
+                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                    //    break;
+
                     case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
-                        scoreInfo.filename = "Erratum Musical/Erratum Musical (scroll).svg";
+                        scoreInfo.filename = "Erratum Musical (conversion 2025)/Erratum Musical (conversion 2025).svg";
                         scoreInfo.aboutText = "about Erratum Musical I-VIII";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
                         break;
                     case THREE_CRASHES_SCORE_INDEX:
-                        scoreInfo.filename = "Three Crashes/Three Crashes (scroll).svg";
+                        scoreInfo.filename = "Three Crashes (conversion 2025)/Three Crashes (conversion 2025).svg";
                         scoreInfo.aboutText = "about Three Crashes";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
                         break;
+                    //case TOMBEAU1_SCORE_INDEX:
+                    //    scoreInfo.filename = "Tombeau 1/Tombeau 1.svg";
+                    //    scoreInfo.aboutText = "about Tombeau 1";
+                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+                    //    break;
                     default:
                         break;
                 }
