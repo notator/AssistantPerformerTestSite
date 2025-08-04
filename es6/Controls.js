@@ -998,24 +998,22 @@ export class Controls
                         scoreInfo.filename = "Study 2 (conversion 2025)/Study 2 (conversion 2025).svg";
                         scoreInfo.aboutText = "about Study 2";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy2.html";
-                        break; 
-                        
+                        break;                        
                     case STUDY2_2STAVES_SCORE_INDEX:
                         scoreInfo.filename = "Study 2 - 2 staves (conversion 2025)/Study 2 - 2 staves (conversion 2025).svg";
                         scoreInfo.aboutText = "about Study 2";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
                         break;
-                    //case STUDY3_SKETCH1_SCORE_INDEX:
-                    //    scoreInfo.filename = "Study 3 sketch 1/Study 3 sketch 1 (scroll).svg";
-                    //    scoreInfo.aboutText = "about Study 3 Sketch";
-                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                    //    break;
-                    //case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
-                    //    scoreInfo.filename = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll).svg";
-                    //    scoreInfo.aboutText = "about Study 3 Sketch";
-                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
-                    //    break;
-
+                    case STUDY3_SKETCH1_SCORE_INDEX:
+                        scoreInfo.filename = "Study 3 sketch 1 (conversion 2025)/Study 3 sketch 1 (conversion 2025).svg";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
+                    case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
+                        scoreInfo.filename = "Study 3 sketch 1 - 4 staves (conversion 2025)/Study 3 sketch 1 - 4 staves (conversion 2025).svg";
+                        scoreInfo.aboutText = "about Study 3 Sketch";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+                        break;
                     case ERRATUM_MUSICAL_I_VIII_SCORE_INDEX:
                         scoreInfo.filename = "Erratum Musical (conversion 2025)/Erratum Musical (conversion 2025).svg";
                         scoreInfo.aboutText = "about Erratum Musical I-VIII";
@@ -1026,11 +1024,11 @@ export class Controls
                         scoreInfo.aboutText = "about Three Crashes";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
                         break;
-                    //case TOMBEAU1_SCORE_INDEX:
-                    //    scoreInfo.filename = "Tombeau 1/Tombeau 1.svg";
-                    //    scoreInfo.aboutText = "about Tombeau 1";
-                    //    scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
-                    //    break;
+                    case TOMBEAU1_SCORE_INDEX:
+                        scoreInfo.filename = "Tombeau 1 (conversion 2025)/Tombeau 1 (conversion 2025).svg";
+                        scoreInfo.aboutText = "about Tombeau 1";
+                        scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+                        break;
                     default:
                         break;
                 }
