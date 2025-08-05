@@ -980,12 +980,12 @@ export class Controls
                 switch(scoreSelectIndex)
                 {
                     case PIANOLA_MUSIC_SCORE_INDEX:
-                        scoreInfo.filename = "Pianola Music (version 2025)/Pianola Music (version 2025) (scroll).svg";
+                        scoreInfo.filename = "Pianola Music (version 2025)/Pianola Music (version 2025).svg";
                         scoreInfo.aboutText = "about Pianola Music";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
                     case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
-                        scoreInfo.filename = "Pianola Music (version 2025) - 3 staves/Pianola Music (version 2025) (scroll).svg";
+                        scoreInfo.filename = "Pianola Music - 3 staves (version 2025)/Pianola Music - 3 staves (version 2025).svg";
                         scoreInfo.aboutText = "about Pianola Music";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
                         break;
