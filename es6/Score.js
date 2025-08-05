@@ -1217,9 +1217,17 @@ let numberOfTracks = 0,
 					barlines = system.barlinesPerInterpretation[0],
 					endBarline = barlines.find(x => (x.typeString === "endRegionBarline" || x.typeString === "endOfScoreBarline"));
 
-				if(endBarline !== undefined && endBarline.msPositionInScore === regionDef.endMsPosInScore)
+				if(endBarline !== undefined)
 				{
-					return {system, endBarline};
+					if(endBarline.typeString === "endRegionBarline" && endBarline.msPositionInScore === regionDef.endMsPosInScore)
+					{
+						return {system, endBarline};
+					}
+					else if(endBarline.typeString === "endOfScoreBarline")
+					{
+                        endBarline.msPositionInScore = regionDef.endMsPosInScore;
+						return {system, endBarline};
+					}
 				}
 				else continue;
 			}
