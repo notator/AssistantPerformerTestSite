@@ -1409,8 +1409,6 @@ export class Controls
 
         setConductingLayer();
 
-        score.sendStartMarkerToStart();
-        score.sendEndMarkerToEnd();
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
         player = new Sequence();

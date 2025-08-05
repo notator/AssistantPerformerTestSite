@@ -646,15 +646,15 @@ let numberOfTracks = 0,
 			{
 				regionIndex = -1;
 			}
-			else if(possibleRegionNames.length > 1)
-			{
-				openRegionSelectControl(possibleRegionNames, cursorX, cursorY);
-			}
 			else if(possibleRegionNames.length === 1)
 			{
 				regionName = possibleRegionNames[0];
 				regionIndex = indexInRegionSequence(regionName);
 				regionName = "";
+			}
+			else if(possibleRegionNames.length > 1)
+			{
+				openRegionSelectControl(possibleRegionNames, cursorX, cursorY);
 			}
 
 			return regionIndex;
@@ -1202,21 +1202,40 @@ let numberOfTracks = 0,
 		startMarker = systems[0].startMarker;
 		startMarker.setName(regionSequence[0].name);
 		hideStartMarkersExcept(startMarker);
-		startMarker.moveTo(systems[0].barlinesPerInterpretation[interpIndex][0]);
+		startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);
 		startMarker.setVisible(true);
 		startRegionIndex = 0;
 	},
 
 	sendEndMarkerToEnd = function()
 	{
-		let lastSystem = systems[systems.length - 1],
-			lastSystemBarlines = lastSystem.barlinesPerInterpretation[interpIndex],
-			lastSystemBarline = lastSystemBarlines[lastSystemBarlines.length - 1];
+		function findSystemAndBarline(regionDef)
+		{
+			for(var i = 0; i < systems.length; ++i)	
+			{
+				let system = systems[i],
+					barlines = system.barlinesPerInterpretation[0],
+					endBarline = barlines.find(x => (x.typeString === "endRegionBarline" || x.typeString === "endOfScoreBarline"));
 
-		endMarker = lastSystem.endMarker;
-		endMarker.setName(regionSequence[regionSequence.length - 1].name);
+				if(endBarline !== undefined && endBarline.msPositionInScore === regionDef.endMsPosInScore)
+				{
+					return {system, endBarline};
+				}
+				else continue;
+			}
+
+			throw "error: cant find the system!";
+		}
+
+		let lastRegion = regionSequence[regionSequence.length - 1],
+		systemAndBarline = findSystemAndBarline(lastRegion),
+		regionSystem = systemAndBarline.system,
+		endOfRegionBarline = systemAndBarline.endBarline;
+
+		endMarker = regionSystem.endMarker;
+		endMarker.setName(lastRegion.name);
 		hideEndMarkersExcept(endMarker);
-		endMarker.moveTo(lastSystemBarline);
+		endMarker.moveTo(endOfRegionBarline);
 		endMarker.setVisible(true);
 		endRegionIndex = regionSequence.length - 1;
 	},
@@ -1352,27 +1371,17 @@ let numberOfTracks = 0,
 			}
 		}
 
-		function adjustMarkersMsPositions()
+		function sendMarkersToInitialPositions()
 		{
-			function getMidY(marker)
+			for(let i = 0; i < systems.length; ++i)
 			{
-				let ys = marker.yCoordinates,
-					midY = (ys.bottom + ys.top) / 2;
-
-				return midY;
+				let system = systems[i];
+				system.startMarker.setVisible(false);
+				system.endMarker.setVisible(false);
 			}
 
-			let event = {};
-
-			event.ignoreOtherMarker = true;
-
-			event.pageX = startMarker.alignment;
-			event.pageY = getMidY(startMarker);
-			setStartMarkerClick(event);
-
-			event.pageX = endMarker.alignment;
-			event.pageY = getMidY(endMarker);
-			setEndMarkerClick(event);
+			sendStartMarkerToStart();
+			sendEndMarkerToEnd();
 		}
 
 		for(let i = 0; i < tracks.length; ++i)
@@ -1382,8 +1391,8 @@ let numberOfTracks = 0,
 
 		setRegionData(systems, interpIndex);
 
-		adjustMarkersMsPositions();
-
+		sendMarkersToInitialPositions();
+		
 		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
 	},
 
@@ -1797,18 +1806,6 @@ let numberOfTracks = 0,
 				}
 			}
 		}
-		function setMarkersToInitialPositions(systems)
-		{
-			for(let i = 0; i < systems.length; ++i)
-			{
-				let system = systems[i];
-				system.startMarker.setVisible(false);
-				system.endMarker.setVisible(false);
-			}
-
-			sendStartMarkerToStart();
-			sendEndMarkerToEnd();
-		}
 
 		if(cursor === undefined)
 		{
@@ -1816,8 +1813,6 @@ let numberOfTracks = 0,
 			cursor = new Cursor(systemChanged, viewBoxScale);
 			markersLayer.appendChild(cursor.element);
 		}
-
-		setMarkersToInitialPositions(systems);
 
 		setInterpretationState(systems, interpIndex);
 	},
@@ -1905,7 +1900,7 @@ export class Score
 
 		// functions called when clicking the sendStartMarkerToStart of senEndMarkerToEnd buttons
 		this.sendStartMarkerToStart = sendStartMarkerToStart;
-		this.sendEndMarkerToEnd = sendEndMarkerToEnd;
+		this.sendEndMarkerToEnd = sendEndMarkerToEnd;	
 
 		this.getStartMarkerMsPositionInScore = getStartMarkerMsPositionInScore;
 		this.getEndMarkerMsPositionInScore = getEndMarkerMsPositionInScore;
