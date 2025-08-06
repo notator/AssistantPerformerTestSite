@@ -5,21 +5,18 @@ These changes are being implemented gradually, in conjunction with changes being
 This file is intended to be a help when revising the main documentation for AssistantPerformer2025 when the TODOS2025 branch is merged
 into the stable branch.
 
+REMARKS: Study 2 sends messages excessively fast to the ResidentSynth, resulting in some rather strange artefacts. Even playing it at the
+slowest possible speed (10%) still results in some audible artefacts. Generally however, performances are as expected, so I don't think I 
+can tweek anything to improve the situation. (?)
+
 ===========================================================================================================================================
 TODOs:
-1. (done?) Debug the performance of messages defined in envelopes: The Assistant Performer seems not to be sending them all correctly...
-Especially check messages that have no duration attribute, and those that have a duration 0 ms. Both mean the same, and should work properly.
-
-KNOWN BUGS:
-A) None of the current scores except Study 1 and Study 2 are running correctly in the AssistantPerformerTestSite.
-B) The midiChords elements in the Erratum Musical score are empty! There must be a problem in its algorithm code.
+1. (DONE) Debug the performance of messages defined in envelopes.
 
 2. Implement the performance of multiple interpretations of each score. This involves a change in the SVG-MIDI file format, and is being
 done incrementally.
-2a) (DONE) Write the ConvertSVGMIDI application in C#. This has created a new Study 2 score in the new format.
-BUG FIX (DONE): Change Moritz so that it writes the midiChords element _before_ the graphics element inside chord elements!
-    Thus the score:midiChords element simply replaces the score:midi element, and new scores have the same structure as the converted scores.
-    (DONE) Update all the SVG-MIDI scores used by the AP and as demo scores in Visual Studio!
+2a) (DONE) Write the ConvertSVGMIDI application in C#. This has been used to move existing scores to AP 2025 without changing their algorithms.
+    In new and converted scores, the score:midiChords element simply replaces the score:midi element. Otherwise, their structure is unchanged.
 2b) (DONE) Integrate the new Study 2 score into the AssistantPerformer's code. Test it and perform it.
 2c) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
 "Interpretation Select" control at the top of page 2 of the AP's GUI.
@@ -28,7 +25,7 @@ BUG FIX (DONE): Change Moritz so that it writes the midiChords element _before_ 
      ii) Made invisible if there is only one interpretation.
     iii) Disabled (greyed out) while performing.
 Comment: Also see the blue-boxed note apropos the remarks at the start of Part 4 of Retrospective 2024 (Also, see my 9th July notebook entry.):
-The descision to implement multiple interpretations of a score has to do with the way performance practice traditions develop (through the
+The decision to implement multiple interpretations of a score has to do with the way performance practice traditions develop (through the
 use of different recordings of the same piece). There is never a single, perfect performance of a score that is intended to be interpreted by
 humans.
 Performances using the Assistant Performer´s conducting options are problematic: its impossible to know _exactly_ when the next event will
@@ -42,8 +39,8 @@ working (much in the same way that all that´s relevant about space, time and inf
 "really" are (maybe when _mathematically_ defined) isn´t relevant to how we experience them. Experiencing someone's unique performance of a
 score is to experience "what it is like to be" someone else. Its comforting to know that we are not alone.
 
-3. Add code to the AssistantPerformer that would react to a right-click on a chord symbol by displaying its temporal information
-in an Alert() box.
+3. (TODO) Add code to the AssistantPerformer that would react to a right-click on a chord symbol by displaying its temporal information
+in an Alert() box. This might also be done using a new tool in the array of controls at the top of the page.
 
 4. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
 I want to simplify Sequence.js if possible, but not to change the way it reports msPositions to the Cursor! Possibly, the use of PREQUEUE could
@@ -52,12 +49,18 @@ for help, but be very careful! We already got into a mess with this. (Those chan
 
 (Possibly after the November conference)
 5. Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
-This project would be part of the Moritz solution (written in C#)
+This project would be part of the Moritz solution (written in C#).
+I'm thinking of composing a piece that would be performed by the Assistant Performer, but that would be put together from different recordings
+of different (particular) note sequences. The (obsolete) pallettes did this at the event level, but I'm thinking of doing something similar with
+short sequences of up to 7 events. Each sequence would be recorded many times in different ways that would be sequenced in the score... The
+beginnings of a new counterpoint... This needs some more thought.
 
+(Possibly after the November conference)
 6. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
 ways of doing things. Apart from doing simple things like changing vars into lets, it might even be worth converting the whole project to strongly
 typed Typescript.
 
+(Possibly after the November conference)
 7. Implement an Annotations Editor in the AssistantPerformer2025. This may not be as large a project as it sounds. The "annotations" layer already
 exists in the SVG-MIDI scores, and anything written on it is simply ignored by the performance functions.
 I imagine it should be fairly easy to create a new editing, "non-performance", page that would have special tools instead of performance controls.
