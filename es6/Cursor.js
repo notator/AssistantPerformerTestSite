@@ -10,7 +10,11 @@ export class Cursor
 			let element = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 
 			element.setAttribute("class", "cursorLine");
-			element.setAttribute("style", "stroke:" + GREY + ";stroke-width:" + viewBoxScale.toString(10) + "px; visibility:hidden");
+			
+			element.style.stroke = GREY;
+			element.style.strokeWidth = viewBoxScale.toString(10) + "px";
+			element.style.visibility = "hidden";
+
 			// the following attributes are set properly in moveElementTo(...) (inside init(...))
 			element.setAttribute("x1", "0");
 			element.setAttribute("y1", "0");

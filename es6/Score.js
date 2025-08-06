@@ -1083,6 +1083,10 @@ let numberOfTracks = 0,
 				system.endMarker = new EndMarker(yCoordinates, systemIndex, regionSequence, vbScale);
 				markersLayer.appendChild(system.endMarker.element);
 			}
+			// cursor is accessed outside the score using a getter function
+			cursor = new Cursor(systemChanged, viewBoxScale);
+			// This is a new markerslayer, so it needs a new cursor.
+			markersLayer.appendChild(cursor.element);
 		}
 
 		function initializeTrackIsOnArray(system)
@@ -1813,13 +1817,6 @@ let numberOfTracks = 0,
 					}
 				}
 			}
-		}
-
-		if(cursor === undefined)
-		{
-			// cursor is accessed outside the score using a getter function
-			cursor = new Cursor(systemChanged, viewBoxScale);
-			markersLayer.appendChild(cursor.element);
 		}
 
 		setInterpretationState(systems, interpIndex);
