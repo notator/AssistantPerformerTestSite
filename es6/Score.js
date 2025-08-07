@@ -1063,6 +1063,8 @@ let numberOfTracks = 0,
 			}
 
 			// markersLayer is global inside the score namespace
+			// A fresh markersLayer is always created because the score's dimensions
+			// may have changed after returning from performing a different one.
 			if(markersLayer !== undefined)
 			{
 				markersLayer.remove();
