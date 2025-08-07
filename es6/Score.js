@@ -1013,7 +1013,8 @@ let numberOfTracks = 0,
 			regionSequence = regionSeq;
 		}
 
-		// Creates the internal global markersLayer and its startMarkers and endMarkers
+		// Sets (or resets) the markersLayer (global in this namespace),
+		// together with its startMarkers, endMarkers and cursor.
 		function setMarkersLayer(svgElem, systems, regionSequence, vbScale)
 		{
 			// Creates a new "g" element at the top level of the svg page.
