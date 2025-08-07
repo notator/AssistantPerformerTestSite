@@ -40,20 +40,25 @@ working (much in the same way that all that´s relevant about space, time and inf
 score is to experience "what it is like to be" someone else. Its comforting to know that we are not alone.
 
 3. (TODO) Add code to the AssistantPerformer that would react to a right-click on a chord symbol by displaying its temporal information
-in an Alert() box. This might also be done using a new tool in the array of controls at the top of the page.
+(In an Alert() box? Or in a temporary DIV on the markersLayer?). This could also be done using a new tool in the array of controls at the top
+of the page.
 
-4. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
+4. (TODO) Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
+This project would be part of the Moritz solution (written in C#).
+I'm thinking of composing a piece that would be performed by the Assistant Performer, but that would be put together from different recordings
+of different (particular) note sequences. The (obsolete) palettes did this at the event level, but I'm thinking of doing something similar with
+short sequences of up to 7 events. Each sequence would be recorded many times in different ways that would be sequenced in the score... The
+beginnings of a new counterpoint... This needs some more thought... Thinking about STRAVINSKY's THE RITE OF SPRING and object/motive repeats.
+Stravinsky was looking for ways to structure things independently of structural _harmony_, but maybe there's a way to redevelop some _other_ kind
+of higher logic (e.g. counterpoint) that way...
+(Note that I'm currently watching many videos by https://www.youtube.com/@EarlyMusicSources. Especially interesting are the ones related to the
+genesis of counterpoint and harmony. A really great resource!) 
+
+(Possibly after the November conference)
+5. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
 I want to simplify Sequence.js if possible, but not to change the way it reports msPositions to the Cursor! Possibly, the use of PREQUEUE could
 be changed: Timestamped messages sent _between_the_changes_of_cursor_position_ could be sent all at once to the synth for scheduling. Use CoPilot
 for help, but be very careful! We already got into a mess with this. (Those changes have now been undone.)
-
-(Possibly after the November conference)
-5. Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
-This project would be part of the Moritz solution (written in C#).
-I'm thinking of composing a piece that would be performed by the Assistant Performer, but that would be put together from different recordings
-of different (particular) note sequences. The (obsolete) pallettes did this at the event level, but I'm thinking of doing something similar with
-short sequences of up to 7 events. Each sequence would be recorded many times in different ways that would be sequenced in the score... The
-beginnings of a new counterpoint... This needs some more thought.
 
 (Possibly after the November conference)
 6. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
