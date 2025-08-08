@@ -777,7 +777,8 @@ let numberOfTracks = 0,
 	// Called when the go button or a startConducting button is clicked.
 	setCursor = function()
 	{
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
+		let displayRunningCursor = true;
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor);
 	},
 
 	// Constructs empty systems for all the pages.
@@ -1303,7 +1304,7 @@ let numberOfTracks = 0,
 		}
 	},
 
-	setInterpretationState = function(systems, interpIndex)
+	setInterpretationState = function(systems, interpIndex, displayRunningCursor)
 	{
 		function setRegionData(systems, interpIndex)
 		{
@@ -1408,7 +1409,7 @@ let numberOfTracks = 0,
 
 		sendMarkersToInitialPositions();
 		
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor);
 	},
 
 	// Loads the global tracks array.
@@ -1840,15 +1841,19 @@ let numberOfTracks = 0,
 		return regionSequence;
 	},
 
-	getCurrentTrackInterpretations = function()
+	getCurrentTracksAndNumberOfInterpretations = function()
 	{
 		let allTracks = tracks,
-			currentTrackInterpretations = [];
+			currentTracks = [];
+
 		for(let i = 0; i < allTracks.length; ++i)																				  
 		{
-			currentTrackInterpretations.push(allTracks[i].currentInterpretation);
+			currentTracks.push(allTracks[i].currentInterpretation);
 		}
-		return currentTrackInterpretations;
+
+		let numberOfInterpretations = allTracks[0].interpretations.length;
+		
+		return {currentTracks, numberOfInterpretations};
 	},
 
 	getMarkersLayer = function()
@@ -1887,10 +1892,10 @@ let numberOfTracks = 0,
 		return endRegionIndex;
 	},
 
-	setInterpretation = function(interpretationIndex)
+	setInterpretation = function(interpretationIndex, displayRunningCursor)
 	{
 		interpIndex = interpretationIndex;
-		setInterpretationState(systems, interpIndex);
+		setInterpretationState(systems, interpIndex, displayRunningCursor);
 	};
 
 export class Score
@@ -1938,7 +1943,7 @@ export class Score
 		// tracksData is an object having a single tracks array attribute:
 		// Each track in the array has one or more interpretations.
 		this.setTracks = setTracks;
-		this.getCurrentTrackInterpretations = getCurrentTrackInterpretations;
+		this.getCurrentTracksAndNumberOfInterpretations = getCurrentTracksAndNumberOfInterpretations;
 
 		this.setInterpretation = setInterpretation;
 

@@ -5,7 +5,7 @@ let
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 	score,
-	trackInterpretations,
+	tracks,
 
 	previousTimestamp = null, // nextMoment()
 	startOfRegion,
@@ -86,7 +86,7 @@ let
 			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
 			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-			for(let track of trackInterpretations)
+			for(let track of tracks)
 			{
 				if(track.isOn)
 				{
@@ -154,7 +154,7 @@ let
 			return nextTrack;
 		}
 
-		track = getNextTrack(trackInterpretations);
+		track = getNextTrack(tracks);
 
 		if(document.hidden === true)
 		{
@@ -423,7 +423,7 @@ export class Sequence
 
 	getTracks()
 	{
-		return trackInterpretations;
+		return tracks;
 	}
 
 	// This function is called
@@ -437,7 +437,7 @@ export class Sequence
 	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
 	initTracks()
 	{
-		let i, nTracks = trackInterpretations.length, track,
+		let i, nTracks = tracks.length, track,
 			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
 			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
 			regionStartMsPositionsInScore = score.getRegionStartMsPositionsInScore(),
@@ -450,7 +450,7 @@ export class Sequence
 
 		for(i = 0; i < nTracks; ++i)
 		{
-			track = trackInterpretations[i];
+			track = tracks[i];
 			track.isOn = trackIsOnArray[i];
 
 			if(track.isOn)
@@ -502,7 +502,7 @@ export class Sequence
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		trackInterpretations = score.getCurrentTrackInterpretations();
+		tracks = score.getCurrentTracksAndNumberOfInterpretations().currentTracks;
 		regionSequence = score.getRegionSequence();
 
 		this.initTracks(); // called again when the start and end markers move.
@@ -541,7 +541,7 @@ export class Sequence
 		speed = baseSpeed;
 		sequenceRecording = recording; // can be undefined or null
 
-		trackInterpretations = score.getCurrentTrackInterpretations();
+		tracks = score.getCurrentTracksAndNumberOfInterpretations().currentTracks;
 		this.initTracks();
 
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
@@ -555,9 +555,9 @@ export class Sequence
 		lastReportedMsPosition = -1;
 		endOfConductedPerformance = false;
 
-        for(var i = 0; i < trackInterpretations.length; i++)
+        for(var i = 0; i < tracks.length; i++)
 		{
-			trackInterpretations[i].resetToStartMarker();
+			tracks[i].resetToStartMarker();
         }
 
 		performanceStartTime = timer.now();

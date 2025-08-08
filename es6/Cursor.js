@@ -34,7 +34,7 @@ export class Cursor
 		Object.defineProperty(this, "yCoordinates", { value: { top: -1, bottom: -1 }, writable: true }); // set in moveElementTo() in init()		
 	}
 
-	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray, interpIndex)
+	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor)
 	{
 		// Returns an array containing an msPosData object for every distinct msPositionInScore.
 		// An msPosData object contains the following fields:
@@ -179,7 +179,14 @@ export class Cursor
 
 		this.moveElementTo(startMarkerMsPositionInScore); // sets yCoordinates if necessary
 
-		this.setVisible(true);
+		if(displayRunningCursor)
+		{
+			this.setVisible(true);
+		}
+		else
+		{
+			this.setVisible(false);
+		}
 	}
 
 	// use running index here if possible...

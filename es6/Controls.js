@@ -1237,7 +1237,8 @@ export class Controls
 
         if(controlID === "interpretationSelect")
         {
-            score.setInterpretation(globalElements.interpretationSelect.selectedIndex);
+            let displayRunningCursor = false;
+            score.setInterpretation(globalElements.interpretationSelect.selectedIndex, displayRunningCursor);
         }
 
         /**** controls in options panel ***/
@@ -1345,14 +1346,35 @@ export class Controls
         // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
         function getTracksData(score)
         {
+            function setInterpretationsControl(nInterpretations)
+            {
+                let interpretationSelect = globalElements.interpretationSelect;
+
+                interpretationSelect.options.length = 0;
+                let option = document.createElement("option");
+                option.text = "interpretation 1";
+                interpretationSelect.add(option, null);
+
+                if(nInterpretations > 1)
+                {
+                    for(let i = 1; i < nInterpretations; ++i)
+                    {
+                        option = document.createElement("option");
+                        option.text = "interpretation " + (i + 1).toString();
+                        interpretationSelect.add(option, null);
+                    }
+                }
+            }
+
             // Get everything except the timeObjects (which have to take account of speed)
             score.getEmptySystems();
 
             score.setTracks();
 
             // Each track has a currentTrackInterpretation containing midiChords and midRests
-            let currentTrackInterpretations = score.getCurrentTrackInterpretations(),
-                nTracks = currentTrackInterpretations.length;
+            let currentTrackInterpretations = score.getCurrentTracksAndNumberOfInterpretations(),
+                nTracks = currentTrackInterpretations.currentTracks.length,
+                nInterpretations = currentTrackInterpretations.numberOfInterpretations;
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
@@ -1361,6 +1383,8 @@ export class Controls
             // Repainting includes using the correct staff colours, but the score may also update the position of
             // its start marker (which always starts on a chord) if a track is turned off.
             tracksControl.init(nTracks);
+
+            setInterpretationsControl(nInterpretations);
         }
 
         function setSpeedControl(tracksControlWidth)
