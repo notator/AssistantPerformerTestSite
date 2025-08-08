@@ -269,6 +269,7 @@ var
         // end performance buttons
 
         globalElements.interpretationSelect.disabled = true;
+        globalElements.interpretationSmokeDiv.style.display = "block";
 
         cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
     },
@@ -583,6 +584,7 @@ var
         globalElements.speedControlSmokeDiv.style.display = "none";
 
         globalElements.interpretationSelect.disabled = false;
+        globalElements.interpretationSmokeDiv.style.display = "none";
     },
 
     reportEndOfRegion = function(regionIndex)
@@ -884,6 +886,7 @@ export class Controls
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
             globalElements.interpretationSelect = document.getElementById("interpretationSelect");
+            globalElements.interpretationSmokeDiv = document.getElementById("interpretationSmokeDiv");
 
             globalElements.conductingLayer = document.getElementById("conductingLayer");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");

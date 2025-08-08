@@ -61,9 +61,7 @@
         <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start" onclick="_AP.controls.beginRuntime()" style="display:none;" />
     </div>
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
-        <div id="speedControlDiv"
-             style="position: absolute; top: 0; height:29px; width:279px; margin:0; font-size:12px;
-             border-color:#008000; border-width:1px; border-style:solid; background-color:#F5FFF5;">
+        <div id="speedControlDiv" class="controlBackground" style="height:29px; width:279px">
             <label id="speedControlLabel1" for="speedControlInput" style="position:absolute; top:5px; left:4px; margin:0;">
                 speed:
             </label>
@@ -304,13 +302,13 @@
 
             </g>
         </svg>
-        <div id="interpretationDiv"
-             style="position: absolute; top: 0; left: 681px; width:144px; height:30px; margin:0; padding:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="144" height="30" style="position: absolute; left: 0px; top: 0;">
-                <rect id="interpBackground" x="0" y="0" width="144" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
-            </svg>
+        <div id="interpretationDiv" class="controlBackground" style="left: 680px; width:144px; height:29px">
             <select id="interpretationSelect" class="interpretationSelector" onchange="_AP.controls.doControl('interpretationSelect')"></select>
-
+        </div>
+        <div id="interpretationSmokeDiv" style="position: absolute; top: 0px; left: 679px; width:147px; height:32px; margin:0; padding:0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="147" height="32" style="position: absolute; left: 0px; top: 0px;">
+                <rect x="0" y="0" width="147" height="32" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
+            </svg>
         </div>
         <div id="downloadLinkDiv"
              style="position: absolute; top: 0; left: 865px;">
