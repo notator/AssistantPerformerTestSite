@@ -485,8 +485,8 @@ ResSynth.residentSynth = (function(window)
                         // 46 (Harp)
                         // 104, 105, 106, 107, 108, 109, 110, 111
                         //
-                        // 02.2020: Except for Harpsichord, the following presetIndices
-                        // are all those used by the AssistantPerformer(GrandPiano + Study2)
+                        // 02.2020: Except for Harpsichord (6), the following presetIndices
+                        // are all those used by the AssistantPerformer (GrandPiano + Study2)
                         switch(originalPresetIndex)
                         {
                             case 0: // Grand Piano						
@@ -510,14 +510,14 @@ ResSynth.residentSynth = (function(window)
                             case 12: // Marimba
                                 setCustomLONGEnvData(zones, 0, 0, 0, 0, 9.5, 0.6, 0.5, 0.1);
                                 break;
-                            //case 13: // Xylophone -- used by AssistantPerformer, but does not have a LONG envelope.
-                            //	break;
+                            //case 13: // Xylophone -- is used by AssistantPerformer,  but has a SHORT envelope (not a LONG envelope).
                             case 14: // Tubular Bells
                                 setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 20, 5, 0.5, 0.1);
                                 break;
                             case 15: // Dulcimer
                                 setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 10, 0.4, 0.4, 0.04);
                                 break;
+                            // case 16: // Drawbar Organ --- is used by AssistantPerformer, but has an UNENDING envelope (not a LONG envelope).
                             case 24: // NylonGuitar
                                 setCustomLONGEnvData(zones, 0, 0, 0.5, 0.5, 7, 0.3, 0.3, 0.05);
                                 break;

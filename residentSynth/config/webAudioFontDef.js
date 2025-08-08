@@ -32,7 +32,8 @@ ResSynth.webAudioFontDef =
                     "_tone_0130_FluidR3_GM_sf2_file", // instr: 13,  xylophone    -- old presetIndex:13, 
                     "_tone_0140_FluidR3_GM_sf2_file", // instr: 14,  tubularBells -- old presetIndex:14, 
                     "_tone_0150_FluidR3_GM_sf2_file", // instr: 15,  dulcimer     -- old presetIndex:15,
-                    , , , , , , , ,	                  // instr: 16,17,18,19,20,21,22,23, -- undefined
+                    "_tone_0160_FluidR3_GM_sf2_file", // instr: 16,  drawbar organ  -- old presetIndex:16, 
+                     , , , , , , ,	                  // instr: 17,18,19,20,21,22,23, -- undefined
                     "_tone_0240_FluidR3_GM_sf2_file", // instr: 24,  nylonGuitar  -- old presetIndex:24, 
                     "_tone_0250_FluidR3_GM_sf2_file", // instr: 25,  steelGuitar  -- old presetIndex:25, 
                     "_tone_0260_FluidR3_GM_sf2_file", // instr: 26, electricGuitarJazz  -- old presetIndex:26, 
