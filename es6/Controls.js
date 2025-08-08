@@ -268,6 +268,8 @@ var
         cl.setConductCreepControlDisabled.setAttribute("opacity", SMOKE);
         // end performance buttons
 
+        globalElements.interpretationSelect.disabled = true;
+
         cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
     },
 
@@ -579,6 +581,8 @@ var
 
         globalElements.speedControlInput.disabled = false;
         globalElements.speedControlSmokeDiv.style.display = "none";
+
+        globalElements.interpretationSelect.disabled = false;
     },
 
     reportEndOfRegion = function(regionIndex)
