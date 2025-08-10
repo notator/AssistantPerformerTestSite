@@ -502,7 +502,7 @@ export class Sequence
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		tracks = score.getCurrentTracksAndNumberOfInterpretations().currentTracks;
+		tracks = score.getCurrentTracks();
 		regionSequence = score.getRegionSequence();
 
 		this.initTracks(); // called again when the start and end markers move.
@@ -541,7 +541,7 @@ export class Sequence
 		speed = baseSpeed;
 		sequenceRecording = recording; // can be undefined or null
 
-		tracks = score.getCurrentTracksAndNumberOfInterpretations().currentTracks;
+		tracks = score.getCurrentTracks();
 		this.initTracks();
 
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;

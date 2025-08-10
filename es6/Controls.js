@@ -861,6 +861,49 @@ var
         globalElements.speedControlCheckbox.checked = false;
         globalElements.speedControlCheckbox.disabled = true;
         globalElements.speedControlLabel2.innerHTML = "100%";
+    },
+
+    // If there is more than one region, this function sets the interpretationsSelect control's
+    // options to the regions currently available at the startMarker's msPositionInScore.
+    // Otherwise, if there are no regions in the score, it sets the interpretationsSelect
+    // control's options to the available _interpretations_.
+    // If there is only one interpretation
+    // a) there will be only one option("interpretation 1"), and
+    // b) the control will be disabled (by other code).
+    setInterpretationsControl = function (availableRegionNames, nInterpretations)
+    {
+        let interpretationSelect = globalElements.interpretationSelect;
+
+        interpretationSelect.options.length = 0;
+        if(availableRegionNames.length > 1)
+        {
+            for(let i = 0; i < availableRegionNames.length; ++i)
+            {
+                let option = document.createElement("option");
+                option.text = "region " + availableRegionNames[i];
+                interpretationSelect.add(option, null);
+            }
+        }
+        else if(nInterpretations > 0)
+        {
+            let option = document.createElement("option");
+            option.text = "interpretation 1";
+            interpretationSelect.add(option, null);
+
+            if(nInterpretations > 1)
+            {
+                for(let i = 1; i < nInterpretations; ++i)
+                {
+                    option = document.createElement("option");
+                    option.text = "interpretation " + (i + 1).toString();
+                    interpretationSelect.add(option, null);
+                }
+            }
+        }
+        else
+        {
+            throw "Error setting interpretation/region select control.";
+        }
     };
 
 export class Controls
@@ -1327,35 +1370,12 @@ export class Controls
         // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
         function getTracksData(score)
         {
-            function setInterpretationsControl(nInterpretations)
-            {
-                let interpretationSelect = globalElements.interpretationSelect;
-
-                interpretationSelect.options.length = 0;
-                let option = document.createElement("option");
-                option.text = "interpretation 1";
-                interpretationSelect.add(option, null);
-
-                if(nInterpretations > 1)
-                {
-                    for(let i = 1; i < nInterpretations; ++i)
-                    {
-                        option = document.createElement("option");
-                        option.text = "interpretation " + (i + 1).toString();
-                        interpretationSelect.add(option, null);
-                    }
-                }
-            }
-
-            // Get everything except the timeObjects (which have to take account of speed)
-            score.getEmptySystems();
-
-            score.setTracks();
+            score.init(); // get empty systems, set tracks, runningCursor, startMarker to start, endMarker to end..
 
             // Each track has a currentTrackInterpretation containing midiChords and midRests
-            let currentTrackInterpretations = score.getCurrentTracksAndNumberOfInterpretations(),
-                nTracks = currentTrackInterpretations.currentTracks.length,
-                nInterpretations = currentTrackInterpretations.numberOfInterpretations;
+            let nTracks = score.getCurrentTracks().length,
+                availableRegionNames = score.getAvailableRegionNames(),
+                nInterpretations = score.getNumberOfInterpretations();
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
@@ -1365,7 +1385,7 @@ export class Controls
             // its start marker (which always starts on a chord) if a track is turned off.
             tracksControl.init(nTracks);
 
-            setInterpretationsControl(nInterpretations);
+            setInterpretationsControl(availableRegionNames, nInterpretations);
         }
 
         function setSpeedControl(tracksControlWidth)
