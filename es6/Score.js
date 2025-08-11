@@ -1833,9 +1833,7 @@ let numberOfTracks = 0,
 			sendEndMarkerToEnd();
 		}
 
-		let interpIndex = 0,
-			displayRunningCursor = false;
-
+		let interpIndex = 0;
 		for(let i = 0; i < tracks.length; ++i)
 		{
 			tracks[i].setCurrentInterpretation(interpIndex);
@@ -1844,7 +1842,8 @@ let numberOfTracks = 0,
 		setRegionData(systems);
 
 		sendMarkersToInitialPositions();
-		
+
+		let displayRunningCursor = false;		
 		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor);
 	},
 

@@ -44,7 +44,7 @@ var
     deviceOptions = {},
 
     // deletes the 'save' button created by createSaveMIDIFileLink() 
-    deleteSaveLink = function()
+    deleteSaveLink = function ()
     {
         let
             saveLink = document.getElementById("saveLink"),
@@ -53,7 +53,7 @@ var
         if(saveLink !== null)
         {
             // Need a small delay for the revokeObjectURL to work properly.
-            window.setTimeout(function()
+            window.setTimeout(function ()
             {
                 window.URL.revokeObjectURL(saveLink.href); // window.URL is set in Main.js
                 downloadLinkDiv.removeChild(saveLink);
@@ -63,7 +63,7 @@ var
 
     // Returns true if any of the defined trackRecordings contain moments, otherwise false.
     // Used to prevent the creation of a 'save' button when there is nothing to save.
-    hasData = function(nOutputVoices, trackRecordings)
+    hasData = function (nOutputVoices, trackRecordings)
     {
         var i, has = false;
         for(i = 0; i < nOutputVoices; ++i)
@@ -81,7 +81,7 @@ var
     // The date part of the name is formatted as
     //     year-month-day, with month and day always having two characters
     // so that downloaded files will list in order of creation time.
-    getMIDIFileName = function(scoreName)
+    getMIDIFileName = function (scoreName)
     {
         var
             d = new Date(),
@@ -122,7 +122,7 @@ var
     // sequenceMsDuration is the total duration of the sequenceRecording in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileLink = function(scoreName, sequenceRecording, sequenceMsDuration)
+    createSaveMIDIFileLink = function (scoreName, sequenceRecording, sequenceMsDuration)
     {
         var
             standardMidiFile,
@@ -150,14 +150,14 @@ var
                     a.href = window.URL.createObjectURL(standardMidiFile); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
-                    a.onmouseover = function() // there is an event argument, but it is ignored
+                    a.onmouseover = function () // there is an event argument, but it is ignored
                     {
                         var img = document.getElementById("saveImg");
                         img.src = "images/saveMouseOver.png";
                         a.style.cursor = 'default';
                     };
 
-                    a.onmouseout = function() // there is an event argument, but it is ignored
+                    a.onmouseout = function () // there is an event argument, but it is ignored
                     {
                         var img = document.getElementById("saveImg");
                         if(img !== null)
@@ -166,7 +166,7 @@ var
                         }
                     };
 
-                    a.onclick = function() // there is an event argument, but it is ignored
+                    a.onclick = function () // there is an event argument, but it is ignored
                     {
                         // The link's download field has been set, so the file is downloaded here.
                         deleteSaveLink();
@@ -178,7 +178,7 @@ var
         }
     },
 
-    setMainOptionsState = function(mainOptionsState)
+    setMainOptionsState = function (mainOptionsState)
     {
         function setResidentSynthFunctions(residentSynth)
         {
@@ -232,11 +232,11 @@ var
                             residentSynth.open()
                                 .then(() =>
                                 {
-                                    console.log("Opened ResidentSynth");                                    
+                                    console.log("Opened ResidentSynth");
                                 })
                                 .catch(() => {console.error("Error opening ResidentSynth");});
                         })
-                        .catch(() => {console.error("Error closing ResidentSynth");});                    
+                        .catch(() => {console.error("Error closing ResidentSynth");});
                 }
                 break;
             case "toBack": // set svg controls and score visible
@@ -249,7 +249,7 @@ var
         }
     },
 
-    setPage2ControlsDisabled = function()
+    setPage2ControlsDisabled = function ()
     {
         tracksControl.setDisabled(true);
 
@@ -274,7 +274,7 @@ var
         cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
     },
 
-    setConductTimerControlClicked = function()
+    setConductTimerControlClicked = function ()
     {
         if(cl.setConductTimerControlDisabled.getAttribute("opacity") === GLASS)
         {
@@ -290,7 +290,7 @@ var
         }
     },
 
-    setConductCreepControlClicked = function()
+    setConductCreepControlClicked = function ()
     {
         if(cl.setConductCreepControlDisabled.getAttribute("opacity") === GLASS)
         {
@@ -307,7 +307,7 @@ var
     },
 
     // mousemove handler
-    conductTimer = function(e)
+    conductTimer = function (e)
     {
         if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
         {
@@ -316,7 +316,7 @@ var
     },
 
     // mousedown handler
-    startConductTimer = function(e)
+    startConductTimer = function (e)
     {
         if(e.button === 0) // main (=left) button
         {
@@ -332,7 +332,7 @@ var
     },
 
     // mouseup handler
-    stopConductTimer = function(e)
+    stopConductTimer = function (e)
     {
         if(e.button === 0) // main (=left) button
         {
@@ -341,7 +341,7 @@ var
     },
 
     // mousemove handler
-    conductCreep = function(e)
+    conductCreep = function (e)
     {
         if(e.clientX > conductingLimit.left && e.clientX < conductingLimit.right)
         {
@@ -350,7 +350,7 @@ var
     },
 
     // mousedown handler
-    startConductCreep = function(e)
+    startConductCreep = function (e)
     {
         if(e.button === 0) // main (=left) button
         {
@@ -361,7 +361,7 @@ var
     },
 
     // mouseup handler
-    stopConductCreep = function(e)
+    stopConductCreep = function (e)
     {
         if(e.button === 0) // main (=left) button
         {
@@ -369,7 +369,7 @@ var
         }
     },
 
-    setEventListenersAndMouseCursors = function(svgControlsState)
+    setEventListenersAndMouseCursors = function (svgControlsState)
     {
         let s = score,
             markersLayer = s.getMarkersLayer(),
@@ -434,7 +434,7 @@ var
         }
     },
 
-    startPlaying = function()
+    startPlaying = function ()
     {
         let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
             sequenceRecording, trackIsOnArray = [];
@@ -504,7 +504,7 @@ var
     },
 
     // Called when a start conducting button is clicked on.
-    setConducting = function(speed)
+    setConducting = function (speed)
     {
         score.setCursor();
 
@@ -520,7 +520,7 @@ var
         }
     },
 
-    setStopped = function()
+    setStopped = function ()
     {
         player.stop();
 
@@ -531,7 +531,7 @@ var
             conductor = undefined;
         }
 
-        deviceOptions.performanceMode = performanceMode.score;        
+        deviceOptions.performanceMode = performanceMode.score;
 
         score.hideCursor();
         score.resetRegionInfoStrings();
@@ -587,14 +587,14 @@ var
         globalElements.interpretationSmokeDiv.style.display = "none";
     },
 
-    reportEndOfRegion = function(regionIndex)
+    reportEndOfRegion = function (regionIndex)
     {
         score.leaveRegion(regionIndex);
     },
 
     // Callback called when a performing sequenceRecording is stopped or has played its last message,
     // or when the player is stopped or has played its last subsequence.
-    reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
+    reportEndOfPerformance = function (sequenceRecording, performanceMsDuration)
     {
         var
             scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
@@ -678,7 +678,7 @@ var
     // Callback called by a performing sequence. Reports the msPositionInScore of the
     // Moment curently being sent. When all the events in the span have been played,
     // reportEndOfPerformance() is called (see above).
-    reportMsPos = function(msPositionInScore)
+    reportMsPos = function (msPositionInScore)
     {
         //console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
         // If there is a graphic object in the score having msPositionInScore,
@@ -688,7 +688,7 @@ var
 
     // see: http://stackoverflow.com/questions/846221/logarithmic-slider
     // Returns the speed from the (logarithmic) speed slider control.
-    speedSliderValue = function(position)
+    speedSliderValue = function (position)
     {
         var
             // the slider has min="0" max="180" (default value=SPEEDCONTROL_MIDDLE (=90))
@@ -702,7 +702,7 @@ var
     },
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
-    setSvgControlsState = function(svgCtlsState)
+    setSvgControlsState = function (svgCtlsState)
     {
 
         function setPage1Controls()
@@ -839,7 +839,7 @@ var
 
     // The Go control can be clicked directly.
     // Also, it is called automatically when assisted performances start.
-    goControlClicked = function()
+    goControlClicked = function ()
     {
         if(svgControlsState === 'stopped' || svgControlsState === 'paused')
         {
@@ -851,7 +851,7 @@ var
         }
     },
 
-    resetSpeed = function()
+    resetSpeed = function ()
     {
         if(player.setSpeed !== undefined)
         {
@@ -870,9 +870,11 @@ var
     // If there is only one interpretation
     // a) there will be only one option("interpretation 1"), and
     // b) the control will be disabled (by other code).
-    setInterpretationsControl = function (availableRegionNames, nInterpretations)
+    setInterpretationSelect = function (score)
     {
-        let interpretationSelect = globalElements.interpretationSelect;
+        let interpretationSelect = globalElements.interpretationSelect,
+            availableRegionNames = score.getAvailableRegionNames(),
+            nInterpretations = score.getNumberOfInterpretations();
 
         interpretationSelect.options.length = 0;
         if(availableRegionNames.length > 1)
@@ -1048,7 +1050,7 @@ export class Controls
                         scoreInfo.filename = "Study 2 (conversion 2025)/Study 2 (conversion 2025).svg";
                         scoreInfo.aboutText = "about Study 2";
                         scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy2.html";
-                        break;                        
+                        break;
                     case STUDY2_2STAVES_SCORE_INDEX:
                         scoreInfo.filename = "Study 2 - 2 staves (conversion 2025)/Study 2 - 2 staves (conversion 2025).svg";
                         scoreInfo.aboutText = "about Study 2";
@@ -1125,7 +1127,7 @@ export class Controls
                 newNode.setAttribute("data", pageURL);
                 newNode.setAttribute("type", "image/svg+xml");
                 newNode.setAttribute("class", "svgPage");
-                newNode.addEventListener('load', function() {setScoreLoadedState();});
+                newNode.addEventListener('load', function () {setScoreLoadedState();});
 
                 return newNode;
             }
@@ -1177,7 +1179,7 @@ export class Controls
         function toggleBack(selected)
         {
             selected.setAttribute("opacity", "1");
-            window.setTimeout(function()
+            window.setTimeout(function ()
             {
                 selected.setAttribute("opacity", "0");
             }, 200);
@@ -1367,25 +1369,15 @@ export class Controls
     // The Start button is enabled when a score and MIDI output have been selected.
     beginRuntime()
     {
-        // tracksData is set up inside score (where it can be retrieved again later), and the tracksControl is initialized.
-        function getTracksData(score)
+        // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
+        // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
+        // of its track controls is turned on or off.
+        // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
+        // Repainting includes using the correct staff colours, but the score may also update the position of
+        // its start marker (which always starts on a chord) if a track is turned off.
+        function setTracksControl(score)
         {
-            score.init(); // get empty systems, set tracks, runningCursor, startMarker to start, endMarker to end..
-
-            // Each track has a currentTrackInterpretation containing midiChords and midRests
-            let nTracks = score.getCurrentTracks().length,
-                availableRegionNames = score.getAvailableRegionNames(),
-                nInterpretations = score.getNumberOfInterpretations();
-
-            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-            // It calls score.refreshDisplay(undefined, trackIsOnArray) function as a callback when one
-            // of its track controls is turned on or off.
-            // score.refreshDisplay(trackIsOnArray) simply tells the score to repaint itself using trackIsOnArray.
-            // Repainting includes using the correct staff colours, but the score may also update the position of
-            // its start marker (which always starts on a chord) if a track is turned off.
-            tracksControl.init(nTracks);
-
-            setInterpretationsControl(availableRegionNames, nInterpretations);
+            tracksControl.init(score.getCurrentTracks().length);
         }
 
         function setSpeedControl(tracksControlWidth)
@@ -1428,9 +1420,13 @@ export class Controls
             conductingLimit.right = parseInt(conductingLayer.style.width) - 2;
         }
 
-        // This function can throw an exception
-        // (e.g. if an attempt is made to create an event that has no duration).
-        getTracksData(score);
+        score.init(); // get systems, set tracks, runningCursor, startMarker to start, endMarker to end..
+
+        setTracksControl(score);
+
+        setSpeedControl(tracksControl.width());
+
+        setInterpretationSelect(score);
 
         setConductingLayer();
 
@@ -1440,8 +1436,6 @@ export class Controls
         player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
 
         tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
-
-        setSpeedControl(tracksControl.width());
 
         resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
 
