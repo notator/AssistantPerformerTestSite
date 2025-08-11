@@ -870,8 +870,8 @@ var
     },
 
     // If there is more than one region, this function sets the interpretationsSelect control's
-    // options to the regions currently available at the startMarker's msPositionInScore.
-    // Otherwise, if there are no regions in the score, it sets the interpretationsSelect
+    // options to all the _region_names_ (in alphabetical order).
+    // If there is only one region in the score (the minimum), it sets the interpretationsSelect
     // control's options to the available _interpretations_.
     // If there is only one interpretation
     // a) there will be only one option("interpretation 1"), and
