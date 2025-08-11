@@ -5,9 +5,42 @@ These changes are being implemented gradually, in conjunction with changes being
 This file is intended to be a help when revising the main documentation for AssistantPerformer2025 when the TODOS2025 branch is merged
 into the stable branch.
 
-REMARKS: Study 2 sends messages excessively fast to the ResidentSynth, resulting in some rather strange artefacts. Even playing it at the
+REMARKS:
+1. Study 2 sends messages excessively fast to the ResidentSynth, resulting in some rather strange artefacts. Even playing it at the
 slowest possible speed (10%) still results in some audible artefacts. Generally however, performances are as expected, so I don't think I 
 can tweek anything to improve the situation. (?)
+
+2. Regions and Interpretations should be properly documented:
+Interpretations (which are temporal information) are stored in parallel <midiChord> or <midiRest> elements inside <midiChords> or
+<midiRests> elements inside SVG <g class "chord"> or <g class "rest"> elements. Each <g class "chord"> or <g class "rest"> element also
+contains a single <g class="graphics"> element that defines the symbol's appearance.
+<g class="chord">
+    <score:midiChords>
+        <midiChord> <!-- interpretation 1 -->
+            ...
+        </midiChord>
+        <midiChord> <!-- interpretation 2 -->
+            ...
+        </midiChord>
+        ... <!-- more <midiChord> elements (interpretations) ad lib. -->
+    </score:midiChords>
+    <g class="graphics">
+        ...
+    </g>
+</g>
+And similarly for <g class="rest">. (Different rest interpretations simply have different durations.)
+All scores contain 1 or more Regions. 
+If a score contains more than one Region, then each Region determines the interpretation that it will play. The InterpretationSelect control
+is therefore populated by "region A", "region B" etc. In this case, the Regions available in the Select control change dynamically, depending
+on the Regions currently available at the position of the startMarker, and making a selection automatically sends the endMarker to the end of
+the score (otherwise the startMarker could end up later than the endMarker.).
+If a score contains only 1 Region, then the user is given control of which interpretation is to be played. The InterpretationSelect control
+will then be populated by "interpretation 1", "interpretation 2", etc. options depending on the number of interpretations in the score. In this
+case, if there is only 1 interpretation, the control is disabled (greyed out).
+I'm using the following three test scores
+a) Tombeau 1 (multiple regions, but only one interpretation in the score)
+b) Study 1 (1 region with 2 interpretations)
+c) Pianola Music (multiple regions with multiple interpretation levels -- Region B uses Interpretation 2)
 
 ===========================================================================================================================================
 TODOs:

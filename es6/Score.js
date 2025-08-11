@@ -353,7 +353,7 @@ let numberOfTracks = 0,
 			cursorX = e.pageX,
 			cursorY = e.pageY,
 			systemIndex, system,
-			timeObjectsArray, midiObjectOrBarline, trackIndex, barlineTimeObject;
+			timeObjectsArray, midiObjectOrBarline, trackIndex;
 
 		// Returns the system having stafflines closest to cursorY.
 		function findSystemIndex(cursorY)
@@ -1875,11 +1875,6 @@ let numberOfTracks = 0,
 		}
 		
 		return currentTracks;
-	},
-
-	getNumberOfRegions = function()
-	{
-		return regionSequence.length; 
 	},
 
 	getMarkersLayer = function()
