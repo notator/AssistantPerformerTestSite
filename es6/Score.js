@@ -472,22 +472,6 @@ let numberOfTracks = 0,
 			return trackIndex;
 		}
 
-		// Returns -1 if the regionName is not present in regionSequence
-		function indexInRegionSequence(regionName)
-		{
-			let index = -1;
-			for(let i = 0; i < regionSequence.length; ++i)
-			{
-				let region = regionSequence[i];
-				if(regionName.localeCompare(region.name) === 0)
-				{
-					index = i;
-					break;
-				}
-			}
-			return index;
-		}
-
 		// Displays an alert if an attempt was made to set the startMarker or endMarker in the wrong order.
 		function selectRegionIndex(timeObject, settingEndMarker)
 		{
@@ -717,7 +701,7 @@ let numberOfTracks = 0,
 						{
 							endMarker.setName(regionSequence[endRegionIndex].name);
 						}
-					}
+					}					
 					break;
 				default:
 					break;
@@ -1625,16 +1609,40 @@ let numberOfTracks = 0,
 		svgPageClicked(e, 'settingStart');
 	},
 
-	getAvailableRegionNames = function ()
+	// returns all the region names in alphabetical order (disregarding upper/lower case)
+	getAllRegionNames = function ()
 	{
-		let msPos = startMarker.msPositionInScore,
-			names = regionNamesPerMsPosInScore.find(x => x.msPosInScore >= msPos).regionNames;
+		let names = [];
+
+		for(let i = 0; i < regionSequence.length; ++i)
+		{
+			names = names.concat(regionSequence[i].name);
+		}
+
+		names.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
 		return names;
 	},
 
 	getNumberOfInterpretations = function ()
 	{
 		return nInterpretations;
+	},
+
+	// Returns -1 if the regionName is not present in regionSequence
+	indexInRegionSequence = function(regionName)
+	{
+		let index = -1;
+		for(let i = 0; i < regionSequence.length; ++i)
+		{
+			let region = regionSequence[i];
+			if(regionName.localeCompare(region.name) === 0)
+			{
+				index = i;
+				break;
+			}
+		}
+		return index;
 	},
 
 	sendStartMarkerToStart = function()
@@ -1971,7 +1979,7 @@ export class Score
 		this.init = init;
 
 		this.getCurrentTracks = getCurrentTracks;
-		this.getAvailableRegionNames = getAvailableRegionNames;
+		this.getAllRegionNames = getAllRegionNames;
 		this.getNumberOfInterpretations = getNumberOfInterpretations;
 
 		this.setInterpretation = setInterpretation;

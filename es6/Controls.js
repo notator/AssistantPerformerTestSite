@@ -371,6 +371,12 @@ var
 
     setEventListenersAndMouseCursors = function (svgControlsState)
     {
+        function setStartMarker(e)
+        {
+            score.setStartMarkerClick(e);                                
+            setInterpretationSelect(score);
+        }
+
         let s = score,
             markersLayer = s.getMarkersLayer(),
             currentURL = new URL(window.location.href),
@@ -383,7 +389,7 @@ var
             switch(svgControlsState)
             {
                 case 'settingStart':
-                    markersLayer.addEventListener('click', s.setStartMarkerClick, false);
+                    markersLayer.addEventListener('click', setStartMarker, false);
                     currentSiteURL = currentSiteURL + 'cursors/setStartCursor.cur';
                     markersLayer.style.cursor = "url(" + currentSiteURL + "), crosshair";
                     break;
@@ -416,7 +422,7 @@ var
                     // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
                     // "Calling removeEventListener() with arguments which do not identify any currently 
                     //  registered EventListener on the EventTarget has no effect."
-                    markersLayer.removeEventListener('click', s.setStartMarkerClick, false);
+                    markersLayer.removeEventListener('click', setStartMarker, false);
                     markersLayer.removeEventListener('click', s.setEndMarkerClick, false);
                     markersLayer.style.cursor = 'auto';
                     conductingLayer.style.visibility = "hidden";
@@ -873,16 +879,16 @@ var
     setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
-            availableRegionNames = score.getAvailableRegionNames(),
+            allRegionNames = score.getAllRegionNames(),
             nInterpretations = score.getNumberOfInterpretations();
 
         interpretationSelect.options.length = 0;
-        if(availableRegionNames.length > 1)
+        if(allRegionNames.length > 1)
         {
-            for(let i = 0; i < availableRegionNames.length; ++i)
+            for(let i = 0; i < allRegionNames.length; ++i)
             {
                 let option = document.createElement("option");
-                option.text = "region " + availableRegionNames[i];
+                option.text = "region " + allRegionNames[i];
                 interpretationSelect.add(option, null);
             }
         }
