@@ -1457,16 +1457,16 @@ let numberOfTracks = 0,
 							endAndStartRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline')),
 							endRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endRegionBarline')),
 							endOfScoreBarlineElems = Array.from(systemElem.getElementsByClassName('endOfScoreBarline')),
-							barlineObjs, normalBarlineTimeObjs = [], startBarlineTimeObjs = [], endBarlineTimeObjs = [], endOfScoreTimeObjs = [],
-							endAndStartBarlineTimeObjs = [];
+							barlineObjs, normalBarlineObjs = [], startRegionBarlineObjs = [], endRegionBarlineObjs = [], endOfScoreBarlineObjs = [],
+							endAndStartBarlineObjs = [];
 
-						normalBarlineTimeObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
-						startBarlineTimeObjs = getBarlineTypeAndAlignments(startRegionBarlineElems, "startRegionBarline");
-						endBarlineTimeObjs = getBarlineTypeAndAlignments(endRegionBarlineElems, "endRegionBarline");
-						endOfScoreTimeObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
-						endAndStartBarlineTimeObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
+						normalBarlineObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
+						startRegionBarlineObjs = getBarlineTypeAndAlignments(startRegionBarlineElems, "startRegionBarline");
+						endRegionBarlineObjs = getBarlineTypeAndAlignments(endRegionBarlineElems, "endRegionBarline");
+						endOfScoreBarlineObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
+						endAndStartBarlineObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
 
-						barlineObjs = [...normalBarlineTimeObjs, ...startBarlineTimeObjs, ...endAndStartBarlineTimeObjs, ...endBarlineTimeObjs, ...endOfScoreTimeObjs];
+						barlineObjs = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
 						barlineObjs.sort((x, y) => x.alignment - y.alignment);
 
 						if(barlineObjs[barlineObjs.length - 1].typeString === "endOfScoreBarline")
@@ -1521,18 +1521,10 @@ let numberOfTracks = 0,
 						voiceTimeObjects = system.staves[0].voices[0].timeObjects;
 
 						system.barlinesPerInterpretation = getBarlinesPerInterpretation(systemElem, voiceTimeObjects, nInterpretations);
-
-						// Does the endMarker need the right barline to be at the end of each voice's timeObjects?
-						// If so, add it here.
-						// Currently, when this function is called, there are only MidiChords and MidiRests in the timeObjects.
 					}
 				}
 
 				getVoiceTimeObjects();
-
-				// Does the endMarker need the right barline to be at the end of each voice's timeObjects?
-				// If so, add it after calling the following function.
-				// Currently, there are only MidiChords and MidiRests in the timeObjects.
 				getSystemBarlineTimeObjects(systemElems, systems);
 			}
 
@@ -1609,19 +1601,13 @@ let numberOfTracks = 0,
 		svgPageClicked(e, 'settingStart');
 	},
 
-	// returns all the region names in alphabetical order (disregarding upper/lower case)
-	getAllRegionNames = function ()
+	// Sorts the regionSequence by region.name (in place, alphabetically, disregarding upper/lower case)
+	// and returns the result.
+	getSortedRegions = function ()
 	{
-		let names = [];
+		regionSequence.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
-		for(let i = 0; i < regionSequence.length; ++i)
-		{
-			names = names.concat(regionSequence[i].name);
-		}
-
-		names.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-
-		return names;
+		return regionSequence;
 	},
 
 	getNumberOfInterpretations = function ()
@@ -1810,6 +1796,37 @@ let numberOfTracks = 0,
 				}
 			}
 
+			// Set each region.startBarline and region.systemIndex.
+			// These attributes are used when selecting a region with the InterpretatonsSelect control.
+			function setRegionStartBarlineAndSystemIndex(regionSequence, systems)
+			{
+				for(let region of regionSequence)
+				{
+					let found = false;
+					for(let systemIndex = 0; systemIndex < systems.length; ++ systemIndex)
+					{
+						let barlines = systems[systemIndex].barlinesPerInterpretation[0];
+						for(let barline of barlines)
+						{
+							if(barline.typeString === "startRegionBarline")
+							{
+								if( region.startMsPosInScore === barline.msPositionInScore)
+								{
+									region.startBarline = barline;
+									region.systemIndex = systemIndex;
+									found = true;
+									break;
+								}
+							}
+						}
+						if(found)
+						{
+							break;
+						}
+					}
+				}				
+			}
+			
 			if(regionSequence.length === 1)
 			{
 				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
@@ -1821,6 +1838,7 @@ let numberOfTracks = 0,
 			}
 
 			setRegionNamesPerMsPosInScore(regionSequence);
+			setRegionStartBarlineAndSystemIndex(regionSequence, systems);
 
 			for(let track of tracks)
 			{
@@ -1979,7 +1997,7 @@ export class Score
 		this.init = init;
 
 		this.getCurrentTracks = getCurrentTracks;
-		this.getAllRegionNames = getAllRegionNames;
+		this.getSortedRegions = getSortedRegions;
 		this.getNumberOfInterpretations = getNumberOfInterpretations;
 
 		this.setInterpretation = setInterpretation;

@@ -879,16 +879,21 @@ var
     setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
-            allRegionNames = score.getAllRegionNames(),
+            sortedRegions = score.getSortedRegions(),
             nInterpretations = score.getNumberOfInterpretations();
 
         interpretationSelect.options.length = 0;
-        if(allRegionNames.length > 1)
+        if(sortedRegions.length > 1)
         {
-            for(let i = 0; i < allRegionNames.length; ++i)
+            for(let i = 0; i < sortedRegions.length; ++i)
             {
-                let option = document.createElement("option");
-                option.text = "region " + allRegionNames[i];
+                let region = sortedRegions[i],
+                    option = document.createElement("option");
+
+                option.text = "region " + region.name;
+                option.startRegionBarline = region.startBarline;
+                option.startRegionSystemIndex = region.systemIndex;
+
                 interpretationSelect.add(option, null);
             }
         }
