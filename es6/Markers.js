@@ -128,7 +128,8 @@ export class StartMarker extends Marker
 		this.circle.style.fill = GREEN;
 		if(this.text !== undefined)
 		{
-			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.25).toString()); // left edge will be right of x
+			this.text.setAttribute('text-anchor', 'end'); // right edge will be left of x
+			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * -1.4).toString()); // right edge will be left of x
 			this.text.textContent = regionSequence[0].name;
 			this.text.style.fill = GREEN;
 		}
@@ -147,8 +148,7 @@ export class EndMarker extends Marker
 		this.circle.style.fill = RED;
 		if(this.text !== undefined)
 		{
-			this.text.setAttribute('text-anchor', 'end'); // right edge will be left of x
-			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * -1.25).toString()); // right edge will be left of x
+			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.4).toString()); // left edge will be right of x
 			this.text.textContent = regionSequence[regionSequence.length - 1].name;
 			this.text.style.fill = RED;
 		}
