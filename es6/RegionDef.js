@@ -3,43 +3,7 @@ export class RegionDef
 {
 	constructor(regionDefElem, regionInfoStringElems)
 	{
-		var
-			name = regionDefElem.getAttribute("name"),
-			fromStartOfBar = parseInt(regionDefElem.getAttribute("fromStartOfBar"), 10),
-			startMsPosInScore = parseInt(regionDefElem.getAttribute("startMsPosInScore"), 10),
-			toEndOfBarAttr = regionDefElem.getAttribute("toEndOfBar"),
-			toEndOfBar = (toEndOfBarAttr === "final") ? "final" : parseInt(toEndOfBarAttr, 10),
-			endMsPosAttr = regionDefElem.getAttribute("endMsPosInScore"),
-			endMsPosInScore = (toEndOfBarAttr === "final") ? Number.MAX_VALUE : parseInt(endMsPosAttr, 10),
-			_startRegionInfoStringElem,
-			_endRegionInfoStringElem;
-
-		console.assert(!isNaN(startMsPosInScore));
-		console.assert(!isNaN(endMsPosInScore));
-
-		for(let textElem of regionInfoStringElems)
-		{
-			let t = textElem.innerHTML;
-			if(t.localeCompare(name) === 0)
-			{
-				_startRegionInfoStringElem = textElem;
-				break;
-			}
-		}
-		for(let textElem of regionInfoStringElems)
-		{
-			let t = textElem.innerHTML;
-			if(t.indexOf(name) === 0 && t.length > name.length)
-			{
-				let char = t.slice(name.length, name.length + 1);
-				if(char.localeCompare(' ') === 0 || isNaN(char))
-				{
-					_endRegionInfoStringElem = textElem;
-					break;
-				}
-			}
-		}
-
+		// public function
 		function setActiveInfoStringsStyle(isActive)
 		{
 			let startColorString, endColorString, weightString;
@@ -54,26 +18,74 @@ export class RegionDef
 				startColorString = 'black';
 				endColorString = 'black';
 				weightString = 'normal';
-			} 
+			}
 			_startRegionInfoStringElem.setAttribute('fill', startColorString);
 			_startRegionInfoStringElem.setAttribute('font-weight', weightString);
 			_endRegionInfoStringElem.setAttribute('fill', endColorString);
 			_endRegionInfoStringElem.setAttribute('font-weight', weightString);
 		}
 
-		// fromStartOfBar and toEndOfBar correspond correctly to the msPos values,
-		// but they are currently just used as comments while debugging.		
-		Object.defineProperty(this, "name", { value: name, writable: false });
-		Object.defineProperty(this, "fromStartOfBar", { value: fromStartOfBar, writable: false });
-		Object.defineProperty(this, "startMsPosInScore", { value: startMsPosInScore, writable: false });
-		Object.defineProperty(this, "toEndOfBar", { value: toEndOfBar, writable: false });
-		Object.defineProperty(this, "endMsPosInScore", { value: endMsPosInScore, writable: false });
-		Object.defineProperty(this, "setActiveInfoStringsStyle", { value: setActiveInfoStringsStyle, writable: false });
+		let // static values, used by the above function (when regionDefElem is defined).
+			_startRegionInfoStringElem,
+			_endRegionInfoStringElem,
+			// default values (overridden when regionDefElem is defined)
+			endMsPosInScore = Number.MAX_VALUE,
+			fromStartOfBar = 1,
+			interpIndex = 0,
+			name = "a",
+			startMsPosInScore = 0,
+			toEndOfBar = "last";
 
-		// startMarkerMsPosInScore can be different from startMsPosInScore only in the first regionDef that is going to be performed.
-		Object.defineProperty(this, "startMarkerMsPosInScore", { value: startMsPosInScore, writable: true });
-		// endMarkerMsPosInScore can be different from endMsPosInScore only in the last regionDef that is going to be performed.
-		Object.defineProperty(this, "endMarkerMsPosInScore", { value: endMsPosInScore, writable: true });
+		if(regionDefElem !== undefined)
+		{
+			endMsPosInScore = parseInt(regionDefElem.getAttribute("endMsPosInScore"), 10);
+			fromStartOfBar = parseInt(regionDefElem.getAttribute("fromStartOfBar"), 10);
+			interpIndex = parseInt(regionDefElem.getAttribute("midiChordIndex"), 10);
+			name = regionDefElem.getAttribute("name");
+			startMsPosInScore = parseInt(regionDefElem.getAttribute("startMsPosInScore"), 10);
+			toEndOfBar = parseInt(regionDefElem.getAttribute("toEndOfBar"), 10);
+
+			console.assert(!isNaN(startMsPosInScore));
+			console.assert(!isNaN(endMsPosInScore));
+
+			for(let textElem of regionInfoStringElems)
+			{
+				let t = textElem.innerHTML;
+				if(t.localeCompare(name) === 0)
+				{
+					_startRegionInfoStringElem = textElem;
+					break;
+				}
+			}
+
+			for(let textElem of regionInfoStringElems)
+			{
+				let t = textElem.innerHTML;
+				if(t.indexOf(name) === 0 && t.length > name.length)
+				{
+					let char = t.slice(name.length, name.length + 1);
+					if(char.localeCompare(' ') === 0 || isNaN(char))
+					{
+						_endRegionInfoStringElem = textElem;
+						break;
+					}
+				}
+			}
+		}
+
+		Object.defineProperty(this, "name", {value: name, writable: false});
+		Object.defineProperty(this, "startMsPosInScore", {value: startMsPosInScore, writable: false});
+		Object.defineProperty(this, "endMsPosInScore", {value: endMsPosInScore, writable: true}); // is set while loading 1-region scores.		
+		Object.defineProperty(this, "interpIndex", {value: interpIndex, writable: false});		
+
+		// fromStartOfBar and toEndOfBar are non-functional comments, defined by Moritz and used while debugging.
+		// They could be deleted from both the SVG files and this region definition. (Don't rely on them in active javascript!)
+		Object.defineProperty(this, "fromStartOfBar", {value: fromStartOfBar, writable: false});
+		Object.defineProperty(this, "toEndOfBar", {value: toEndOfBar, writable: false});				
+
+		// The infoStrings are the region names (in boxes above the region start and ends) that change colour
+		// to show which region is being performed. Such boxes only exist when two or more regions exist.
+		Object.defineProperty(this, "setActiveInfoStringsStyle", { value: setActiveInfoStringsStyle, writable: false });
 	}
 }
 
