@@ -6,6 +6,12 @@ export class RegionDef
 		// public function
 		function setActiveInfoStringsStyle(isActive)
 		{
+			if(_startRegionInfoStringElem === undefined)
+			{
+				// is undefined when there is only one region (having no infoStrings in boxes)
+				return; 
+			}
+
 			let startColorString, endColorString, weightString;
 			if(isActive)
 			{
