@@ -869,18 +869,17 @@ var
         globalElements.speedControlLabel2.innerHTML = "100%";
     },
 
-    // If there is more than one region, this function sets the interpretationsSelect control's
-    // options to all the _region_names_ (in alphabetical order).
-    // If there is only one region in the score (the minimum), it sets the interpretationsSelect
-    // control's options to the available _interpretations_.
-    // If there is only one interpretation
-    // a) there will be only one option("interpretation 1"), and
-    // b) the control will be disabled (by other code).
+    // This function sets the interpretationsSelect control's
+    // options to the available region.longNames (in alphabetical order).
+    // If no regions are defined in the SVG, one (score-length) region per interpretation
+    // is automatically constructed. Each such region has a longName consisting of the
+    // string "interpretation " folowed by the interpretation's number.
+    // Regions that are defined in the SVG have longNames that begin with the string
+    // "region " followed by its shortName as defined in the SVG.
     setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
-            sortedRegions = score.getSortedRegions(),
-            nInterpretations = score.getNumberOfInterpretations();
+            sortedRegions = score.getSortedRegions();
 
         interpretationSelect.options.length = 0;
         if(sortedRegions.length > 1)
@@ -890,27 +889,11 @@ var
                 let region = sortedRegions[i],
                     option = document.createElement("option");
 
-                option.text = "region " + region.name;
+                option.text = region.longName;
                 option.startRegionBarline = region.startBarline;
                 option.startRegionSystemIndex = region.systemIndex;
 
                 interpretationSelect.add(option, null);
-            }
-        }
-        else if(nInterpretations > 0)
-        {
-            let option = document.createElement("option");
-            option.text = "interpretation 1";
-            interpretationSelect.add(option, null);
-
-            if(nInterpretations > 1)
-            {
-                for(let i = 1; i < nInterpretations; ++i)
-                {
-                    option = document.createElement("option");
-                    option.text = "interpretation " + (i + 1).toString();
-                    interpretationSelect.add(option, null);
-                }
             }
         }
         else

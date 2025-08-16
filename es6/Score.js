@@ -979,12 +979,8 @@ let numberOfTracks = 0,
 					regionDefElems = svgElem.getElementsByClassName("regionDef"),
 					regionInfoStringElems = svgElem.getElementsByClassName("regionInfoString");
 
-				if(regionDefElems.length === 0)
-				{
-					// default is to define a region that contains the whole score
-					regionSeq.push({name: "a", fromStartOfBar: 1, startMsPosInScore: 0, toEndOfBar: "last", endMsPosInScore: Number.MAX_VALUE});
-				}
-				else
+				// one region per interpretation will be created later, when the number of interpretations is known.
+				if(regionDefElems.length > 0)
 				{
 					for(let regionDefElem of regionDefElems)
 					{
@@ -1601,18 +1597,13 @@ let numberOfTracks = 0,
 		svgPageClicked(e, 'settingStart');
 	},
 
-	// Sorts the regionSequence by region.name (in place, alphabetically, disregarding upper/lower case)
+	// Sorts the regionSequence by region.shortName (in place, alphabetically, disregarding upper/lower case)
 	// and returns the result.
 	getSortedRegions = function ()
 	{
-		regionSequence.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		regionSequence.sort((a, b) => a.shortName.toLowerCase().localeCompare(b.shortName.toLowerCase()));
 
 		return regionSequence;
-	},
-
-	getNumberOfInterpretations = function ()
-	{
-		return nInterpretations;
 	},
 
 	// Returns -1 if the regionName is not present in regionSequence
@@ -1743,12 +1734,12 @@ let numberOfTracks = 0,
 				// Uses Moritz' algorithm (A, A1, A2 etc.).
 				function getRegionNameSequence(regionSequence)
 				{
-					let names = [];
+					let shortNames = [];
 					for(let region of regionSequence)
 					{
-						names.push(region.name);
+						shortNames.push(region.shortName);
 					}
-					return names;
+					return shortNames;
 				}
 
 				function getRegionMsPosBounds(regionSequence)
@@ -1808,15 +1799,13 @@ let numberOfTracks = 0,
 						let barlines = systems[systemIndex].barlinesPerInterpretation[0];
 						for(let barline of barlines)
 						{
-							if(barline.typeString === "startRegionBarline")
+							if((region.startMsPosInScore === 0)
+							|| (barline.typeString === "startRegionBarline" && region.startMsPosInScore === barline.msPositionInScore))
 							{
-								if( region.startMsPosInScore === barline.msPositionInScore)
-								{
-									region.startBarline = barline;
-									region.systemIndex = systemIndex;
-									found = true;
-									break;
-								}
+								region.startBarline = barline;
+								region.systemIndex = systemIndex;
+								found = true;
+								break;
 							}
 						}
 						if(found)
@@ -1826,23 +1815,47 @@ let numberOfTracks = 0,
 					}
 				}				
 			}
-			
-			if(regionSequence.length === 1)
-			{
-				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
-					interpIndex = 0,
-					finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
-					finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore;
 
-				regionSequence[0].endMsPosInScore = finalBarlineMsPosInScore;
+			if(regionSequence.length === 0)
+			{
+				// create one region per interpretation (each region spans the whole score).
+				let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
+					nInterpretations = timeObjects[0].length;
+
+				for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
+				{
+					let scoreSpanRegionData = {},
+						finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
+					    finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore,
+						interpretationNr = (interpIndex + 1).toString();
+
+					scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
+					scoreSpanRegionData.longName = "interpretation " + interpretationNr; // used in the interpretationSelect control
+					scoreSpanRegionData.interpIndex = interpIndex;
+					scoreSpanRegionData.startMsPosInScore = 0;
+					scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
+
+					let region = new RegionDef(undefined, undefined, scoreSpanRegionData);
+					// must I set the start barline later?
+
+					regionSequence.push(region);
+				}
+				// These variables (global in Score) need to be ignored when performing scoreSpanRegions...
+				startRegionIndex = -1;
+				endRegionIndex = -1;
 			}
 
 			setRegionNamesPerMsPosInScore(regionSequence);
 			setRegionStartBarlineAndSystemIndex(regionSequence, systems);
 
-			for(let track of tracks)
+			// If the longName begins with "interpretation", then the regions are not linked.
+			// (Interpretation-regions end at the end of the score.)
+			if(regionSequence[0].longName.split(0, 6) === "region")
 			{
-				track.currentInterpretation.setRegionLinks(regionSequence);
+				for(let track of tracks)
+				{
+					track.currentInterpretation.setRegionLinks(regionSequence);
+				}
 			}
 		}
 
@@ -1859,10 +1872,10 @@ let numberOfTracks = 0,
 			sendEndMarkerToEnd();
 		}
 
-		let interpIndex = 0;
+
 		for(let i = 0; i < tracks.length; ++i)
 		{
-			tracks[i].setCurrentInterpretation(interpIndex);
+			tracks[i].setCurrentInterpretation(0);
 		}
 
 		setRegionData(systems);
@@ -1870,7 +1883,7 @@ let numberOfTracks = 0,
 		sendMarkersToInitialPositions();
 
 		let displayRunningCursor = false;		
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, 0, displayRunningCursor);
 	},
 
 	
@@ -1941,17 +1954,20 @@ let numberOfTracks = 0,
 
 	setInterpretation = function(interpretationIndex)
 	{
-		if(regionSequence.length > 1)
-		{
-			startMarker.setName(regionSequence[startRegionIndex].name);
-			currentRegionIndex = startRegionIndex;
-		}
-		else
-		{
-			interpIndex = interpretationIndex;
-			startMarker.setName((interpretationIndex + 1).toString());
-			cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
-		}
+		startMarker.setName(regionSequence[startRegionIndex].shortName);
+		currentRegionIndex = startRegionIndex;
+
+		//if(regionSequence.length > 1)
+		//{
+		//	startMarker.setName(regionSequence[startRegionIndex].name);
+		//	currentRegionIndex = startRegionIndex;
+		//}
+		//else
+		//{
+		//	interpIndex = interpretationIndex;
+		//	startMarker.setName((interpretationIndex + 1).toString());
+		//	cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
+		//}
 	};
 
 export class Score
@@ -1998,7 +2014,6 @@ export class Score
 
 		this.getCurrentTracks = getCurrentTracks;
 		this.getSortedRegions = getSortedRegions;
-		this.getNumberOfInterpretations = getNumberOfInterpretations;
 
 		this.setInterpretation = setInterpretation;
 
