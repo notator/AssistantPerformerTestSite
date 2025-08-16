@@ -890,8 +890,9 @@ var
                     option = document.createElement("option");
 
                 option.text = region.longName;
-                option.startRegionBarline = region.startBarline;
-                option.startRegionSystemIndex = region.systemIndex;
+                option.region = region;
+                //option.startRegionBarline = region.startBarline;
+                //option.startRegionSystemIndex = region.systemIndex;
 
                 interpretationSelect.add(option, null);
             }
@@ -1257,8 +1258,11 @@ export class Controls
 
         if(controlID === "interpretationSelect")
         {
-            let displayRunningCursor = false;
-            score.setInterpretation(globalElements.interpretationSelect.selectedIndex, displayRunningCursor);
+            let displayRunningCursor = false,
+                select = globalElements.interpretationSelect,
+                region = select.options[select.selectedIndex].region;
+
+            score.setInterpretation(region, displayRunningCursor);
         }
 
         /**** controls in options panel ***/

@@ -1952,22 +1952,20 @@ let numberOfTracks = 0,
 		return endRegionIndex;
 	},
 
-	setInterpretation = function(interpretationIndex)
+	setInterpretation = function(region)
 	{
-		startMarker.setName(regionSequence[startRegionIndex].shortName);
-		currentRegionIndex = startRegionIndex;
-
-		//if(regionSequence.length > 1)
-		//{
-		//	startMarker.setName(regionSequence[startRegionIndex].name);
-		//	currentRegionIndex = startRegionIndex;
-		//}
-		//else
-		//{
-		//	interpIndex = interpretationIndex;
-		//	startMarker.setName((interpretationIndex + 1).toString());
-		//	cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
-		//}
+		startMarker.setName(region.shortName);
+		if(region.longName.split(0, 6) === "region")
+		{			
+			currentRegionIndex = startRegionIndex;
+		}
+		else
+		{
+			currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
+			interpIndex = currentRegionIndex;
+			//cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
+			cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
+		}
 	};
 
 export class Score
