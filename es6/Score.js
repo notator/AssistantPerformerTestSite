@@ -9,9 +9,10 @@ const BLACK_COLOR = "#000000";
 
 let numberOfTracks = 0,
 
-	nInterpretations, // is set when an SVG-MIDI file is loaded
-	interpIndex = 0, // default value, will be reset by user control
-
+	// This value is owned by the InterpretationSelect control.
+	// The control sets it (and other things) by calling this.setInterpretation(region).
+	currentInterpIndex = 0, // default value.
+	
 	// Contains an array of track.
 	// Each track contains:
 	//    1. an array of Interpretations, each of which contains midiChords and midiRests
@@ -148,9 +149,10 @@ let numberOfTracks = 0,
 	{
 		function findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, firstMidiObject, lastMidiObject, deltaBefore, deltaAfter, settingStart)
 		{
+			// uses global currentInterpIndex
 			function findBarline(system, msPos)
 			{
-				let barline = system.barlinesPerInterpretation[interpIndex].find(x => x.msPositionInScore === msPos);
+				let barline = system.barlinesPerInterpretation[currentInterpIndex].find(x => x.msPositionInScore === msPos);
 				return barline;
 			}
 
@@ -206,7 +208,8 @@ let numberOfTracks = 0,
 		let midiObjectBefore = null, midiObjectAfter = null, returnObject = null,
 			deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
 			startIndex = 0, endIndex = numberOfTracks,
-			firstMidiObject, lastMidiObject;
+			firstMidiObject, lastMidiObject,
+			interpIndex = currentInterpIndex; // currentInterpIndex is a global value owned and set by the InterpretationSelect control
 
 		for(let i = startIndex; i < endIndex; ++i)
 		{
@@ -762,7 +765,7 @@ let numberOfTracks = 0,
 	setCursor = function ()
 	{
 		let displayRunningCursor = true;
-		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
 	},
 
 
@@ -1351,7 +1354,7 @@ let numberOfTracks = 0,
 					// Sets the msPosition of each timeObject (rests and chords) in the voice.timeObjects arrays.
 					function setMsPositions(systems)
 					{
-						var nStaves, nVoices, nSystems,
+						let nStaves, nVoices, nSystems,
 							timeObjects, nTimeObjects, nInterpretations;
 
 						nSystems = systems.length;
@@ -1400,11 +1403,7 @@ let numberOfTracks = 0,
 						getSystemVoiceObjects(i, systemElem, system, viewBoxScale);
 					}
 
-					// Set global nInterpretations:
-					nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
-
 					setMsPositions(systems);
-
 				}
 
 				function getSystemBarlineTimeObjects(systemElems, systemElem)
@@ -1524,7 +1523,7 @@ let numberOfTracks = 0,
 				getSystemBarlineTimeObjects(systemElems, systems);
 			}
 
-			function getEmptyTracks(system0staves)
+			function getEmptyTracks(system0staves, nInterpretations)
 			{
 				var tracks = [],
 					staffIndex, voiceIndex, nStaves = system0staves.length, staff;
@@ -1540,13 +1539,13 @@ let numberOfTracks = 0,
 				return tracks;
 			}
 
-			interpIndex = 0; // default
-
 			if(systems[0].staves[0].voices[0].timeObjects === undefined)
 			{
 				getVoiceAndSystemTimeObjects();
 
-				tracks = getEmptyTracks(systems[0].staves);
+				let nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
+
+				tracks = getEmptyTracks(systems[0].staves, nInterpretations);
 
 				nStaves = systems[0].staves.length;
 
@@ -1566,9 +1565,10 @@ let numberOfTracks = 0,
 							track = tracks[trackIndex];
 							for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
 							{
+								let timeObject = voice.timeObjects[timeObjectIndex];
 								for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
 								{
-									let midiObject = voice.timeObjects[timeObjectIndex][interpIndex];
+									let midiObject = timeObject[interpIndex];
 									if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
 									{
 										track.interpretations[interpIndex].midiObjects.push(midiObject);
@@ -1957,6 +1957,9 @@ let numberOfTracks = 0,
 	// called by interpretationSelect.leave
 	setInterpretation = function(region)
 	{
+		// global: used when finding timeObject.msPositions
+		currentInterpIndex = region.interpIndex;
+
 		let system = systems[region.systemIndex];
 
 		startMarker = system.startMarker;
@@ -1966,9 +1969,10 @@ let numberOfTracks = 0,
 
 		sendEndMarkerToEnd();
 
-			currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
+		currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
+		
 
-			cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
+		cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
 
 		//if(region.longName.split(0, 6) === "region")
 		//{			
