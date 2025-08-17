@@ -1597,13 +1597,15 @@ let numberOfTracks = 0,
 		svgPageClicked(e, 'settingStart');
 	},
 
-	// Sorts the regionSequence by region.shortName (in place, alphabetically, disregarding upper/lower case)
-	// and returns the result.
+	// Returns a clone of the regionSequence, sorted by region.shortName (in place, alphabetically, disregarding upper/lower case)
+	// The main regionSequence is not changed.
 	getSortedRegions = function ()
 	{
-		regionSequence.sort((a, b) => a.shortName.toLowerCase().localeCompare(b.shortName.toLowerCase()));
+		let regionSequenceClone = [...regionSequence];
 
-		return regionSequence;
+		regionSequenceClone.sort((a, b) => a.shortName.toLowerCase().localeCompare(b.shortName.toLowerCase()));
+
+		return regionSequenceClone;
 	},
 
 	// Returns -1 if the regionName is not present in regionSequence
@@ -1952,20 +1954,33 @@ let numberOfTracks = 0,
 		return endRegionIndex;
 	},
 
+	// called by interpretationSelect.leave
 	setInterpretation = function(region)
 	{
+		let system = systems[region.systemIndex];
+
+		startMarker = system.startMarker;
+		hideStartMarkersExcept(startMarker);
+		startMarker.moveTo(region.startBarline);
 		startMarker.setName(region.shortName);
-		if(region.longName.split(0, 6) === "region")
-		{			
-			currentRegionIndex = startRegionIndex;
-		}
-		else
-		{
+
+		sendEndMarkerToEnd();
+
 			currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
-			interpIndex = currentRegionIndex;
-			//cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
+
 			cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
-		}
+
+		//if(region.longName.split(0, 6) === "region")
+		//{			
+		//	currentRegionIndex = startRegionIndex;
+		//}
+		//else
+		//{
+		//	currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
+		//	interpIndex = currentRegionIndex;
+		//	//cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, interpretationIndex, false);
+		//	cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
+		//}
 	};
 
 export class Score

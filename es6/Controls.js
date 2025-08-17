@@ -1258,11 +1258,10 @@ export class Controls
 
         if(controlID === "interpretationSelect")
         {
-            let displayRunningCursor = false,
-                select = globalElements.interpretationSelect,
+            let select = globalElements.interpretationSelect,
                 region = select.options[select.selectedIndex].region;
 
-            score.setInterpretation(region, displayRunningCursor);
+            score.setInterpretation(region);
         }
 
         /**** controls in options panel ***/
