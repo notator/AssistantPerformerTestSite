@@ -5,23 +5,20 @@ const CIRCLE_RADIUS = 5; // user html pixels;
 class Marker
 {
 	// Contains a line, a disk and (possibly) a text element.
-	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale)
 	{
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			line = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
 			circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
-			svgTop, svgBottom, text;
+			text = document.createElementNS("http://www.w3.org/2000/svg", 'text'),
+			svgTop, svgBottom;
 
 		svgTop = (yCoordinates.top * vbScale).toString();
 		svgBottom = (yCoordinates.bottom * vbScale).toString(); 
 
 		element.appendChild(line);
 		element.appendChild(circle);
-		if(regionSequence.length > 1)
-		{
-			text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-			element.appendChild(text);
-		}
+		element.appendChild(text);
 
 		line.setAttribute('x1', '0');
 		line.setAttribute('y1', svgTop);
@@ -35,25 +32,26 @@ class Marker
 		circle.setAttribute('r', (vbScale * CIRCLE_RADIUS).toString());
 		circle.style.strokeWidth = 0;
 
-		if(text !== undefined)
-		{
-			text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.8).toString()); // baseline will be below y
-			text.setAttribute('x', '0'); // dx will be set, so origin will not be 0
-			text.setAttribute('y', svgTop); // dy will be set, so baseline will be below top
-			text.setAttribute('style', 'font-size: ' + (vbScale * CIRCLE_RADIUS * 2.4).toString() + '; font-family: sans-serif; font-weight: bold');
-		}
+		let textBoxWidth = (vbScale * CIRCLE_RADIUS * 10);
+		text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.8).toString()); // baseline will be below y
+		text.setAttribute('x', '0'); // dx will be set, so origin will not be 0
+		text.setAttribute('y', svgTop); // dy will be set, so baseline will be below top
+		text.setAttribute('textLength', textBoxWidth.toString()); // constant width of the text element in pixels
+		text.setAttribute('fontSize', (vbScale * CIRCLE_RADIUS * 2.4).toString());
+		text.setAttribute('fontFamily', 'sans-serif');
+		text.setAttribute('fontWeight', 'bold');
+		text.setAttribute('fill', GREEN);
+		text.setAttribute('textAnchor', 'end');// anchor position is the right edge of the text.
+		text.setAttribute('dx', ((vbScale * CIRCLE_RADIUS * -1.4) - text.textLength.baseVal.value).toString()); // right edge of text will be left of x
+		text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
 
 		Object.defineProperty(this, "viewBoxScale", { value: vbScale, writable: false });
 		Object.defineProperty(this, "element", { value: element, writable: false });
 		Object.defineProperty(this, "line", { value: line, writable: false });
-		Object.defineProperty(this, "circle", { value: circle, writable: false });
-		if(text !== undefined)
-		{
-			Object.defineProperty(this, "text", { value: text, writable: false });
-		}
+		Object.defineProperty(this, "circle", {value: circle, writable: false});
+		Object.defineProperty(this, "text", {value: text, writable: false});
 		Object.defineProperty(this, "yCoordinates", { value: yCoordinates, writable: false });
 		Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
-
 	}
 
 	// the top of the line (excluding the disk)
@@ -80,10 +78,7 @@ class Marker
 		this.line.setAttribute('x1', x.toString());
 		this.line.setAttribute('x2', x.toString());
 		this.circle.setAttribute('cx', x.toString());
-		if(this.text !== undefined)
-		{
-			this.text.setAttribute('x', x.toString());
-		}
+		this.text.setAttribute('x', x.toString());
 	}
 
 	setVisible(setToVisible)
@@ -92,67 +87,53 @@ class Marker
 		{
 			this.line.style.visibility = 'visible';
 			this.circle.style.visibility = 'visible';
-			if(this.text !== undefined)
-			{
-				this.text.setAttribute('display', 'display');
-			}
+			this.text.style.visibility = 'visible';
 		}
 		else
 		{
 			this.line.style.visibility = 'hidden';
 			this.circle.style.visibility = 'hidden';
-			if(this.text !== undefined)
-			{
-				this.text.setAttribute('display', 'none');
-			}
+			this.text.style.visibility = 'hidden';
 		}
 	}
 
-	setName(markerName)
+	setLable(lableString)
 	{
-		if(this.text !== undefined)
-		{
-			this.text.textContent = markerName;
-		}
+		this.text.textContent = lableString;
 	}
 }
 
 export class StartMarker extends Marker
 {
 
-	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale)
 	{
-		super(yCoordinates, systemIndex, regionSequence, vbScale);
+		super(yCoordinates, systemIndex, vbScale);
 
 		this.line.style.stroke = GREEN;
 		this.circle.style.fill = GREEN;
-		if(this.text !== undefined)
-		{
-			this.text.setAttribute('text-anchor', 'end'); // right edge will be left of x
-			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * -1.4).toString()); // right edge will be left of x
-			this.text.textContent = regionSequence[0].name;
-			this.text.style.fill = GREEN;
-		}
-
+		this.text.setAttribute('fill', GREEN);
+		this.text.setAttribute('textAnchor', 'end');// anchor position is the right edge of the text.
+		this.text.setAttribute('dx', ((vbScale * CIRCLE_RADIUS * -1.4) - this.text.textLength.baseVal.value).toString()); // right edge of text will be left of x
+		this.text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
+		
 		this.setVisible(false);
 	}
 }
 
 export class EndMarker extends Marker
 {
-	constructor(yCoordinates, systemIndex, regionSequence, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale)
 	{
-		super(yCoordinates, systemIndex, regionSequence, vbScale);
+		super(yCoordinates, systemIndex, vbScale);
 
 		this.line.style.stroke = RED;
 		this.circle.style.fill = RED;
-		if(this.text !== undefined)
-		{
-			this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.4).toString()); // left edge will be right of x
-			this.text.textContent = regionSequence[regionSequence.length - 1].name;
-			this.text.style.fill = RED;
-		}
-
+		this.text.setAttribute('fill', RED);
+		this.text.setAttribute('textAnchor', 'start'); // anchor position is the left edge of the text.
+		this.text.setAttribute('dx', (vbScale * CIRCLE_RADIUS * 1.4).toString()); // left edge will be right of x
+		this.text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
+		
 		this.setVisible(false);
 	}
 }

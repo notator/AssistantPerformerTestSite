@@ -699,7 +699,7 @@ let //**************************************************************************
                         startMarker.moveTo(midiObjectOrBarline);
                         if(regionSequence.length > 1)
                         {
-                            startMarker.setName(regionSequence[startRegionIndex].shortName);
+                            startMarker.setLable(regionSequence[startRegionIndex].shortName);
                         }
                     }
                     currentRegionIndex = (regionIndex === -1) ? currentRegionIndex : regionIndex;
@@ -721,7 +721,7 @@ let //**************************************************************************
                         endMarker.moveTo(midiObjectOrBarline);
                         if(regionSequence.length > 1)
                         {
-                            endMarker.setName(regionSequence[endRegionIndex].shortName);
+                            endMarker.setLable(regionSequence[endRegionIndex].shortName);
                         }
                     }
                     break;
@@ -1087,10 +1087,10 @@ let //**************************************************************************
 
                     system = systems[systemIndex];
 
-                    system.startMarker = new StartMarker(yCoordinates, systemIndex, regionSequence, vbScale);
+                    system.startMarker = new StartMarker(yCoordinates, systemIndex, vbScale);
                     markersLayer.appendChild(system.startMarker.element);
 
-                    system.endMarker = new EndMarker(yCoordinates, systemIndex, regionSequence, vbScale);
+                    system.endMarker = new EndMarker(yCoordinates, systemIndex, vbScale);
                     markersLayer.appendChild(system.endMarker.element);
                 }
                 // cursor is accessed outside the score using a getter function
@@ -1649,7 +1649,7 @@ let //**************************************************************************
         startMarker = systems[0].startMarker;
         hideStartMarkersExcept(startMarker);
 
-        startMarker.setName(regionSequence[0].shortName);
+        startMarker.setLable(regionSequence[0].shortName);
         startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);
         startMarker.setVisible(true);
         startRegionIndex = 0;
@@ -1689,7 +1689,7 @@ let //**************************************************************************
             endOfRegionBarline = systemAndBarline.endBarline;
 
         endMarker = regionSystem.endMarker;
-        endMarker.setName(lastRegion.name);
+        endMarker.setLable(lastRegion.shortName);
         hideEndMarkersExcept(endMarker);
         endMarker.moveTo(endOfRegionBarline);
         endMarker.setVisible(true);
@@ -1985,7 +1985,7 @@ let //**************************************************************************
         startMarker = system.startMarker;
         hideStartMarkersExcept(startMarker);
         startMarker.moveTo(region.startBarline);
-        startMarker.setName(region.shortName);
+        startMarker.setLable(region.shortName);
 
         sendEndMarkerToEnd();
 
