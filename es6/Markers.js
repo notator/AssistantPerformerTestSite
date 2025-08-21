@@ -4,7 +4,7 @@ const CIRCLE_RADIUS = 5; // user html pixels;
 
 class Marker
 {
-	// Contains a line, a disk and (possibly) a text element.
+	// Contains a line, a disk and a text element.
 	constructor(yCoordinates, systemIndex, vbScale)
 	{
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
@@ -32,18 +32,10 @@ class Marker
 		circle.setAttribute('r', (vbScale * CIRCLE_RADIUS).toString());
 		circle.style.strokeWidth = 0;
 
-		let textBoxWidth = (vbScale * CIRCLE_RADIUS * 10);
 		text.setAttribute("dy", (vbScale * CIRCLE_RADIUS * 0.8).toString()); // baseline will be below y
 		text.setAttribute('x', '0'); // dx will be set, so origin will not be 0
 		text.setAttribute('y', svgTop); // dy will be set, so baseline will be below top
-		text.setAttribute('textLength', textBoxWidth.toString()); // constant width of the text element in pixels
-		text.setAttribute('fontSize', (vbScale * CIRCLE_RADIUS * 2.4).toString());
-		text.setAttribute('fontFamily', 'sans-serif');
-		text.setAttribute('fontWeight', 'bold');
-		text.setAttribute('fill', GREEN);
-		text.setAttribute('textAnchor', 'end');// anchor position is the right edge of the text.
-		text.setAttribute('dx', ((vbScale * CIRCLE_RADIUS * -1.4) - text.textLength.baseVal.value).toString()); // right edge of text will be left of x
-		text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
+		text.setAttribute('style', 'font-size: ' + (vbScale * CIRCLE_RADIUS * 2.4).toString() + '; font-family: sans-serif; font-weight: bold');
 
 		Object.defineProperty(this, "viewBoxScale", { value: vbScale, writable: false });
 		Object.defineProperty(this, "element", { value: element, writable: false });
@@ -105,18 +97,18 @@ class Marker
 
 export class StartMarker extends Marker
 {
-
 	constructor(yCoordinates, systemIndex, vbScale)
 	{
 		super(yCoordinates, systemIndex, vbScale);
 
 		this.line.style.stroke = GREEN;
 		this.circle.style.fill = GREEN;
-		this.text.setAttribute('fill', GREEN);
-		this.text.setAttribute('textAnchor', 'end');// anchor position is the right edge of the text.
-		this.text.setAttribute('dx', ((vbScale * CIRCLE_RADIUS * -1.4) - this.text.textLength.baseVal.value).toString()); // right edge of text will be left of x
-		this.text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
+		this.text.style.fill = GREEN;
+		this.text.setAttribute('text-anchor', 'end'); // right edge will be left of x
+		this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * -1.6).toString()); // right edge will be left of x
+		this.text.textContent = "*"; // will be set correctly using setLable() before display.
 		
+
 		this.setVisible(false);
 	}
 }
@@ -129,11 +121,10 @@ export class EndMarker extends Marker
 
 		this.line.style.stroke = RED;
 		this.circle.style.fill = RED;
-		this.text.setAttribute('fill', RED);
-		this.text.setAttribute('textAnchor', 'start'); // anchor position is the left edge of the text.
-		this.text.setAttribute('dx', (vbScale * CIRCLE_RADIUS * 1.4).toString()); // left edge will be right of x
-		this.text.setAttribute('textContent', 'HHH'); // default for debugging - will be set using setLable(region.shortName) later
-		
+		this.text.style.fill = RED;
+		this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.6).toString()); // left edge will be right of x
+		this.text.textContent = "*"; // will be set correctly using setLable() before display.		
+
 		this.setVisible(false);
 	}
 }
