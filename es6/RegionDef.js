@@ -58,14 +58,10 @@ export class RegionDef
 		{
 			shortName = regionDefElem.getAttribute("name");
 			longName = "region " + shortName;
-			if("midiChordIndex" in regionDefElem)
-			{
-				interpIndex = parseInt(regionDefElem.getAttribute("midiChordIndex"), 10);
-			}
-			else
-			{
-				interpIndex = 0; // legacy scores that have regions, but only one interpretation (such as Tombeau 1)
-			}
+			interpIndex = parseInt(regionDefElem.getAttribute("midiChordIndex"), 10);
+			// legacy scores that have regions, but only one interpretation (such as Tombeau 1)
+			// have the default interpIndex = 0;
+			interpIndex = (Number.isNaN(interpIndex)) ? 0 : interpIndex; 
 			//fromStartOfBar = parseInt(regionDefElem.getAttribute("fromStartOfBar"), 10);
 			//toEndOfBar = parseInt(regionDefElem.getAttribute("toEndOfBar"), 10);
 			startMsPosInScore = parseInt(regionDefElem.getAttribute("startMsPosInScore"), 10);
