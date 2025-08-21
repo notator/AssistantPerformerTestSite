@@ -1080,17 +1080,18 @@ let //**************************************************************************
 
                 markersLayer = createMarkersLayer(svgElem);
 
-                let markerYLimitsArray = getMarkerYLimitsArray(systems);
+                let markerYLimitsArray = getMarkerYLimitsArray(systems),
+                    displayLable = (regionSequence.length > 0) ? true : false;
                 for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
                 {
                     let yCoordinates = {top: markerYLimitsArray[systemIndex].top + 5, bottom: markerYLimitsArray[systemIndex].bottom - 5};
 
                     system = systems[systemIndex];
 
-                    system.startMarker = new StartMarker(yCoordinates, systemIndex, vbScale);
+                    system.startMarker = new StartMarker(yCoordinates, systemIndex, vbScale, displayLable);
                     markersLayer.appendChild(system.startMarker.element);
 
-                    system.endMarker = new EndMarker(yCoordinates, systemIndex, vbScale);
+                    system.endMarker = new EndMarker(yCoordinates, systemIndex, vbScale, displayLable);
                     markersLayer.appendChild(system.endMarker.element);
                 }
                 // cursor is accessed outside the score using a getter function

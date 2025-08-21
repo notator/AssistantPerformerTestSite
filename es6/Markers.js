@@ -5,7 +5,7 @@ const CIRCLE_RADIUS = 5; // user html pixels;
 class Marker
 {
 	// Contains a line, a disk and a text element.
-	constructor(yCoordinates, systemIndex, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable)
 	{
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			line = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
@@ -14,7 +14,7 @@ class Marker
 			svgTop, svgBottom;
 
 		svgTop = (yCoordinates.top * vbScale).toString();
-		svgBottom = (yCoordinates.bottom * vbScale).toString(); 
+		svgBottom = (yCoordinates.bottom * vbScale).toString();
 
 		element.appendChild(line);
 		element.appendChild(circle);
@@ -37,13 +37,14 @@ class Marker
 		text.setAttribute('y', svgTop); // dy will be set, so baseline will be below top
 		text.setAttribute('style', 'font-size: ' + (vbScale * CIRCLE_RADIUS * 2.4).toString() + '; font-family: sans-serif; font-weight: bold');
 
-		Object.defineProperty(this, "viewBoxScale", { value: vbScale, writable: false });
-		Object.defineProperty(this, "element", { value: element, writable: false });
-		Object.defineProperty(this, "line", { value: line, writable: false });
+		Object.defineProperty(this, "viewBoxScale", {value: vbScale, writable: false});
+		Object.defineProperty(this, "element", {value: element, writable: false});
+		Object.defineProperty(this, "line", {value: line, writable: false});
 		Object.defineProperty(this, "circle", {value: circle, writable: false});
 		Object.defineProperty(this, "text", {value: text, writable: false});
-		Object.defineProperty(this, "yCoordinates", { value: yCoordinates, writable: false });
-		Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
+		Object.defineProperty(this, "displayLable", {value: displayLable, writable: false});
+		Object.defineProperty(this, "yCoordinates", {value: yCoordinates, writable: false});
+		Object.defineProperty(this, "systemIndex", {value: systemIndex, writable: false});
 	}
 
 	// the top of the line (excluding the disk)
@@ -91,23 +92,25 @@ class Marker
 
 	setLable(lableString)
 	{
-		this.text.textContent = lableString;
+		if(this.displayLable)
+		{
+			this.text.textContent = lableString;
+		}
 	}
 }
 
 export class StartMarker extends Marker
 {
-	constructor(yCoordinates, systemIndex, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable)
 	{
-		super(yCoordinates, systemIndex, vbScale);
+		super(yCoordinates, systemIndex, vbScale, displayLable);
 
 		this.line.style.stroke = GREEN;
 		this.circle.style.fill = GREEN;
 		this.text.style.fill = GREEN;
 		this.text.setAttribute('text-anchor', 'end'); // right edge will be left of x
 		this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * -1.6).toString()); // right edge will be left of x
-		this.text.textContent = "*"; // will be set correctly using setLable() before display.
-		
+		this.text.textContent = ""; // will be set and displayed if displayLable is true.		
 
 		this.setVisible(false);
 	}
@@ -115,15 +118,15 @@ export class StartMarker extends Marker
 
 export class EndMarker extends Marker
 {
-	constructor(yCoordinates, systemIndex, vbScale)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable)
 	{
-		super(yCoordinates, systemIndex, vbScale);
+		super(yCoordinates, systemIndex, vbScale, displayLable);
 
 		this.line.style.stroke = RED;
 		this.circle.style.fill = RED;
 		this.text.style.fill = RED;
 		this.text.setAttribute("dx", (vbScale * CIRCLE_RADIUS * 1.6).toString()); // left edge will be right of x
-		this.text.textContent = "*"; // will be set correctly using setLable() before display.		
+		this.text.textContent = ""; // will be set and displayed if displayLable is true.		
 
 		this.setVisible(false);
 	}
