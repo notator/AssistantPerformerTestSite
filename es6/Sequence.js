@@ -445,9 +445,6 @@ export class Sequence
 
 		score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-		// Note that the trackIsOnArray will also include input tracks if the score has any,
-		// but that these are ignored here because _tracks_ only contains the _output_ tracks.
-
 		for(i = 0; i < nTracks; ++i)
 		{
 			track = tracks[i];
@@ -502,7 +499,11 @@ export class Sequence
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		tracks = score.getCurrentTracks();
+		// 22.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
+		// The Sequence code should no longer have anything to do with regions!
+		tracks = score.getMidiObjectsPerTrack();
+
+		/******/
 		regionSequence = score.getRegionSequence();
 
 		this.initTracks(); // called again when the start and end markers move.
@@ -541,7 +542,7 @@ export class Sequence
 		speed = baseSpeed;
 		sequenceRecording = recording; // can be undefined or null
 
-		tracks = score.getCurrentTracks();
+		tracks = score.getMidiObjectsPerTrack();
 		this.initTracks();
 
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
