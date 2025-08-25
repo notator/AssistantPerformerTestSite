@@ -369,14 +369,14 @@ var
         }
     },
 
+    setStartMarker = function(e)
+    {
+        score.setStartMarkerClick(e);                                
+        setInterpretationSelect(score);
+    },
+
     setEventListenersAndMouseCursors = function (svgControlsState)
     {
-        function setStartMarker(e)
-        {
-            score.setStartMarkerClick(e);                                
-            setInterpretationSelect(score);
-        }
-
         let s = score,
             markersLayer = s.getMarkersLayer(),
             currentURL = new URL(window.location.href),
