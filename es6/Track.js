@@ -32,14 +32,20 @@ class Interpretation
 
 	setRegionLinks(regionSequence)
 	{
-		let prevRegionLink = undefined;
-		let midiObjects = this.midiObjects;
+		let prevRegionLink = undefined,
+			connectRegions = (regionSequence[0].isSimpleInterpretation() === false),
+			midiObjects = this.midiObjects;
+
 		for (let i = 0; i < regionSequence.length; ++i)
 		{
 			let regionDef = regionSequence[i],
 				regionLink = new RegionLink(midiObjects, regionDef, prevRegionLink);
 
-			prevRegionLink = regionLink;
+			if(connectRegions)
+			{
+				prevRegionLink = regionLink;
+			}
+
 			this._regionLinks.push(regionLink);
 		}
 	}
@@ -406,22 +412,22 @@ index, even if there are no NoteOn messages in the channel.`
 	// Called at the end of a performance to reset the initial state (for further performances).
 	setToFirstRegion()
 	{
-		let _regionLinks = this._regionLinks,
-			midiObjects = this.midiObjects;
+		//let _regionLinks = this._regionLinks,
+		//	midiObjects = this.midiObjects;
+		//
+		//let regionLink = _regionLinks[0],
+		//	endMsPosInScore = regionLink.endOfRegionMsPositionInScore;
 
-		let regionLink = _regionLinks[0],
-			endMsPosInScore = regionLink.endOfRegionMsPositionInScore;
-
-		for (let midiObject of midiObjects)
+		for (let midiObject of this.midiObjects)
 		{
-			if (midiObject.msPositionInScore < endMsPosInScore)
-			{
+			//if (midiObject.msPositionInScore < endMsPosInScore)
+			//{
 				midiObject.setToStartAtBeginning();
-			}
-			else
-			{
-				break;
-			}
+			//}
+			//else
+			//{
+			//	break;
+			//}
 		}
 		this._setState(0, 0);
 	}

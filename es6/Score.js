@@ -46,11 +46,8 @@ let //**************************************************************************
 
     // This value (currentRegionIndex) is owned by the InterpretationSelect control.
     // The control sets it (and other things) by calling this.setInterpretation(region).
-    // currentRegionIndex can be used to find currentInterpIndex as follows:
-    //	  currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
-    // and currentInterpIndex can be used to find a specific track.Interpretation:
-    //    currentTrackInterpretation = track.Interpretations[currentInterpIndex];
     currentRegionIndex = 0, // default value: the index of the current region in the regionSequence.
+    // currentInterpretationIndex is regionSequence[currentRegionIndex].interpIndex;
 
     // This array is initialized to all tracks on (=true) when the score is loaded,
     // and reset when the tracksControl calls this.refreshDisplay().
@@ -736,17 +733,13 @@ let //**************************************************************************
         cursor.setVisible(false);
     },
 
+    // This function does nothing if there are no defined infoStrings
+    // (such as for simpleInterpretations, or when there is only one region).
     setActiveInfoStringsStyle = function (regionIndex)
     {
-        // setActiveInfoStringsStyle is only defined if there are InfoStrings whose style needs to be set.
-        // There are no InfoStrings if the score contains no regionInfoStringElems. This is the case for
-        // all scores prior to Tombeau 1.
-        // see Score.getRegionData(svgElem).
-        if(regionSequence[regionIndex].setActiveInfoStringsStyle !== undefined)
-        {
-            console.assert(regionSequence.length > 1, "console assertion failed!");
-            regionSequence[regionIndex].setActiveInfoStringsStyle(true);
-        }
+        // This function does nothing if there are no defined infoStrings
+        // (such as for simpleInterpretations, or when there is only one region).
+        regionSequence[regionIndex].setActiveInfoStringsStyle(true);
     },
 
     leaveRegion = function (regionIndex)
@@ -1839,6 +1832,17 @@ let //**************************************************************************
                 }
             }
 
+            function setRegionLinks(regionSequence, tracks)
+            {
+                for(let track of tracks)
+                {
+                    for(let interpretation of track.interpretations)
+                    {
+                        interpretation.setRegionLinks(regionSequence);
+                    }
+                }
+            }
+
             if(regionSequence.length === 0)
             {
                 // create one region per interpretation (each region spans the whole score).
@@ -1870,17 +1874,9 @@ let //**************************************************************************
 
             setRegionNamesPerMsPosInScore(regionSequence);
             setRegionStartBarlineAndSystemIndex(regionSequence, systems);
+            setRegionLinks(regionSequence, tracks);
 
-            // If the longName begins with "interpretation", then the regions are not linked.
-            // (Interpretation-regions end at the end of the score.)
-            if(regionSequence[0].longName.split(0, 6) === "region")
-            {
-                for(let track of tracks)
-                {
-                    track.currentInterpretation.setRegionLinks(regionSequence);
-                }
-            }
-        }
+        } // end of setRegionData()
 
         function sendMarkersToInitialPositions()
         {
@@ -1926,14 +1922,29 @@ let //**************************************************************************
         return regionSequence;
     },
 
-    getCurrentTracks = function ()
+    getNumberOfTracks = function ()
+    {
+        return tracks.length;
+    },
+
+    // should return all tracks with region sequences included
+    // 22.08.2025 Returns a flat list of of MidiChords and MidiRests derived from the region definitions.
+	// The Sequence code should no longer have anything to do with regions!
+    getMidiObjectsPerTrack = function ()
     {
         let allTracks = tracks,
-            currentTracks = [];
+            currentTracks = [],
+            region = regionSequence[currentRegionIndex],
+            currentInterpretationIndex;
+
+        if(region.isSimpleInterpretation())
+        {
+            currentInterpretationIndex = regionSequence[currentRegionIndex].interpIndex
+        }
 
         for(let i = 0; i < allTracks.length; ++i)																				  
         {
-            currentTracks.push(allTracks[i].currentInterpretation);
+            currentTracks.push(allTracks[i].interpretations[currentInterpretationIndex]);
         }
 
         return currentTracks;
@@ -1972,7 +1983,15 @@ let //**************************************************************************
 
     getEndRegionIndex = function ()
     {
-        return endRegionIndex;
+        if(regionSequence[currentRegionIndex].isSimpleInterpretation()) 
+        {
+            // e.g. Study 1 with several interpretations of the same score
+            return startRegionIndex;
+        }
+        else
+        {
+            return endRegionIndex;
+        }        
     },
 
     // called by interpretationSelect.leave
@@ -2035,7 +2054,9 @@ export class Score
 
         this.init = init;
 
-        this.getCurrentTracks = getCurrentTracks;
+        this.getNumberOfTracks = getNumberOfTracks;
+        this.getMidiObjectsPerTrack = getMidiObjectsPerTrack;
+        
         this.getSortedRegions = getSortedRegions;
 
         this.setInterpretation = setInterpretation;

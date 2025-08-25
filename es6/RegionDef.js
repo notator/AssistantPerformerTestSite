@@ -31,6 +31,18 @@ export class RegionDef
 			_endRegionInfoStringElem.setAttribute('font-weight', weightString);
 		}
 
+		function isSimpleInterpretation()
+		{
+			if(this.longName.slice(0, 6) === "region")
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 		let // static values, used by the public setActiveInfoStringsStyle function.
 			// This function is only used when there is more than one region/interpretation.
 			_startRegionInfoStringElem,
@@ -104,7 +116,10 @@ export class RegionDef
 		// fromStartOfBar and toEndOfBar are non-functional comments, defined by Moritz that can be used while debugging.
 		// They could be deleted from both the SVG files and this region definition.
 		//Object.defineProperty(this, "fromStartOfBar", {value: fromStartOfBar, writable: false});
-		//Object.defineProperty(this, "toEndOfBar", {value: toEndOfBar, writable: false});				
+		//Object.defineProperty(this, "toEndOfBar", {value: toEndOfBar, writable: false});
+		
+		// function returns false if longName begins with "region", otherwise true.
+		Object.defineProperty(this, "isSimpleInterpretation", { value: isSimpleInterpretation, writable: false });
 
 		// The infoStrings are the region names (in boxes above the region start and ends) that change colour
 		// to show which region is being performed. Such boxes only exist when two or more regions exist.

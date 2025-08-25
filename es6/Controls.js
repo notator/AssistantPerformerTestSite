@@ -882,24 +882,17 @@ var
             sortedRegions = score.getSortedRegions();
 
         interpretationSelect.options.length = 0;
-        if(sortedRegions.length > 1)
+        for(let i = 0; i < sortedRegions.length; ++i)
         {
-            for(let i = 0; i < sortedRegions.length; ++i)
-            {
-                let region = sortedRegions[i],
-                    option = document.createElement("option");
+            let region = sortedRegions[i],
+                option = document.createElement("option");
 
-                option.text = region.longName;
-                option.region = region;
-                //option.startRegionBarline = region.startBarline;
-                //option.startRegionSystemIndex = region.systemIndex;
+            option.text = region.longName;
+            option.region = region;
+            //option.startRegionBarline = region.startBarline;
+            //option.startRegionSystemIndex = region.systemIndex;
 
-                interpretationSelect.add(option, null);
-            }
-        }
-        else
-        {
-            throw "Error setting interpretation/region select control.";
+            interpretationSelect.add(option, null);
         }
     };
 
@@ -1374,7 +1367,7 @@ export class Controls
         // its start marker (which always starts on a chord) if a track is turned off.
         function setTracksControl(score)
         {
-            tracksControl.init(score.getCurrentTracks().length);
+            tracksControl.init(score.getNumberOfTracks());
         }
 
         function setSpeedControl(tracksControlWidth)
