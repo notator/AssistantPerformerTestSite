@@ -1939,7 +1939,7 @@ let //**************************************************************************
 
         if(region.isSimpleInterpretation())
         {
-            currentInterpretationIndex = regionSequence[currentRegionIndex].interpIndex
+            currentInterpretationIndex = regionSequence[currentRegionIndex].interpIndex;
         }
 
         for(let i = 0; i < allTracks.length; ++i)																				  
