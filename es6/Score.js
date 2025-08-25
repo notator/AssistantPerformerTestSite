@@ -1178,7 +1178,9 @@ let //**************************************************************************
             pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
             pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
-            getRegionData(svgElem); // sets regionSequence and default values for startRegionIndex, endRegionIndex. 
+            // get regions into regionSequence and default values for startRegionIndex, endRegionIndex.
+            // Region and MidiObject msPosInPerf values will be set when the MidiObjects have been loaded.
+            getRegionData(svgElem); 
 
             for(let systemIndex = 0; systemIndex < pageSystemElems.length; ++systemIndex)
             {
@@ -1196,7 +1198,7 @@ let //**************************************************************************
         }
 
         // Loads the global tracks array
-        function setTracks()
+        function getMidiObjects()
         {
             // systems->staves->voices->timeObjects
             let
@@ -1597,7 +1599,8 @@ let //**************************************************************************
         }
 
         getEmptySystems();
-        setTracks();
+        getMidiObjects();
+        setTrackPerformanceObjects();
         setInitialInterpretationState(systems);
     },
 
@@ -1927,27 +1930,102 @@ let //**************************************************************************
         return tracks.length;
     },
 
-    // should return all tracks with region sequences included
-    // 22.08.2025 Returns a flat list of of MidiChords and MidiRests derived from the region definitions.
-	// The Sequence code should no longer have anything to do with regions!
-    getMidiObjectsPerTrack = function ()
+    //// should return all tracks with region sequences included
+    //// 22.08.2025 Returns a flat list of of MidiChords and MidiRests derived from the region definitions.
+	//// The Sequence code should no longer have anything to do with regions!
+    //getMidiObjectsPerTrack = function ()
+    //{
+    //    let allTracks = tracks,
+    //        currentTracks = [],
+    //        region = regionSequence[currentRegionIndex],
+    //        currentInterpretationIndex;
+    //
+    //    if(region.isSimpleInterpretation())
+    //    {
+    //        currentInterpretationIndex = regionSequence[currentRegionIndex].interpIndex;
+    //    }
+    //
+    //    for(let i = 0; i < allTracks.length; ++i)																				  
+    //    {
+    //        currentTracks.push(allTracks[i].interpretations[currentInterpretationIndex]);
+    //    }
+    //
+    //    return currentTracks;
+    //},
+
+    setTrackPerformanceObjects = function()
     {
-        let allTracks = tracks,
-            currentTracks = [],
-            region = regionSequence[currentRegionIndex],
-            currentInterpretationIndex;
+        function setRegionSequenceMsPositionsInPerformance()
+        {            
+            function getMsDuration(interpretations, interpIndex)
+            {
+                let msDur = 0,
+                    midiObjects = interpretations[interpIndex].midiObjects;
 
-        if(region.isSimpleInterpretation())
-        {
-            currentInterpretationIndex = regionSequence[currentRegionIndex].interpIndex;
+                for(let midiObject of midiObjects)
+                {
+                    msDur += midiObject.msDurationInScore;
+                }
+
+                return msDur;
+            }
+
+            let msPosInPerf = 0,
+                regionDurInPerf,
+                interpIndex = -1,
+                interpretations = tracks[0].interpretations;
+
+            for(let region of regionSequence)
+            {
+                interpIndex = region.interpIndex;
+                regionDurInPerf = getMsDuration(interpretations, interpIndex);
+                region.startMsPosInPerf = msPosInPerf;
+                msPosInPerf += regionDurInPerf;
+                region.endMsPosInPerf = msPosInPerf;
+            }
         }
 
-        for(let i = 0; i < allTracks.length; ++i)																				  
+        function findMidiObjectIndexRange(region, track)
         {
-            currentTracks.push(allTracks[i].interpretations[currentInterpretationIndex]);
+            let midiObjects = track.interpretations[0].midiObjects,                
+                firstIndex = midiObjects.findIndex(x => (x.msPositionInScore >= region.startMsPosInScore && x.msPositionInScore < region.endMsPosInScore)),
+                lastIndex  = midiObjects.findLastIndex(x => (x.msPositionInScore >= region.startMsPosInScore && x.msPositionInScore < region.endMsPosInScore));
+             
+            return {firstIndex, lastIndex};
+
         }
 
-        return currentTracks;
+        setRegionSequenceMsPositionsInPerformance();
+        
+        let performanceDuration = regionSequence[regionSequence.length-1].endMsPosInPerf;
+
+        for(let track of tracks)
+        {
+            let performedMidiObjects = [],
+                msPosInPerf = 0;
+
+            for(let region of regionSequence)
+            {
+                let indexRange = findMidiObjectIndexRange(region, track),
+                    firstIndex = indexRange.firstIndex,
+                    lastIndex = indexRange.lastIndex, 
+                    midiObjects = track.interpretations[region.interpIndex].midiObjects;
+                
+                for(let moIndex = firstIndex; moIndex <= lastIndex; moIndex++)
+                {
+                    let midiObject = midiObjects[moIndex];
+                    midiObject.msPosInPerf = msPosInPerf;
+                    midiObject.msDurInPerf = midiObject.msDurationInScore;
+                    msPosInPerf += midiObject.msDurInPerf;
+
+                    performedMidiObjects.push(midiObject);
+                }
+            }
+            track.performedMidiObjects = performedMidiObjects;
+
+            let lastMidiObject = performedMidiObjects[performedMidiObjects.length - 1];
+            console.assert((lastMidiObject.msPosInPerf + lastMidiObject.msDurInPerf) === performanceDuration);
+        }
     },
 
     getMarkersLayer = function ()
@@ -2055,7 +2133,7 @@ export class Score
         this.init = init;
 
         this.getNumberOfTracks = getNumberOfTracks;
-        this.getMidiObjectsPerTrack = getMidiObjectsPerTrack;
+        //this.getMidiObjectsPerTrack = getMidiObjectsPerTrack;
         
         this.getSortedRegions = getSortedRegions;
 
