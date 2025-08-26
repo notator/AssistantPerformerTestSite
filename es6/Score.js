@@ -1600,8 +1600,8 @@ let //**************************************************************************
 
         getEmptySystems();
         getMidiObjects();
-        setTrackPerformanceObjects();
         setInitialInterpretationState(systems);
+        setTrackPerformanceObjects();        
     },
 
     setEndMarkerClick = function (e)
