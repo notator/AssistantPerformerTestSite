@@ -1929,122 +1929,28 @@ let //**************************************************************************
         return tracks.length;
     },
 
-
+    // If regionSequence[0].isSimpleInterpretation(), each track.performanceObjects will contain an array of
+    // _parallel_ alternative interpretations (each of which contains a flat list of midiObjects).
+    // Otherwise track.performanceObjects contains all the midiObjects for the complete _sequence_ of regions.
     setTrackPerformanceObjects = function()
-    {
-        function setRegionMidiObjectIndexRangePerTrack(regionSequence, track)
-        {
-            let midiObjects = track.interpretations[0].midiObjects;
-
-            track.regionRanges = [];
-
-            for(let i = 0; i < regionSequence.length; i++)
-            {
-                let region = regionSequence[i],
-                    nextRegion = (i < regionSequence.length - 1) ? regionSequence[i + 1] : null,
-                    regionStartMsPos = region.startMsPosInScore,
-                    regionEndMsPos = region.endMsPosInScore,
-                    regionRange = {};
-                    
-                regionRange.firstMidiObjectIndex = midiObjects.findIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
-                regionRange.lastMidiObjectIndex = midiObjects.findLastIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
-
-                track.regionRanges.push(regionRange);
-            }
-        }
-
-        //function setRegionSequenceMsPositionsInPerformance()
-        //{            
-        //    function getMsDuration(interpretations, interpIndex)
-        //    {
-        //        let msDur = 0,
-        //            midiObjects = interpretations[interpIndex].midiObjects;
-
-        //        for(let midiObject of midiObjects)
-        //        {
-        //            msDur += midiObject.msDurationInScore;
-        //        }
-
-        //        return msDur;
-        //    }
-
-        //    let msPosInPerf = 0,
-        //        regionDurInPerf,
-        //        interpIndex = -1,
-        //        interpretations = tracks[0].interpretations,
-        //        regionIndexForLog = 0;
-
-
-        //    for(let region of regionSequence)
-        //    {
-        //        console.log("regionIndex= " + regionIndexForLog.toString());
-        //        regionIndexForLog++;
-
-        //        interpIndex = region.interpIndex;
-        //        regionDurInPerf = getMsDuration(interpretations, interpIndex);
-        //        region.startMsPosInPerf = msPosInPerf;
-        //        msPosInPerf += regionDurInPerf;
-        //        region.endMsPosInPerf = msPosInPerf;
-
-        //        console.log("   region.startMsPosInPerf= " + region.startMsPosInPerf.toString());
-        //        console.log("   region.endMsPosInPerf= " + region.endMsPosInPerf.toString());
-        //    }
-        //}
-
+    { 
+        let performanceDuration = -1;
         for(let track of tracks)
         {
-            setRegionMidiObjectIndexRangePerTrack(regionSequence, track);
-        }
-        
-        //let performanceDuration = regionSequence[regionSequence.length - 1].endMsPosInPerf;
+            track.setPerformanceObjects(regionSequence);
 
-        //console.log("performanceDuration= " + performanceDuration.toString());
-
-        //let trackIndexForLog = 0;
-
-        //for(let track of tracks)
-        //{
-        //    let performedMidiObjects = [],
-        //        msPosInPerf = 0,
-        //        regionIndexForLog = 0;
-
-        //    console.log("trackIndex= " + trackIndexForLog.toString());
-        //    trackIndexForLog++;
-
-        //    for(let region of regionSequence)
-        //    {
-        //        let indexRange = findMidiObjectIndexRange(region, track),
-        //            firstIndex = indexRange.firstIndex,
-        //            lastIndex = indexRange.lastIndex, 
-        //            midiObjects = track.interpretations[region.interpIndex].midiObjects,
-        //            regionDurationForLog = 0;
-
-        //        console.log("   regionIndex= " + regionIndexForLog.toString());
-        //        regionIndexForLog++;
-        //        console.log("      firstIndex= " + firstIndex.toString());
-        //        console.log("      lastIndex= " + lastIndex.toString());
-                
-        //        for(let moIndex = firstIndex; moIndex <= lastIndex; moIndex++)
-        //        {
-        //            let midiObject = midiObjects[moIndex];
-        //            midiObject.msPosInPerf = msPosInPerf;
-        //            midiObject.msDurInPerf = midiObject.msDurationInScore;
-        //            msPosInPerf += midiObject.msDurInPerf;
-
-        //            regionDurationForLog += midiObject.msDurInPerf;
-
-        //            performedMidiObjects.push(midiObject);
-        //        }
-        //        console.log("      regionDurationForLog= " + regionDurationForLog.toString());
-        //    }
-        //    track.performedMidiObjects = performedMidiObjects;
-
-        //    let lastMidiObject = performedMidiObjects[performedMidiObjects.length - 1],
-        //        endOfLastObject = lastMidiObject.msPosInPerf + lastMidiObject.msDurInPerf;
-
-        //    console.log("endOfLastObject= " + endOfLastObject.toString()) + " (should be equal to performanceDuration)";
-        //    //console.assert(endOfLastObject === performanceDuration);
-        //}
+            if(regionSequence[0].isSimpleInterpretation() === false)
+            {
+                // check that all track durations are the same
+                let lastObject = track.performanceObjects[track.performanceObjects.length - 1],
+                    trackDuration = lastObject.msPosInPerf + lastObject.msDurInPerf;
+                if(performanceDuration > 0)
+                {
+                    console.assert(trackDuration === performanceDuration);
+                }
+                performanceDuration = trackDuration;
+            }
+        }        
     },
 
     getMarkersLayer = function ()

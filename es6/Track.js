@@ -501,4 +501,101 @@ export class Track
 	{
 		this.currentInterpretation = this.interpretations[interpIndex];
 	}
+
+	getMidiObjectIndexRangesPerRegion(regionSequence)
+	{
+		let midiObjects = this.interpretations[0].midiObjects,
+			regionRanges = [];
+
+		for(let i = 0; i < regionSequence.length; i++)
+		{
+			let region = regionSequence[i],
+				regionStartMsPos = region.startMsPosInScore,
+				regionEndMsPos = region.endMsPosInScore,
+				regionRange = {};
+
+			regionRange.firstMidiObjectIndex = midiObjects.findIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
+			regionRange.lastMidiObjectIndex = midiObjects.findLastIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
+
+			regionRanges.push(regionRange);
+		}
+
+		this.regionRanges = regionRanges;
+	}
+
+	setPerformanceObjects(regionSequence)
+	{
+		function getParallelInterpretations(that, regionSequence)
+		{
+			console.assert(regionSequence[0].isSimpleInterpretation());
+
+			let performanceObjects = [];
+			for(let regionIndex = 0; regionIndex < regionSequence.length; regionIndex++)
+			{
+				let region = regionSequence[regionIndex],
+					indexRange = that.regionRanges[regionIndex],
+					firstIndex = indexRange.firstMidiObjectIndex,
+					lastIndex = indexRange.lastMidiObjectIndex,
+					interpIndex = region.interpIndex,
+					midiObjects = that.interpretations[interpIndex].midiObjects,
+					interpretation = [];
+
+				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
+				{
+					let midiObj = midiObjects[midiObjIndex];
+
+					midiObj.msPosInPerf = msPosInPerf;
+					midiObj.msDurInPerf = midiObj.msDurationInScore;
+					msPosInPerf += midiObj.msDurInPerf;
+
+					interpretation.push(midiObj);
+				}
+
+				performanceObjects.push(interpretation);
+			}
+			return performanceObjects;
+		}
+
+		function getSequentialRegions(that, regionSequence)
+		{
+			for(let regionIndex = 0; regionIndex < regionSequence.length; regionIndex++)
+			{
+				let region = regionSequence[regionIndex],
+					indexRange = that.regionRanges[regionIndex],
+					firstIndex = indexRange.firstMidiObjectIndex,
+					lastIndex = indexRange.lastMidiObjectIndex,
+					interpIndex = region.interpIndex,
+					midiObjects = that.interpretations[interpIndex].midiObjects;
+
+				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
+				{
+					let midiObj = midiObjects[midiObjIndex];
+
+					midiObj.msPosInPerf = msPosInPerf;
+					midiObj.msDurInPerf = midiObj.msDurationInScore;
+					msPosInPerf += midiObj.msDurInPerf;
+
+					performanceObjects.push(midiObj);
+				}
+			}
+
+			return performanceObjects;
+		}
+
+		let performanceObjects = [],
+			msPosInPerf = 0;
+
+		this.getMidiObjectIndexRangesPerRegion(regionSequence);
+
+		if(regionSequence[0].isSimpleInterpretation())
+		{
+			performanceObjects = getParallelInterpretations(this, regionSequence);
+		}
+		else
+		{
+			performanceObjects = getSequentialRegions(this, regionSequence);
+		}
+
+		this.performanceObjects = performanceObjects;
+	}
 }
