@@ -5,7 +5,7 @@ let
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 	score,
-	tracks,
+	tracks = [],
 
 	previousTimestamp = null, // nextMoment()
 	startOfRegion,
@@ -437,27 +437,42 @@ export class Sequence
 	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
 	initTracks()
 	{
-		let i, nTracks = tracks.length, track,
+		let
+			// rewrite these two functions to return startMarkerMsPosInPerf and endMarkerMsPosInPerf
 			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
 			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
+			// delete this variable and function
 			regionStartMsPositionsInScore = score.getRegionStartMsPositionsInScore(),
+			// these are correct
+			performanceObjectsPerTrack = score.getPerformanceObjectsPerTrack(),
 			trackIsOnArray = [];
 
 		score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-		for(i = 0; i < nTracks; ++i)
+		let nTracks = trackIsOnArray.length;
+		tracks.length = 0; // global
+		for(let i = 0; i < nTracks; ++i)
 		{
-			track = tracks[i];
+			let track = {};
 			track.isOn = trackIsOnArray[i];
+			track.performanceObjects = performanceObjectsPerTrack[i];
+			if(Array.isArray(track.performanceObjects[0]))
+			{
+				let interpretationIndex = score.getInterpretationIndex();
+				track.performanceObjects = track.performanceObjects[interpretationIndex];
+			}
+			tracks.push(track);
 
 			if(track.isOn)
 			{
-				let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
-
-				for(var j = 0; j < trackInitMessages.length; j++)
-				{
-					outputDevice.send(trackInitMessages[j].data, timer.now());
-				}
+				// 27.08.2025 track.setOutputSpan needs to set or use startMarkerMsPosInPerf and endMarkerMsPosInPerf,
+				// and no longer needs regionStartMsPositionsInScore.
+				// Rewrite setOutputSpan accordingly, returning trackInitMessages as before.
+				//let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
+				//for(var j = 0; j < trackInitMessages.length; j++)
+				//{
+				//	outputDevice.send(trackInitMessages[j].data, timer.now());
+				//}
 			}
 		}
 	}
@@ -499,13 +514,10 @@ export class Sequence
 		outputDevice = outputDeviceArg;
 		score = scoreArg;
 
-		// 22.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
-		// The Sequence code should no longer have anything to do with regions!
-		tracks = score.getMidiObjectsPerTrack();
+		// 27.08.2025 The Sequence code should no longer have anything to do with regions!();
+		regionSequence = score.getRegionsClone();
 
-		/******/
-		regionSequence = score.getRegionSequence();
-
+		// 27.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
 		this.initTracks(); // called again when the start and end markers move.
 
 		reportEndOfRegion = reportEndOfRegionCallback;

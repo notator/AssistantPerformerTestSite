@@ -105,6 +105,12 @@ let //**************************************************************************
         }
     },
 
+    getInterpretationIndex = function ()
+    {
+        // TODO (get it from controls.currentInterpretationIndex)
+        return 0;
+    },
+
     hideStartMarkersExcept = function (startMarker)
     {
         var i, sMarker;
@@ -1180,7 +1186,7 @@ let //**************************************************************************
 
             // get regions into regionSequence and default values for startRegionIndex, endRegionIndex.
             // Region and MidiObject msPosInPerf values will be set when the MidiObjects have been loaded.
-            getRegionData(svgElem); 
+            getRegionData(svgElem);
 
             for(let systemIndex = 0; systemIndex < pageSystemElems.length; ++systemIndex)
             {
@@ -1601,7 +1607,7 @@ let //**************************************************************************
         getEmptySystems();
         getMidiObjects();
         setInitialInterpretationState(systems);
-        setTrackPerformanceObjects();        
+        setTrackPerformanceObjects();
     },
 
     setEndMarkerClick = function (e)
@@ -1614,15 +1620,10 @@ let //**************************************************************************
         svgPageClicked(e, 'settingStart');
     },
 
-    // Returns a clone of the regionSequence, sorted by region.shortName (in place, alphabetically, disregarding upper/lower case)
-    // The main regionSequence is not changed.
-    getSortedRegions = function ()
+    // Returns a clone of the regionSequence
+    getRegionsClone = function ()
     {
-        let regionSequenceClone = [...regionSequence];
-
-        regionSequenceClone.sort((a, b) => a.shortName.toLowerCase().localeCompare(b.shortName.toLowerCase()));
-
-        return regionSequenceClone;
+        return [...regionSequence];
     },
 
     // Returns -1 if the regionShortName is not present in regionSequence
@@ -1824,7 +1825,7 @@ let //**************************************************************************
                                 region.systemIndex = systemIndex;
                                 found = true;
                                 break;
-                            }                            
+                            }
                         }
                         if(found)
                         {
@@ -1919,11 +1920,6 @@ let //**************************************************************************
         return cursor;
     },
 
-    getRegionSequence = function ()
-    {
-        return regionSequence;
-    },
-
     getNumberOfTracks = function ()
     {
         return tracks.length;
@@ -1932,8 +1928,8 @@ let //**************************************************************************
     // If regionSequence[0].isSimpleInterpretation(), each track.performanceObjects will contain an array of
     // _parallel_ alternative interpretations (each of which contains a flat list of midiObjects).
     // Otherwise track.performanceObjects contains all the midiObjects for the complete _sequence_ of regions.
-    setTrackPerformanceObjects = function()
-    { 
+    setTrackPerformanceObjects = function ()
+    {
         let performanceDuration = -1;
         for(let track of tracks)
         {
@@ -1950,7 +1946,19 @@ let //**************************************************************************
                 }
                 performanceDuration = trackDuration;
             }
-        }        
+        }
+    },
+
+    getPerformanceObjectsPerTrack = function ()
+    {
+        let trackPerformanceObjects = [];
+
+        for(let track of tracks)
+        {
+            trackPerformanceObjects.push(track.performanceObjects);
+        }
+
+        return trackPerformanceObjects;
     },
 
     getMarkersLayer = function ()
@@ -2035,6 +2043,7 @@ export class Score
         this.getStartMarkerMsPositionInScore = getStartMarkerMsPositionInScore;
         this.getEndMarkerMsPositionInScore = getEndMarkerMsPositionInScore;
         this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
+        this.getInterpretationIndex = getInterpretationIndex;
 
         // Called when the start button is clicked in the top options panel,
         // and when setOptions button is clicked at the top of the score.
@@ -2059,8 +2068,8 @@ export class Score
 
         this.getNumberOfTracks = getNumberOfTracks;
         //this.getMidiObjectsPerTrack = getMidiObjectsPerTrack;
-        
-        this.getSortedRegions = getSortedRegions;
+
+        this.getRegionsClone = getRegionsClone;
 
         this.setInterpretation = setInterpretation;
 
@@ -2070,7 +2079,6 @@ export class Score
         this.getMarkersLayer = getMarkersLayer;
         this.getSystems = getSystems;
         this.getCursor = getCursor;
-        this.getRegionSequence = getRegionSequence;
         this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
         this.getRegionStartMsPositionsInScore = getRegionStartMsPositionsInScore;
         this.getStartRegionIndex = getStartRegionIndex;
@@ -2078,6 +2086,8 @@ export class Score
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;
+
+        this.getPerformanceObjectsPerTrack = getPerformanceObjectsPerTrack; // used by Sequence.js
 
         this.reportTickOverload = reportTickOverload;
         this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;

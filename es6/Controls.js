@@ -869,28 +869,32 @@ var
         globalElements.speedControlLabel2.innerHTML = "100%";
     },
 
-    // This function sets the interpretationsSelect control's
-    // options to the available region.longNames (in alphabetical order).
-    // If no regions are defined in the SVG, one (score-length) region per interpretation
-    // is automatically constructed. Each such region has a longName consisting of the
-    // string "interpretation " folowed by the interpretation's number.
-    // Regions that are defined in the SVG have longNames that begin with the string
-    // "region " followed by its shortName as defined in the SVG.
+    // If regions are defined in the SVG:
+    //    region.shortName is defined in the SVG.
+    //    region.longName has been constructed as the string "region " followed by region.shortName.
+    //    This function sets the interpretationsSelect control's options as follows
+    //      option.text = region.longName,
+    //      option.region = (a clone of) the region itself.
+    //    The options are in the order of the regions in the regionSequence (their order of execution)
+    //    so regions lower down the options happen later than those above.
+    // Else, if no regions are defined in the SVG:
+    //    There are as many interpretations as there are levels of midiObject in the SVG's midiObjects elements.
+    //    One (score-length) region per interpretation has been automatically constructed.
+    //    Each such region has a longName consisting of the string "interpretation " folowed by the
+    //    interpretation's number. Such interpretations are parallel alternatives.
     setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
-            sortedRegions = score.getSortedRegions();
+            regions = score.getRegionsClone();
 
         interpretationSelect.options.length = 0;
-        for(let i = 0; i < sortedRegions.length; ++i)
+        for(let i = 0; i < regions.length; ++i)
         {
-            let region = sortedRegions[i],
+            let region = regions[i],
                 option = document.createElement("option");
 
             option.text = region.longName;
             option.region = region;
-            //option.startRegionBarline = region.startBarline;
-            //option.startRegionSystemIndex = region.systemIndex;
 
             interpretationSelect.add(option, null);
         }
