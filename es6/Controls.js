@@ -442,8 +442,7 @@ var
 
     startPlaying = function ()
     {
-        let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed,
-            sequenceRecording, trackIsOnArray = [];
+        let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, sequenceRecording;
 
         deleteSaveLink();
 
@@ -483,8 +482,7 @@ var
                 score.setCursor();
             }
 
-            score.moveStartMarkerToTop(globalElements.svgPagesFrame);
-            score.getReadOnlyTrackIsOnArray(trackIsOnArray);
+            score.moveStartMarkerToTop(globalElements.svgPagesFrame);            
 
             startRegionIndex = score.getStartRegionIndex();
             score.setActiveInfoStringsStyle(startRegionIndex);
@@ -494,18 +492,18 @@ var
 
             if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep)
             {
-                baseSpeed = 1;
                 player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
             }
             else // options.performanceMode === score)
             {
-                baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
                 player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
             }
 
+            let trackIsOnArray = [];
+            score.getReadOnlyTrackIsOnArray(trackIsOnArray);
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
-            player.play(trackIsOnArray, startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, baseSpeed, sequenceRecording);
+            player.play(startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, sequenceRecording);
         }
     },
 
@@ -1314,12 +1312,6 @@ export class Controls
 
         if(controlID === "speedControlMousemove")
         {
-            var speed = speedSliderValue(globalElements.speedControlInput.value);
-            if(player.setSpeed !== undefined)
-            {
-                player.setSpeed(speed);
-            }
-
             if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
             {
                 globalElements.speedControlCheckbox.checked = true;
@@ -1330,7 +1322,18 @@ export class Controls
                 globalElements.speedControlCheckbox.checked = false;
                 globalElements.speedControlCheckbox.disabled = false;
             }
+
+            var speed = speedSliderValue(globalElements.speedControlInput.value);
             globalElements.speedControlLabel2.innerHTML = Math.round(speed * 100) + "%";
+        }
+
+        if(controlID === "speedControlMouseout")
+        {
+            var speed = speedSliderValue(globalElements.speedControlInput.value);
+            if(player.setSpeed !== undefined)
+            {
+                player.setSpeed(speed);
+            }
         }
 
         if(controlID === "speedControlCheckboxClick")

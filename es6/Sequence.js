@@ -428,13 +428,18 @@ export class Sequence
 
 	// This function is called
 	// 1. by this.init(...)
-	// 2. when either the startMarker or endMarker has been moved.
-	// 3. as a callback, when the tracksControl is changed.
-	// 
-	// Sets each track's isOn attribute.
-	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
-	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
-	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
+	// 2. when the trackOnOffControl changes.
+	// 3. when the interpretationSelect control changes
+	// 4. when either the startMarker or endMarker has been moved.
+	// Note that the speed control is simpler: It only affects the performance speed,
+	// so changes that attribute directly using a mouseleave event handler.
+	//
+	// This function first sets the individual tracks:
+	//   Sets each track's isOn attribute.
+	//   If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
+	//   sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
+	//   all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
+	// Then combines the track.MidiObjects into a single list of moments to be performed.
 	initTracks()
 	{
 		let
@@ -518,7 +523,7 @@ export class Sequence
 		regionSequence = score.getRegionsClone();
 
 		// 27.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
-		this.initTracks(); // called again when the start and end markers move.
+		this.initTracks(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
 
 		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
@@ -540,22 +545,15 @@ export class Sequence
 	}
 
 	// play()
-	//
-	// trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
-	// be played or not. This array belongs to its creator, and is read only.
-	//
 	// recording is a Sequence to which timestamped moments are added as they are performed.
 	// Can be undefined or null. If used, it should be an empty Sequence having the same number
 	// of tracks as this (calling) sequence.
-	play(trackIsOnArray, startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, baseSpeed, recording)
+	play(startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
 	{
 		// In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)
-		// In normal Sequence or Keyboard1 performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
-		speed = baseSpeed;
+		// In normal performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
+		// tracks and speed have been set earlier;
 		sequenceRecording = recording; // can be undefined or null
-
-		tracks = score.getMidiObjectsPerTrack();
-		this.initTracks();
 
 		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
 		endMarkerMsPositionInScore = endMarkerMsPosInScore;

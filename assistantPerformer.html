@@ -67,6 +67,7 @@
             </label>
             <input type="range" class="speedSlider" id="speedControlInput" value="90" min="0" max="180"
                    onmousemove="_AP.controls.doControl('speedControlMousemove')"
+                   onmouseout="_AP.controls.doControl('speedControlMouseout')"
                    style="position:absolute; top:5px; left:45px;" />
             <label id="speedControlLabel2" for="speedControlInput" style="position:absolute; top:5px; left:227px; margin:0;">
                 100%
