@@ -91,18 +91,11 @@ let //**************************************************************************
         }
     },
 
-    // Pushes the values in the trackIsOnArray into the argument (which is an empty array).
-    // The returnArray will be garbage collected when it is finished with.
-    // This rigmarole so that values in the trackIsOnArray can't be changed except by the tracksControl.
-    getReadOnlyTrackIsOnArray = function (returnArray)
+    // Returns a clone of the trackIsOnArray
+    // (so that values in the trackIsOnArray can't be changed except by the tracksControl).
+    getReadOnlyTrackIsOnArray = function ()
     {
-        var i;
-        console.assert(returnArray.length === 0);
-
-        for(i = 0; i < trackIsOnArray.length; ++i)
-        {
-            returnArray.push(trackIsOnArray[i]);
-        }
+        return [...trackIsOnArray];
     },
 
     getInterpretationIndex = function ()
@@ -1693,15 +1686,15 @@ let //**************************************************************************
         endRegionIndex = regionSequence.length - 1;
     },
 
-    getStartMarkerMsPositionInScore = function ()
-    {
-        return startMarker.msPositionInScore;
-    },
+    //getStartMarkerMsPositionInScore = function ()
+    //{
+    //    return startMarker.msPositionInScore;
+    //},
 
-    getEndMarkerMsPositionInScore = function ()
-    {
-        return endMarker.msPositionInScore;
-    },
+    //getEndMarkerMsPositionInScore = function ()
+    //{
+    //    return endMarker.msPositionInScore;
+    //},
 
     // Called when the start button is clicked in the top options panel,
     // and when setOptions button is clicked at the top of the score.
@@ -1948,37 +1941,9 @@ let //**************************************************************************
         }
     },
 
-    getPerformanceObjectsPerTrack = function ()
-    {
-        let trackPerformanceObjects = [];
-
-        for(let track of tracks)
-        {
-            trackPerformanceObjects.push(track.performanceObjects);
-        }
-
-        return trackPerformanceObjects;
-    },
-
     getMarkersLayer = function ()
     {
         return markersLayer; // is undefined before a score is loaded
-    },
-
-    getRegionStartMsPositionsInScore = function ()
-    {
-        let rval = [];
-        rval.push(0); // always include the beginning of the score
-        for(let i = 0; i < regionSequence.length; ++i)
-        {
-            let rl = regionSequence[i];
-            if(rval.indexOf(rl.startMsPosInScore) < 0)
-            {
-                rval.push(rl.startMsPosInScore);
-            }
-        }
-        rval.sort(function (a, b) {return a - b;});
-        return rval;
     },
 
     getRegionNamesPerMsPosInScore = function ()
@@ -2020,6 +1985,93 @@ let //**************************************************************************
         sendEndMarkerToEnd();
 
         cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
+    },
+
+    // This function has been moved out of Sequence, and into Score.
+    // Sequence.play() should then call either
+    //     tracks = score.getMomentsToPerform();
+    // or even
+    //     momentsToPerform = score.getMomentsToPerform();
+    //
+    // This function is currently called
+    // 1. by score.init(...)
+    // 2. when the trackOnOffControl changes.
+    // 3. when the interpretationSelect control changes
+    // 4. when either the startMarker or endMarker has been moved.
+    // Note that the speed control is simpler: It only affects the performance (=Sequence) speed,
+    // so changes that attribute directly using a mouseleave event handler.
+    //
+    // This function first sets the individual tracks:
+    //   Sets each track's isOn attribute.
+    //   If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
+    //   sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
+    //   all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
+    // Then combines the track.MidiObjects into a single list of moments to be performed.
+    setTracks = function()
+    {
+        function getRegionStartMsPositionsInScore()
+        {
+            let rval = [];
+            rval.push(0); // always include the beginning of the score
+            for(let i = 0; i < regionSequence.length; ++i)
+            {
+                let rl = regionSequence[i];
+                if(rval.indexOf(rl.startMsPosInScore) < 0)
+                {
+                    rval.push(rl.startMsPosInScore);
+                }
+            }
+            rval.sort(function (a, b) {return a - b;});
+            return rval;
+        }
+
+        function getPerformanceObjectsPerTrack()
+        {
+            let trackPerformanceObjects = [];
+
+            for(let track of tracks)
+            {
+                trackPerformanceObjects.push(track.performanceObjects);
+            }
+
+            return trackPerformanceObjects;
+        }
+
+        let
+            startMarkerMsPosInScore = startMarker.msPositionInScore, //score.getStartMarkerMsPositionInScore(),
+            endMarkerMsPosInScore = endMarker.msPositionInScore, //score.getEndMarkerMsPositionInScore(),
+            // the first region returned by the following function should be the region set in the InterpretationsSelect control.
+            regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(),
+            performanceObjectsPerTrack = getPerformanceObjectsPerTrack(),
+            trackIsOnArray = getReadOnlyTrackIsOnArray(),
+            nTracks = trackIsOnArray.length;
+
+        tracks.length = 0; // global
+        for(let i = 0; i < nTracks; ++i)
+        {
+            let track = {};
+            track.isOn = trackIsOnArray[i];
+            track.performanceObjects = performanceObjectsPerTrack[i];
+            if(Array.isArray(track.performanceObjects[0]))
+            {
+                let interpretationIndex = score.getInterpretationIndex();
+                track.performanceObjects = track.performanceObjects[interpretationIndex];
+            }
+            tracks.push(track);
+        }
+
+        // 1.9.2025 Now agglommerate the track.performanceObjects into a flat list of cross-track moments.
+        // The getMoments function sets a global moments object containing _only_ the moments that are needed by the Sequence object.
+        //      moments = getMoments(tracks);
+        // The first moment (=moments[0]) contains the messages that can be sent immediately to initialize each track.
+        //      for(let msg of moments[0].msgs)
+        //      {
+        //          outputDevice.send(msg.data, timer.now());
+        //      }
+        //
+        // The getMoments function replaces track.setOutputSpan() and code inside Sequence.play() so that all possible preparation is done
+        // before actually clicking the Go button.
+        // Accordingly, delete the track.setOutputSpan() function and revise the Sequence.play() function.
     };
 
 export class Score
@@ -2039,8 +2091,8 @@ export class Score
         this.sendStartMarkerToStart = sendStartMarkerToStart;
         this.sendEndMarkerToEnd = sendEndMarkerToEnd;
 
-        this.getStartMarkerMsPositionInScore = getStartMarkerMsPositionInScore;
-        this.getEndMarkerMsPositionInScore = getEndMarkerMsPositionInScore;
+        //this.getStartMarkerMsPositionInScore = getStartMarkerMsPositionInScore;
+        //this.getEndMarkerMsPositionInScore = getEndMarkerMsPositionInScore;
         this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
         this.getInterpretationIndex = getInterpretationIndex;
 
@@ -2079,17 +2131,19 @@ export class Score
         this.getSystems = getSystems;
         this.getCursor = getCursor;
         this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
-        this.getRegionStartMsPositionsInScore = getRegionStartMsPositionsInScore;
+        //this.getRegionStartMsPositionsInScore = getRegionStartMsPositionsInScore;
         this.getStartRegionIndex = getStartRegionIndex;
         this.getEndRegionIndex = getEndRegionIndex;
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;
 
-        this.getPerformanceObjectsPerTrack = getPerformanceObjectsPerTrack; // used by Sequence.js
+        //this.getPerformanceObjectsPerTrack = getPerformanceObjectsPerTrack; // used by Sequence.js
 
         this.reportTickOverload = reportTickOverload;
         this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;
+
+        this.setTracks = setTracks;
     }
 }
 

@@ -22,7 +22,7 @@ let
 	trackCtlElems = [], // the controls for individual tracks
 
 	scoreRefresh = undefined, // a callback that tells the score to redraw itself
-	initTracks = undefined, // a callback that sets the tracks for performance
+	setTracks = undefined, // a callback that sets the tracks for performance
 
 	setTrackCtlState = function(trackIndex, state)
 	{
@@ -52,16 +52,17 @@ let
 
 	bbWidth = 0, // the width of the bounding box. Set in init()
 
-	// Pushes the track on/off states as booleans into the argument (which is an empty array).
+	// Returns a new array containing the boolean values in the trackCtlElems.
 	// The tracks' state cannot be set by changing values in the returned array.
 	// This function is called by the trackOnOff function below.
-	getReadOnlyTrackIsOnArray = function(readOnlyArray)
+	getCurrentReadOnlyTrackIsOnArray = function()
 	{
-		var i;
+		var i, readOnlyArray = [];
 		for(i = 0; i < trackCtlElems.length; ++i)
 		{
 			readOnlyArray.push(trackCtlElems[i].state === "on"); // "disabled" and "off" are both "off" here
 		}
+		return readOnlyArray
 	};
 
 export class TracksControl
@@ -229,16 +230,16 @@ export class TracksControl
 		}
 	}
 
-	setOnChangeCallbacks(scoreRefreshDisplayCallback, initTracksCallback)
+	setOnChangeCallbacks(scoreRefreshDisplayCallback, setTracksCallback)
 	{
 		scoreRefresh = scoreRefreshDisplayCallback;
-		initTracks = initTracksCallback;
+		setTracks = setTracksCallback;
 	}	
 
 	// Called if the user clicks a trackControl.
 	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
 	// callback which tells the score to redraw itself, and
-	// the initTracks callback that sets the tracks for performance.
+	// the setTracks callback that sets the tracks for performance.
 	trackOnOff(trackNumberStr, bulletOffID)
 	{
 		var
@@ -301,14 +302,14 @@ export class TracksControl
 				// scoreRefresh is a callback that tells the score to redraw itself
 				if(scoreRefresh !== undefined)
 				{
-					getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray);
-					scoreRefresh(readOnlyTrackIsOnArray);
+					let currentReadOnlyTrackIsOnArray = getCurrentReadOnlyTrackIsOnArray();
+					scoreRefresh(currentReadOnlyTrackIsOnArray);
 				}
 
-				// initTracks is a callback that sets the tracks for performance
-				if(initTracks !== undefined)
+				// setTracks is a callback that sets the tracks for performance
+				if(setTracks !== undefined)
 				{
-					initTracks();
+					setTracks();
                 }
 			}
 		}

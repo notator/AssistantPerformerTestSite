@@ -372,7 +372,7 @@ var
     setStartMarker = function(e)
     {
         score.setStartMarkerClick(e);                                
-        setInterpretationSelect(score, player.initTracks);
+        setInterpretationSelect(score);
     },
 
     setEventListenersAndMouseCursors = function (svgControlsState)
@@ -499,8 +499,7 @@ var
                 player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
             }
 
-            let trackIsOnArray = [];
-            score.getReadOnlyTrackIsOnArray(trackIsOnArray);
+            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
             player.play(startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, sequenceRecording);
@@ -880,7 +879,7 @@ var
     //    One (score-length) region per interpretation has been automatically constructed.
     //    Each such region has a longName consisting of the string "interpretation " folowed by the
     //    interpretation's number. Such interpretations are parallel alternatives.
-    setInterpretationSelect = function (score, initTracksCallback)
+    setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
             regions = score.getRegionsClone();
@@ -897,7 +896,7 @@ var
             interpretationSelect.add(option, null);
         }
 
-        interpretationSelect.onmouseout = initTracksCallback;
+        interpretationSelect.onmouseout = score.setTracks;
     };
 
 export class Controls
@@ -1203,7 +1202,7 @@ export class Controls
             else if(svgControlsState === 'settingStart')
             {
                 setSvgControlsState('stopped');
-                player.initTracks();
+                score.setTracks();
             }
         }
 
@@ -1216,7 +1215,7 @@ export class Controls
             else if(svgControlsState === 'settingEnd')
             {
                 setSvgControlsState('stopped');
-                player.initTracks();
+                score.setTracks();
             }
         }
 
@@ -1227,7 +1226,7 @@ export class Controls
                 toggleBack(cl.sendStartToBeginningControlSelected);
                 score.sendStartMarkerToStart();
                 score.hideCursor();
-                player.initTracks();
+                score.setTracks();
             }
         }
 
@@ -1237,7 +1236,7 @@ export class Controls
             {
                 toggleBack(cl.sendStopToEndControlSelected);
                 score.sendEndMarkerToEnd();
-                player.initTracks();
+                score.setTracks();
             }
         }
 
@@ -1426,7 +1425,7 @@ export class Controls
         setSpeedControl(tracksControl.width());
                 
         player = new Sequence();
-        setInterpretationSelect(score, player.initTracks);
+        setInterpretationSelect(score);
 
         setConductingLayer();
 
@@ -1434,7 +1433,7 @@ export class Controls
 
         player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
 
-        tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);
+        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setTracks);
 
         resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
 

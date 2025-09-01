@@ -426,62 +426,6 @@ export class Sequence
 		return tracks;
 	}
 
-	// This function is called
-	// 1. by this.init(...)
-	// 2. when the trackOnOffControl changes.
-	// 3. when the interpretationSelect control changes
-	// 4. when either the startMarker or endMarker has been moved.
-	// Note that the speed control is simpler: It only affects the performance speed,
-	// so changes that attribute directly using a mouseleave event handler.
-	//
-	// This function first sets the individual tracks:
-	//   Sets each track's isOn attribute.
-	//   If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
-	//   sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
-	//   all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-	// Then combines the track.MidiObjects into a single list of moments to be performed.
-	initTracks()
-	{
-		let
-			// rewrite these two functions to return startMarkerMsPosInPerf and endMarkerMsPosInPerf
-			startMarkerMsPosInScore = score.getStartMarkerMsPositionInScore(),
-			endMarkerMsPosInScore = score.getEndMarkerMsPositionInScore(),
-			// delete this variable and function
-			regionStartMsPositionsInScore = score.getRegionStartMsPositionsInScore(),
-			// these are correct
-			performanceObjectsPerTrack = score.getPerformanceObjectsPerTrack(),
-			trackIsOnArray = [];
-
-		score.getReadOnlyTrackIsOnArray(trackIsOnArray);
-
-		let nTracks = trackIsOnArray.length;
-		tracks.length = 0; // global
-		for(let i = 0; i < nTracks; ++i)
-		{
-			let track = {};
-			track.isOn = trackIsOnArray[i];
-			track.performanceObjects = performanceObjectsPerTrack[i];
-			if(Array.isArray(track.performanceObjects[0]))
-			{
-				let interpretationIndex = score.getInterpretationIndex();
-				track.performanceObjects = track.performanceObjects[interpretationIndex];
-			}
-			tracks.push(track);
-
-			if(track.isOn)
-			{
-				// 27.08.2025 track.setOutputSpan needs to set or use startMarkerMsPosInPerf and endMarkerMsPosInPerf,
-				// and no longer needs regionStartMsPositionsInScore.
-				// Rewrite setOutputSpan accordingly, returning trackInitMessages as before.
-				//let trackInitMessages = track.setOutputSpan(i, startMarkerMsPosInScore, endMarkerMsPosInScore, regionStartMsPositionsInScore);
-				//for(var j = 0; j < trackInitMessages.length; j++)
-				//{
-				//	outputDevice.send(trackInitMessages[j].data, timer.now());
-				//}
-			}
-		}
-	}
-
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
@@ -523,7 +467,7 @@ export class Sequence
 		regionSequence = score.getRegionsClone();
 
 		// 27.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
-		this.initTracks(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
+		score.setTracks(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
 
 		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
