@@ -372,7 +372,7 @@ var
     setStartMarker = function(e)
     {
         score.setStartMarkerClick(e);                                
-        setInterpretationSelect(score);
+        setInterpretationSelect(score, player.initTracks);
     },
 
     setEventListenersAndMouseCursors = function (svgControlsState)
@@ -880,7 +880,7 @@ var
     //    One (score-length) region per interpretation has been automatically constructed.
     //    Each such region has a longName consisting of the string "interpretation " folowed by the
     //    interpretation's number. Such interpretations are parallel alternatives.
-    setInterpretationSelect = function (score)
+    setInterpretationSelect = function (score, initTracksCallback)
     {
         let interpretationSelect = globalElements.interpretationSelect,
             regions = score.getRegionsClone();
@@ -896,6 +896,8 @@ var
 
             interpretationSelect.add(option, null);
         }
+
+        interpretationSelect.onmouseout = initTracksCallback;
     };
 
 export class Controls
@@ -1422,14 +1424,14 @@ export class Controls
         setTracksControl(score);
 
         setSpeedControl(tracksControl.width());
-
-        setInterpretationSelect(score);
+                
+        player = new Sequence();
+        setInterpretationSelect(score, player.initTracks);
 
         setConductingLayer();
 
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
-        player = new Sequence();
         player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
 
         tracksControl.setOnChangeCallbacks(score.refreshDisplay, player.initTracks);

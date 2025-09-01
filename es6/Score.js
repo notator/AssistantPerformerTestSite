@@ -107,8 +107,7 @@ let //**************************************************************************
 
     getInterpretationIndex = function ()
     {
-        // TODO (get it from controls.currentInterpretationIndex)
-        return 0;
+        return regionSequence[currentRegionIndex].interpIndex;
     },
 
     hideStartMarkersExcept = function (startMarker)
