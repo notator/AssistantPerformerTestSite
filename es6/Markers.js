@@ -45,6 +45,8 @@ class Marker
 		Object.defineProperty(this, "displayLable", {value: displayLable, writable: false});
 		Object.defineProperty(this, "yCoordinates", {value: yCoordinates, writable: false});
 		Object.defineProperty(this, "systemIndex", {value: systemIndex, writable: false});
+
+		Object.defineProperty(this, "msPosInPerf", {value: 0, writable: true});
 	}
 
 	// the top of the line (excluding the disk)

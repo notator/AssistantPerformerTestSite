@@ -113,10 +113,11 @@ export class RegionDef
 		Object.defineProperty(this, "startMsPosInScore", {value: startMsPosInScore, writable: false});
 		Object.defineProperty(this, "endMsPosInScore", {value: endMsPosInScore, writable: false});	
 		
-		// These values depend on this region's position in the regionSequence.
-		// They will be set when the regionSequence is complete.
-		Object.defineProperty(this, "startMsPosInPerf", {value: -1, writable: true});
-		Object.defineProperty(this, "endMsPosInPerf", {value: -1, writable: true});	
+		// This value will be overridden if regions are sequential (i.e. if isSimpleInterpretation() is false).
+		// It will be set when the regionSequence is complete.
+		Object.defineProperty(this, "startMsPosInPerf", {value: 0, writable: true});
+		// This value will be set to the value of the following region.startMsPosInPerf or the end of the interpretation.
+		Object.defineProperty(this, "endMsPosInPerf", {value: 0, writable: true});
 
 		// fromStartOfBar and toEndOfBar are non-functional comments, defined by Moritz that can be used while debugging.
 		// They could be deleted from both the SVG files and this region definition.

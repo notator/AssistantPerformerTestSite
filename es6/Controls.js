@@ -895,8 +895,6 @@ var
 
             interpretationSelect.add(option, null);
         }
-
-        interpretationSelect.onmouseout = score.setTracksAndMoments;
     };
 
 export class Controls

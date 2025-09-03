@@ -1676,18 +1676,10 @@ let //**************************************************************************
         hideEndMarkersExcept(endMarker);
         endMarker.moveTo(endOfRegionBarline);
         endMarker.setVisible(true);
+        endMarker.msPosInPerf = lastRegion.endMsPosInPerf;
+
         endRegionIndex = regionSequence.length - 1;
     },
-
-    //getStartMarkerMsPositionInScore = function ()
-    //{
-    //    return startMarker.msPositionInScore;
-    //},
-
-    //getEndMarkerMsPositionInScore = function ()
-    //{
-    //    return endMarker.msPositionInScore;
-    //},
 
     // Called when the start button is clicked in the top options panel,
     // and when setOptions button is clicked at the top of the score.
@@ -1820,17 +1812,6 @@ let //**************************************************************************
                 }
             }
 
-            function setRegionLinks(regionSequence, tracks)
-            {
-                for(let track of tracks)
-                {
-                    for(let interpretation of track.interpretations)
-                    {
-                        interpretation.setRegionLinks(regionSequence);
-                    }
-                }
-            }
-
             if(regionSequence.length === 0)
             {
                 // create one region per interpretation (each region spans the whole score).
@@ -1862,7 +1843,6 @@ let //**************************************************************************
 
             setRegionNamesPerMsPosInScore(regionSequence);
             setRegionStartBarlineAndSystemIndex(regionSequence, systems);
-            setRegionLinks(regionSequence, tracks);
 
         } // end of setRegionData()
 
@@ -1942,6 +1922,7 @@ let //**************************************************************************
         hideStartMarkersExcept(startMarker);
         startMarker.moveTo(region.startBarline);
         startMarker.setLable(region.shortName);
+        startMarker.msPosInPerf = region.startMsPosInPerf;
 
         sendEndMarkerToEnd();
 
@@ -1957,34 +1938,13 @@ let //**************************************************************************
     // so changes that attribute directly in Sequence using a mouseleave event handler.
     setTracksAndMoments = function()
     {
-        function getRegionStartMsPositionsInScore()
-        {
-            let rval = [];
-            rval.push(0); // always include the beginning of the score
-            for(let i = 0; i < regionSequence.length; ++i)
-            {
-                let rl = regionSequence[i];
-                if(rval.indexOf(rl.startMsPosInScore) < 0)
-                {
-                    rval.push(rl.startMsPosInScore);
-                }
-            }
-            rval.sort(function (a, b) {return a - b;});
-            return rval;
-        }
-
-        function getMoments(tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf, regionStartMsPositionsInScore)
+        function getMoments(regionSequence, tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf)
         {
             // TODO (see code in the old Sequence.play() function)
         }
 
-        let
-            startMarkerMsPosInScore = startMarker.msPositionInScore, //score.getStartMarkerMsPositionInScore(),
-            endMarkerMsPosInScore = endMarker.msPositionInScore, //score.getEndMarkerMsPositionInScore(),
-            // TODO use the following two attributes, not the previous two.
-            startMarkerMsPosInPerf, // startMarker.msPosInPerf
-            endMarkerMsPosInPerf, // endMarker.msPosInPerf
-            regionStartMsPositionsInScore = getRegionStartMsPositionsInScore(),
+        let startMarkerMsPosInPerf = startMarker.msPosInPerf,
+            endMarkerMsPosInPerf = endMarker.msPosInPerf,
             trackIsOnArray = getReadOnlyTrackIsOnArray(),
             nTracks = trackIsOnArray.length;
 
@@ -1993,11 +1953,12 @@ let //**************************************************************************
             let track = tracks[i];
             track.setRuntimeInterpretation(trackIsOnArray[i], regionSequence, currentRegionIndex);
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
-        }
+        }        
 
         // 1.9.2025 Now agglommerate each defined track.runtimeInterpretation into a flat list of cross-track moments.
         // The getMoments() function sets a global moments object containing _only_ the moments that are needed by the Sequence.play() function.
-        moments = getMoments(tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf, regionStartMsPositionsInScore);
+        // Each moment should have a boolean .beginRegion attribute (set using region.startMsPosInPerf or region.endMsPosInPerf, which are now set.)
+        moments = getMoments(regionSequence, tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf);
         // The getMoments function replaces track.setOutputSpan() and code inside Sequence.play() so that all possible preparation is done
         // before actually clicking the Go button.
         // Accordingly, delete the track.setOutputSpan() function and revise the Sequence.play() function.

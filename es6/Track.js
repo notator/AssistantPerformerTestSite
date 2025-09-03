@@ -1,6 +1,5 @@
 
 import { constants } from "./Constants.js";
-import { RegionLink } from "./RegionLink.js";
 import { MidiRest, MidiChord } from "./MidiObject.js";
 import {RegionControls} from "./RegionControls.js";
 
@@ -28,26 +27,6 @@ class Interpretation
 		lastMidiObject = midiObjects[midiObjects.length - 1];
 		finalBarlineMsPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
 		return finalBarlineMsPos;
-	}
-
-	setRegionLinks(regionSequence)
-	{
-		let prevRegionLink = undefined,
-			connectRegions = (regionSequence[0].isSimpleInterpretation() === false),
-			midiObjects = this.midiObjects;
-
-		for (let i = 0; i < regionSequence.length; ++i)
-		{
-			let regionDef = regionSequence[i],
-				regionLink = new RegionLink(midiObjects, regionDef, prevRegionLink);
-
-			if(connectRegions)
-			{
-				prevRegionLink = regionLink;
-			}
-
-			this._regionLinks.push(regionLink);
-		}
 	}
 
 	setOutputSpan(trackIndex, startMarkerMsPositionInScore, endMarkerMsPositionInScore, regionStartMsPositionsInScore)
@@ -363,52 +342,6 @@ index, even if there are no NoteOn messages in the channel.`
 		this.currentMoment = this._momentAtStartMarker;
 	}
 
-	// ** Compare this code with setInitialTrackState() inside setOutputSpan() above. **
-	// When this function returns:
-	// this.currentMoment is the first moment that is going to be played in this track.
-	// (If the performance is set to start inside a rest, this.currentMoment will be in
-	// a midiChord that starts after the beginning of the region.)
-	// this.currentMoment will be null if there are no more moments to play in the track
-	// (i.e. if last midiObject in the track is a rest, and the performance is set to start
-	// after its beginning).
-	_setNextRegion(regionLink)
-	{
-		let i, startMidiObjectIndex = -1, momentIndex = -1, nMidiObjectsInRegion = -1, moIndex = -1,
-			midiObjects = this.midiObjects;
-
-		if (regionLink.nextRegionMidiObjectIndex === undefined
-			|| regionLink.nextRegionMomentIndex === undefined
-			|| regionLink.nextRegionMidiObjectsCount === undefined)
-		{
-			throw "Can't set next region.";
-		}
-		startMidiObjectIndex = regionLink.nextRegionMidiObjectIndex;
-		momentIndex = regionLink.nextRegionMomentIndex;
-		nMidiObjectsInRegion = regionLink.nextRegionMidiObjectsCount;
-		// set all midiObjects in the region except the first (which is set by setting the 'current' values below)
-		moIndex = startMidiObjectIndex + 1;
-		for (i = 1; i < nMidiObjectsInRegion; ++i)
-		{
-			midiObjects[moIndex++].setToStartAtBeginning();
-		}
-		this._setState(startMidiObjectIndex, momentIndex);
-		// The current ContinuousController state commands must be added
-		// to the the first moment in each region before the performance begins.
-	}
-	moveToNextRegion(regionIndexInPerformance)
-	{
-		/* track.regionLinks is an array of regionLink objects that have the following attributes:
-		 *     .endOfRegionMsPositionInScore
-		 *     .nextRegionMidiObjectIndex // the index of the midiObject containing the first moment at or after the startMsPositionInScore of the toRegion.
-		 *     .nextRegionMomentIndex // the index (in midiObject.moments) of the first moment at or after the startMsPositionInScore of the toRegion
-		 *     .nextRegionMidiObjectsCount // includes midiObjects that straddle the region boundaries.
-		 * each Track has its own regionLinks array, and maintains its own regionIndex for the current region
-		 *
-		 * The current ContinuousController state commands are added to the the first moment in each region before the performance begins.
-		 */
-		let currentRegionLink = this._regionLinks[regionIndexInPerformance];
-		this._setNextRegion(currentRegionLink);
-	}
 	// Called at the end of a performance to reset the initial state (for further performances).
 	setToFirstRegion()
 	{
@@ -561,6 +494,15 @@ export class Track
 
 				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
 				{
+					if(midiObjIndex === firstIndex)
+					{
+						// This function is called for multiple tracks.
+						// The following assertion ensures that all tracks agree on where the regions start.
+						console.assert(region.startMsPosInPerf === 0 || region.startMsPosInPerf === msPosInPerf);
+						// override default value (=0)
+						region.startMsPosInPerf = msPosInPerf;
+					}
+
 					let midiObj = midiObjects[midiObjIndex];
 
 					midiObj.msPosInPerf = msPosInPerf;
@@ -568,6 +510,19 @@ export class Track
 					msPosInPerf += midiObj.msDurInPerf;
 
 					interpretation.midiObjects.push(midiObj);
+
+					if(midiObjIndex === lastIndex)
+					{
+						// This function is called for multiple tracks.
+						// The following assertion ensures that all tracks agree on where the regions end.
+						console.assert(region.endMsPosInPerf === 0 || region.endMsPosInPerf === msPosInPerf);
+						// override default value (=0)
+						region.endMsPosInPerf = msPosInPerf;
+					}
+				}
+				if(regionIndex > 0)
+				{
+					console.assert(region.startMsPosInPerf === regionSequence[regionIndex - 1].endMsPosInPerf);
 				}
 			}
 
@@ -581,6 +536,13 @@ export class Track
 			if(regionSequence[0].isSimpleInterpretation())
 			{
 				this.runtimeInterpretation = getCurrentInterpretation(this, regionSequence, currentRegionIndex, midiObjectIndexRangesPerRegion);
+				if(regionSequence[0].endMsPosInPerf === 0)
+				{
+					for(let region of regionSequence)
+					{
+						region.endMsPosInPerf = region.endMsPosInScore;
+					}
+				}
 			}
 			else if(this.runtimeInterpretation === undefined)
 			{
