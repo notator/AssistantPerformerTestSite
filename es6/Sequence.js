@@ -412,19 +412,6 @@ let
 
 export class Sequence
 {
-	constructor()
-	{
-		this.resume = resume;
-		this.isStopped = isStopped;
-		this.isPaused = isPaused;
-		this.isRunning = isRunning;
-	}
-
-	getTracks()
-	{
-		return tracks;
-	}
-
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
@@ -438,8 +425,8 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
-	{
+	constructor(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
+	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
 			throw "The midi output device must be defined.";
@@ -461,6 +448,12 @@ export class Sequence
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
 		reportTickOverload = reportTickOverloadCallback;
+
+		// external interface
+		this.resume = resume;
+		this.isStopped = isStopped;
+		this.isPaused = isPaused;
+		this.isRunning = isRunning;
 
 		setState("stopped");
 	}

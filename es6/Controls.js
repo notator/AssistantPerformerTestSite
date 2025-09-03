@@ -1436,11 +1436,7 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        player = new Sequence(); // TODO move the Sequence.init() code into the Sequence constructor.
-
-        // 03.09.2025 The arguments to the following function have changed to no longer include score.
-        // The score.moments should now be given to the player.play() function.
-        player.init(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
+        player = new Sequence(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
 
         setSvgControlsState('stopped');
     }
