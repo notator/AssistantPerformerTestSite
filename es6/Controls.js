@@ -896,7 +896,7 @@ var
             interpretationSelect.add(option, null);
         }
 
-        interpretationSelect.onmouseout = score.setTracks;
+        interpretationSelect.onmouseout = score.setTracksAndMoments;
     };
 
 export class Controls
@@ -1202,7 +1202,7 @@ export class Controls
             else if(svgControlsState === 'settingStart')
             {
                 setSvgControlsState('stopped');
-                score.setTracks();
+                score.setTracksAndMoments();
             }
         }
 
@@ -1215,7 +1215,7 @@ export class Controls
             else if(svgControlsState === 'settingEnd')
             {
                 setSvgControlsState('stopped');
-                score.setTracks();
+                score.setTracksAndMoments();
             }
         }
 
@@ -1226,7 +1226,7 @@ export class Controls
                 toggleBack(cl.sendStartToBeginningControlSelected);
                 score.sendStartMarkerToStart();
                 score.hideCursor();
-                score.setTracks();
+                score.setTracksAndMoments();
             }
         }
 
@@ -1236,7 +1236,7 @@ export class Controls
             {
                 toggleBack(cl.sendStopToEndControlSelected);
                 score.sendEndMarkerToEnd();
-                score.setTracks();
+                score.setTracksAndMoments();
             }
         }
 
@@ -1422,22 +1422,26 @@ export class Controls
 
         setTracksControl(score);
 
-        setSpeedControl(tracksControl.width());
-                
-        player = new Sequence();
+        setSpeedControl(tracksControl.width());                
+        
         setInterpretationSelect(score);
 
         setConductingLayer();
 
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
-        player.init(deviceOptions.outputDevice, score, reportEndOfRegion, reportEndOfPerformance, reportMsPos);
+        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setTracksAndMoments);
 
-        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setTracks);
-
-        resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
+        score.setTracksAndMoments(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
+
+        player = new Sequence(); // TODO move the Sequence.init() code into the Sequence constructor.
+
+        // 03.09.2025 TODO: the arguments to the following function need to change.
+        // I think it should just be given outputDevice and the callbacks.
+        // The score.moments should be given to the player.play() function.
+        player.init(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
 
         setSvgControlsState('stopped');
     }

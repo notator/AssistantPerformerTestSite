@@ -489,56 +489,75 @@ export class Track
 {
 	constructor(nInterpretations)
 	{
+		// Information from the score is going to be loaded into each Interpretation.midiObjects array.
 		this.interpretations = [];
 		for (let i = 0; i < nInterpretations; ++i)
 		{
 			this.interpretations.push(new Interpretation());
 		}
-		this.currentInterpretation = this.interpretations[0]; // default 
 	}
 
-	setCurrentInterpretation(interpIndex)
+	setRuntimeInterpretation(trackIsOn, regionSequence, currentRegionIndex)
 	{
-		this.currentInterpretation = this.interpretations[interpIndex];
-	}
-
-	getMidiObjectIndexRangesPerRegion(regionSequence)
-	{
-		let midiObjects = this.interpretations[0].midiObjects,
-			regionRanges = [];
-
-		for(let i = 0; i < regionSequence.length; i++)
+		function getMidiObjectIndexRangesPerRegion(that, regionSequence)
 		{
-			let region = regionSequence[i],
-				regionStartMsPos = region.startMsPosInScore,
-				regionEndMsPos = region.endMsPosInScore,
-				regionRange = {};
+			let midiObjects = that.interpretations[0].midiObjects,
+				midiObjectIndexRangesPerRegion = [];
 
-			regionRange.firstMidiObjectIndex = midiObjects.findIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
-			regionRange.lastMidiObjectIndex = midiObjects.findLastIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
+			for(let i = 0; i < regionSequence.length; i++)
+			{
+				let region = regionSequence[i],
+					regionStartMsPos = region.startMsPosInScore,
+					regionEndMsPos = region.endMsPosInScore,
+					regionRange = {};
 
-			regionRanges.push(regionRange);
+				regionRange.firstMidiObjectIndex = midiObjects.findIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
+				regionRange.lastMidiObjectIndex = midiObjects.findLastIndex(x => (x.msPositionInScore >= regionStartMsPos && x.msPositionInScore < regionEndMsPos));
+
+				midiObjectIndexRangesPerRegion.push(regionRange);
+			}
+
+			return midiObjectIndexRangesPerRegion;
 		}
 
-		this.regionRanges = regionRanges;
-	}
-
-	setPerformanceObjects(regionSequence)
-	{
-		function getParallelInterpretations(that, regionSequence)
+		function getCurrentInterpretation(that, regionSequence, currentRegionIndex, midiObjectIndexRangesPerRegion)
 		{
 			console.assert(regionSequence[0].isSimpleInterpretation());
 
-			let performanceObjects = [];
+			let interpretation = new Interpretation(),
+				region = regionSequence[currentRegionIndex],
+				indexRange = midiObjectIndexRangesPerRegion[currentRegionIndex],
+				firstIndex = indexRange.firstMidiObjectIndex,
+				lastIndex = indexRange.lastMidiObjectIndex,
+				interpIndex = region.interpIndex,
+				midiObjects = that.interpretations[interpIndex].midiObjects,
+				msPosInPerf = 0;
+
+			for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
+			{
+				let midiObj = midiObjects[midiObjIndex];
+
+				midiObj.msPosInPerf = msPosInPerf;
+				midiObj.msDurInPerf = midiObj.msDurationInScore;
+				msPosInPerf += midiObj.msDurInPerf;
+
+				interpretation.midiObjects.push(midiObj);
+			}
+			return interpretation;
+		}
+
+		function getSequentialRegionsInterpretation(that, regionSequence, midiObjectIndexRangesPerRegion)
+		{
+			let interpretation = new Interpretation(),
+				msPosInPerf = 0;
+
 			for(let regionIndex = 0; regionIndex < regionSequence.length; regionIndex++)
 			{
 				let region = regionSequence[regionIndex],
-					indexRange = that.regionRanges[regionIndex],
+					indexRange = midiObjectIndexRangesPerRegion[regionIndex],
 					firstIndex = indexRange.firstMidiObjectIndex,
 					lastIndex = indexRange.lastMidiObjectIndex,
-					interpIndex = region.interpIndex,
-					midiObjects = that.interpretations[interpIndex].midiObjects,
-					interpretation = [];
+					midiObjects = that.interpretations[region.interpIndex].midiObjects;
 
 				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
 				{
@@ -548,54 +567,29 @@ export class Track
 					midiObj.msDurInPerf = midiObj.msDurationInScore;
 					msPosInPerf += midiObj.msDurInPerf;
 
-					interpretation.push(midiObj);
+					interpretation.midiObjects.push(midiObj);
 				}
-
-				performanceObjects.push(interpretation);
 			}
-			return performanceObjects;
-		}
 
-		function getSequentialRegions(that, regionSequence)
+			return interpretation;
+		}			
+
+		if(trackIsOn)
 		{
-			for(let regionIndex = 0; regionIndex < regionSequence.length; regionIndex++)
+			let midiObjectIndexRangesPerRegion = getMidiObjectIndexRangesPerRegion(this, regionSequence);
+
+			if(regionSequence[0].isSimpleInterpretation())
 			{
-				let region = regionSequence[regionIndex],
-					indexRange = that.regionRanges[regionIndex],
-					firstIndex = indexRange.firstMidiObjectIndex,
-					lastIndex = indexRange.lastMidiObjectIndex,
-					interpIndex = region.interpIndex,
-					midiObjects = that.interpretations[interpIndex].midiObjects;
-
-				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
-				{
-					let midiObj = midiObjects[midiObjIndex];
-
-					midiObj.msPosInPerf = msPosInPerf;
-					midiObj.msDurInPerf = midiObj.msDurationInScore;
-					msPosInPerf += midiObj.msDurInPerf;
-
-					performanceObjects.push(midiObj);
-				}
+				this.runtimeInterpretation = getCurrentInterpretation(this, regionSequence, currentRegionIndex, midiObjectIndexRangesPerRegion);
 			}
-
-			return performanceObjects;
-		}
-
-		let performanceObjects = [],
-			msPosInPerf = 0;
-
-		this.getMidiObjectIndexRangesPerRegion(regionSequence);
-
-		if(regionSequence[0].isSimpleInterpretation())
-		{
-			performanceObjects = getParallelInterpretations(this, regionSequence);
+			else if(this.runtimeInterpretation === undefined)
+			{
+				this.runtimeInterpretation = getSequentialRegionsInterpretation(this, regionSequence, midiObjectIndexRangesPerRegion);
+			}
 		}
 		else
 		{
-			performanceObjects = getSequentialRegions(this, regionSequence);
+			this.runtimeInterpretation = undefined;
 		}
-
-		this.performanceObjects = performanceObjects;
 	}
 }

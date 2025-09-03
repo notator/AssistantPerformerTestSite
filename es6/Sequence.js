@@ -4,7 +4,6 @@ import { Conductor } from "./Conductor.js";
 let
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
-	score,
 	tracks = [],
 
 	previousTimestamp = null, // nextMoment()
@@ -439,21 +438,17 @@ export class Sequence
 	// and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init(outputDeviceArg, scoreArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
+	init(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
 	{
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
 			throw "The midi output device must be defined.";
 		}
 
-		if(scoreArg === undefined || scoreArg === null)
-		{
-			throw "The score must be defined!";
-		}
-
 		if(reportEndOfRegionCallback === undefined || reportEndOfRegionCallback === null
 			|| reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
-			|| reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null)
+			|| reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null
+			|| reportTickOverloadCallback === undefined || reportTickOverloadCallback === null)
 		{
 			throw "Error: all callbacks must be defined.";
 		}
@@ -461,18 +456,11 @@ export class Sequence
 		timer = performance; // performance.now() is the default timer
 
 		outputDevice = outputDeviceArg;
-		score = scoreArg;
-
-		// 27.08.2025 The Sequence code should no longer have anything to do with regions!();
-		regionSequence = score.getRegionsClone();
-
-		// 27.08.2025 Each Sequence.track now contains a flat list of MidiChords and MidiRests derived from the region definitions.
-		score.setTracks(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
 
 		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportNextMIDIObject = reportNextMIDIObjectCallback;
-		reportTickOverload = score.reportTickOverload;
+		reportTickOverload = reportTickOverloadCallback;
 
 		setState("stopped");
 	}

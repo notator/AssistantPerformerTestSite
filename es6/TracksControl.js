@@ -22,7 +22,7 @@ let
 	trackCtlElems = [], // the controls for individual tracks
 
 	scoreRefresh = undefined, // a callback that tells the score to redraw itself
-	setTracks = undefined, // a callback that sets the tracks for performance
+	setTracksAndMoments = undefined, // a callback that sets the tracks for performance
 
 	setTrackCtlState = function(trackIndex, state)
 	{
@@ -230,16 +230,16 @@ export class TracksControl
 		}
 	}
 
-	setOnChangeCallbacks(scoreRefreshDisplayCallback, setTracksCallback)
+	setOnChangeCallbacks(scoreRefreshDisplayCallback, setTracksAndMomentsCallback)
 	{
 		scoreRefresh = scoreRefreshDisplayCallback;
-		setTracks = setTracksCallback;
+		setTracksAndMoments = setTracksAndMomentsCallback;
 	}	
 
 	// Called if the user clicks a trackControl.
 	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
 	// callback which tells the score to redraw itself, and
-	// the setTracks callback that sets the tracks for performance.
+	// the setTracksAndMoments callback that sets the tracks for performance.
 	trackOnOff(trackNumberStr, bulletOffID)
 	{
 		var
@@ -306,10 +306,10 @@ export class TracksControl
 					scoreRefresh(currentReadOnlyTrackIsOnArray);
 				}
 
-				// setTracks is a callback that sets the tracks for performance
-				if(setTracks !== undefined)
+				// setTracksAndMoments is a callback that sets the tracks for performance
+				if(setTracksAndMoments !== undefined)
 				{
-					setTracks();
+					setTracksAndMoments();
                 }
 			}
 		}
