@@ -686,9 +686,12 @@ let //**************************************************************************
                         startMarker = system.startMarker;
                         hideStartMarkersExcept(startMarker);
                         startMarker.moveTo(midiObjectOrBarline);
+                        startMarker.msPosInPerf = startMarker.msPositionInScore;
                         if(regionSequence.length > 1)
                         {
-                            startMarker.setLable(regionSequence[startRegionIndex].shortName);
+                            let region = regionSequence[startRegionIndex];
+                            startMarker.setLable(region.shortName);
+                            startMarker.msPosInPerf += region.startMsPosInPerf;
                         }
                     }
                     currentRegionIndex = (regionIndex === -1) ? currentRegionIndex : regionIndex;
@@ -708,9 +711,12 @@ let //**************************************************************************
                         endMarker = system.endMarker;
                         hideEndMarkersExcept(endMarker);
                         endMarker.moveTo(midiObjectOrBarline);
+                        endMarker.msPosInPerf = endMarker.msPositionInScore;
                         if(regionSequence.length > 1)
                         {
+                            let region = regionSequence[endRegionIndex];
                             endMarker.setLable(regionSequence[endRegionIndex].shortName);
+                            endMarker.msPosInPerf += region.startMsPosInPerf;
                         }
                     }
                     break;
@@ -1633,8 +1639,10 @@ let //**************************************************************************
         hideStartMarkersExcept(startMarker);
 
         startMarker.setLable(regionSequence[0].shortName);
-        startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);
+        startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);        
+        startMarker.msPosInPerf = 0;
         startMarker.setVisible(true);
+
         startRegionIndex = 0;
     },
 
@@ -1675,8 +1683,8 @@ let //**************************************************************************
         endMarker.setLable(lastRegion.shortName);
         hideEndMarkersExcept(endMarker);
         endMarker.moveTo(endOfRegionBarline);
-        endMarker.setVisible(true);
         endMarker.msPosInPerf = lastRegion.endMsPosInPerf;
+        endMarker.setVisible(true);
 
         endRegionIndex = regionSequence.length - 1;
     },
@@ -1841,9 +1849,31 @@ let //**************************************************************************
                 endRegionIndex = -1;
             }
 
+            function setRegionStartAndEndMsPosInPerf(regionSequence)
+            {
+                if(regionSequence[0].isSimpleInterpretation())
+                {
+                    for(let region of regionSequence)
+                    {
+                        region.startMsPosInPerf = region.startMsPosInScore;
+                        region.endMsPosInPerf = region.endMsPosInScore;
+                    }
+                }
+                else // regions are concatenated
+                {
+                    let msPos = 0;
+                    for(let region of regionSequence)
+                    {
+                        region.startMsPosInPerf = msPos;
+                        msPos += (region.endMsPosInScore - region.startMsPosInScore);
+                        region.endMsPosInPerf = msPos;
+                    }
+                }
+            }
+
             setRegionNamesPerMsPosInScore(regionSequence);
             setRegionStartBarlineAndSystemIndex(regionSequence, systems);
-
+            setRegionStartAndEndMsPosInPerf(regionSequence);
         } // end of setRegionData()
 
         function sendMarkersToInitialPositions()
@@ -1907,7 +1937,7 @@ let //**************************************************************************
         else
         {
             return endRegionIndex;
-        }        
+        }
     },
 
     // called by interpretationSelect.leave
@@ -1943,9 +1973,7 @@ let //**************************************************************************
             // TODO (see code in the old Sequence.play() function)
         }
 
-        let startMarkerMsPosInPerf = startMarker.msPosInPerf,
-            endMarkerMsPosInPerf = endMarker.msPosInPerf,
-            trackIsOnArray = getReadOnlyTrackIsOnArray(),
+        let trackIsOnArray = getReadOnlyTrackIsOnArray(),
             nTracks = trackIsOnArray.length;
 
         for(let i = 0; i < nTracks; ++i)
@@ -1953,12 +1981,14 @@ let //**************************************************************************
             let track = tracks[i];
             track.setRuntimeInterpretation(trackIsOnArray[i], regionSequence, currentRegionIndex);
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
-        }        
+        }
 
         // 1.9.2025 Now agglommerate each defined track.runtimeInterpretation into a flat list of cross-track moments.
-        // The getMoments() function sets a global moments object containing _only_ the moments that are needed by the Sequence.play() function.
-        // Each moment should have a boolean .beginRegion attribute (set using region.startMsPosInPerf or region.endMsPosInPerf, which are now set.)
-        moments = getMoments(regionSequence, tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf);
+        // The getMoments() function sets a global moments object containing _only_ the information required by the Sequence.play() function.
+        // The information should include only the moments to be played, and information that triggers the callbacks passed to the Sequence constructor:
+        // See Controls.beginRuntime() above:
+        //     player = new Sequence(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
+        moments = getMoments(regionSequence, tracks, startMarker.msPosInPerf, endMarker.msPosInPerf);
         // The getMoments function replaces track.setOutputSpan() and code inside Sequence.play() so that all possible preparation is done
         // before actually clicking the Go button.
         // Accordingly, delete the track.setOutputSpan() function and revise the Sequence.play() function.
@@ -1982,7 +2012,7 @@ export class Score
         this.sendEndMarkerToEnd = sendEndMarkerToEnd;
 
         this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
-        
+
         // Called when the start button is clicked in the top options panel,
         // and when setOptions button is clicked at the top of the score.
         // If the startMarker is not fully visible in the svgPagesDiv, move

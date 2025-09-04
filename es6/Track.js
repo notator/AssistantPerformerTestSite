@@ -468,6 +468,13 @@ export class Track
 
 			for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
 			{
+				if(midiObjIndex === firstIndex)
+				{
+					// This function is called for multiple tracks.
+					// The following assertion ensures that all tracks agree with where the regions start in performance.
+					console.assert(region.startMsPosInPerf === msPosInPerf);
+				}
+
 				let midiObj = midiObjects[midiObjIndex];
 
 				midiObj.msPosInPerf = msPosInPerf;
@@ -475,6 +482,13 @@ export class Track
 				msPosInPerf += midiObj.msDurInPerf;
 
 				interpretation.midiObjects.push(midiObj);
+
+				if(midiObjIndex === lastIndex)
+				{
+					// This function is called for multiple tracks.
+					// The following assertion ensures that all tracks agree with where the regions end in performance.
+					console.assert(region.endMsPosInPerf === msPosInPerf);
+				}
 			}
 			return interpretation;
 		}
@@ -497,10 +511,8 @@ export class Track
 					if(midiObjIndex === firstIndex)
 					{
 						// This function is called for multiple tracks.
-						// The following assertion ensures that all tracks agree on where the regions start.
-						console.assert(region.startMsPosInPerf === 0 || region.startMsPosInPerf === msPosInPerf);
-						// override default value (=0)
-						region.startMsPosInPerf = msPosInPerf;
+						// The following assertion ensures that all tracks agree with where the regions start in performance.
+						console.assert(region.startMsPosInPerf === msPosInPerf);
 					}
 
 					let midiObj = midiObjects[midiObjIndex];
@@ -514,10 +526,8 @@ export class Track
 					if(midiObjIndex === lastIndex)
 					{
 						// This function is called for multiple tracks.
-						// The following assertion ensures that all tracks agree on where the regions end.
-						console.assert(region.endMsPosInPerf === 0 || region.endMsPosInPerf === msPosInPerf);
-						// override default value (=0)
-						region.endMsPosInPerf = msPosInPerf;
+						// The following assertion ensures that all tracks agree with where the regions end in performance.
+						console.assert(region.endMsPosInPerf === msPosInPerf);
 					}
 				}
 				if(regionIndex > 0)
