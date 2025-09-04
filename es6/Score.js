@@ -1983,6 +1983,15 @@ let //**************************************************************************
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
         }
 
+        //Thoughts (TODOs) 04.09.2025:
+        //1. A major refactoring proposal: Replace all 'sPosition' substrings by 'sPos', and 'sDuration' by 'sDur' in all files.
+        //   (e.g .msPositionInScore becomes .msPosInScore, .startMsPositionInScore becomes .startMsPosInScore)
+        //   Test thoroughly before committing! Otherwise undo!
+        //2. The current Interpretation class contains unused attributes and functions inherited from the old Track class.
+        //   These need to be scrutinized carefully: What I'm calling an 'Interpretation' before this point in the code is actually a simple
+        //   object with a .midiObjects attribute. The other attributes could be of interest when reprogramming Sequence.play(), and used
+        //   somehow by the moments object...
+
         // 1.9.2025 Now agglommerate each defined track.runtimeInterpretation into a flat list of cross-track moments.
         // The getMoments() function sets a global moments object containing _only_ the information required by the Sequence.play() function.
         // The information should include only the moments to be played, and information that triggers the callbacks passed to the Sequence constructor:

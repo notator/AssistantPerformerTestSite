@@ -12,7 +12,7 @@ can tweek anything to improve the situation. (?)
 
 2. Regions and Interpretations should be properly documented:
 Interpretations (which are temporal information) are stored in parallel <midiChord> or <midiRest> elements inside <midiChords> or
-<midiRests> elements inside SVG <g class "chord"> or <g class "rest"> elements. Each <g class "chord"> or <g class "rest"> element also
+<midiRests> elements inside SVG files (<g class "chord"> or <g class "rest"> elements). Each <g class "chord"> or <g class "rest"> element also
 contains a single <g class="graphics"> element that defines the symbol's appearance.
 <g class="chord">
     <score:midiChords>
@@ -32,7 +32,7 @@ And similarly for <g class="rest">. (Different rest interpretations simply have 
 Interaction between the InterpretationSelect control, the startMarker and endMarker:
 All scores contain 1 or more Regions. 
 If a score contains more than one Region, then each Region determines the interpretation that it will play. The InterpretationSelect control
-is therefore populated by all the _Regions_ in the score: "region A", "region B", etc.
+is therefore populated by all the _Regions_ in the score: "region A", "region B", etc. in the order in which they will be played.
 If a score contains only one Region, then the user is given control of which interpretation is to be played. The InterpretationSelect control
 will then be populated by all the _Interpretations_ in the score: "interpretation 1", "interpretation 2", etc.
 If there is only one Region and one Interpretation, the control displays "interpretation 1" but is disabled (greyed out).
@@ -57,10 +57,14 @@ done incrementally.
 2b) (DONE) Integrate the new Study 2 score into the AssistantPerformer's code. Test it and perform it.
 2c) (DONE) The Assistant Performer has been updated to read the new format. Different interpretations of Study 1 can be selected using an
 "Interpretation Select" control at the top of page 2 of the AP's GUI.
-2d) (TODO) The AssistantPerformer's "Interpretation Select" control needs to be
+2d) (DONE) The AssistantPerformer's "Interpretation Select" control needs to be
       i) populated according to the number of interpretations in the score.
      ii) Made invisible if there is only one interpretation.
     iii) Disabled (greyed out) while performing.
+2c) (TODO) Rewrite the AP code so that all possible work is done before calling Sequence.play(). This means a major rewrite of the code.
+    (04.09.2025: The rewrite is nearly complete. See Score.setTracksAndMoments().)
+    Once the new Sequence code is complete and running, test all the AP's functions with the three test scores and Study 2, to ensure that
+    the rewrite has been successful.
 Comment: Also see the blue-boxed note apropos the remarks at the start of Part 4 of Retrospective 2024 (Also, see my 9th July notebook entry.):
 The decision to implement multiple interpretations of a score has to do with the way performance practice traditions develop (through the
 use of different recordings of the same piece). There is never a single, perfect performance of a score that is intended to be interpreted by
