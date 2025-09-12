@@ -10,8 +10,8 @@ export class Seq
 
 		// Pushes trks into their respective worker's trk array and returns an array of worker.
 		// The track parameters pushed are:
-		//  msPosition
-		//	moments // an array of moment. Each moment has a messages[] attribute and an msPositionInSeq attribute.
+		//  msPos
+		//	moments // an array of moment. Each moment has a messages[] attribute and an msPosInSeq attribute.
 		//  trkOptions
 		function setAndGetWorkers(seqPositionInScore, trks, trackWorkers)
 		{
@@ -27,9 +27,9 @@ export class Seq
 					if(moment.messages.length > 0)
 					{
 						trkMoment = {};
-						// all moments have an msPositionInChord attribute (even in midiRests)
-						trkMoment.isFirstMomentInMidiObject = (moment.msPositionInChord === 0);
-						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
+						// all moments have an msPosInChord attribute (even in midiRests)
+						trkMoment.isFirstMomentInMidiObject = (moment.msPosInChord === 0);
+						trkMoment.msPosInSeq = midiObjectMsPosInSeq + moment.msPosInChord;
 						trkMoment.messages = moment.messages; // a clone of the messages is made when the trkMoment is transferred to the webWorker.
 						trkMoments.push(trkMoment);
 					}
@@ -40,7 +40,7 @@ export class Seq
 				for(i = 0; i < nTrkMidiObjects; ++i)
 				{
 					midiObject = trkMidiObjects[i];
-					midiObjectMsPosInSeq = midiObject.msPositionInScore - seqPositionInScore;
+					midiObjectMsPosInSeq = midiObject.msPosInScore - seqPositionInScore;
 					for(j = 0; j < midiObject.moments.length; ++j)
 					{
 						pushMoment(trkMoments, midiObject.moments[j]);
@@ -71,11 +71,11 @@ export class Seq
 
 				if(trkWorker !== null)
 				{
-					//trkWorker.postMessage({ action: "pushTrk", msPosition: seqPositionInScore, moments: moments, options: options });
+					//trkWorker.postMessage({ action: "pushTrk", msPos: seqPositionInScore, moments: moments, options: options });
 					let jsonMoments = JSON.stringify(moments),
 						jsonOptions = JSON.stringify(options);
 
-					trkWorker.postMessage({ "action": "pushTrk", "msPosition": seqPositionInScore, "moments": jsonMoments, "options": jsonOptions });
+					trkWorker.postMessage({ "action": "pushTrk", "msPos": seqPositionInScore, "moments": jsonMoments, "options": jsonOptions });
 					trkWorker.hasCompleted = false;
 				}
 

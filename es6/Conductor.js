@@ -49,8 +49,8 @@ let
 	},
 
 	// This handler sends COMMAND messages defined in the score to the _outputDevice.
-	// The timestamp is the msPositionInScore of the message definition in the score.
-    // (The msPositionInScore is calculated from the msDuration attributes of the Moments.)
+	// The timestamp is the msPosInScore of the message definition in the score.
+    // (The msPosInScore is calculated from the msDur attributes of the Moments.)
 	//
 	// May 2024 note about SYSEX, CHANNEL_PRESSURE and AFTERTOUCH messages:
 	// Neither the AssistantPerformer nor the ResidentSynth currently support these messages,
@@ -104,7 +104,7 @@ export class Conductor
 		// variables that can change while performing
 		Object.defineProperty(this, "_prevX", { value: -1, writable: true });
 		// Continuously increasing value wrt start of performance (and recording). Returned by now().
-		Object.defineProperty(this, "_smoothMsPositionInScore", { value: 0, writable: true });
+		Object.defineProperty(this, "_smoothMsPosInScore", { value: 0, writable: true });
 		Object.defineProperty(this, "_prevPerfNow", { value: 0, writable: true });
 	}
 
@@ -130,7 +130,7 @@ export class Conductor
 
 	now()
 	{
-		return this._smoothMsPositionInScore;
+		return this._smoothMsPosInScore;
 	}
 
 	// called by Sequence. Is MIDI Thru...
@@ -173,10 +173,10 @@ export class TimerConductor extends Conductor
 				speedFactor = xFactor * that._globalSpeed,
 				now = performance.now(),
 				timeInterval = now - that._prevPerfNow,
-				smoothMsDurationInScore = timeInterval * speedFactor;
+				smoothMsDurInScore = timeInterval * speedFactor;
 
-			that._smoothMsPositionInScore += smoothMsDurationInScore; // _smoothMsPositionInScore includes durations of repeated regions.
-			that._timeMarker.advance(smoothMsDurationInScore);
+			that._smoothMsPosInScore += smoothMsDurInScore; // _smoothMsPosInScore includes durations of repeated regions.
+			that._timeMarker.advance(smoothMsDurInScore);
 			that._prevPerfNow = now;
 		}
 
@@ -241,10 +241,10 @@ export class CreepConductor extends Conductor
 		}
 
 		let pixelDistance = Math.sqrt((dx * dx) + (dy * dy)),
-			smoothMsDurationInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._globalSpeed;
+			smoothMsDurInScore = xFactor * (pixelDistance / this.getPixelsPerMs()) * this._globalSpeed;
 
-		this._smoothMsPositionInScore += smoothMsDurationInScore;
-		this._timeMarker.advance(smoothMsDurationInScore);
+		this._smoothMsPosInScore += smoothMsDurInScore;
+		this._timeMarker.advance(smoothMsDurInScore);
 	}
 }
 

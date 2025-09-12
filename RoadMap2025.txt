@@ -97,7 +97,7 @@ genesis of counterpoint and harmony. A really great resource!)
 
 (Possibly after the November conference)
 5. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
-I want to simplify Sequence.js if possible, but not to change the way it reports msPositions to the Cursor! Possibly, the use of PREQUEUE could
+I want to simplify Sequence.js if possible, but not to change the way it reports each msPos (msPositions) to the Cursor! Possibly, the use of PREQUEUE could
 be changed: Timestamped messages sent _between_the_changes_of_cursor_position_ could be sent all at once to the synth for scheduling. Use CoPilot
 for help, but be very careful! We already got into a mess with this. (Those changes have now been undone.)
 

@@ -12,8 +12,8 @@ let
 	currentMoment = null, // nextMoment(), resume(), tick()
 	endOfConductedPerformance,
 
-	//startMarkerMsPositionInScore,
-	endMarkerMsPositionInScore,
+	//startMarkerMsPosInScore,
+	endMarkerMsPosInScore,
 
 	// used by setState()
 	pausedMoment = null, // set by pause(), used by resume()
@@ -25,8 +25,8 @@ let
 	reportNextMIDIObject,  // callback. Set in play().
 	reportTickOverload, // callback. Set in play().
 
-	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
-	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
+	lastReportedMsPos = -1, // set by tick() used by nextMoment()
+	msPosToReport = -1,   // set in nextMoment() and used/reset by tick()
 	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
 
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
@@ -82,9 +82,9 @@ let
 
 		function stopAtEndOfPerformance()
 		{
-			var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
+			var performanceMsDur = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
-			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+			reportEndOfPerformance(sequenceRecording, performanceMsDur);
 			for(let track of tracks)
 			{
 				if(track.isOn)
@@ -94,8 +94,8 @@ let
 			}
 		}
 
-		// Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
-		// or null if the earliest nextMsPosition is >= endMarkerMsPosition.
+		// Returns the track having the earliest nextMsPos (= the position of the first unsent Moment in the track),
+		// or null if the earliest nextMsPos is >= endMarkerMsPos.
 		function getNextTrack(tracks)
 		{
 			let nextTrack = null, trackMsPos, nextMomtMsPosInScore = Number.MAX_VALUE;
@@ -119,12 +119,12 @@ let
 				let track = tracks[t];
 				if(track.isOn && track.hasEndedRegion === false)
 				{
-					trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
+					trackMsPos = track.currentMsPos(); // returns Number.MAX_VALUE at end of track
 					if(trackMsPos >= regionSequence[currentRegionIndex].endMsPosInScore)
 					{
 						track.hasEndedRegion = true;
 					}
-					else if(!(trackMsPos >= endMarkerMsPositionInScore && currentRegionIndex === endRegionIndex))
+					else if(!(trackMsPos >= endMarkerMsPosInScore && currentRegionIndex === endRegionIndex))
 					{
 						if(trackMsPos < nextMomtMsPosInScore)
 						{
@@ -166,7 +166,7 @@ let
 				if(endOfConductedPerformance === false)
 				{
 					nextMomt = new Moment(0, 0);  // dummy moment
-					trackNextMomtMsPos = endMarkerMsPositionInScore;
+					trackNextMomtMsPos = endMarkerMsPosInScore;
 					endOfConductedPerformance = true;
 				}
 				else
@@ -179,14 +179,14 @@ let
 				// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
 				setState("stopped");
 				// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-				delay = (endMarkerMsPositionInScore - previousMomtMsPosInScore) / speed;
+				delay = (endMarkerMsPosInScore - previousMomtMsPosInScore) / speed;
 				window.setTimeout(stopAtEndOfPerformance, delay);
 			}
 		}
 		else
 		{
 			nextMomt = track.currentMoment;
-			trackNextMomtMsPos = track.currentMsPosition();
+			trackNextMomtMsPos = track.currentMsPos();
 			track.advanceCurrentMoment();
 		}
 
@@ -201,11 +201,11 @@ let
 				nextMomtMsPosInScore = trackNextMomtMsPos;
 			}
 
-			if((nextMomtMsPosInScore > lastReportedMsPosition) || startOfRegion)
+			if((nextMomtMsPosInScore > lastReportedMsPos) || startOfRegion)
 			{
 				// the position will be reported by tick() when nextMomt is sent.
-				msPositionToReport = nextMomtMsPosInScore;
-				//console.log("msPositionToReport=%i", msPositionToReport);
+				msPosToReport = nextMomtMsPosInScore;
+				//console.log("msPosToReport=%i", msPosToReport);
 			}
 
 			if(previousTimestamp === null)
@@ -268,7 +268,7 @@ let
 	//          toIndex // the index of the final moment in the track (which does not play)
 	//          currentIndex // = fromIndex
 	//      reportEndOfPerformance // can be null
-	//      reportMsPosition // can be null    
+	//      reportMsPos // can be null    
 	tick = function()
 	{
 		var
@@ -303,11 +303,11 @@ let
 		// send all messages that are due between now and PREQUEUE ms later. 
 		while(delay <= PREQUEUE)
 		{
-			if(msPositionToReport >= 0)
+			if(msPosToReport >= 0)
 			{
-				reportNextMIDIObject(msPositionToReport);
-				lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
-				msPositionToReport = -1;
+				reportNextMIDIObject(msPosToReport);
+				lastReportedMsPos = msPosToReport; // lastReportedMsPos is used in nextMoment() above.
+				msPosToReport = -1;
 			}
 
 			if(thisTickTimestampLimit < currentMoment.timestamp)
@@ -357,7 +357,7 @@ let
 	// Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
 	resume = function()
 	{
-		var pauseMsDuration;
+		var pauseMsDur;
 
 		if(pausedMoment === null || pauseStartTime < 0)
 		{
@@ -365,13 +365,13 @@ let
 		}
 
 		currentMoment = pausedMoment; // the moment that is about to be sent.
-		pauseMsDuration = timer.now() - pauseStartTime;
+		pauseMsDur = timer.now() - pauseStartTime;
 
 		setState("running"); // sets pausedMoment to null.
 
-		currentMoment.timestamp += pauseMsDuration;
-		previousTimestamp += pauseMsDuration;
-		startTimeAdjustedForPauses += pauseMsDuration;
+		currentMoment.timestamp += pauseMsDur;
+		previousTimestamp += pauseMsDur;
+		startTimeAdjustedForPauses += pauseMsDur;
 
 		tick();
 	},
@@ -413,17 +413,17 @@ let
 export class Sequence
 {
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
-	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
+	// reaches the endMarkerMsPos (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
-	//      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+	//      reportEndOfPerformance(sequenceRecording, performanceMsDur);
 	// The reportNextMIDIObjectCallback argument is a callback function which reports the current
-	// msPositionInScore back to the GUI while performing.
+	// msPosInScore back to the GUI while performing.
 	// It is called here as:
-	//      reportNextMIDIObject(msPositionToReport);
-	// The msPosition it passes back is the original number of milliseconds from the start of the score
+	//      reportNextMIDIObject(msPosToReport);
+	// The msPos it passes back is the original number of milliseconds from the start of the score
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
-	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
+	// Moments whose msPosInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
 	constructor(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
 	{		
@@ -480,15 +480,15 @@ export class Sequence
 		// tracks and speed have been set earlier;
 		sequenceRecording = recording; // can be undefined or null
 
-		//startMarkerMsPositionInScore = startMarkerMsPosInScore;
-		endMarkerMsPositionInScore = endMarkerMsPosInScore;
+		//startMarkerMsPosInScore = startMarkerMsPosInScore;
+		endMarkerMsPosInScore = endMarkerMsPosInScore;
 
 		pausedMoment = null;
 		pauseStartTime = -1;
 		previousTimestamp = null;
 		previousMomtMsPosInScore = startMarkerMsPosInScore;
-		msPositionToReport = -1;
-		lastReportedMsPosition = -1;
+		msPosToReport = -1;
+		lastReportedMsPos = -1;
 		endOfConductedPerformance = false;
 
         for(var i = 0; i < tracks.length; i++)
@@ -523,13 +523,13 @@ export class Sequence
 	// does nothing if the sequence is already stopped
 	stop()
 	{
-		var performanceMsDuration;
+		var performanceMsDur;
 
 		if(!(stopped === true && paused === false))
 		{
 			setState("stopped");
-			performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
-			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+			performanceMsDur = Math.ceil(timer.now() - performanceStartTime);
+			reportEndOfPerformance(sequenceRecording, performanceMsDur);
 		}
 	}
 }

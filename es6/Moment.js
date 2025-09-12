@@ -6,18 +6,18 @@ class Moment
 {
 
 	// Moment constructor
-	// The moment.msPositionInChord is the position of the moment wrt its MidiChord or MidiRest.
+	// The moment.msPosInChord is the position of the moment wrt its MidiChord or MidiRest.
 	// it is initially set to the value stored in the score, but changes if the performance speed is not 100%.
-	// During performances (when the absolute DOMHRT time is known) moment.msPositionInChord is used, with
-	// the msPosition of the containing MidiChord or MidiRest, to set moment.timestamp. 
-	constructor(msPositionInChord)
+	// During performances (when the absolute DOMHRT time is known) moment.msPosInChord is used, with
+	// the msPos of the containing MidiChord or MidiRest, to set moment.timestamp. 
+	constructor(msPosInChord)
 	{
-		if(msPositionInChord === undefined || msPositionInChord < 0)
+		if(msPosInChord === undefined || msPosInChord < 0)
 		{
-			throw "Error: Moment.msPositionInChord must be defined.";
+			throw "Error: Moment.msPosInChord must be defined.";
 		}
 
-		this.msPositionInChord = msPositionInChord;
+		this.msPosInChord = msPosInChord;
 
 		// The absolute time (DOMHRT) at which this moment is sent to the output device.
 		// This value is always set in Sequence.nextMoment().
@@ -27,13 +27,13 @@ class Moment
 	}
 
 	// Adds the moment2.messages to the end of the current messages using
-	// msPositionInChord attributes to check synchronousness.
-	// Throws an exception if moment2.msPositionInChord !== this.msPositionInChord.
+	// msPosInChord attributes to check synchronousness.
+	// Throws an exception if moment2.msPosInChord !== this.msPosInChord.
 	mergeMoment(moment2)
 	{
-		var msPositionInChord = this.msPositionInChord;
+		var msPosInChord = this.msPosInChord;
 
-		console.assert(msPositionInChord === moment2.msPositionInChord, "Attempt to merge moments having different msPositionInChord values.");
+		console.assert(msPosInChord === moment2.msPosInChord, "Attempt to merge moments having different msPosInChord values.");
 
 		this.messages = this.messages.concat(moment2.messages);
 	}

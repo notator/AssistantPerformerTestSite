@@ -133,13 +133,13 @@ export class TimeMarker
 {
 	constructor(score, isConductingTimer)
 	{
-		let startMarkerMsPositionInScore = score.getStartMarkerMsPositionInScore(),
+		let startMarkerMsPosInScore = score.getStartMarkerMsPosInScore(),
 			cursor = score.getCursor(),
 			regionSequence = score.getRegionSequence(),
 			startRegionIndex = score.getStartRegionIndex(),
 			endRegionIndex = score.getEndRegionIndex(),
 			msPosDataArray = cursor.msPosDataArray,
-			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPositionInScore === startMarkerMsPositionInScore),
+			currentMsPosDataIndex = msPosDataArray.findIndex((a) => a.msPosInScore === startMarkerMsPosInScore),
 			msPosData = msPosDataArray[currentMsPosDataIndex],
 			nextMsPosData = msPosDataArray[currentMsPosDataIndex + 1], // the final barline is in msPosDataArray, but regions can't start there.
 			yCoordinates = msPosData.yCoordinates;
@@ -154,7 +154,7 @@ export class TimeMarker
 		Object.defineProperty(this, "_endRegionIndex", { value: endRegionIndex, writable: false });
 
 		 // updated while running
-		Object.defineProperty(this, "_smoothMsPositionInScore", { value: startMarkerMsPositionInScore, writable: true });	
+		Object.defineProperty(this, "_smoothMsPosInScore", { value: startMarkerMsPosInScore, writable: true });	
 		Object.defineProperty(this, "_msPosData", { value: msPosData, writable: true });
 		Object.defineProperty(this, "_nextMsPosData", { value: nextMsPosData, writable: true });
 		Object.defineProperty(this, "_regionIndex", { value: startRegionIndex, writable: true });
@@ -177,7 +177,7 @@ export class TimeMarker
 		return this._msPosData.pixelsPerMs;
 	}
 
-	advance(smoothMsDurationInScore)
+	advance(smoothMsDurInScore)
 	{
 		function moveElementTo(that, currentMsPosData, currentPreciseAlignment, nextAlignment, msIncrement)
 		{
@@ -215,26 +215,26 @@ export class TimeMarker
 			//}
 		}
 
-		// this._smoothMsPositionInScore is the accurate current msPosition wrt the start of the score (also between chords and rests).
-		this._smoothMsPositionInScore += smoothMsDurationInScore;
+		// this._smoothMsPosInScore is the accurate current msPos wrt the start of the score (also between chords and rests).
+		this._smoothMsPosInScore += smoothMsDurInScore;
 
 		// this._nextMsPosData will be undefined when the TimeMarker has reached the final barline.
-		if(this._nextMsPosData !== undefined && this._smoothMsPositionInScore >= this._nextMsPosData.msPositionInScore)
+		if(this._nextMsPosData !== undefined && this._smoothMsPosInScore >= this._nextMsPosData.msPosInScore)
 		{
-			if(this._regionSequence[this._regionIndex].endMsPosInScore <= this._nextMsPosData.msPositionInScore)
+			if(this._regionSequence[this._regionIndex].endMsPosInScore <= this._nextMsPosData.msPosInScore)
 			{
 				if(this._regionIndex < this._endRegionIndex)
 				{
 					// move to the next region
 					this._regionIndex++;
-					this._smoothMsPositionInScore = this._regionSequence[this._regionIndex].startMsPosInScore;
-					this._msPosData = this._msPosDataArray.find((a) => a.msPositionInScore === this._smoothMsPositionInScore);
+					this._smoothMsPosInScore = this._regionSequence[this._regionIndex].startMsPosInScore;
+					this._msPosData = this._msPosDataArray.find((a) => a.msPosInScore === this._smoothMsPosInScore);
 					this._msPosDataIndex = this._msPosDataArray.findIndex((e) => e === this._msPosData);
 					this._alignment = this._msPosData.alignment;
 
 					// index + 1 should always work, because the final barline is in this._msPosDataArray, but regions can't start there.
 					this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
-					smoothMsDurationInScore = 0;
+					smoothMsDurInScore = 0;
 				}
 			}
 			else
@@ -247,13 +247,13 @@ export class TimeMarker
 				// it also works for the last midiObject in the score because the final barline is in this._msPosDataArray,
 				// but this._nextMsPosData will be set to undefined when the TimeMarker reaches the final barline.
 				this._nextMsPosData = this._msPosDataArray[this._msPosDataIndex + 1];
-				smoothMsDurationInScore = 0;
+				smoothMsDurInScore = 0;
 			}
 		}
 
 		if(this._nextMsPosData !== undefined)
 		{
-			moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, smoothMsDurationInScore);
+			moveElementTo(this, this._msPosData, this._alignment, this._nextMsPosData.alignment, smoothMsDurInScore);
 		}
 	}
 }

@@ -70,14 +70,14 @@ eventHandler = function (e)
 
     /****************************************/
     // Seq constructor sends:
-    // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
-    // Set a new trk object's attributes to msPosition, moments and options,
-    // then add it to the allTrks array maintaining the allTrks array in order of msPosition.
+    // postMessage({ action: "pushTrk", msPos: msPos, moments: moments, options: options });
+    // Set a new trk object's attributes to msPos, moments and options,
+    // then add it to the allTrks array maintaining the allTrks array in order of msPos.
     // The options attribute is always a defined object, but it need not have any attributes.
     function pushTrk(msg)
     {
         var insertAtIndex,
-			msPosition = msg.msPosition,
+			msPos = msg.msPos,
 			moments = JSON.parse(msg.moments),
 			options = JSON.parse(msg.options),
 			trk = {};
@@ -155,19 +155,19 @@ eventHandler = function (e)
             }
         }
 
-        function findInsertionIndex(currentTrks, msPosition)
+        function findInsertionIndex(currentTrks, msPos)
         {
             var i, nTrks = currentTrks.length, insIndex = nTrks;
 
-            if(nTrks > 0 && currentTrks[nTrks - 1].msPosition > msPosition)
+            if(nTrks > 0 && currentTrks[nTrks - 1].msPos > msPos)
             {
-                if(currentTrks[0].msPosition < msPosition)
+                if(currentTrks[0].msPos < msPos)
                 {
                     for(i = nTrks - 1; i >= 1; --i)
                     {
-                        console.assert(currentTrks[i].msPosition !== msPosition,
+                        console.assert(currentTrks[i].msPos !== msPos,
 							"Error in TrackWorker.pushTrk(): Attempt to push a trk at an existing position!");
-                        if((currentTrks[i - 1].msPosition < msPosition) && (currentTrks[i].msPosition > msPosition))
+                        if((currentTrks[i - 1].msPos < msPos) && (currentTrks[i].msPos > msPos))
                         {
                             insIndex = i;
                             break;
@@ -201,9 +201,9 @@ eventHandler = function (e)
             }
         }
 
-        insertAtIndex = findInsertionIndex(allTrks, msPosition);
+        insertAtIndex = findInsertionIndex(allTrks, msPos);
 
-        trk.msPosition = msPosition;
+        trk.msPos = msPos;
         trk.moments = moments;
         trk.previousMsPosInSeq = 0;
 
@@ -319,8 +319,8 @@ eventHandler = function (e)
                 function getDelay(moment)
                 {
                     var
-					delay = (moment.msPositionInSeq - currentTrk.previousMsPosInSeq) / speed;
-                    currentTrk.previousMsPosInSeq = moment.msPositionInSeq;
+					delay = (moment.msPosInSeq - currentTrk.previousMsPosInSeq) / speed;
+                    currentTrk.previousMsPosInSeq = moment.msPosInSeq;
 
                     return delay;
                 }
@@ -519,7 +519,7 @@ eventHandler = function (e)
             break;
 
         // called by Seq when loading this worker with trks
-        // postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+        // postMessage({ action: "pushTrk", msPos: msPos, moments: moments, options: options });
         case "pushTrk":
             pushTrk(msg);
             break;

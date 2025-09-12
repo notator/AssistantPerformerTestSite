@@ -34,15 +34,15 @@ export class Cursor
 		Object.defineProperty(this, "yCoordinates", { value: { top: -1, bottom: -1 }, writable: true }); // set in moveElementTo() in init()		
 	}
 
-	set(systems, startMarkerMsPositionInScore, endMarkerMsPositionInScore, trackIsOnArray, interpIndex, displayRunningCursor)
+	set(systems, startMarkerMsPosInScore, endMarkerMsPosInScore, trackIsOnArray, interpIndex, displayRunningCursor)
 	{
-		// Returns an array containing an msPosData object for every distinct msPositionInScore.
+		// Returns an array containing an msPosData object for every distinct msPosInScore.
 		// An msPosData object contains the following fields:
-		//	.msPositionInScore
+		//	.msPosInScore
 		//	.alignmentX
 		//	.yCoordinates
 		//  .pixelsPerMs -- used by CreepConductor
-		// The msPosData objects are sorted in order of .msPositionInScore.
+		// The msPosData objects are sorted in order of .msPosInScore.
 		// The last entry is an msPosData object for the final barline.
 		function getScoreMsPosDataArray(systems, viewBoxScale, trackIsOnArray, interpIndex)
 		{
@@ -59,7 +59,7 @@ export class Cursor
 						yCoordinates = {},
 						leftmostMidiObject = system.staves[0].voices[0].timeObjects[0][interpIndex],
 						// pixelsPerMs is set properly later for CreepConductor
-						msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+						msPosData = { msPosInScore: leftmostMidiObject.msPosInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 
 					yCoordinates.top = line.y1.baseVal.value;
 					yCoordinates.bottom = line.y2.baseVal.value;
@@ -72,7 +72,7 @@ export class Cursor
 							{
 								leftmostMidiObject = voice.timeObjects[0][interpIndex];
 								// pixelsPerMs is set properly later for CreepConductor
-								msPosData = { msPositionInScore: leftmostMidiObject.msPositionInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
+								msPosData = { msPosInScore: leftmostMidiObject.msPosInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 							}
 						}
 					}
@@ -93,7 +93,7 @@ export class Cursor
 						let msPosData = systemMsPosDataArray[i],
 							nextMsPosData = systemMsPosDataArray[i + 1];
 
-						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextMsPosData.msPositionInScore - msPosData.msPositionInScore);
+						msPosData.pixelsPerMs = (nextMsPosData.alignment - msPosData.alignment) / (nextMsPosData.msPosInScore - msPosData.msPosInScore);
 					}
 					// last barline pixelsPerMs remains 0
 				}
@@ -121,11 +121,11 @@ export class Cursor
 							for(let ti = 0; ti < nMidiObjects; ++ti)
 							{
 								let midiObject = midiObjects[ti][interpIndex];
-								msPos = midiObject.msPositionInScore;								
-								if(systemMsPosDataArray.find((e) => e.msPositionInScore === msPos) === undefined)
+								msPos = midiObject.msPosInScore;								
+								if(systemMsPosDataArray.find((e) => e.msPosInScore === msPos) === undefined)
 								{
 									// pixelsPerMs is set properly later for CreepConductor
-									msPosData = {msPositionInScore: msPos, alignment: midiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates};
+									msPosData = {msPosInScore: msPos, alignment: midiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates};
 									systemMsPosDataArray.push(msPosData);
 								}
 							}
@@ -133,16 +133,16 @@ export class Cursor
 							if(systemMsPosDataArray.find((e) => e.alignment === system.right) === undefined)
 							{
 								let lastMidiObject = midiObjects[midiObjects.length - 1][interpIndex];
-								msPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+								msPos = lastMidiObject.msPosInScore + lastMidiObject.msDurInScore;
 								// pixelsPerMs is set properly later for CreepConductor
-								msPosData = {msPositionInScore: msPos, alignment: system.right * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates};
+								msPosData = {msPosInScore: msPos, alignment: system.right * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates};
 								systemMsPosDataArray.push(msPosData);
 							}
 						}
 					}
 				}
 
-				systemMsPosDataArray.sort((a, b) => a.msPositionInScore - b.msPositionInScore);
+				systemMsPosDataArray.sort((a, b) => a.msPosInScore - b.msPosInScore);
 				setPixelsPerMs(systemMsPosDataArray);
 
 				return systemMsPosDataArray;
@@ -174,10 +174,10 @@ export class Cursor
 		// The last entry is an msPosData object for the final barline.
 		this.msPosDataArray = getScoreMsPosDataArray(systems, this.viewBoxScale, trackIsOnArray, interpIndex);
 
-		this.startMarkerMsPosInScore = startMarkerMsPositionInScore;
-		this.endMarkerMsPosInScore = endMarkerMsPositionInScore;
+		this.startMarkerMsPosInScore = startMarkerMsPosInScore;
+		this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 
-		this.moveElementTo(startMarkerMsPositionInScore); // sets yCoordinates if necessary
+		this.moveElementTo(startMarkerMsPosInScore); // sets yCoordinates if necessary
 
 		if(displayRunningCursor)
 		{
@@ -190,9 +190,9 @@ export class Cursor
 	}
 
 	// use running index here if possible...
-	moveElementTo(msPositionInScore)
+	moveElementTo(msPosInScore)
 	{
-		let msPosData = this.msPosDataArray.find((e) => e.msPositionInScore === msPositionInScore);
+		let msPosData = this.msPosDataArray.find((e) => e.msPosInScore === msPosInScore);
 		if(msPosData !== undefined)
 		{
 			if(msPosData.yCoordinates !== this.yCoordinates)

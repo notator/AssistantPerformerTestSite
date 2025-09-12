@@ -63,7 +63,7 @@ let //**************************************************************************
     // functions
 
     // This callback is called by sequence.tick() if it can't keep up with the speed of a performance,
-    // so that moments having different msPositionInScore have had to be sent "synchronously" in a tight loop.
+    // so that moments having different msPosInScore have had to be sent "synchronously" in a tight loop.
     // nAsynchMomentsSentAtOnce is the number of moments sent "synchronously" during the overload.
     reportTickOverload = function ()
     {
@@ -159,7 +159,7 @@ let //**************************************************************************
             function findBarline(system, msPos)
             {
                 let currentInterpIndex = regionSequence[currentRegionIndex].interpIndex,
-                    barline = system.barlinesPerInterpretation[currentInterpIndex].find(x => x.msPositionInScore === msPos);
+                    barline = system.barlinesPerInterpretation[currentInterpIndex].find(x => x.msPosInScore === msPos);
 
                 return barline;
             }
@@ -174,7 +174,7 @@ let //**************************************************************************
                 }
                 else  // setting end
                 {
-                    let msPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore,
+                    let msPos = lastMidiObject.msPosInScore + lastMidiObject.msDurInScore,
                         barline = findBarline(system, msPos);
 
                     returnObject = barline;
@@ -184,7 +184,7 @@ let //**************************************************************************
             {
                 if(settingStart)
                 {
-                    let msPos = firstMidiObject.msPositionInScore,
+                    let msPos = firstMidiObject.msPosInScore,
                         barline = findBarline(system, msPos);
 
                     returnObject = barline;
@@ -197,7 +197,7 @@ let //**************************************************************************
             else // clicked between two midiObjects (both midiObjectBefore and midiObjectAfter are defined)
             {
                 let midiObject = (deltaAfter < deltaBefore) ? midiObjectAfter : midiObjectBefore,
-                    msPos = midiObject.msPositionInScore,
+                    msPos = midiObject.msPosInScore,
                     barline = findBarline(system, msPos);
 
                 if(barline !== null)
@@ -486,9 +486,9 @@ let //**************************************************************************
         // Displays an alert if an attempt was made to set the startMarker or endMarker in the wrong order.
         function selectRegionIndex(timeObject, settingEndMarker)
         {
-            function findMsPositionForRegions(timeObject, settingEndMarker)
+            function findMsPosForRegions(timeObject, settingEndMarker)
             {
-                let msPos = timeObject.msPositionInScore;
+                let msPos = timeObject.msPosInScore;
                 if(settingEndMarker === true)
                 {
                     msPos--;
@@ -496,13 +496,13 @@ let //**************************************************************************
                 return msPos;
             }
 
-            function findRegionShortNamesAtMsPos(msPositionInScore)
+            function findRegionShortNamesAtMsPos(msPosInScore)
             {
                 let regionShortNames = undefined;
                 for(let i = 1; i < regionShortNamesPerMsPosInScore.length; ++i)
                 {
-                    if(regionShortNamesPerMsPosInScore[i - 1].msPosInScore <= msPositionInScore
-                        && regionShortNamesPerMsPosInScore[i].msPosInScore > msPositionInScore)
+                    if(regionShortNamesPerMsPosInScore[i - 1].msPosInScore <= msPosInScore
+                        && regionShortNamesPerMsPosInScore[i].msPosInScore > msPosInScore)
                     {
                         regionShortNames = regionShortNamesPerMsPosInScore[i - 1].regionShortNames;
                         break;
@@ -589,7 +589,7 @@ let //**************************************************************************
                 document.body.appendChild(selectRegionLayer);
             }
 
-            function getPossibleRegionShortNames(msPositionInScore, regionShortNames, settingEndMarker, ignoreOtherMarker)
+            function getPossibleRegionShortNames(msPosInScore, regionShortNames, settingEndMarker, ignoreOtherMarker)
             {
                 let possibleNames = [];
                 for(let regionShortName of regionShortNames)
@@ -598,18 +598,18 @@ let //**************************************************************************
                     if(settingEndMarker === false)
                     {
                         if(index < endRegionIndex
-                            || (ignoreOtherMarker === undefined && index === endRegionIndex && msPositionInScore < endMarker.msPositionInScore))
+                            || (ignoreOtherMarker === undefined && index === endRegionIndex && msPosInScore < endMarker.msPosInScore))
                         {
                             // ignoreOtherMarker is defined only when changing interpretations.
                             // In this case, the markers are not actually moving in the graphics, so the check does not need to be made,
-                            // and the  marker.msPositionInScore values are currently invalid anyway (they are being reset).
+                            // and the  marker.msPosInScore values are currently invalid anyway (they are being reset).
                             possibleNames.push(regionShortName);
                         }
                     }
                     else // find end region names
                     {
                         if(index > startRegionIndex
-                            || (ignoreOtherMarker === undefined && index === startRegionIndex && msPositionInScore > startMarker.msPositionInScore))
+                            || (ignoreOtherMarker === undefined && index === startRegionIndex && msPosInScore > startMarker.msPosInScore))
                         {
                             possibleNames.push(regionShortName);
                         }
@@ -632,9 +632,9 @@ let //**************************************************************************
                 return possibleNames;
             }
 
-            let msPositionForRegions = findMsPositionForRegions(timeObject, settingEndMarker),
-                regionShortNames = findRegionShortNamesAtMsPos(msPositionForRegions),
-                possibleRegionNames = getPossibleRegionShortNames(msPositionForRegions, regionShortNames, settingEndMarker, ignoreOtherMarker),
+            let msPosForRegions = findMsPosForRegions(timeObject, settingEndMarker),
+                regionShortNames = findRegionShortNamesAtMsPos(msPosForRegions),
+                possibleRegionNames = getPossibleRegionShortNames(msPosForRegions, regionShortNames, settingEndMarker, ignoreOtherMarker),
                 regionIndex = 0; // default
 
             if(possibleRegionNames === null) // illegal marker position click
@@ -686,7 +686,7 @@ let //**************************************************************************
                         startMarker = system.startMarker;
                         hideStartMarkersExcept(startMarker);
                         startMarker.moveTo(midiObjectOrBarline);
-                        startMarker.msPosInPerf = startMarker.msPositionInScore;
+                        startMarker.msPosInPerf = startMarker.msPosInScore;
                         if(regionSequence.length > 1)
                         {
                             let region = regionSequence[startRegionIndex];
@@ -711,7 +711,7 @@ let //**************************************************************************
                         endMarker = system.endMarker;
                         hideEndMarkersExcept(endMarker);
                         endMarker.moveTo(midiObjectOrBarline);
-                        endMarker.msPosInPerf = endMarker.msPositionInScore;
+                        endMarker.msPosInPerf = endMarker.msPosInScore;
                         if(regionSequence.length > 1)
                         {
                             let region = regionSequence[endRegionIndex];
@@ -776,7 +776,7 @@ let //**************************************************************************
     {
         let displayRunningCursor = true,
             currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
-        cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
+        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
     },
 
 
@@ -1254,7 +1254,7 @@ let //**************************************************************************
 
                                 timeObject.forEach((midiObject) =>
                                 {
-                                    if(midiObject.msDurationInScore === undefined || midiObject.msDurationInScore < 1)
+                                    if(midiObject.msDurInScore === undefined || midiObject.msDurInScore < 1)
                                     {
                                         throw "Error: Chords and Rests must have a duration greater than 0!";
                                     }
@@ -1365,7 +1365,7 @@ let //**************************************************************************
                         }
                     }
 
-                    // Sets the msPosition of each timeObject (rests and chords) in the voice.timeObjects arrays.
+                    // Sets the msPos of each timeObject (rests and chords) in the voice.timeObjects arrays.
                     function setMsPositions(systems)
                     {
                         let nStaves, nVoices, nSystems,
@@ -1382,7 +1382,7 @@ let //**************************************************************************
                                 nVoices = systems[0].staves[staffIndex].voices.length;
                                 for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                                 {
-                                    let msPosition = 0;
+                                    let msPos = 0;
                                     for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
                                     {
                                         timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
@@ -1395,10 +1395,10 @@ let //**************************************************************************
 
                                                 if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                                 {
-                                                    Object.defineProperty(midiObject, "msPositionInScore", {value: msPosition, writable: false});
+                                                    Object.defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
                                                 }
 
-                                                msPosition += midiObject.msDurationInScore;
+                                                msPos += midiObject.msDurInScore;
                                             }
                                         }
                                     }
@@ -1503,7 +1503,7 @@ let //**************************************************************************
                                     if((midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                         && midiObject.alignment > barline.alignment)
                                     {
-                                        barline.msPositionInScore = midiObject.msPositionInScore;
+                                        barline.msPosInScore = midiObject.msPosInScore;
                                         jIndex = j + 1;
                                         break;
                                     }
@@ -1513,9 +1513,9 @@ let //**************************************************************************
                             {
                                 let lastBarline = barlines[barlines.length - 1],
                                     lastMidiObject = voiceTimeObjects[voiceTimeObjects.length - 1][interpIndex],
-                                    lastBarlineMsPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+                                    lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDurInScore;
 
-                                lastBarline.msPositionInScore = lastBarlineMsPos;
+                                lastBarline.msPosInScore = lastBarlineMsPos;
                             }
                         }
 
@@ -1658,13 +1658,13 @@ let //**************************************************************************
 
                 if(endBarline !== undefined)
                 {
-                    if(endBarline.typeString === "endRegionBarline" && endBarline.msPositionInScore === regionDef.endMsPosInScore)
+                    if(endBarline.typeString === "endRegionBarline" && endBarline.msPosInScore === regionDef.endMsPosInScore)
                     {
                         return {system, endBarline};
                     }
                     else if(endBarline.typeString === "endOfScoreBarline")
                     {
-                        endBarline.msPositionInScore = regionDef.endMsPosInScore;
+                        endBarline.msPosInScore = regionDef.endMsPosInScore;
                         return {system, endBarline};
                     }
                 }
@@ -1713,17 +1713,17 @@ let //**************************************************************************
         }
     },
 
-    // Advances the cursor to msPosition (in any channel)
+    // Advances the cursor to msPos (in any channel)
     // Sets the cursor invisible when the end of the score is reached.
-    advanceCursor = function (msPositionInScore)
+    advanceCursor = function (msPosInScore)
     {
-        if(msPositionInScore === endMarker.msPositionInScore && currentRegionIndex === endRegionIndex)
+        if(msPosInScore === endMarker.msPosInScore && currentRegionIndex === endRegionIndex)
         {
             cursor.setVisible(false);
         }
         else
         {
-            cursor.moveElementTo(msPositionInScore);
+            cursor.moveElementTo(msPosInScore);
         }
     },
 
@@ -1752,15 +1752,15 @@ let //**************************************************************************
                     let regionMsPosBounds = [];
                     for(let region of regionSequence)
                     {
-                        let msPositionInScore = region.startMsPosInScore;
-                        if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
+                        let msPosInScore = region.startMsPosInScore;
+                        if(regionMsPosBounds.indexOf(msPosInScore) === -1)
                         {
-                            regionMsPosBounds.push(msPositionInScore);
+                            regionMsPosBounds.push(msPosInScore);
                         }
-                        msPositionInScore = region.endMsPosInScore;
-                        if(regionMsPosBounds.indexOf(msPositionInScore) === -1)
+                        msPosInScore = region.endMsPosInScore;
+                        if(regionMsPosBounds.indexOf(msPosInScore) === -1)
                         {
-                            regionMsPosBounds.push(msPositionInScore);
+                            regionMsPosBounds.push(msPosInScore);
                         }
                     }
                     regionMsPosBounds.sort((a, b) => (a - b));
@@ -1804,7 +1804,7 @@ let //**************************************************************************
                         let barlines = systems[systemIndex].barlinesPerInterpretation[0];
                         for(let barline of barlines)
                         {
-                            if(region.startMsPosInScore === barline.msPositionInScore)
+                            if(region.startMsPosInScore === barline.msPosInScore)
                             {
                                 region.startBarline = barline;
                                 region.systemIndex = systemIndex;
@@ -1830,7 +1830,7 @@ let //**************************************************************************
                 {
                     let scoreSpanRegionData = {},
                         finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
-                        finalBarlineMsPosInScore = finalMidiObject.msPositionInScore + finalMidiObject.msDurationInScore,
+                        finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDurInScore,
                         interpretationNr = (interpIndex + 1).toString();
 
                     scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
@@ -1894,7 +1894,7 @@ let //**************************************************************************
         sendMarkersToInitialPositions();
 
         let displayRunningCursor = false;
-        cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, 0, displayRunningCursor);
+        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, 0, displayRunningCursor);
     },
 
     getSystems = function ()
@@ -1956,7 +1956,7 @@ let //**************************************************************************
 
         sendEndMarkerToEnd();
 
-        cursor.set(systems, startMarker.msPositionInScore, endMarker.msPositionInScore, trackIsOnArray, currentRegionIndex, false);
+        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
     },
 
     // This function is called
@@ -1984,8 +1984,8 @@ let //**************************************************************************
         }
 
         //Thoughts (TODOs) 04.09.2025:
-        //1. A major refactoring proposal: Replace all 'sPosition' substrings by 'sPos', and 'sDuration' by 'sDur' in all files.
-        //   (e.g .msPositionInScore becomes .msPosInScore, .startMsPositionInScore becomes .startMsPosInScore)
+        //1. A major refactoring proposal: Replace all 'sPos' substrings by 'sPos', and 'sDur' by 'sDur' in all files.
+        //   (e.g .msPosInScore becomes .msPosInScore, .startMsPosInScore becomes .startMsPosInScore)
         //   Test thoroughly before committing! Otherwise undo!
         //2. The current Interpretation class contains unused attributes and functions inherited from the old Track class.
         //   These need to be scrutinized carefully: What I'm calling an 'Interpretation' before this point in the code is actually a simple
@@ -2033,7 +2033,7 @@ export class Score
         // When the score is first read, all tracks perform by default.
         this.setCursor = setCursor;
         // Advances the cursor to the following timeObject (in any channel)
-        // if the msPosition argument is >= that object's msPosition. Otherwise does nothing.
+        // if the msPos argument is >= that object's msPos. Otherwise does nothing.
         this.advanceCursor = advanceCursor;
         this.hideCursor = hideCursor;
 

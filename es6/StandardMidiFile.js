@@ -92,7 +92,7 @@ let
 	//      SequenceRecording.trackRecordings is an array of TrackRecording (which are parallel in time) (see Sequence.js)
 	//      TrackRecording.moments is an array of Moment (moments are sequential in the track) (see TrackRecording.js)
 	//          Tracks do not include the messages which are automatically written into
-	//          the file at the end of each track (after sequenceMsDuration). These messages, which
+	//          the file at the end of each track (after sequenceMsDur). These messages, which
 	//          all happen "synchronously", are AllControllersOff, AllSoundOff and EndOfTrack.
 	//      Moment.messages is an array of Message (see Moment.js)
 	//          All the messages in a moment are sent with no delay between them. The time
@@ -103,9 +103,9 @@ let
 	//          The proposed Web MIDI API calls a "Message" an "Event" but, for me, an "Event" is
 	//          a temporal entity, and Messages have no temporal attribute. An "Event" is, for me,
 	//          the temporal equivalent of an "Object", and I need the word elsewhere.          
-	// sequenceMsDuration is the total duration of the sequenceRecording in (whole) milliseconds. It determines
+	// sequenceMsDur is the total duration of the sequenceRecording in (whole) milliseconds. It determines
 	//      the timing of the end-of-track messages.
-	sequenceToSMF = function(sequenceRecording, sequenceMsDuration)
+	sequenceToSMF = function(sequenceRecording, sequenceMsDur)
 	{
 		var
 			midiArray,
@@ -134,8 +134,8 @@ let
 		// Returns a Uint8Array containing the complete standard MIDI file.
 		// Moment timestamps are currently relative to the start of the trackRecordings, so the
 		// earliest moment timestamp is 0.
-		// Moment.msPositionInScore is always ignored.
-		function sequenceToUint8Array(trackRecordings, sequenceMsDuration)
+		// Moment.msPosInScore is always ignored.
+		function sequenceToUint8Array(trackRecordings, sequenceMsDur)
 		{
 			var i, trackChunk, trackChunks = [], trackChunksLength = 0,
 				nPerformingTracks,
@@ -145,7 +145,7 @@ let
 				nTracks = trackRecordings.length;
 
 			// Returns a UintArray containing a track chunk (track header + data)
-			function getTrackChunk(trackMoments, sequenceMsDuration)
+			function getTrackChunk(trackMoments, sequenceMsDur)
 			{
 				var
 					trackData, trackHeader, trackChunk, trackMessages;
@@ -420,7 +420,7 @@ let
 				// Start the track 200 milliseconds before the first message in any track,
 				// and end it 300 milliseconds after the end of the sequence 
 				// so that the start and end of playback are not quite so abrupt.
-				trackData = getTrackData(-200, trackMessages, sequenceMsDuration + 300);
+				trackData = getTrackData(-200, trackMessages, sequenceMsDur + 300);
 				trackHeader = getTrackHeader(trackData.length);
 				trackChunk = new Uint8Array(trackHeader.length + trackData.length);
 				trackChunk.set(trackHeader, 0);
@@ -459,7 +459,7 @@ let
 			{
 				if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
 				{
-					trackChunk = getTrackChunk(trackRecordings[i].moments, sequenceMsDuration);
+					trackChunk = getTrackChunk(trackRecordings[i].moments, sequenceMsDur);
 					trackChunksLength += trackChunk.length;
 					trackChunks.push(trackChunk);
 				}
@@ -485,7 +485,7 @@ let
 
 		if(hasData(trackRecordings))
 		{
-			midiArray = sequenceToUint8Array(trackRecordings, sequenceMsDuration);
+			midiArray = sequenceToUint8Array(trackRecordings, sequenceMsDur);
 			smf = new Blob([midiArray], { type: 'audio/midi' });
 		}
 

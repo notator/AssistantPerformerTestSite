@@ -119,10 +119,10 @@ var
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
     // sequenceRecording is a SequenceRecording object.
-    // sequenceMsDuration is the total duration of the sequenceRecording in milliseconds (an integer).
+    // sequenceMsDur is the total duration of the sequenceRecording in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileLink = function (scoreName, sequenceRecording, sequenceMsDuration)
+    createSaveMIDIFileLink = function (scoreName, sequenceRecording, sequenceMsDur)
     {
         var
             standardMidiFile,
@@ -142,7 +142,7 @@ var
                 {
                     downloadName = getMIDIFileName(scoreName);
 
-                    standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
+                    standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDur);
 
                     a = document.createElement('a');
                     a.id = "saveLink";
@@ -442,7 +442,7 @@ var
 
     startPlaying = function ()
     {
-        let startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, sequenceRecording;
+        let startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording;
 
         deleteSaveLink();
 
@@ -486,9 +486,9 @@ var
 
             startRegionIndex = score.getStartRegionIndex();
             score.setActiveInfoStringsStyle(startRegionIndex);
-            startMarkerMsPosition = score.getStartMarkerMsPositionInScore();
+            startMarkerMsPos = score.getStartMarkerMsPosInScore();
             endRegionIndex = score.getEndRegionIndex();
-            endMarkerMsPosition = score.getEndMarkerMsPositionInScore();
+            endMarkerMsPos = score.getEndMarkerMsPosInScore();
 
             if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep)
             {
@@ -502,7 +502,7 @@ var
             let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
-            player.play(startRegionIndex, startMarkerMsPosition, endRegionIndex, endMarkerMsPosition, sequenceRecording);
+            player.play(startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
         }
     },
 
@@ -597,7 +597,7 @@ var
 
     // Callback called when a performing sequenceRecording is stopped or has played its last message,
     // or when the player is stopped or has played its last subsequence.
-    reportEndOfPerformance = function (sequenceRecording, performanceMsDuration)
+    reportEndOfPerformance = function (sequenceRecording, performanceMsDur)
     {
         var
             scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
@@ -665,7 +665,7 @@ var
 
         if(setTimestampsRelativeToSequenceRecording(sequenceRecording))
         {
-            createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDuration);
+            createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDur);
         }
 
         // The moment.timestamps do not need to be restored to their original values here
@@ -678,15 +678,15 @@ var
         svgControlsState = "stopped";
     },
 
-    // Callback called by a performing sequence. Reports the msPositionInScore of the
+    // Callback called by a performing sequence. Reports the msPosInScore of the
     // Moment curently being sent. When all the events in the span have been played,
     // reportEndOfPerformance() is called (see above).
-    reportMsPos = function (msPositionInScore)
+    reportMsPos = function (msPosInScore)
     {
-        //console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
-        // If there is a graphic object in the score having msPositionInScore,
+        //console.log("Controls: calling score.advanceRunningMarker(msPos), msPosInScore=" + msPosInScore);
+        // If there is a graphic object in the score having msPosInScore,
         // the running cursor is aligned to that object.
-        score.advanceCursor(msPositionInScore);
+        score.advanceCursor(msPosInScore);
     },
 
     // see: http://stackoverflow.com/questions/846221/logarithmic-slider

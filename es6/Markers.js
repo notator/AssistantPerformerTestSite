@@ -68,7 +68,7 @@ class Marker
 		var x = timeObject.alignment * this.viewBoxScale;
 
 		this.alignment = timeObject.alignment;
-		this.msPositionInScore = timeObject.msPositionInScore;
+		this.msPosInScore = timeObject.msPosInScore;
 
 		this.line.setAttribute('x1', x.toString());
 		this.line.setAttribute('x2', x.toString());

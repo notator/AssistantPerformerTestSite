@@ -79,7 +79,7 @@ export class TrackRecording
 
 		function addNewMoment(moments, message, timestamp)
 		{
-			var newMoment = new Moment(0); // msPositionInScore is irrelevant here
+			var newMoment = new Moment(0); // msPosInScore is irrelevant here
 
 			newMoment.timestamp = timestamp;
 			newMoment.messages.push(message);
