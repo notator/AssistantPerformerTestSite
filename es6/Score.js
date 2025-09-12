@@ -1989,9 +1989,11 @@ let //**************************************************************************
         }
 
         //Thoughts (TODOs) 04.09.2025:
-        //1. (DONE) Major refactoring: Replace all 'sPos' substrings by 'sPos', and 'sDur' by 'sDur' in all files.
-        //   (e.g .msPosInScore becomes .msPosInScore, .startMsPosInScore becomes .startMsPosInScore)
-        //   Test thoroughly before committing! Some automatic refactoring undone -- e.g. envelope message durations in score files are 'msDur'!
+        //1. (DONE 12.09.2025) Major refactoring: Replace all 'sPosition' substrings by 'sPos', and 'sDuration' by 'sDur' in all files.
+        //   (e.g .msPositionInScore becomes .msPosInScore, .startMsPositionInScore becomes .startMsPosInScore)
+        //   Test thoroughly in a new thread before merging!
+        //   Some undos made while testing: In particular, score files are not affected by the recent refactoring so, when reading score files,
+        //   midiChord and midiRest duration attributes remain as "msDuration" and _envelope_ message durations remain as 'msDur'!
         //2. The current Interpretation class contains unused attributes and functions inherited from the old Track class.
         //   These need to be scrutinized carefully: What I'm calling an 'Interpretation' before this point in the code is actually a simple
         //   object with a .midiObjects attribute. The other attributes could be of interest when reprogramming Sequence.play(), and used
