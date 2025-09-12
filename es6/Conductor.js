@@ -50,7 +50,7 @@ let
 
 	// This handler sends COMMAND messages defined in the score to the _outputDevice.
 	// The timestamp is the msPosInScore of the message definition in the score.
-    // (The msPosInScore is calculated from the msDur attributes of the Moments.)
+	// (The msPosInScore is calculated from the msDuration attributes of the Moments.)
 	//
 	// May 2024 note about SYSEX, CHANNEL_PRESSURE and AFTERTOUCH messages:
 	// Neither the AssistantPerformer nor the ResidentSynth currently support these messages,

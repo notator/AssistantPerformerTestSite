@@ -153,7 +153,7 @@ function _getMoments(midiChordElem)
 				// initialMessages are converted a moment in getMoments() (see below).
 				let noteOnMessages = GetUInt8Msgs(msgElems);
 				initialMessages = initialMessages.concat(noteOnMessages);
-				currentMsPos = parseInt(midiChordChildElem.getAttribute("msDur"));
+				currentMsPos = parseInt(midiChordChildElem.getAttribute("msDuration"));
 				break;
 			}
 			case "envelope":
@@ -199,7 +199,7 @@ class MidiObject
 		{
 			let moment = new Moment(0); // There are no messages in the moment.messages array.
 			moments.push(moment);
-			moments.msDurInScore = parseInt(midiObjectElem.getAttribute("msDur"));
+			moments.msDurInScore = parseInt(midiObjectElem.getAttribute("msDuration"));
 		}
 
      	// Each moments array is an ordered array of Moment objects.

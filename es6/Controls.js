@@ -882,7 +882,7 @@ var
     setInterpretationSelect = function (score)
     {
         let interpretationSelect = globalElements.interpretationSelect,
-            regions = score.getRegionsClone();
+            regions = score.getRegionSequence();
 
         interpretationSelect.options.length = 0;
         for(let i = 0; i < regions.length; ++i)
