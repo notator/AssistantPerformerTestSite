@@ -2008,8 +2008,66 @@ let //**************************************************************************
     // Called by initMoments, setMomentsOnTrackControlChange and setInterpretation (see above). 
     setMoments = function(regionSequence, tracks, trackIsOnArray)
     {
-        moments = [];
-        // TODO (see code in the old Performer.play() function)
+        function getAllMoments(tracks, trackIsOnArray)
+        {
+            let allMoments = [];
+            for(let i = 0; i < tracks.length; ++i)
+            {
+                if(trackIsOnArray[i])
+                {
+                    let runtimeInterpretation = tracks[i].runtimeInterpretation;
+                    for(let midiObject of runtimeInterpretation.midiObjects)
+                    {
+                        allMoments = allMoments.concat(midiObject.moments);
+                    }
+                }
+            }
+            return allMoments;
+        }
+
+        function mergeMoments(allMoments)
+        {
+            let currentMoment = allMoments[0],
+                mergedMoments = [];
+
+            for(let i = 1; i < allMoments.length; ++i)
+            {
+                let moment = allMoments[i];
+                if(moment.msPosInPerf === currentMoment.msPosInPerf)
+                {
+                    currentMoment.mergeMoment(moment);
+                }
+                else
+                {
+                    mergedMoments.push(currentMoment);
+                    currentMoment = moment;
+                }
+            }
+            return mergedMoments;
+        }
+
+        function setRegionAttributes(mergedMoments, regionSequence)
+        {
+            for(let region of regionSequence)
+            {
+                let moment = mergedMoments.find(x => x.msPosInPerf === region.startMsPosInPerf);
+                console.assert(moment !== undefined);
+                moment.startRegion = region;
+            }
+        }
+
+        let allMoments = getAllMoments(tracks, trackIsOnArray);
+
+        allMoments.sort((x, y) => x.msPosInPerf - y.msPosInPerf);
+
+        let mergedMoments = mergeMoments(allMoments);
+
+        setRegionAttributes(mergedMoments, regionSequence);
+
+        // Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
+        // Moments that need to update the current region in the GUI during performance have a .startRegion (=Region) attribute.
+        // global moments
+        moments = mergedMoments;
     },
 
     // Called by controls.beginRuntime()

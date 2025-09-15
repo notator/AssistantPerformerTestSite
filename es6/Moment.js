@@ -27,13 +27,13 @@ class Moment
 	}
 
 	// Adds the moment2.messages to the end of the current messages using
-	// msPosInChord attributes to check synchronousness.
-	// Throws an exception if moment2.msPosInChord !== this.msPosInChord.
+	// msPosInPerf attributes to check synchronicity.
+	// Throws an exception if moment2.msPosInPerf !== this.msPosInPerf.
 	mergeMoment(moment2)
 	{
-		var msPosInChord = this.msPosInChord;
+		var msPosInPerf = this.msPosInPerf;
 
-		console.assert(msPosInChord === moment2.msPosInChord, "Attempt to merge moments having different msPosInChord values.");
+		console.assert(msPosInPerf === moment2.msPosInPerf, "Attempt to merge moments having different msPosInPerf values.");
 
 		this.messages = this.messages.concat(moment2.messages);
 	}

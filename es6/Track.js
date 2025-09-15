@@ -67,10 +67,17 @@ export class Track
 				midiObj.msDurInPerf = midiObj.msDurInScore;
 				msPosInPerf += midiObj.msDurInPerf;
 
+				midiObj.moments[0].msPosInScore = midiObj.msPosInScore; // used to update the cursor when performing
+
+				// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
 				for(let moment of midiObj.moments)
-				{
-					// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
+				{					
+					if(moment.msPosInChord === midiObj.msDurInScore)
+					{
+						moment.msPosInScore = midiObj.msPosInScore + midiObj.msDurInScore;
+					}
 					moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+					console.assert(! isNaN(moment.msPosInPerf));
 					delete moment.msPosInChord;
 				}
 
@@ -114,10 +121,17 @@ export class Track
 					midiObj.msDurInPerf = midiObj.msDurInScore;
 					msPosInPerf += midiObj.msDurInPerf;
 
+					midiObj.moments[0].msPosInScore = midiObj.msPosInScore; // used to update the cursor when performing
+
+					// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
 					for(let moment of midiObj.moments)
 					{
-						// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
+						if(moment.msPosInChord === midiObj.msDurInScore)
+						{
+							moment.msPosInScore = midiObj.msPosInScore + midiObj.msDurInScore;
+						}						
 						moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+						console.assert(! isNaN(moment.msPosInPerf));
 						delete moment.msPosInChord;
 					}
 
