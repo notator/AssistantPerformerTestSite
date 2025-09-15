@@ -410,7 +410,7 @@ let
 		return (stopped === false && paused === false);
 	};
 
-export class Sequence
+export class Performer
 {
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPos (see play(), or stop() is called. Can be undefined or null.
@@ -458,6 +458,12 @@ export class Sequence
 		setState("stopped");
 	}
 
+	// Function added 13.09.2025
+	getMoments(momentsArg)
+	{
+		this.moments = momentsArg;
+	}
+
 	setTimerAndOutputDevice(objectWithNowFunction, objectWithSendFunction)
 	{
 		timer = objectWithNowFunction; // use objectWithNowFunction.now() for timings
@@ -470,13 +476,13 @@ export class Sequence
 	}
 
 	// play()
-	// recording is a Sequence to which timestamped moments are added as they are performed.
-	// Can be undefined or null. If used, it should be an empty Sequence having the same number
-	// of tracks as this (calling) sequence.
+	// The recording is a SequenceRecording to which timestamped moments are added as they are performed.
+	// Can be undefined or null. If used, it should be an empty SequenceRecording having the same number
+	// of tracks as this (calling) Performer.
 	play(startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
 	{
-		// In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)
-		// In normal performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
+		// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
+		// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
 		// tracks and speed have been set earlier;
 		sequenceRecording = recording; // can be undefined or null
 

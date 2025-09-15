@@ -22,7 +22,7 @@ let
 	trackCtlElems = [], // the controls for individual tracks
 
 	scoreRefresh = undefined, // a callback that tells the score to redraw itself
-	setTracksAndMoments = undefined, // a callback that sets the tracks for performance
+	setMoments = undefined, // a callback that sets the performance moments
 
 	setTrackCtlState = function(trackIndex, state)
 	{
@@ -62,7 +62,7 @@ let
 		{
 			readOnlyArray.push(trackCtlElems[i].state === "on"); // "disabled" and "off" are both "off" here
 		}
-		return readOnlyArray
+		return readOnlyArray;
 	};
 
 export class TracksControl
@@ -230,23 +230,22 @@ export class TracksControl
 		}
 	}
 
-	setOnChangeCallbacks(scoreRefreshDisplayCallback, setTracksAndMomentsCallback)
+	setOnChangeCallbacks(scoreRefreshDisplayCallback, setMomentsOnTrackControlChangeCallback)
 	{
 		scoreRefresh = scoreRefreshDisplayCallback;
-		setTracksAndMoments = setTracksAndMomentsCallback;
+		setMoments = setMomentsOnTrackControlChangeCallback;
 	}	
 
 	// Called if the user clicks a trackControl.
 	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
 	// callback which tells the score to redraw itself, and
-	// the setTracksAndMoments callback that sets the tracks for performance.
+	// the setMoments callback that sets the performance moments.
 	trackOnOff(trackNumberStr, bulletOffID)
 	{
 		var
 			trackIndex = parseInt(trackNumberStr, 10),
 			bulletOffLayer = document.getElementById(bulletOffID),
 			thisIsTheLastPlayingInputOrOutputTrack,
-			readOnlyTrackIsOnArray = [],
 			disabledFrame = document.getElementById(DISABLED_FRAME_ID),
 			isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
@@ -298,18 +297,14 @@ export class TracksControl
 					bulletOffLayer.setAttribute("opacity", GLASS);
 					trackCtlElems[trackIndex].state = "on";
 				}
-
-				// scoreRefresh is a callback that tells the score to redraw itself
-				if(scoreRefresh !== undefined)
+				
+				if(scoreRefresh !== undefined && setMoments !== undefined)
 				{
 					let currentReadOnlyTrackIsOnArray = getCurrentReadOnlyTrackIsOnArray();
+					// scoreRefresh is a callback that tells the score to redraw itself
 					scoreRefresh(currentReadOnlyTrackIsOnArray);
-				}
-
-				// setTracksAndMoments is a callback that sets the tracks for performance
-				if(setTracksAndMoments !== undefined)
-				{
-					setTracksAndMoments();
+					// setMoments is a callback that sets the performance moments
+					setMoments(currentReadOnlyTrackIsOnArray);
                 }
 			}
 		}

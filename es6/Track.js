@@ -67,6 +67,13 @@ export class Track
 				midiObj.msDurInPerf = midiObj.msDurInScore;
 				msPosInPerf += midiObj.msDurInPerf;
 
+				for(let moment of midiObj.moments)
+				{
+					// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
+					moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+					delete moment.msPosInChord;
+				}
+
 				interpretation.midiObjects.push(midiObj);
 
 				if(midiObjIndex === lastIndex)
@@ -106,6 +113,13 @@ export class Track
 					midiObj.msPosInPerf = msPosInPerf;
 					midiObj.msDurInPerf = midiObj.msDurInScore;
 					msPosInPerf += midiObj.msDurInPerf;
+
+					for(let moment of midiObj.moments)
+					{
+						// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
+						moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+						delete moment.msPosInChord;
+					}
 
 					interpretation.midiObjects.push(midiObj);
 

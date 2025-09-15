@@ -36,7 +36,7 @@ export class Interpretation
 	//		// track.currentMoment is set to the its first moment.
 	//		// track._currentMidiObjectIndex is the index of the track._currentMidiObject, in track.midiObjects.
 	//		//
-	//		// 17.08.2021: this function now returns an array of Messages that should be sent by player.run(...)
+	//		// 17.08.2021: this function now returns an array of Messages that should be sent by performer.run(...)
 	//		// at the beginning of a performance to set the CC and preset state of the track.
 	//		function setInitialTrackState(that, startMarkerMsPosInScore, endMarkerMsPosInScore)
 	//		{

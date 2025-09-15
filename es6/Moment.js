@@ -20,7 +20,7 @@ class Moment
 		this.msPosInChord = msPosInChord;
 
 		// The absolute time (DOMHRT) at which this moment is sent to the output device.
-		// This value is always set in Sequence.nextMoment().
+		// This value is always set in Performer.nextMoment().
 		this.timestamp = UNDEFINED_TIMESTAMP;
 
 		this.messages = []; // an array of Messages (can be replaced)

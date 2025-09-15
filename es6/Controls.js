@@ -3,7 +3,7 @@ import {constants} from "./Constants.js";
 import {TracksControl} from "./TracksControl.js";
 import {Score} from "./Score.js";
 import {TimerConductor, CreepConductor} from "./Conductor.js";
-import {Sequence} from "./Sequence.js";
+import {Performer} from "./Performer.js";
 import {SequenceRecording} from "./SequenceRecording.js";
 import {sequenceToSMF} from "./StandardMidiFile.js";
 
@@ -30,7 +30,7 @@ const
 
 var
     residentSynth,
-    player, // player is always a Sequence
+    performer,
     tracksControl = new TracksControl(),
 
     score,
@@ -469,13 +469,13 @@ var
                 break;
         }
 
-        if(deviceOptions.performanceMode === performanceMode.score && player.isPaused())
+        if(deviceOptions.performanceMode === performanceMode.score && performer.isPaused())
         {
-            player.resume();
+            performer.resume();
         }
-        else if(player.isStopped())
+        else if(performer.isStopped())
         {
-            sequenceRecording = new SequenceRecording(player.getTracks());
+            sequenceRecording = new SequenceRecording(performer.getTracks());
 
             if(deviceOptions.performanceMode === performanceMode.score)
             {
@@ -492,17 +492,17 @@ var
 
             if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep)
             {
-                player.setTimerAndOutputDevice(conductor, conductor);  // Sequence can use conductor or performance timer
+                performer.setTimerAndOutputDevice(conductor, conductor);  // Performer can use conductor or performance timer
             }
             else // options.performanceMode === score)
             {
-                player.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Sequence can use conductor or performance timer
+                performer.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Performer can use conductor or performance timer
             }
 
             let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
-            player.play(startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
+            performer.play(startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
         }
     },
 
@@ -515,7 +515,7 @@ var
         {
             score.deleteTickOverloadMarkers();
             score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
-            player.setTimerAndOutputDevice(conductor, conductor);
+            performer.setTimerAndOutputDevice(conductor, conductor);
         }
         else
         {
@@ -525,7 +525,7 @@ var
 
     setStopped = function ()
     {
-        player.stop();
+        performer.stop();
 
         if(conductor !== undefined)
         {
@@ -596,7 +596,7 @@ var
     },
 
     // Callback called when a performing sequenceRecording is stopped or has played its last message,
-    // or when the player is stopped or has played its last subsequence.
+    // or when the performer is stopped or has played its last subsequence.
     reportEndOfPerformance = function (sequenceRecording, performanceMsDur)
     {
         var
@@ -724,9 +724,9 @@ var
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if(player.isRunning())
+            if(performer.isRunning())
             {
-                player.pause();
+                performer.pause();
             }
 
             deviceOptions.outputDevice.setAllChannelSoundOff();
@@ -856,9 +856,9 @@ var
 
     resetSpeed = function ()
     {
-        if(player.setSpeed !== undefined)
+        if(performer.setSpeed !== undefined)
         {
-            player.setSpeed(1);
+            performer.setSpeed(1);
         }
         globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
         globalElements.speedControlCheckbox.checked = false;
@@ -1200,7 +1200,6 @@ export class Controls
             else if(svgControlsState === 'settingStart')
             {
                 setSvgControlsState('stopped');
-                score.setTracksAndMoments();
             }
         }
 
@@ -1213,7 +1212,6 @@ export class Controls
             else if(svgControlsState === 'settingEnd')
             {
                 setSvgControlsState('stopped');
-                score.setTracksAndMoments();
             }
         }
 
@@ -1224,7 +1222,6 @@ export class Controls
                 toggleBack(cl.sendStartToBeginningControlSelected);
                 score.sendStartMarkerToStart();
                 score.hideCursor();
-                score.setTracksAndMoments();
             }
         }
 
@@ -1234,7 +1231,6 @@ export class Controls
             {
                 toggleBack(cl.sendStopToEndControlSelected);
                 score.sendEndMarkerToEnd();
-                score.setTracksAndMoments();
             }
         }
 
@@ -1252,10 +1248,9 @@ export class Controls
 
         if(controlID === "interpretationSelect")
         {
-            let select = globalElements.interpretationSelect,
-                region = select.options[select.selectedIndex].region;
+            let select = globalElements.interpretationSelect;
 
-            score.setInterpretation(region);
+            score.setInterpretation(select.options[select.selectedIndex].region);
         }
 
         /**** controls in options panel ***/
@@ -1329,9 +1324,9 @@ export class Controls
         if(controlID === "speedControlMouseout")
         {
             var speed = speedSliderValue(globalElements.speedControlInput.value);
-            if(player.setSpeed !== undefined)
+            if(performer.setSpeed !== undefined)
             {
-                player.setSpeed(speed);
+                performer.setSpeed(speed);
             }
         }
 
@@ -1428,14 +1423,14 @@ export class Controls
 
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
-        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setTracksAndMoments);
+        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setMomentsOnTrackControlChange);
 
-        score.setTracksAndMoments(); // called again when the tracksControl or interpretationControl change, or the startMarker or endMarker moves.
+        score.initMoments();
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        player = new Sequence(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
-
+        performer = new Performer(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
+        
         setSvgControlsState('stopped');
     }
 }

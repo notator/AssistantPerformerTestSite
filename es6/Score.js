@@ -37,8 +37,8 @@ let //**************************************************************************
     // An array of Track objects.
     tracks = [],
 
-    // the moments required by the Sequence.play() function.
-    moments,
+    // the moments required by the Performer.play() function.
+    moments = [],
 
     //******************************************************************************************
     // Variable values: These can be changed by controls on page 2. (After the Start button is pressed on page 1)
@@ -1962,22 +1962,18 @@ let //**************************************************************************
         sendEndMarkerToEnd();
 
         cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
+                
+        // The moments don't change if the track.runtimeInterpretation doesn't change.
+        if(regionSequence[0].isSimpleInterpretation())
+        {            
+            // TODO: Make sure that each track.runtimeInterpretation has been set to the current Interpretation here!
+            setMoments(regionSequence, tracks, trackIsOnArray);
+        }
     },
 
-    // This function is called
-    // 1. by score.init(...)
-    // 2. when the trackOnOffControl changes.
-    // 3. when the interpretationSelect control changes
-    // 4. when either the startMarker or endMarker has been moved.
-    // Note that the speed control is simpler: It only affects the performance (=Sequence) speed,
-    // so changes that attribute directly in Sequence using a mouseleave event handler.
-    setTracksAndMoments = function()
+    // The track.setRuntimeInterpretation attributes are the only track attributes that can change after being initialized.
+    setTrackRuntimeInterpretations = function()
     {
-        function getMoments(regionSequence, tracks, startMarkerMsPosInPerf, endMarkerMsPosInPerf)
-        {
-            // TODO (see code in the old Sequence.play() function)
-        }
-
         let trackIsOnArray = getReadOnlyTrackIsOnArray(),
             nTracks = trackIsOnArray.length;
 
@@ -1988,15 +1984,51 @@ let //**************************************************************************
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
         }
 
-        // 1.9.2025 Now agglommerate each defined track.runtimeInterpretation into a flat list of cross-track moments.
-        // The getMoments() function sets a global moments object containing _only_ the information required by the Sequence.play() function.
-        // The information should include only the moments to be played, and information that triggers the callbacks passed to the Sequence constructor:
-        // See Controls.beginRuntime() above:
-        //     player = new Sequence(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
-        moments = getMoments(regionSequence, tracks, startMarker.msPosInPerf, endMarker.msPosInPerf);
-        // The getMoments function replaces track.setOutputSpan() and code inside Sequence.play() so that all possible preparation is done
-        // before actually clicking the Go button.
-        // Accordingly, delete the track.setOutputSpan() function and revise the Sequence.play() function.
+        // 14.09.2025
+        // The performer constructor takes the following arguments (See Controls.beginRuntime()):
+        //     performer = new Performer(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
+        // (TODO: rename Performer --> Player)
+        //
+        // The moments to be performed are maintained in the score using the functions defined below. The moments are the complete set of moments
+        // defined by the tracks, subject to the trackIsOnArray and the interpretation. The runtimeInterpretation of each track only changes if
+        // the score contains simple, alternative interpretations, so changing the interpretationSelect control will only affect the moments if
+        // that is the case.
+        //
+        // The performer.play() function (called when the Go button is clicked) takes arguments that define the performance's
+        //    1. moments (retrieved from the score)
+        //    2. speed (from the speed control),
+        //    3. startMsPos and endMsPos (starMarker and endMarker respectively).
+        // i.e. something like: performer.play(score.getMoments(), speed, score.startMarker, score.endMarker);
+        //
+        // Accordingly, delete the track.setOutputSpan() function and the commented out parts of the Interpretation class.
+        // Also, of course, revise the Performer.play() function...
+    },
+    
+    // Uses each track.runtimeInterpretation.
+    // Called by initMoments, setMomentsOnTrackControlChange and setInterpretation (see above). 
+    setMoments = function(regionSequence, tracks, trackIsOnArray)
+    {
+        moments = [];
+        // TODO (see code in the old Performer.play() function)
+    },
+
+    // Called by controls.beginRuntime()
+    initMoments = function()
+    {
+        setTrackRuntimeInterpretations();
+        setMoments(regionSequence, tracks, trackIsOnArray);
+    },
+
+    // Called by tracksControl.onChange
+    setMomentsOnTrackControlChange = function(trackIsOnArray)
+    {
+        setMoments(regionSequence, tracks, trackIsOnArray);
+    }, 
+
+    // called by the performer.
+    getMoments = function()
+    {
+        return moments;
     };
 
 export class Score
@@ -2063,7 +2095,8 @@ export class Score
         this.reportTickOverload = reportTickOverload;
         this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;
 
-        this.setTracksAndMoments = setTracksAndMoments;
+        this.initMoments = initMoments; // called by controls.beginRuntime()
+        this.setMomentsOnTrackControlChange = setMomentsOnTrackControlChange; // called by tracksControl.onChange
+        this.getMoments = getMoments; // called by performer to get the current moments
     }
 }
-
