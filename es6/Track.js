@@ -48,8 +48,7 @@ export class Track
 				indexRange = midiObjectIndexRangesPerRegion[currentRegionIndex],
 				firstIndex = indexRange.firstMidiObjectIndex,
 				lastIndex = indexRange.lastMidiObjectIndex,
-				interpIndex = region.interpIndex,
-				midiObjects = that.interpretations[interpIndex].midiObjects,
+				midiObjects = that.interpretations[region.interpIndex].midiObjects,
 				msPosInPerf = 0;
 
 			for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
@@ -64,21 +63,19 @@ export class Track
 				let midiObj = midiObjects[midiObjIndex];
 
 				midiObj.msPosInPerf = msPosInPerf;
-				midiObj.msDurInPerf = midiObj.msDurInScore;
-				msPosInPerf += midiObj.msDurInPerf;
+				msPosInPerf += midiObj.msDuration;
 
 				midiObj.moments[0].msPosInScore = midiObj.msPosInScore; // used to update the cursor when performing
 
 				// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
 				for(let moment of midiObj.moments)
 				{					
-					if(moment.msPosInChord === midiObj.msDurInScore)
+					if(moment.msPosInChord === midiObj.msDuration)
 					{
-						moment.msPosInScore = midiObj.msPosInScore + midiObj.msDurInScore;
+						moment.msPosInScore = midiObj.msPosInScore + midiObj.msDuration;
 					}
 					moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
 					console.assert(! isNaN(moment.msPosInPerf));
-					delete moment.msPosInChord;
 				}
 
 				interpretation.midiObjects.push(midiObj);
@@ -95,8 +92,7 @@ export class Track
 
 		function getSequentialRegionsInterpretation(that, regionSequence, midiObjectIndexRangesPerRegion)
 		{
-			let interpretation = new Interpretation(),
-				msPosInPerf = 0;
+			let interpretation = new Interpretation();				
 
 			for(let regionIndex = 0; regionIndex < regionSequence.length; regionIndex++)
 			{
@@ -104,38 +100,40 @@ export class Track
 					indexRange = midiObjectIndexRangesPerRegion[regionIndex],
 					firstIndex = indexRange.firstMidiObjectIndex,
 					lastIndex = indexRange.lastMidiObjectIndex,
-					midiObjects = that.interpretations[region.interpIndex].midiObjects;
+					midiObjectsInScore = that.interpretations[region.interpIndex].midiObjects,
+					msPosInPerf = region.startMsPosInPerf;
 
 				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
 				{
-					if(midiObjIndex === firstIndex)
+					let midiObjectInScore = midiObjectsInScore[midiObjIndex],
+						midiObjectInPerf;
+
+					if(midiObjectInScore instanceof MidiChord)
 					{
-						// This function is called for multiple tracks.
-						// The following assertion ensures that all tracks agree with where the regions start in performance.
-						console.assert(region.startMsPosInPerf === msPosInPerf);
+						midiObjectInPerf = new MidiChord(midiObjectInScore);
 					}
+					else
+					{
+						midiObjectInPerf = new MidiRest(midiObjectInScore);
+					}					
 
-					let midiObj = midiObjects[midiObjIndex];
+					midiObjectInPerf.msPosInPerf = msPosInPerf;
+					msPosInPerf += midiObjectInPerf.msDuration;
 
-					midiObj.msPosInPerf = msPosInPerf;
-					midiObj.msDurInPerf = midiObj.msDurInScore;
-					msPosInPerf += midiObj.msDurInPerf;
-
-					midiObj.moments[0].msPosInScore = midiObj.msPosInScore; // used to update the cursor when performing
+					midiObjectInPerf.moments[0].msPosInScore = midiObjectInScore.msPosInScore; // used to update the cursor when performing
 
 					// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
-					for(let moment of midiObj.moments)
+					for(let moment of midiObjectInPerf.moments)
 					{
-						if(moment.msPosInChord === midiObj.msDurInScore)
+						if(moment.msPosInChord === midiObjectInPerf.msDuration)
 						{
-							moment.msPosInScore = midiObj.msPosInScore + midiObj.msDurInScore;
+							moment.msPosInScore = midiObjectInPerf.msPosInScore + midiObjectInPerf.msDuration;
 						}						
-						moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+						moment.msPosInPerf = midiObjectInPerf.msPosInPerf + moment.msPosInChord;
 						console.assert(! isNaN(moment.msPosInPerf));
-						delete moment.msPosInChord;
 					}
 
-					interpretation.midiObjects.push(midiObj);
+					interpretation.midiObjects.push(midiObjectInPerf);
 
 					if(midiObjIndex === lastIndex)
 					{

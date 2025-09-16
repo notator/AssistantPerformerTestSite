@@ -3,6 +3,7 @@ import {EndMarker} from "./Markers.js";
 import {Cursor} from "./Cursor.js";
 import {MidiChord, MidiRest} from "./MidiObject.js";
 import {Track} from "./Track.js";
+import {Moment} from "./Moment.js";
 import {RegionDef} from "./RegionDef.js";
 
 const BLACK_COLOR = "#000000";
@@ -174,7 +175,7 @@ let //**************************************************************************
                 }
                 else  // setting end
                 {
-                    let msPos = lastMidiObject.msPosInScore + lastMidiObject.msDurInScore,
+                    let msPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration,
                         barline = findBarline(system, msPos);
 
                     returnObject = barline;
@@ -1242,7 +1243,7 @@ let //**************************************************************************
                                         let midiChordsChildren = noteObjectChildren[j].children;
                                         for(k = 0; k < midiChordsChildren.length; ++k)
                                         {
-                                            timeObject.push(new MidiChord(midiChordsChildren[k], systemIndex));
+                                            timeObject.push(new MidiChord(midiChordsChildren[k]));
                                         }
                                         break;
                                     }
@@ -1251,7 +1252,7 @@ let //**************************************************************************
                                         let midiRestsChildren = noteObjectChildren[j].children;
                                         for(k = 0; k < midiRestsChildren.length; ++k)
                                         {
-                                            timeObject.push(new MidiRest(midiRestsChildren[k], systemIndex)); // see MidiChord constructor.
+                                            timeObject.push(new MidiRest(midiRestsChildren[k])); // see MidiChord constructor.
                                         }
                                         break;
                                     }
@@ -1259,7 +1260,7 @@ let //**************************************************************************
 
                                 timeObject.forEach((midiObject) =>
                                 {
-                                    if(midiObject.msDurInScore === undefined || midiObject.msDurInScore < 1)
+                                    if(midiObject.msDuration === undefined || midiObject.msDuration < 1)
                                     {
                                         throw "Error: Chords and Rests must have a duration greater than 0!";
                                     }
@@ -1403,7 +1404,7 @@ let //**************************************************************************
                                                     Object.defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
                                                 }
 
-                                                msPos += midiObject.msDurInScore;
+                                                msPos += midiObject.msDuration;
                                             }
                                         }
                                     }
@@ -1518,7 +1519,7 @@ let //**************************************************************************
                             {
                                 let lastBarline = barlines[barlines.length - 1],
                                     lastMidiObject = voiceTimeObjects[voiceTimeObjects.length - 1][interpIndex],
-                                    lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDurInScore;
+                                    lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
 
                                 lastBarline.msPosInScore = lastBarlineMsPos;
                             }
@@ -1835,7 +1836,7 @@ let //**************************************************************************
                 {
                     let scoreSpanRegionData = {},
                         finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
-                        finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDurInScore,
+                        finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDuration,
                         interpretationNr = (interpIndex + 1).toString();
 
                     scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
@@ -2027,10 +2028,12 @@ let //**************************************************************************
 
         function mergeMoments(allMoments)
         {
-            let currentMoment = allMoments[0],
+            let currentMoment = new Moment(allMoments[0].msPosInChord),
                 mergedMoments = [];
 
-            for(let i = 1; i < allMoments.length; ++i)
+            currentMoment.msPosInPerf = 0;
+
+            for(let i = 0; i < allMoments.length; ++i)
             {
                 let moment = allMoments[i];
                 if(moment.msPosInPerf === currentMoment.msPosInPerf)
@@ -2040,7 +2043,8 @@ let //**************************************************************************
                 else
                 {
                     mergedMoments.push(currentMoment);
-                    currentMoment = moment;
+                    currentMoment = new Moment(moment.msPosInChord);
+                    currentMoment.msPosInPerf = moment.msPosInPerf;
                 }
             }
             return mergedMoments;

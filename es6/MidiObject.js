@@ -76,7 +76,7 @@ function _getMoments(midiChordElem)
 		return envDurations;
 	}
 
-	// Returns an array of Moments.
+	// Returns an array of Moments and their msDuration.
 	// Each Moment is an array of messages that are sent "synchronously" at their position wrt the chord:
 	//     .msPosInChord
 	//     .messages 
@@ -179,98 +179,68 @@ function _getMoments(midiChordElem)
 		}
 	}
 
-	let moments = getMoments(initialMessages, envelopeMessages, noteOffMessages, currentMsPos);
-	moments.msDurInScore = currentMsPos;
+	let moments = getMoments(initialMessages, envelopeMessages, noteOffMessages, currentMsPos),
+		msDuration = currentMsPos;
 
-	return moments;
+	return {moments, msDuration};
 }
 
 class MidiObject
 {
 	constructor(midiObjectElem)
 	{
-		let moments = [];
-
-		if (midiObjectElem.nodeName === "midiChord")
+		function getClonedMoments(originalMoments)
 		{
-			moments = _getMoments(midiObjectElem);
+			let clonedMoments = [],
+				clonedMoment;
+
+			for(let moment of originalMoments)
+			{
+				clonedMoment = new Moment(moment.msPosInChord);
+				clonedMoment.messages = moment.messages;
+				clonedMoments.push(clonedMoment);
+			}
+			return clonedMoments;
+		}
+
+		let moments = [],
+			msDuration,
+			msPosInScore;
+
+		if(midiObjectElem instanceof MidiObject)
+		{
+			 // make a clone
+			 moments = getClonedMoments(midiObjectElem.moments); // the contained messages are not cloned
+			 msDuration = midiObjectElem.msDuration;
+			 msPosInScore = midiObjectElem.msPosInScore;
+		}
+		else if (midiObjectElem.nodeName === "midiChord")
+		{
+			// read the score
+			let momDur = _getMoments(midiObjectElem);
+			moments = momDur.moments;
+			msDuration = momDur.msDuration;
+			msPosInScore = -1; // will be set later
 		}
 		else if (midiObjectElem.nodeName === "midiRest")
 		{
+			// read the score
 			let moment = new Moment(0); // There are no messages in the moment.messages array.
 			moments.push(moment);
-			moments.msDurInScore = parseInt(midiObjectElem.getAttribute("msDuration"));
+			msDuration = parseInt(midiObjectElem.getAttribute("msDuration"));
+			msPosInScore = -1; // will be set later
 		}
 
-     	// Each moments array is an ordered array of Moment objects.
+		// The msDuration and msPosInScore properties are not changed by the global speed option!
+		// These values are used, but not changed, either when moving Markers about or during performances.)		
+		Object.defineProperty(this, "msDuration", { value: msDuration, writable: false });
+		Object.defineProperty(this, "msPosInScore", { value: msPosInScore, writable: true });
+		// Each moments array is an ordered array of Moment objects.
 		// A Moment is a list of logically synchronous Messages.
-		// The msDurInScore and msPosInScore properties are not changed by the global speed option!
-		// These values are used, but not changed, either when moving Markers about or during performances.)
-		Object.defineProperty(this, "moments", { value: moments, writable: false });
-		Object.defineProperty(this, "msDurInScore", { value: moments.msDurInScore, writable: false });
-
-		// used at runtime
-		Object.defineProperty(this, "currentMoment", { value: moments[0], writable: true });
-		Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
+		Object.defineProperty(this, "moments", { value: moments, writable: true });
 	}
 
-	/***** The following functions are defined for both MidiChords and MidiRests *****************/
-
-	// The chord or rest must be at or straddle the start marker.
-	// This function sets the chord or rest to the state it should have when a performance starts.
-	// this.currentMoment is set to the first moment at or after startMarkerMsPosInScore.
-	// this.currentMoment will be undefined if there are no moments at or after startMarkerMsPosInScore. 
-	setToStartMarker(startMarkerMsPosInScore)
-	{
-		var
-			nMoments = this.moments.length,
-			currentIndex, currentPosition;
-
-		console.assert(
-			((this.msPosInScore <= startMarkerMsPosInScore)
-				&& (this.msPosInScore + this.msDurInScore > startMarkerMsPosInScore)),
-			"This chord or rest must be at or straddle the start marker.");
-
-		for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
-		{
-			currentPosition = this.msPosInScore + this.moments[currentIndex].msPosInChord;
-			if(currentPosition >= startMarkerMsPosInScore)
-			{
-				break;
-			}
-		}
-		this._currentMomentIndex = currentIndex;
-		this.currentMoment = this.moments[currentIndex];
-	}
-
-	advanceCurrentMoment()
-	{
-		console.assert(this.currentMoment !== null, "CurrentMoment should never be null here!");
-
-		this._currentMomentIndex++;
-
-		if(this._currentMomentIndex < this.moments.length)
-		{
-			this.currentMoment = this.moments[this._currentMomentIndex];
-			return this.currentMoment;
-		}
-		else
-		{
-			this._currentMomentIndex = 0;
-			this.currentMoment = this.moments[0];
-			return null;
-		}
-	}
-
-	setToStartAtBeginning()
-	{
-		this._currentMomentIndex = 0;
-		this.currentMoment = this.moments[0];
-		for(let moment of this.moments)
-		{
-			moment.timestamp = UNDEFINED_TIMESTAMP;
-		}
-	}
+	/***** Other functions defined for both MidiChords and MidiRests would be defined here. *****************/
 }
 
 export class MidiChord extends MidiObject
