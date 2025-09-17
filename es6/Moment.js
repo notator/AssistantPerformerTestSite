@@ -1,29 +1,56 @@
 
-import { constants } from "./Constants.js";
-const UNDEFINED_TIMESTAMP = constants.UNDEFINED_TIMESTAMP;
+//import { constants } from "./Constants.js";
+//const UNDEFINED_TIMESTAMP = constants.UNDEFINED_TIMESTAMP;
 
-class Moment
+export class Moment
 {
-
 	// Moment constructor
-	// The moment.msPosInChord is the position of the moment wrt its MidiChord or MidiRest.
-	// it is initially set to the value stored in the score, but changes if the performance speed is not 100%.
-	// During performances (when the absolute DOMHRT time is known) moment.msPosInChord is used, with
-	// the msPos of the containing MidiChord or MidiRest, to set moment.timestamp. 
-	constructor(msPosInChord)
+	// The constructorArg must either be a number (msPosInChord) or a Moment.
+	// The moment.msPosInChord is the position of the moment wrt its MidiChord or MidiRest. 
+	constructor(constructorArg)
 	{
-		if(msPosInChord === undefined || msPosInChord < 0)
+		if(constructorArg instanceof Moment)
 		{
-			throw "Error: Moment.msPosInChord must be defined.";
+			// clone the Moment
+			let originalMoment = constructorArg;
+			 // clone the attributes
+			 //if(originalMoment.msPosInChord !== undefined)
+			 //{
+			 //	  this.msPosInChord = originalMoment.msPosInChord;
+			 //}
+			 if(originalMoment.msPosInPerf !== undefined)
+			 {
+				 this.msPosInPerf = originalMoment.msPosInPerf;
+			 }
+			 if(originalMoment.msPosInScore !== undefined)
+			 {
+				 this.msPosInScore = originalMoment.msPosInScore;
+			 }
+			 // the messages are not cloned since they never change.
+			 this.messages = originalMoment.messages;
 		}
-
-		this.msPosInChord = msPosInChord;
+		else if(Number.isNaN(constructorArg) === false)
+		{
+			let msPosInChord = constructorArg;
+			if(msPosInChord >= 0)
+			{
+				this.msPosInChord = msPosInChord;
+			}
+			else
+			{
+				throw "Error: Moment.msPosInChord must be a number >= 0.";
+			}
+			this.messages = []; // an array of Messages (can be replaced)
+		}
+		else
+		{
+			throw "Programming error: constructorArg must either be a number (=msPosInChord) or a Moment.";
+		}
 
 		// The absolute time (DOMHRT) at which this moment is sent to the output device.
 		// This value is always set in Performer.nextMoment().
-		this.timestamp = UNDEFINED_TIMESTAMP;
-
-		this.messages = []; // an array of Messages (can be replaced)
+		// REMARK: I think this timestamp should be added _later_ to save space...
+		// this.timestamp = UNDEFINED_TIMESTAMP;
 	}
 
 	// Adds the moment2.messages to the end of the current messages using
@@ -52,4 +79,4 @@ class Moment
 	}
 }
 
-export { UNDEFINED_TIMESTAMP, Moment };
+//export { UNDEFINED_TIMESTAMP, Moment };
