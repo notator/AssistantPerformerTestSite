@@ -1,5 +1,5 @@
+import { Moment } from "./Moment.js";
 import { Message } from "./Message.js";
-import { UNDEFINED_TIMESTAMP, Moment } from "./Moment.js";
 
 // Returns an ordered array of strongly classed Moment objects.
 // Each Moment is a strongly classed object containing strongly classed Message objects.
