@@ -130,7 +130,7 @@ export class Track
 							moment.msPosInScore = midiObjectInPerf.msPosInScore + midiObjectInPerf.msDuration;
 						}						
 						moment.msPosInPerf = midiObjectInPerf.msPosInPerf + moment.msPosInChord;
-						console.assert(! isNaN(moment.msPosInPerf));
+						console.assert(Number.isNaN(moment.msPosInPerf) === false);
 					}
 
 					interpretation.midiObjects.push(midiObjectInPerf);
