@@ -1985,24 +1985,22 @@ let //**************************************************************************
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
         }
 
-        // 14.09.2025
+        // 17.09.2025
         // The performer constructor takes the following arguments (See Controls.beginRuntime()):
         //     performer = new Performer(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
-        // (TODO: rename Performer --> Player)
         //
         // The moments to be performed are maintained in the score using the functions defined below. The moments are the complete set of moments
         // defined by the tracks, subject to the trackIsOnArray and the interpretation. The runtimeInterpretation of each track only changes if
         // the score contains simple, alternative interpretations, so changing the interpretationSelect control will only affect the moments if
         // that is the case.
         //
-        // The performer.play() function (called when the Go button is clicked) takes arguments that define the performance's
+        // The performer.play() function (called when the Go button is clicked) takes arguments that define the performance:
         //    1. moments (retrieved from the score)
         //    2. speed (from the speed control),
         //    3. startMsPos and endMsPos (starMarker and endMarker respectively).
         // i.e. something like: performer.play(score.getMoments(), speed, score.startMarker, score.endMarker);
         //
-        // Accordingly, delete the track.setOutputSpan() function and the commented out parts of the Interpretation class.
-        // Also, of course, revise the Performer.play() function...
+        // Revise the Performer.play() function accordingly...
     },
     
     // Uses each track.runtimeInterpretation.
@@ -2019,6 +2017,7 @@ let //**************************************************************************
                     let runtimeInterpretation = tracks[i].runtimeInterpretation;
                     for(let midiObject of runtimeInterpretation.midiObjects)
                     {
+                        midiObject.moments[0].msPosInScore = midiObject.msPosInScore; // used when updating the GUI during performance
                         allMoments = allMoments.concat(midiObject.moments);
                     }
                 }
@@ -2028,10 +2027,8 @@ let //**************************************************************************
 
         function mergeMoments(allMoments)
         {
-            let currentMoment = new Moment(allMoments[0].msPosInChord),
+            let currentMoment = new Moment(allMoments[0]),
                 mergedMoments = [];
-
-            currentMoment.msPosInPerf = 0;
 
             for(let i = 0; i < allMoments.length; ++i)
             {
@@ -2043,8 +2040,7 @@ let //**************************************************************************
                 else
                 {
                     mergedMoments.push(currentMoment);
-                    currentMoment = new Moment(moment.msPosInChord);
-                    currentMoment.msPosInPerf = moment.msPosInPerf;
+                    currentMoment = new Moment(moment);
                 }
             }
             return mergedMoments;
