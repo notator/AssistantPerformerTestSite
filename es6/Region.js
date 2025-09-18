@@ -1,5 +1,5 @@
 
-export class RegionDef
+export class Region
 {
 	constructor(regionDefElem, regionInfoStringElems, scoreSpanRegionData)
 	{
@@ -29,18 +29,6 @@ export class RegionDef
 			_startRegionInfoStringElem.setAttribute('font-weight', weightString);
 			_endRegionInfoStringElem.setAttribute('fill', endColorString);
 			_endRegionInfoStringElem.setAttribute('font-weight', weightString);
-		}
-
-		function isSimpleInterpretation()
-		{
-			if(this.longName.slice(0, 6) === "region")
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
 		}
 
 		let // static values, used by the public setActiveInfoStringsStyle function.
@@ -113,7 +101,7 @@ export class RegionDef
 		Object.defineProperty(this, "startMsPosInScore", {value: startMsPosInScore, writable: false});
 		Object.defineProperty(this, "endMsPosInScore", {value: endMsPosInScore, writable: false});	
 		
-		// This value will be overridden if regions are sequential (i.e. if isSimpleInterpretation() is false).
+		// This value will be overridden if regions are consecutive.
 		// It will be set when the regionSequence is complete.
 		Object.defineProperty(this, "startMsPosInPerf", {value: 0, writable: true});
 		// This value will be set to the value of the following region.startMsPosInPerf or the end of the interpretation.
@@ -123,9 +111,6 @@ export class RegionDef
 		// They could be deleted from both the SVG files and this region definition.
 		//Object.defineProperty(this, "fromStartOfBar", {value: fromStartOfBar, writable: false});
 		//Object.defineProperty(this, "toEndOfBar", {value: toEndOfBar, writable: false});
-		
-		// function returns false if longName begins with "region", otherwise true.
-		Object.defineProperty(this, "isSimpleInterpretation", { value: isSimpleInterpretation, writable: false });
 
 		// The infoStrings are the region names (in boxes above the region start and ends) that change colour
 		// to show which region is being performed. Such boxes only exist when two or more regions exist.
