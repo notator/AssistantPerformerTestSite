@@ -4,7 +4,7 @@ import {Cursor} from "./Cursor.js";
 import {MidiChord, MidiRest} from "./MidiObject.js";
 import {Track} from "./Track.js";
 import {Moment} from "./Moment.js";
-import {RegionDef} from "./RegionDef.js";
+import {Region} from "./Region.js";
 
 const BLACK_COLOR = "#000000";
 
@@ -991,27 +991,26 @@ let //**************************************************************************
                 return system;
             }
 
-            // uses the <regionSequence> element to set the following values (global inside Score.js):
+            // If the <regionSequence> element is defined in the score, this function uses it to set the following values (global inside Score.js):
             // 	   startRegionIndex, endRegionIndex, regionSequence.
-            function getRegionData(svgElem)
+            // If there are no regions defined in the score, one region per interpretation will be created later, when the number of interpretations
+            // is known. Interpretations are defined by the level of their <midiChord> and <midiRest> elements inside the <midiObjects> elements.
+            function getConsecutiveRegionDataFromScore(svgElem)
             {
                 let regionSeq = [],
                     regionDefElems = svgElem.getElementsByClassName("regionDef"),
                     regionInfoStringElems = svgElem.getElementsByClassName("regionInfoString");
-
-                // one region per interpretation will be created later, when the number of interpretations is known.
+                
                 if(regionDefElems.length > 0)
                 {
                     for(let regionDefElem of regionDefElems)
                     {
-                        let regionDef = new RegionDef(regionDefElem, regionInfoStringElems);
+                        let regionDef = new Region(regionDefElem, regionInfoStringElems);
                         regionSeq.push(regionDef);
                     }
-
-                    //The first regionDef must have startMsPosInScore = "0".
-                    console.assert(regionSeq[0].startMsPosInScore === 0);
+                    regionSeq.hasConsecutiveRegions = true; // will be false in interpretation regions (created later).
                 }
-
+                
                 startRegionIndex = 0;
                 endRegionIndex = regionSeq.length - 1;
                 regionSequence = regionSeq;
@@ -1184,7 +1183,7 @@ let //**************************************************************************
 
             // get regions into regionSequence and default values for startRegionIndex, endRegionIndex.
             // Region and MidiObject msPosInPerf values will be set when the MidiObjects have been loaded.
-            getRegionData(svgElem);
+            getConsecutiveRegionDataFromScore(svgElem);
 
             for(let systemIndex = 0; systemIndex < pageSystemElems.length; ++systemIndex)
             {
@@ -1845,19 +1844,21 @@ let //**************************************************************************
                     scoreSpanRegionData.startMsPosInScore = 0;
                     scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
 
-                    let region = new RegionDef(undefined, undefined, scoreSpanRegionData);
+                    let region = new Region(undefined, undefined, scoreSpanRegionData);
                     // must I set the start barline later?
 
                     regionSequence.push(region);
                 }
-                // These variables (global in Score) need to be ignored when performing scoreSpanRegions...
+
+                regionSequence.hasConsecutiveRegions = false; // is true if a regionSequence is defined in the score.
+                // These two variables (global in Score) need to be ignored in scores that have no consecutive regions.
                 startRegionIndex = -1;
                 endRegionIndex = -1;
             }
 
             function setRegionStartAndEndMsPosInPerf(regionSequence)
             {
-                if(regionSequence[0].isSimpleInterpretation())
+                if(regionSequence.hasConsecutiveRegions === false)
                 {
                     for(let region of regionSequence)
                     {
@@ -1935,7 +1936,7 @@ let //**************************************************************************
 
     getEndRegionIndex = function ()
     {
-        if(regionSequence[currentRegionIndex].isSimpleInterpretation()) 
+        if(regionSequence.hasConsecutiveRegions === false)
         {
             // e.g. Study 1 with several interpretations of the same score
             return startRegionIndex;
@@ -1965,7 +1966,7 @@ let //**************************************************************************
         cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
                 
         // The moments don't change if the track.runtimeInterpretation doesn't change.
-        if(regionSequence[0].isSimpleInterpretation())
+        if(regionSequence.hasConsecutiveRegions === false)
         {            
             // TODO: Make sure that each track.runtimeInterpretation has been set to the current Interpretation here!
             setMoments(regionSequence, tracks, trackIsOnArray);
@@ -2063,7 +2064,10 @@ let //**************************************************************************
 
         let mergedMoments = mergeMoments(allMoments);
 
-        setRegionIndexAttributes(mergedMoments, regionSequence);
+        if(regionSequence.hasConsecutiveRegions)
+        {
+            setRegionIndexAttributes(mergedMoments, regionSequence);
+        }
 
         // Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
         // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
