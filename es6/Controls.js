@@ -590,11 +590,6 @@ var
         globalElements.interpretationSmokeDiv.style.display = "none";
     },
 
-    reportEndOfRegion = function (regionIndex)
-    {
-        score.leaveRegion(regionIndex);
-    },
-
     // Callback called when a performing sequenceRecording is stopped or has played its last message,
     // or when the performer is stopped or has played its last subsequence.
     reportEndOfPerformance = function (sequenceRecording, performanceMsDur)
@@ -677,11 +672,16 @@ var
         // the following line is important, because the stop button is also the pause button.
         svgControlsState = "stopped";
     },
+    
+    reportEndOfRegion = function (regionIndex)
+    {
+        score.leaveRegion(regionIndex);
+    },
 
-    // Callback called by a performing sequence. Reports the msPosInScore of the
-    // Moment curently being sent. When all the events in the span have been played,
-    // reportEndOfPerformance() is called (see above).
-    reportMsPos = function (msPosInScore)
+    // Callback called by the Performer.
+    // Reports the msPosInScore of the Moment that is about to be sent.
+    // A Moment will have an.msPosInScore attribute if it is the first Moment of a MidiChord or Midirest.
+    reportMsPosInScore = function (msPosInScore)
     {
         //console.log("Controls: calling score.advanceRunningMarker(msPos), msPosInScore=" + msPosInScore);
         // If there is a graphic object in the score having msPosInScore,
@@ -1429,7 +1429,7 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        performer = new Performer(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
+        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.reportTickOverload);
         
         setSvgControlsState('stopped');
     }

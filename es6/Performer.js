@@ -20,9 +20,9 @@ let
 	stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
 	paused = false, // nextMoment(), pause(), isPaused()
 
-	reportEndOfRegion, // callback
 	reportEndOfPerformance, // callback. Set in play().
-	reportNextMIDIObject,  // callback. Set in play().
+	reportStartOfRegion, // callback	
+	reportMsPosInScore,  // callback. Set in play().
 	reportTickOverload, // callback. Set in play().
 
 	lastReportedMsPos = -1, // set by tick() used by nextMoment()
@@ -107,8 +107,8 @@ let
 					track.moveToNextRegion(currentRegionIndex);
 				}
 
-				reportEndOfRegion(currentRegionIndex);
-				currentRegionIndex++; // the (global) index in the regionLinks array
+				reportStartOfRegion(currentRegionIndex);
+				currentRegionIndex++;
 			}
 
 			let nTracks = tracks.length;
@@ -305,7 +305,7 @@ let
 		{
 			if(msPosToReport >= 0)
 			{
-				reportNextMIDIObject(msPosToReport);
+				reportMsPosInScore(msPosToReport);
 				lastReportedMsPos = msPosToReport; // lastReportedMsPos is used in nextMoment() above.
 				msPosToReport = -1;
 			}
@@ -412,29 +412,30 @@ let
 
 export class Performer
 {
-	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
-	// reaches the endMarkerMsPos (see play(), or stop() is called. Can be undefined or null.
+	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence ends
 	// It is called in this file as:
 	//      reportEndOfPerformance(sequenceRecording, performanceMsDur);
-	// The reportNextMIDIObjectCallback argument is a callback function which reports the current
+	// The reportStartOfRegionCallback argument is a callback function that is called when a new Region is about to start.
+	// Only those Moments that are at the beginning of a Region have a .startRegion attribute. The attribute's value is
+	// the Region that is about to start.
+	// The reportMsPosInScoreCallback argument is a callback function which reports the current
 	// msPosInScore back to the GUI while performing.
 	// It is called here as:
-	//      reportNextMIDIObject(msPosToReport);
+	//      reportMsPosInScore(msPosToReport);
 	// The msPos it passes back is the original number of milliseconds from the start of the score
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
-	// Moments whose msPosInScore is to be reported are given chordStart or restStart
-	// attributes before play() is called.
-	constructor(outputDeviceArg, reportEndOfRegionCallback, reportEndOfPerfCallback, reportNextMIDIObjectCallback, reportTickOverloadCallback)
+	// Only those Moments whose msPosInScore is to be reported have a .msPosInScore attribute.
+	constructor(outputDeviceArg, reportEndOfPerfCallback, reportStartOfRegionCallback, reportMsPosInScoreCallback, reportTickOverloadCallback)
 	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
 			throw "The midi output device must be defined.";
 		}
 
-		if(reportEndOfRegionCallback === undefined || reportEndOfRegionCallback === null
-			|| reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
-			|| reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null
+		if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
+			|| reportStartOfRegionCallback === undefined || reportStartOfRegionCallback === null
+			|| reportMsPosInScoreCallback === undefined || reportMsPosInScoreCallback === null
 			|| reportTickOverloadCallback === undefined || reportTickOverloadCallback === null)
 		{
 			throw "Error: all callbacks must be defined.";
@@ -444,9 +445,9 @@ export class Performer
 
 		outputDevice = outputDeviceArg;
 
-		reportEndOfRegion = reportEndOfRegionCallback;
 		reportEndOfPerformance = reportEndOfPerfCallback;
-		reportNextMIDIObject = reportNextMIDIObjectCallback;
+		reportStartOfRegion = reportStartOfRegionCallback;		
+		reportMsPosInScore = reportMsPosInScoreCallback;
 		reportTickOverload = reportTickOverloadCallback;
 
 		// external interface

@@ -2046,13 +2046,14 @@ let //**************************************************************************
             return mergedMoments;
         }
 
-        function setRegionAttributes(mergedMoments, regionSequence)
+        function setRegionIndexAttributes(mergedMoments, regionSequence)
         {
-            for(let region of regionSequence)
+            for(let regionIndex = 0; regionIndex < regionSequence.length; ++regionIndex)
             {
-                let moment = mergedMoments.find(x => x.msPosInPerf === region.startMsPosInPerf);
+                let region = regionSequence[regionIndex],
+                    moment = mergedMoments.find(x => x.msPosInPerf === region.startMsPosInPerf);
                 console.assert(moment !== undefined);
-                moment.startRegion = region;
+                moment.regionIndex = regionIndex;
             }
         }
 
@@ -2062,10 +2063,10 @@ let //**************************************************************************
 
         let mergedMoments = mergeMoments(allMoments);
 
-        setRegionAttributes(mergedMoments, regionSequence);
+        setRegionIndexAttributes(mergedMoments, regionSequence);
 
         // Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
-        // Moments that need to update the current region in the GUI during performance have a .startRegion (=Region) attribute.
+        // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
         // global moments
         moments = mergedMoments;
     },
