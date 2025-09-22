@@ -805,6 +805,7 @@ let //**************************************************************************
                 systems.length = 0;
                 numberOfTracks = 0;
                 trackIsOnArray.length = 0;
+                currentRegionIndex = 0;
             }
 
             function getSVGElem(svgPage)
