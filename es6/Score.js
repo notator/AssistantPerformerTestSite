@@ -1948,9 +1948,9 @@ let //**************************************************************************
     },
 
     // called by interpretationSelect.leave
-    setInterpretation = function (region)
+    setInterpretation = function(region)
     {
-        // global: currentInterpIndex == regionSequence[currentRegionIndex].interpIndex
+        // the Score global currentRegionIndex value
         currentRegionIndex = regionSequence.findIndex(x => x.shortName === region.shortName);
 
         let system = systems[region.systemIndex];
@@ -1964,13 +1964,19 @@ let //**************************************************************************
         sendEndMarkerToEnd();
 
         cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
-                
-        // The moments don't change if the track.runtimeInterpretation doesn't change.
+
         if(regionSequence.hasConsecutiveRegions === false)
-        {            
-            // TODO: Make sure that each track.runtimeInterpretation has been set to the current Interpretation here!
-            setMoments(regionSequence, tracks, trackIsOnArray);
+        {
+            // track.runtimeInterpretation doesn't change when regionSequence.hasConsecutiveRegions is true.
+            for(let track of tracks)
+            {
+                track.runtimeInterpretation = track.interpretations[region.interpIndex];
+            }
         }
+
+        // Sets the Score global moments value.
+        // Uses the current state of the trackIsOnArray and each track.runtimeInterpretation.
+        setMoments(regionSequence, tracks, trackIsOnArray);
     },
 
     // The track.setRuntimeInterpretation attributes are the only track attributes that can change after being initialized.
