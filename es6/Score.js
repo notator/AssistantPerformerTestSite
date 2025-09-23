@@ -278,6 +278,11 @@ let //**************************************************************************
         return startMarker.msPosInScore;
     },
 
+    getEndMarkerMsPosInScore = function ()
+    {
+        return endMarker.msPosInScore;
+    },
+
     // This function is called by the tracksControl whenever a track's on/off state is toggled.
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
     // Either argument can be undefined, in which case the corresponding internal attribute is not changed.
@@ -2127,6 +2132,7 @@ export class Score
         this.moveStartMarkerToTop = moveStartMarkerToTop;
 
         this.getStartMarkerMsPosInScore = getStartMarkerMsPosInScore;
+        this.getEndMarkerMsPosInScore = getEndMarkerMsPosInScore;
 
         // Recalculates the timeObject lists for the cursor using trackIsOnArray
         // (tracksControl.trackIsOnArray) to take into account which tracks are actually performing.
