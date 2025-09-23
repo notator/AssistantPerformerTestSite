@@ -249,6 +249,25 @@ var
         }
     },
 
+    disableInterpretationSelectControl = function()
+    {
+        let interpSelect = globalElements.interpretationSelect,
+            interpDiv = globalElements.interpretationDiv;
+
+        interpSelect.disabled = true;
+        interpDiv.style.opacity = 0.5;        
+    },
+
+    enableInterpretationSelectControl = function()
+    {
+        let interpSelect = globalElements.interpretationSelect,
+            interpDiv = globalElements.interpretationDiv;
+                       
+        interpSelect.disabled = false;
+        interpDiv.style.opacity = 1;
+
+    },
+
     setPage2ControlsDisabled = function ()
     {
         tracksControl.setDisabled(true);
@@ -268,8 +287,7 @@ var
         cl.setConductCreepControlDisabled.setAttribute("opacity", SMOKE);
         // end performance buttons
 
-        globalElements.interpretationSelect.disabled = true;
-        globalElements.interpretationSmokeDiv.style.display = "block";
+        disableInterpretationSelectControl();
 
         cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
     },
@@ -578,7 +596,6 @@ var
 
         cl.conductCreepSelected.setAttribute("opacity", GLASS);
         cl.setConductCreepControlDisabled.setAttribute("opacity", GLASS);
-
         /********* end performance buttons *******************/
 
         tracksControl.setDisabled(false);
@@ -586,8 +603,7 @@ var
         globalElements.speedControlInput.disabled = false;
         globalElements.speedControlSmokeDiv.style.display = "none";
 
-        globalElements.interpretationSelect.disabled = false;
-        globalElements.interpretationSmokeDiv.style.display = "none";
+        enableInterpretationSelectControl();
     },
 
     // Callback called when a performing sequenceRecording is stopped or has played its last message,
@@ -894,7 +910,7 @@ var
             option.region = region;
 
             interpretationSelect.add(option, null);
-        }
+        }      
     };
 
 export class Controls
@@ -920,7 +936,7 @@ export class Controls
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
             globalElements.interpretationSelect = document.getElementById("interpretationSelect");
-            globalElements.interpretationSmokeDiv = document.getElementById("interpretationSmokeDiv");
+            globalElements.interpretationDiv = document.getElementById("interpretationDiv");
 
             globalElements.conductingLayer = document.getElementById("conductingLayer");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
