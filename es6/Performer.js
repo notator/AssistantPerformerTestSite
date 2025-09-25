@@ -73,12 +73,11 @@ let
 	},
 
 	// nextMoment is used by tick(), resume(), play().
-	// Returns the earliest track.nextMoment or null.
+	// Returns the next moment or null.
 	// Null is returned if there are no more moments or if the sequence is paused or stopped.
 	nextMoment = function()
 	{
-		var
-			track, nextMomtMsPosInScore, trackNextMomtMsPos, nextMomt = null, delay;
+		let	track, nextMomtMsPosInScore, trackNextMomtMsPos, nextMomt = null, delay;
 
 		function stopAtEndOfPerformance()
 		{
