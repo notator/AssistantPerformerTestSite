@@ -477,38 +477,31 @@ export class Performer
 	}
 
 	// play()
-	// The recording is a SequenceRecording to which timestamped moments are added as they are performed.
-	// Can be undefined or null. If used, it should be an empty SequenceRecording having the same number
-	// of tracks as this (calling) Performer.
 	play(startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
 	{
+		// The internal speed and the moments variables have already been set.
 		// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
 		// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
-		// tracks and speed have been set earlier;
-		sequenceRecording = recording; // can be undefined or null
-
-		//startMarkerMsPosInScore = startMarkerMsPosInScore;
+		
+		currentRegionIndex = startRegionIndex;
+		previousMomtMsPosInScore = startMarkerMsPosInScore;
+		endRegionIndex = endRegionIndexArg;	
 		endMarkerMsPosInScore = endMarkerMsPosInScore;
-
+		// The 'recording' argument is an empty SequenceRecording to which timestamped moments will be added as they are performed.
+	    // It has the same number of tracks as the trackIsOnArray, but a track will be undefined if it has been turned off for this performance.
+		sequenceRecording = recording;
+		
 		pausedMoment = null;
 		pauseStartTime = -1;
 		previousTimestamp = null;
-		previousMomtMsPosInScore = startMarkerMsPosInScore;
+		
 		msPosToReport = -1;
 		lastReportedMsPos = -1;
 		endOfConductedPerformance = false;
 
-        for(var i = 0; i < tracks.length; i++)
-		{
-			tracks[i].resetToStartMarker();
-        }
-
 		performanceStartTime = timer.now();
 		startTimeAdjustedForPauses = performanceStartTime;
-		startOfRegion = false;
-
-		currentRegionIndex = startRegionIndex;
-		endRegionIndex = endRegionIndexArg;
+		startOfRegion = false;	
 
 		run();
 	}
