@@ -8,14 +8,17 @@ export class SequenceRecording
 	// It has an array of empty TrackRecording objects allocated per channel index.
 	// Note that the trackRecordings.length will always be maximum channel index + 1, but that the array
 	// can contain undefined members (e.g. if the outputTracks argument contains a single track in channel 2).
-	constructor(outputTracks)
+	constructor(trackIsOnArray)
 	{
-		let i, j, channel, nOutputTracks = outputTracks.length;
+		let i, nOutputTracks = trackIsOnArray.length;
 
 		this.trackRecordings = [];
 		for(i = 0; i < nOutputTracks; ++i)
 		{
-			this.trackRecordings.push(new TrackRecording());
+			if(trackIsOnArray[i] === true)
+			{
+				this.trackRecordings.push(new TrackRecording());
+			}
 		}
 	}
 

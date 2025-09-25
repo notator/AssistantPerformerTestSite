@@ -493,7 +493,7 @@ var
         }
         else if(performer.isStopped())
         {
-            sequenceRecording = new SequenceRecording(performer.getTracks());
+            sequenceRecording = new SequenceRecording(score.getReadOnlyTrackIsOnArray());
 
             if(deviceOptions.performanceMode === performanceMode.score)
             {
