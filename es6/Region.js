@@ -73,7 +73,7 @@ export class Region
 			for(let textElem of regionInfoStringElems)
 			{
 				let t = textElem.innerHTML;
-				if(t.localeCompare(name) === 0)
+				if(t.localeCompare(shortName) === 0)
 				{
 					_startRegionInfoStringElem = textElem;
 					break;
@@ -83,9 +83,9 @@ export class Region
 			for(let textElem of regionInfoStringElems)
 			{
 				let t = textElem.innerHTML;
-				if(t.indexOf(name) === 0 && t.length > name.length)
+				if(t.indexOf(shortName) === 0 && t.length > shortName.length)
 				{
-					let char = t.slice(name.length, name.length + 1);
+					let char = t.slice(shortName.length, shortName.length + 1);
 					if(char.localeCompare(' ') === 0 || isNaN(char))
 					{
 						_endRegionInfoStringElem = textElem;

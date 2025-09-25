@@ -493,7 +493,9 @@ var
         }
         else if(performer.isStopped())
         {
-            sequenceRecording = new SequenceRecording(score.getReadOnlyTrackIsOnArray());
+            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
+
+            sequenceRecording = new SequenceRecording(trackIsOnArray);
 
             if(deviceOptions.performanceMode === performanceMode.score)
             {
@@ -516,8 +518,7 @@ var
             {
                 performer.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Performer can use conductor or performance timer
             }
-
-            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
+                        
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
             performer.play(startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
