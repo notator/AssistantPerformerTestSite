@@ -41,7 +41,7 @@ export class Track
 
 		function getCurrentInterpretation(that, regionSequence, currentRegionIndex, midiObjectIndexRangesPerRegion)
 		{
-			console.assert(regionSequence.hasConsecutiveRegions === false)
+			console.assert(regionSequence.hasConsecutiveRegions === false);
 
 			let interpretation = new Interpretation(),
 				region = regionSequence[currentRegionIndex],
