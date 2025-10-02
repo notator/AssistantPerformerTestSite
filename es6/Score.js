@@ -38,9 +38,6 @@ let //**************************************************************************
     // An array of Track objects.
     tracks = [],
 
-    // the moments required by the Performer.play() function.
-    moments = [],
-
     //******************************************************************************************
     // Variable values: These can be changed by controls on page 2. (After the Start button is pressed on page 1)
 
@@ -1980,9 +1977,8 @@ let //**************************************************************************
             }
         }
 
-        // Sets the Score global moments value.
         // Uses the current state of the trackIsOnArray and each track.runtimeInterpretation.
-        setMoments(regionSequence, tracks, trackIsOnArray);
+        getLinkedMoments(regionSequence, tracks, trackIsOnArray);
     },
 
     // The track.setRuntimeInterpretation attributes are the only track attributes that can change after being initialized.
@@ -1997,28 +1993,11 @@ let //**************************************************************************
             track.setRuntimeInterpretation(trackIsOnArray[i], regionSequence, currentRegionIndex);
             // if trackIsOn === false, track.runtimeInterpretation is undefined.
         }
-
-        // 17.09.2025
-        // The performer constructor takes the following arguments (See Controls.beginRuntime()):
-        //     performer = new Performer(deviceOptions.outputDevice, reportEndOfRegion, reportEndOfPerformance, reportMsPos, score.reportTickOverload);
-        //
-        // The moments to be performed are maintained in the score using the functions defined below. The moments are the complete set of moments
-        // defined by the tracks, subject to the trackIsOnArray and the interpretation. The runtimeInterpretation of each track only changes if
-        // the score contains simple, alternative interpretations, so changing the interpretationSelect control will only affect the moments if
-        // that is the case.
-        //
-        // The performer.play() function (called when the Go button is clicked) takes arguments that define the performance:
-        //    1. moments (retrieved from the score)
-        //    2. speed (from the speed control),
-        //    3. startMsPos and endMsPos (starMarker and endMarker respectively).
-        // i.e. something like: performer.play(score.getMoments(), speed, score.startMarker, score.endMarker);
-        //
-        // Revise the Performer.play() function accordingly...
     },
     
     // Uses each track.runtimeInterpretation.
     // Called by initMoments, setMomentsOnTrackControlChange and setInterpretation (see above). 
-    setMoments = function(regionSequence, tracks, trackIsOnArray)
+    getLinkedMoments = function(regionSequence, tracks, trackIsOnArray)
     {
         function getAllMoments(tracks, trackIsOnArray)
         {
@@ -2070,6 +2049,17 @@ let //**************************************************************************
             }
         }
 
+        function linkedMoments(moments)
+        {
+            for(let i = 0; i < moments.length - 2; ++i)
+            {
+                moments[i].nextMoment = moments[i + 1];
+            }
+            moments[moments.length-1].nextMoment = null;
+
+            return moments;
+        }
+
         let allMoments = getAllMoments(tracks, trackIsOnArray);
 
         allMoments.sort((x, y) => x.msPosInPerf - y.msPosInPerf);
@@ -2083,22 +2073,23 @@ let //**************************************************************************
 
         // Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
         // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
-        // global moments
-        moments = mergedMoments;
+        return linkedMoments(mergedMoments);
     },
 
     // Called by performer.play()
+    // Returns a flat, linked list of moments.
     getMoments = function()
     {
         setTrackRuntimeInterpretations();
-        setMoments(regionSequence, tracks, trackIsOnArray);
-        return moments;
+        let linkedMoments = getLinkedMoments(regionSequence, tracks, trackIsOnArray);       
+
+        return linkedMoments;
     },
 
     // Called by tracksControl.onChange
     setMomentsOnTrackControlChange = function(trackIsOnArray)
     {
-        setMoments(regionSequence, tracks, trackIsOnArray);
+        getLinkedMoments(regionSequence, tracks, trackIsOnArray);
     };
 
 export class Score
