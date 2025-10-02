@@ -74,7 +74,9 @@ let moments, // Set in play().
 
 	// This function uses, but does not change, the global moments variable.
 	// The moments' content can change as the result of Tracks being turned on or off, so they are reloaded from
-	// the score each time the Go button is clicked (i.e. by performer.play()).
+	// the score each time the Go button is clicked (i.e. in performer.play()).
+	// The moments are a linked list of Moment:
+	//   Each Moment has a nextMoment attribute pointing at the next Moment. The final moment.nextMoment is null.
 	// Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
     // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
 	// This function is called by tick(), resume(), play().
