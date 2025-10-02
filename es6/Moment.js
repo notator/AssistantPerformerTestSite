@@ -13,21 +13,13 @@ export class Moment
 		{
 			// clone the Moment
 			let originalMoment = constructorArg;
-			 // clone the attributes
-			 //if(originalMoment.msPosInChord !== undefined)
-			 //{
-			 //	  this.msPosInChord = originalMoment.msPosInChord;
-			 //}
-			 if(originalMoment.msPosInPerf !== undefined)
-			 {
-				 this.msPosInPerf = originalMoment.msPosInPerf;
-			 }
-			 if(originalMoment.msPosInScore !== undefined)
-			 {
-				 this.msPosInScore = originalMoment.msPosInScore;
-			 }
-			 // the messages are not cloned since they never change.
-			 this.messages = originalMoment.messages;
+			// clone the attributes
+			this.msPosInChord = originalMoment.msPosInChord;
+			this.msPosInPerf = originalMoment.msPosInPerf;
+			this.msPosInScore = originalMoment.msPosInScore;
+			this.nextMoment = originalMoment.nextMoment; // null, to be set later
+			// the messages are not cloned since they never change.
+			this.messages = originalMoment.messages;
 		}
 		else if(Number.isNaN(constructorArg) === false)
 		{
@@ -35,12 +27,15 @@ export class Moment
 			if(msPosInChord >= 0)
 			{
 				this.msPosInChord = msPosInChord;
+				this.msPosInPerf = -1; // not known here
+				this.msPosInScore = -1; // not known here
+				this.nextMoment = null; // not known here
+				this.messages = []; // an array of Messages (can be replaced)
 			}
 			else
 			{
 				throw "Error: Moment.msPosInChord must be a number >= 0.";
-			}
-			this.messages = []; // an array of Messages (can be replaced)
+			}			
 		}
 		else
 		{
@@ -58,9 +53,7 @@ export class Moment
 	// Throws an exception if moment2.msPosInPerf !== this.msPosInPerf.
 	mergeMoment(moment2)
 	{
-		var msPosInPerf = this.msPosInPerf;
-
-		console.assert(msPosInPerf === moment2.msPosInPerf, "Attempt to merge moments having different msPosInPerf values.");
+		console.assert(this.msPosInPerf === moment2.msPosInPerf, "Attempt to merge moments having different msPosInPerf values.");
 
 		this.messages = this.messages.concat(moment2.messages);
 	}
