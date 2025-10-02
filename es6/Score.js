@@ -2087,23 +2087,18 @@ let //**************************************************************************
         moments = mergedMoments;
     },
 
-    // Called by controls.beginRuntime()
-    initMoments = function()
+    // Called by performer.play()
+    getMoments = function()
     {
         setTrackRuntimeInterpretations();
         setMoments(regionSequence, tracks, trackIsOnArray);
+        return moments;
     },
 
     // Called by tracksControl.onChange
     setMomentsOnTrackControlChange = function(trackIsOnArray)
     {
         setMoments(regionSequence, tracks, trackIsOnArray);
-    }, 
-
-    // called by the performer.
-    getMoments = function()
-    {
-        return moments;
     };
 
 export class Score
@@ -2171,7 +2166,6 @@ export class Score
         this.reportTickOverload = reportTickOverload;
         this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;
 
-        this.initMoments = initMoments; // called by controls.beginRuntime()
         this.setMomentsOnTrackControlChange = setMomentsOnTrackControlChange; // called by tracksControl.onChange
         this.getMoments = getMoments; // called by performer to get the current moments
     }

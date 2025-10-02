@@ -1,7 +1,7 @@
 import { Moment } from "./Moment.js";
 import { Conductor } from "./Conductor.js";
 
-let
+let moments, // Set in play().
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 	tracks = [],
@@ -72,8 +72,13 @@ let
 		}
 	},
 
-	// nextMoment is used by tick(), resume(), play().
-	// Returns the next moment or null.
+	// This function uses, but does not change, the global moments variable.
+	// The moments' content can change as the result of Tracks being turned on or off, so they are reloaded from
+	// the score each time the Go button is clicked (i.e. by performer.play()).
+	// Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
+    // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
+	// This function is called by tick(), resume(), play().
+	// It returns the next moment or null.
 	// Null is returned if there are no more moments or if the sequence is paused or stopped.
 	nextMoment = function()
 	{
@@ -458,12 +463,6 @@ export class Performer
 		setState("stopped");
 	}
 
-	// Function added 13.09.2025
-	getMoments(momentsArg)
-	{
-		this.moments = momentsArg;
-	}
-
 	setTimerAndOutputDevice(objectWithNowFunction, objectWithSendFunction)
 	{
 		timer = objectWithNowFunction; // use objectWithNowFunction.now() for timings
@@ -476,12 +475,11 @@ export class Performer
 	}
 
 	// play()
-	play(startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
+	// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
+	// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
+	play(momentsArg, startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
 	{
-		// The internal speed and the moments variables have already been set.
-		// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
-		// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
-		
+		moments = momentsArg;		
 		currentRegionIndex = startRegionIndex;
 		previousMomtMsPosInScore = startMarkerMsPosInScore;
 		endRegionIndex = endRegionIndexArg;	

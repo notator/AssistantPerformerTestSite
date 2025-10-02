@@ -521,7 +521,8 @@ var
                         
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
-            performer.play(startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
+            let moments = score.getMoments();
+            performer.play(moments, startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
         }
     },
 
@@ -1441,8 +1442,6 @@ export class Controls
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
         tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setMomentsOnTrackControlChange);
-
-        score.initMoments();
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
