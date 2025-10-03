@@ -2045,13 +2045,18 @@ let //**************************************************************************
             }
         }
 
-        function linkedMoments(moments)
+        function linkedMoments(moments, lastRegionEndMsPosInPerf)
         {
             for(let i = 0; i < moments.length - 2; ++i)
             {
-                moments[i].nextMoment = moments[i + 1];
+                let thisMoment = moments[i],
+                    nextMoment = moments[i + 1]; 
+                thisMoment.nextMoment = nextMoment;
+                thisMoment.msDuration = nextMoment.msPosInPerf - thisMoment.msPosInPerf;
             }
-            moments[moments.length - 1].nextMoment = null;
+            let lastMoment = moments[moments.length - 1];
+            lastMoment.nextMoment = null;
+            lastMoment.msDuration = lastRegionEndMsPosInPerf - lastMoment.msPosInPerf;
 
             return moments;
         }
@@ -2069,9 +2074,10 @@ let //**************************************************************************
             setRegionIndexAttributes(mergedMoments, regionSequence);
         }
 
+        let lastRegionEndMsPosInPerf = regionSequence[regionSequence.length - 1].endMsPosInPerf;
         // Moments that need to update the cursor in the GUI during performance have a .msPosInScore attribute.
         // Moments that need to update the current region in the GUI during performance have a .regionIndex attribute.
-        return linkedMoments(mergedMoments);
+        return linkedMoments(mergedMoments, lastRegionEndMsPosInPerf);
     },
 
     // Returns a flat, linked list of moments.

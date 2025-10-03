@@ -100,72 +100,11 @@ let moments, // Set in play().
 			}
 		}
 
-		// Returns the track having the earliest nextMsPos (= the position of the first unsent Moment in the track),
-		// or null if the earliest nextMsPos is >= endMarkerMsPos.
-		function getNextTrack(tracks)
-		{
-			let nextTrack = null, trackMsPos, nextMomtMsPosInScore = Number.MAX_VALUE;
-
-			function moveToNextRegion(tracks)
-			{
-				for(let track of tracks)
-				{
-					track.moveToNextRegion(currentRegionIndex);
-				}
-
-				reportStartOfRegion(currentRegionIndex);
-				currentRegionIndex++;
-			}
-
-			let nTracks = tracks.length;
-			let endOfRegion = true;
-
-			for(let t = 0; t < nTracks; ++t)
-			{
-				let track = tracks[t];
-				if(track.isOn && track.hasEndedRegion === false)
-				{
-					trackMsPos = track.currentMsPos(); // returns Number.MAX_VALUE at end of track
-					if(trackMsPos >= regionSequence[currentRegionIndex].endMsPosInScore)
-					{
-						track.hasEndedRegion = true;
-					}
-					else if(!(trackMsPos >= endMarkerMsPosInScore && currentRegionIndex === endRegionIndex))
-					{
-						if(trackMsPos < nextMomtMsPosInScore)
-						{
-							nextTrack = track;
-							nextMomtMsPosInScore = trackMsPos;
-						}
-						endOfRegion = false;
-					}
-				}
-			}
-
-			if(endOfRegion)
-			{
-				if(currentRegionIndex === endRegionIndex)
-				{
-					nextTrack = null; // end of performance
-				}
-				else
-				{
-					moveToNextRegion(tracks);
-					nextTrack = getNextTrack(tracks); // recursive call
-					startOfRegion = true;
-				}
-			}
-
-			return nextTrack;
-		}
-
-		track = getNextTrack(tracks);
-
 		if(document.hidden === true)
 		{
 			stopAtEndOfPerformance();
 		}
-		else if(track === null)
+		else if(currentMoment === null)
 		{
 			if(timer instanceof Conductor)
 			{
@@ -191,13 +130,19 @@ let moments, // Set in play().
 		}
 		else
 		{
-			nextMomt = track.currentMoment;
-			trackNextMomtMsPos = track.currentMsPos();
-			track.advanceCurrentMoment();
+			nextMomt = currentMoment.nextMoment;
+			trackNextMomtMsPos = nextMomt.msPosInScore;
+			if(nextMomt.msPosInScore >= 0)
+			{
+				// TODO: check this is working
+				reportMsPosInScore(nextMomt.msPosInScore);
+			}			
 		}
 
+		// TODO: revise the following.
 		if(!stopped && !paused)
 		{
+
 			if(startOfRegion)
 			{
 				nextMomtMsPosInScore = regionSequence[currentRegionIndex].startMsPosInScore;
@@ -257,24 +202,13 @@ let moments, // Set in play().
 	//
 	// 16th Nov. 2012: The cursor can only be updated once per tick, so PREQUEUE needs to be small enough for that not
 	// to matter.
-	// 18th Jan. 2013 -- Jazz 1.2 does not support timestamps.
 	//
 	// 20th Dec. 2018: (while programming the TimerConductor)
 	// Changed PREQUEUE from 0 to 6.
 	// The TimerConductor is now running setInterval at a nominal 3ms, which means
 	// "as fast as meaningfully possible, and definitely faster than PREQUEUE".
 	// This means that this tick function treats all events that happen within 6ms 
-	// as "synchronous", and performs them in a tight loop.
-	//
-	// The following variables are initialised in play() to start playing the span:
-	//      currentMoment // the first moment in the sequence
-	//      track attributes:
-	//          isOn // set by referring to the track control
-	//          fromIndex // the index of the first moment in the track to play
-	//          toIndex // the index of the final moment in the track (which does not play)
-	//          currentIndex // = fromIndex
-	//      reportEndOfPerformance // can be null
-	//      reportMsPos // can be null    
+	// as "synchronous", and performs them in a tight loop.   
 	tick = function()
 	{
 		var
@@ -283,7 +217,6 @@ let moments, // Set in play().
 			delay;
 
 		// moment.timestamps are always absolute DOMHRT values here.
-		// Note that Jazz 1.2 does not support timestamps. It always sends Messages immediately.
 		function sendMessages(moment)
 		{
 			var
@@ -302,6 +235,10 @@ let moments, // Set in play().
 		}
 
 		delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
+		if(currentMoment.nextMoment !== null)
+		{
+			currentMoment.nextMoment.timestamp = currentMoment.timestamp + currentMoment.msDuration;
+		}
 		nAsynchMomentsSentAtOnce = 1;
 
 		let thisTickTimestampLimit = currentMoment.timestamp + 16;  // nAsynchMomentsSentAtOnce not counted if the difference is 16ms
@@ -332,12 +269,13 @@ let moments, // Set in play().
 					// before saving them in a Standard MIDI File.
 					// (i.e. the value of the earliest timestamp in the recording is
 					// subtracted from all the timestamps in the recording)
+					for(let msg of currentMoment.messages)
+					{
+						let trIndex = msg.channel(),
+							tr = sequenceRecording.trackRecordings[trIndex];
 
-					//console.log(currentMoment.timestamp.toString());
-					let trIndex = currentMoment.messages[0].channel(),
-						tr = sequenceRecording.trackRecordings[trIndex];
-
-					tr.addMoment(currentMoment);
+						tr.addMoment(currentMoment);
+					}
 				}
 			}
 
@@ -392,7 +330,8 @@ let moments, // Set in play().
 		{
 			setState("running");
 
-			currentMoment = nextMoment();
+			currentMoment = moments[0];
+			currentMoment.timestamp = timer.now();
 			if(currentMoment === null)
 			{
 				return;
