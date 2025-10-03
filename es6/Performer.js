@@ -134,7 +134,6 @@ let moments, // Set in play().
 			trackNextMomtMsPos = nextMomt.msPosInScore;
 			if(nextMomt.msPosInScore >= 0)
 			{
-				// TODO: check this is working
 				reportMsPosInScore(nextMomt.msPosInScore);
 			}			
 		}
@@ -237,7 +236,7 @@ let moments, // Set in play().
 		delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
 		if(currentMoment.nextMoment !== null)
 		{
-			currentMoment.nextMoment.timestamp = currentMoment.timestamp + currentMoment.msDuration;
+			currentMoment.nextMoment.timestamp = currentMoment.timestamp + (currentMoment.msDuration / speed);
 		}
 		nAsynchMomentsSentAtOnce = 1;
 
