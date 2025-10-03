@@ -1441,7 +1441,7 @@ export class Controls
 
         score.moveStartMarkerToTop(globalElements.svgPagesFrame);
 
-        tracksControl.setOnChangeCallbacks(score.refreshDisplay, score.setMomentsOnTrackControlChange);
+        tracksControl.setOnChangeCallbacks(score.refreshDisplay);
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 

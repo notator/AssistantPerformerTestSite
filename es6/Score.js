@@ -1003,7 +1003,7 @@ let //**************************************************************************
                 let regionSeq = [],
                     regionDefElems = svgElem.getElementsByClassName("regionDef"),
                     regionInfoStringElems = svgElem.getElementsByClassName("regionInfoString");
-                
+
                 if(regionDefElems.length > 0)
                 {
                     for(let regionDefElem of regionDefElems)
@@ -1013,7 +1013,7 @@ let //**************************************************************************
                     }
                     regionSeq.hasConsecutiveRegions = true; // will be false in interpretation regions (created later).
                 }
-                
+
                 startRegionIndex = 0;
                 endRegionIndex = regionSeq.length - 1;
                 regionSequence = regionSeq;
@@ -1647,7 +1647,7 @@ let //**************************************************************************
         hideStartMarkersExcept(startMarker);
 
         startMarker.setLable(regionSequence[0].shortName);
-        startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);        
+        startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);
         startMarker.msPosInPerf = 0;
         startMarker.setVisible(true);
 
@@ -1976,40 +1976,36 @@ let //**************************************************************************
                 track.runtimeInterpretation = track.interpretations[region.interpIndex];
             }
         }
-
-        // Uses the current state of the trackIsOnArray and each track.runtimeInterpretation.
-        getLinkedMoments(regionSequence, tracks, trackIsOnArray);
     },
 
-    // The track.setRuntimeInterpretation attributes are the only track attributes that can change after being initialized.
-    setTrackRuntimeInterpretations = function()
+    // Called by getMoments(), called by Controls.startPlaying() before performer.play() i.e. when the Go button is clicked. 
+    getLinkedMoments = function (regionSequence, tracks, trackIsOnArray)
     {
-        let trackIsOnArray = getReadOnlyTrackIsOnArray(),
-            nTracks = trackIsOnArray.length;
-
-        for(let i = 0; i < nTracks; ++i)
+        // The track.setRuntimeInterpretation attributes are the only track attributes that can change after being initialized.
+        // If trackIsOn === false, track.runtimeInterpretation is undefined.
+        function setTrackRuntimeInterpretations(tracks, trackIsOnArray)
         {
-            let track = tracks[i];
-            track.setRuntimeInterpretation(trackIsOnArray[i], regionSequence, currentRegionIndex);
-            // if trackIsOn === false, track.runtimeInterpretation is undefined.
+            let nTracks = trackIsOnArray.length;
+
+            for(let i = 0; i < nTracks; ++i)
+            {
+                let track = tracks[i];
+                track.setRuntimeInterpretation(trackIsOnArray[i], regionSequence, currentRegionIndex);
+            }
         }
-    },
-    
-    // Uses each track.runtimeInterpretation.
-    // Called by initMoments, setMomentsOnTrackControlChange and setInterpretation (see above). 
-    getLinkedMoments = function(regionSequence, tracks, trackIsOnArray)
-    {
-        function getAllMoments(tracks, trackIsOnArray)
+
+        function getAllMoments(tracks)
         {
             let allMoments = [];
             for(let i = 0; i < tracks.length; ++i)
             {
-                if(trackIsOnArray[i])
-                {
-                    let runtimeInterpretation = tracks[i].runtimeInterpretation;
+                let runtimeInterpretation = tracks[i].runtimeInterpretation;
+                if(runtimeInterpretation !== undefined)
+                {                    
                     for(let midiObject of runtimeInterpretation.midiObjects)
                     {
-                        midiObject.moments[0].msPosInScore = midiObject.msPosInScore; // used when updating the GUI during performance
+                        // msPosInScore is used later to sort the moments, and when updating the GUI during performance
+                        midiObject.moments[0].msPosInScore = midiObject.msPosInScore;
                         allMoments = allMoments.concat(midiObject.moments);
                     }
                 }
@@ -2055,12 +2051,14 @@ let //**************************************************************************
             {
                 moments[i].nextMoment = moments[i + 1];
             }
-            moments[moments.length-1].nextMoment = null;
+            moments[moments.length - 1].nextMoment = null;
 
             return moments;
         }
 
-        let allMoments = getAllMoments(tracks, trackIsOnArray);
+        setTrackRuntimeInterpretations(tracks, trackIsOnArray);
+
+        let allMoments = getAllMoments(tracks);
 
         allMoments.sort((x, y) => x.msPosInPerf - y.msPosInPerf);
 
@@ -2076,20 +2074,11 @@ let //**************************************************************************
         return linkedMoments(mergedMoments);
     },
 
-    // Called by performer.play()
     // Returns a flat, linked list of moments.
-    getMoments = function()
+    getMoments = function ()
     {
-        setTrackRuntimeInterpretations();
-        let linkedMoments = getLinkedMoments(regionSequence, tracks, trackIsOnArray);       
-
+        let linkedMoments = getLinkedMoments(regionSequence, tracks, trackIsOnArray);  
         return linkedMoments;
-    },
-
-    // Called by tracksControl.onChange
-    setMomentsOnTrackControlChange = function(trackIsOnArray)
-    {
-        getLinkedMoments(regionSequence, tracks, trackIsOnArray);
     };
 
 export class Score
@@ -2157,7 +2146,6 @@ export class Score
         this.reportTickOverload = reportTickOverload;
         this.deleteTickOverloadMarkers = deleteTickOverloadMarkers;
 
-        this.setMomentsOnTrackControlChange = setMomentsOnTrackControlChange; // called by tracksControl.onChange
         this.getMoments = getMoments; // called by performer to get the current moments
     }
 }

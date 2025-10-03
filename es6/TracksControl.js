@@ -22,7 +22,6 @@ let
 	trackCtlElems = [], // the controls for individual tracks
 
 	scoreRefresh = undefined, // a callback that tells the score to redraw itself
-	setMoments = undefined, // a callback that sets the performance moments
 
 	setTrackCtlState = function(trackIndex, state)
 	{
@@ -230,16 +229,14 @@ export class TracksControl
 		}
 	}
 
-	setOnChangeCallbacks(scoreRefreshDisplayCallback, setMomentsOnTrackControlChangeCallback)
+	setOnChangeCallbacks(scoreRefreshDisplayCallback)
 	{
 		scoreRefresh = scoreRefreshDisplayCallback;
-		setMoments = setMomentsOnTrackControlChangeCallback;
 	}	
 
 	// Called if the user clicks a trackControl.
 	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
-	// callback which tells the score to redraw itself, and
-	// the setMoments callback that sets the performance moments.
+	// callback which tells the score to redraw itself.
 	trackOnOff(trackNumberStr, bulletOffID)
 	{
 		var
@@ -298,13 +295,11 @@ export class TracksControl
 					trackCtlElems[trackIndex].state = "on";
 				}
 				
-				if(scoreRefresh !== undefined && setMoments !== undefined)
+				if(scoreRefresh !== undefined)
 				{
 					let currentReadOnlyTrackIsOnArray = getCurrentReadOnlyTrackIsOnArray();
 					// scoreRefresh is a callback that tells the score to redraw itself
 					scoreRefresh(currentReadOnlyTrackIsOnArray);
-					// setMoments is a callback that sets the performance moments
-					setMoments(currentReadOnlyTrackIsOnArray);
                 }
 			}
 		}
