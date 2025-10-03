@@ -4,7 +4,6 @@ import { Conductor } from "./Conductor.js";
 let moments, // Set in play().
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
-	tracks = [],
 
 	previousTimestamp = null, // nextMoment()
 	startOfRegion,
@@ -30,7 +29,7 @@ let moments, // Set in play().
 	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
 
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
-	currentRegionIndex, // the index in the regionSequence and in the track._regionLinks arrays
+	currentRegionIndex, // the index in the regionSequence
 	endRegionIndex, // the index of the final region that will play (< regionSequence.length)
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
@@ -84,20 +83,13 @@ let moments, // Set in play().
 	// Null is returned if there are no more moments or if the sequence is paused or stopped.
 	nextMoment = function()
 	{
-		let	track, nextMomtMsPosInScore, trackNextMomtMsPos, nextMomt = null, delay;
+		let	nextMomtMsPosInScore, nextMomt = null, delay;
 
 		function stopAtEndOfPerformance()
 		{
 			var performanceMsDur = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
 			reportEndOfPerformance(sequenceRecording, performanceMsDur);
-			for(let track of tracks)
-			{
-				if(track.isOn)
-				{
-					track.setToFirstRegion();
-				}
-			}
 		}
 
 		if(document.hidden === true)
@@ -111,7 +103,7 @@ let moments, // Set in play().
 				if(endOfConductedPerformance === false)
 				{
 					nextMomt = new Moment(0, 0);  // dummy moment
-					trackNextMomtMsPos = endMarkerMsPosInScore;
+					nextMomtMsPosInScore = endMarkerMsPosInScore;
 					endOfConductedPerformance = true;
 				}
 				else
@@ -131,7 +123,7 @@ let moments, // Set in play().
 		else
 		{
 			nextMomt = currentMoment.nextMoment;
-			trackNextMomtMsPos = nextMomt.msPosInScore;
+			nextMomtMsPosInScore = nextMomt.msPosInScore;
 			if(nextMomt.msPosInScore >= 0)
 			{
 				reportMsPosInScore(nextMomt.msPosInScore);
@@ -148,7 +140,7 @@ let moments, // Set in play().
 			}
 			else
 			{
-				nextMomtMsPosInScore = trackNextMomtMsPos;
+				nextMomtMsPosInScore = nextMomtMsPosInScore;
 			}
 
 			if((nextMomtMsPosInScore > lastReportedMsPos) || startOfRegion)
