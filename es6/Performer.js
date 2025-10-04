@@ -5,7 +5,6 @@ let moments, // Set in play().
 	timer, // performance or conductor (use performance.now() or conductor.now())
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 
-	previousTimestamp = null, // nextMoment()
 	startOfRegion,
 	previousMomtMsPosInScore, // nextMoment()
 	currentMoment = null, // nextMoment(), resume(), tick()
@@ -20,12 +19,14 @@ let moments, // Set in play().
 	paused = false, // nextMoment(), pause(), isPaused()
 
 	reportEndOfPerformance, // callback. Set in play().
-	reportStartOfRegion, // callback	
+	reportEndOfRegion, // callback	
 	reportMsPosInScore,  // callback. Set in play().
-	reportTickOverload, // callback. Set in play().
+	reportUndersizedMomentDuration, // callback. Set in play().
 
 	lastReportedMsPos = -1, // set by tick() used by nextMoment()
 	msPosToReport = -1,   // set in nextMoment() and used/reset by tick()
+	nUndersizedMomentDurations = 0, // incremented in tick() if different moments are sent at the same time.
+	previousTimestamp = 0,
 	
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	currentRegionIndex, // the index in the regionSequence
@@ -70,6 +71,11 @@ let moments, // Set in play().
 		}
 	},
 
+	scheduleReportEndOfPerformance = function(sequenceRecording, performanceMsDur)
+	{
+		requestAnimationFrame((sequenceRecording, performanceMsDur) => reportEndOfPerformance(sequenceRecording, performanceMsDur));
+	},
+
 	// This function uses, but does not change, the global moments variable.
 	// The moments' content can change as the result of Tracks being turned on or off, so they are reloaded from
 	// the score each time the Go button is clicked (i.e. in performer.play()).
@@ -85,10 +91,15 @@ let moments, // Set in play().
 		let	nextMomtMsPosInScore, nextMomt = null, delay;
 
 		function stopAtEndOfPerformance()
-		{
+		{			
 			var performanceMsDur = Math.ceil(timer.now() - performanceStartTime);
 			setState("stopped");
-			reportEndOfPerformance(sequenceRecording, performanceMsDur);
+			scheduleReportEndOfPerformance(sequenceRecording, performanceMsDur);
+		}
+
+		function scheduleReportEndOfRegion(regionIndex)
+		{
+			requestAnimationFrame((regionIndex) => reportEndOfRegion(regionIndex));
 		}
 
 		if(document.hidden === true)
@@ -126,11 +137,10 @@ let moments, // Set in play().
 			{
 				if(nextMomt.regionIndex !== undefined && nextMomt.regionIndex !== currentRegionIndex)
 				{
+					scheduleReportEndOfRegion(currentRegionIndex);
 					startOfRegion == true;
 					currentRegionIndex = nextMomt.regionIndex;
-					console.assert(nextMomt.msPosInScore === regionSequence[currentRegionIndex].startMsPosInScore);					
-					reportStartOfRegionCallback(nextMomt.msPosInScore);
-					
+					console.assert(nextMomt.msPosInScore === regionSequence[currentRegionIndex].startMsPosInScore);											
 				}
 				nextMomtMsPosInScore = nextMomt.msPosInScore;
 			}
@@ -201,14 +211,14 @@ let moments, // Set in play().
 	// 1. Removed the local PREQUEUE and delay variables, and the PREQUEUE loop.
 	//    This tick() function is called recursively per moment, and each moment's messages are conceptually
 	//    synchronous (i.e.have the same timestamp).
-	// 2. reportMsPosInScore(msPos) and reportTickOverload() are now called using requestAnimationFrame.
+	// 2. reportMsPosInScore(msPos) and reportUndersizedMomentDuration() are now called using requestAnimationFrame.
 	//    Copilot showed me how to use requestAnimationFrame to minimize the disruption to setTimeout
 	//    while updating the GUI.
 	// This scheme means that performance is _locally_ accurate (i.e. the individual moment.msDurations
 	// are respected as accurately as possible by setTimeOut, and the sound is always synchronised as
-	// accurately as possible with the GUI. But the actual overall duration of the performance may not be
-	// exactly the sum of the (recorded) msDurations: The recorded timestamps are set using the information
-	// in the score, not the actual timings of the performance.
+	// accurately as possible with the GUI, but the actual overall duration of the performance may not be
+	// exactly the sum of (moment.msDurations / speed). The recorded timestamps are set using the actual
+	// timings in the performance.
 	tick = function()
 	{
 		// moment.timestamps are always absolute DOMHRT values here.
@@ -230,33 +240,34 @@ let moments, // Set in play().
 			requestAnimationFrame(() => reportMsPosInScore(msPosToReport));
 		}
 
-		function scheduleReportTickOverload()
+		function scheduleReportUndersizedMomentDuration()
 		{
-			requestAnimationFrame(() => reportTickOverload());
+			requestAnimationFrame(() => reportUndersizedMomentDuration());
 		}
 
-		const minimumMsDuration = 16;
-		let now = timer.now();
+		const PREQUEUE = 6;
 
 		if(currentMoment === null)
 		{
 			return;
 		}
 
-		if(currentMoment.nextMoment !== null)
-		{
-			currentMoment.nextMoment.timestamp = currentMoment.timestamp + (currentMoment.msDuration / speed);
-		}
-
 		if(msPosToReport >= 0)
 		{
 			scheduleReportMsPosInScore(msPosToReport);
+			if(nUndersizedMomentDurations > 0)
+			{
+				scheduleReportUndersizedMomentDuration();
+				nUndersizedMomentDurations = 0;
+			}
 			lastReportedMsPos = msPosToReport;
 			msPosToReport = -1;
 		}
 
 		if(currentMoment.messages.length > 0) // rest moments can be empty (but should be reported above) 
 		{
+			currentMoment.timestamp = timer.now();
+
 			sendMessages(currentMoment);
 
 			if(sequenceRecording !== undefined && sequenceRecording !== null)
@@ -276,10 +287,11 @@ let moments, // Set in play().
 			}
 		}
 
-		if(currentMoment.msDuration < minimumMsDuration)
+		if(currentMoment.timestamp - previousTimestamp < PREQUEUE)
 		{
-			scheduleReportTickOverload();
+			nUndersizedMomentDurations++;
 		}
+		previousTimestamp = currentMoment.timestamp;
 		
 		let delay = currentMoment.msDuration / speed;
 
@@ -327,7 +339,7 @@ let moments, // Set in play().
 
 			currentRegionIndex = 0;
 			currentMoment = moments[0];
-			currentMoment.timestamp = timer.now();
+			previousTimestamp = 0;
 			if(currentMoment === null)
 			{
 				return;
@@ -356,7 +368,7 @@ export class Performer
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence ends
 	// It is called in this file as:
 	//      reportEndOfPerformance(sequenceRecording, performanceMsDur);
-	// The reportStartOfRegionCallback argument is a callback function that is called when a new Region is about to start.
+	// The reportEndOfRegionCallback argument is a callback function that is called when a new Region is about to start.
 	// Only those Moments that are at the beginning of a Region have a .startRegion attribute. The attribute's value is
 	// the Region that is about to start.
 	// The reportMsPosInScoreCallback argument is a callback function which reports the current
@@ -367,7 +379,7 @@ export class Performer
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
 	// Only those Moments whose msPosInScore is to be reported have a .msPosInScore attribute.
-	constructor(outputDeviceArg, reportEndOfPerfCallback, reportStartOfRegionCallback, reportMsPosInScoreCallback, reportTickOverloadCallback)
+	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, reportUndersizedMomentDurationCallBack)
 	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
@@ -375,9 +387,9 @@ export class Performer
 		}
 
 		if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
-			|| reportStartOfRegionCallback === undefined || reportStartOfRegionCallback === null
+			|| reportEndOfRegionCallback === undefined || reportEndOfRegionCallback === null
 			|| reportMsPosInScoreCallback === undefined || reportMsPosInScoreCallback === null
-			|| reportTickOverloadCallback === undefined || reportTickOverloadCallback === null)
+			|| reportUndersizedMomentDurationCallBack === undefined || reportUndersizedMomentDurationCallBack === null)
 		{
 			throw "Error: all callbacks must be defined.";
 		}
@@ -387,9 +399,9 @@ export class Performer
 		outputDevice = outputDeviceArg;
 
 		reportEndOfPerformance = reportEndOfPerfCallback;
-		reportStartOfRegion = reportStartOfRegionCallback;		
+		reportEndOfRegion = reportEndOfRegionCallback;		
 		reportMsPosInScore = reportMsPosInScoreCallback;
-		reportTickOverload = reportTickOverloadCallback;
+		reportUndersizedMomentDuration = reportUndersizedMomentDurationCallBack;
 
 		// external interface
 		this.resume = resume;
@@ -463,7 +475,7 @@ export class Performer
 		{
 			setState("stopped");
 			performanceMsDur = Math.ceil(timer.now() - performanceStartTime);
-			reportEndOfPerformance(sequenceRecording, performanceMsDur);
+			scheduleReportEndOfPerformance(sequenceRecording, performanceMsDur);
 		}
 	}
 }

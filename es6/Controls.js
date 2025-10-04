@@ -464,7 +464,7 @@ var
 
         deleteSaveLink();
 
-        score.deleteTickOverloadMarkers();
+        score.deleteUndersizedMomentMarkers();
 
         setPage2ControlsDisabled();
 
@@ -533,7 +533,7 @@ var
 
         if(speed > 0)
         {
-            score.deleteTickOverloadMarkers();
+            score.deleteUndersizedMomentMarkers();
             score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
             performer.setTimerAndOutputDevice(conductor, conductor);
         }
@@ -612,8 +612,7 @@ var
     // or when the performer is stopped or has played its last subsequence.
     reportEndOfPerformance = function (sequenceRecording, performanceMsDur)
     {
-        var
-            scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
+        let  scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
 
         // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
         // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
@@ -1445,7 +1444,7 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.reportTickOverload);
+        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.reportUndersizedMomentDuration);
         
         setSvgControlsState('stopped');
     }
