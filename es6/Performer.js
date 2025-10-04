@@ -26,8 +26,7 @@ let moments, // Set in play().
 
 	lastReportedMsPos = -1, // set by tick() used by nextMoment()
 	msPosToReport = -1,   // set in nextMoment() and used/reset by tick()
-	nAsynchMomentsSentAtOnce = 1, // incremented in tick() if unequal timestamps are sent at the same time (inside the PREQUEUE loop). 
-
+	
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	currentRegionIndex, // the index in the regionSequence
 	endRegionIndex, // the index of the final region that will play (< regionSequence.length)
@@ -123,26 +122,23 @@ let moments, // Set in play().
 		else
 		{
 			nextMomt = currentMoment.nextMoment;
-			nextMomtMsPosInScore = nextMomt.msPosInScore;
-			if(nextMomt.msPosInScore >= 0)
+			if(nextMomt !== null)
 			{
-				reportMsPosInScore(nextMomt.msPosInScore);
-			}			
+				if(nextMomt.regionIndex !== undefined && nextMomt.regionIndex !== currentRegionIndex)
+				{
+					startOfRegion == true;
+					currentRegionIndex = nextMomt.regionIndex;
+					console.assert(nextMomt.msPosInScore === regionSequence[currentRegionIndex].startMsPosInScore);					
+					reportStartOfRegionCallback(nextMomt.msPosInScore);
+					
+				}
+				nextMomtMsPosInScore = nextMomt.msPosInScore;
+			}
 		}
 
 		// TODO: revise the following.
 		if(!stopped && !paused)
 		{
-
-			if(startOfRegion)
-			{
-				nextMomtMsPosInScore = regionSequence[currentRegionIndex].startMsPosInScore;
-			}
-			else
-			{
-				nextMomtMsPosInScore = nextMomtMsPosInScore;
-			}
-
 			if((nextMomtMsPosInScore > lastReportedMsPos) || startOfRegion)
 			{
 				// the position will be reported by tick() when nextMomt is sent.
@@ -199,14 +195,22 @@ let moments, // Set in play().
 	// The TimerConductor is now running setInterval at a nominal 3ms, which means
 	// "as fast as meaningfully possible, and definitely faster than PREQUEUE".
 	// This means that this tick function treats all events that happen within 6ms 
-	// as "synchronous", and performs them in a tight loop.   
+	// as "synchronous", and performs them in a tight loop.
+	//
+	// 4th October 2025: (while programming AssistantPerformer2025)
+	// 1. Removed the local PREQUEUE and delay variables, and the PREQUEUE loop.
+	//    This tick() function is called recursively per moment, and each moment's messages are conceptually
+	//    synchronous (i.e.have the same timestamp).
+	// 2. reportMsPosInScore(msPos) and reportTickOverload() are now called using requestAnimationFrame.
+	//    Copilot showed me how to use requestAnimationFrame to minimize the disruption to setTimeout
+	//    while updating the GUI.
+	// This scheme means that performance is _locally_ accurate (i.e. the individual moment.msDurations
+	// are respected as accurately as possible by setTimeOut, and the sound is always synchronised as
+	// accurately as possible with the GUI. But the actual overall duration of the performance may not be
+	// exactly the sum of the (recorded) msDurations: The recorded timestamps are set using the information
+	// in the score, not the actual timings of the performance.
 	tick = function()
 	{
-		var
-			PREQUEUE = 6, // Changed from 0 to 6 -- ji December 2018 (See above)
-			now = timer.now(),
-			delay;
-
 		// moment.timestamps are always absolute DOMHRT values here.
 		function sendMessages(moment)
 		{
@@ -220,73 +224,73 @@ let moments, // Set in play().
 			}
 		}
 
+		// Copilot showed me how to use requestAnimationFrame here.
+		function scheduleReportMsPosInScore(msPosToReport)
+		{
+			requestAnimationFrame(() => reportMsPosInScore(msPosToReport));
+		}
+
+		function scheduleReportTickOverload()
+		{
+			requestAnimationFrame(() => reportTickOverload());
+		}
+
+		const minimumMsDuration = 16;
+		let now = timer.now();
+
 		if(currentMoment === null)
 		{
 			return;
 		}
 
-		delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
 		if(currentMoment.nextMoment !== null)
 		{
 			currentMoment.nextMoment.timestamp = currentMoment.timestamp + (currentMoment.msDuration / speed);
 		}
-		nAsynchMomentsSentAtOnce = 1;
 
-		let thisTickTimestampLimit = currentMoment.timestamp + 16;  // nAsynchMomentsSentAtOnce not counted if the difference is 16ms
-
-		// send all messages that are due between now and PREQUEUE ms later. 
-		while(delay <= PREQUEUE)
+		if(msPosToReport >= 0)
 		{
-			if(msPosToReport >= 0)
-			{
-				reportMsPosInScore(msPosToReport);
-				lastReportedMsPos = msPosToReport; // lastReportedMsPos is used in nextMoment() above.
-				msPosToReport = -1;
-			}
+			scheduleReportMsPosInScore(msPosToReport);
+			lastReportedMsPos = msPosToReport;
+			msPosToReport = -1;
+		}
 
-			if(thisTickTimestampLimit < currentMoment.timestamp)
-			{
-				nAsynchMomentsSentAtOnce++;
-			}
+		if(currentMoment.messages.length > 0) // rest moments can be empty (but should be reported above) 
+		{
+			sendMessages(currentMoment);
 
-			if(currentMoment.messages.length > 0) // rest moments can be empty (but should be reported above) 
+			if(sequenceRecording !== undefined && sequenceRecording !== null)
 			{
-				sendMessages(currentMoment);
-
-				if(sequenceRecording !== undefined && sequenceRecording !== null)
+				// The moments are recorded with their current (absolute DOMHRT) timestamp values.
+				// These values are adjusted relative to the first moment.timestamp
+				// before saving them in a Standard MIDI File.
+				// (i.e. the value of the earliest timestamp in the recording is
+				// subtracted from all the timestamps in the recording)
+				for(let msg of currentMoment.messages)
 				{
-					// The moments are recorded with their current (absolute DOMHRT) timestamp values.
-					// These values are adjusted relative to the first moment.timestamp
-					// before saving them in a Standard MIDI File.
-					// (i.e. the value of the earliest timestamp in the recording is
-					// subtracted from all the timestamps in the recording)
-					for(let msg of currentMoment.messages)
-					{
-						let trIndex = msg.channel(),
-							tr = sequenceRecording.trackRecordings[trIndex];
+					let trIndex = msg.channel(),
+						tr = sequenceRecording.trackRecordings[trIndex];
 
-						tr.addMoment(currentMoment);
-					}
+					tr.addMoment(currentMoment);
 				}
 			}
-
-			currentMoment = nextMoment();
-
-			if(currentMoment === null)
-			{
-				// we're pausing, or have hit the end of the sequence.
-				return;
-			}
-
-			delay = currentMoment.timestamp - now;
 		}
 
-		if(nAsynchMomentsSentAtOnce > 1)
+		if(currentMoment.msDuration < minimumMsDuration)
 		{
-			reportTickOverload();
+			scheduleReportTickOverload();
+		}
+		
+		let delay = currentMoment.msDuration / speed;
+
+		currentMoment = nextMoment();
+		if(currentMoment === null)
+		{
+			// we're pausing, or have hit the end of the sequence.
+			return;
 		}
 
-		window.setTimeout(tick, delay);  // that will schedule the next tick.
+		window.setTimeout(tick, delay );  // schedules the next tick.
 	},
 
 	// Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
@@ -321,6 +325,7 @@ let moments, // Set in play().
 		{
 			setState("running");
 
+			currentRegionIndex = 0;
 			currentMoment = moments[0];
 			currentMoment.timestamp = timer.now();
 			if(currentMoment === null)
@@ -462,6 +467,7 @@ export class Performer
 		}
 	}
 }
+
 
 
 
