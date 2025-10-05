@@ -59,7 +59,7 @@ export class Moment
 	}
 
 	// returns an object having a timestamp and a clone of this.messages[]
-	recordingData()
+	timestampedMessages()
 	{
 		let rval = { timestamp: this.timestamp, messages: [] },
 			rvalMessages = rval.messages;

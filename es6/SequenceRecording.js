@@ -1,6 +1,6 @@
 
 import { TrackRecording } from "./TrackRecording.js";
-import { Message } from "./Message.js";
+//import { Message } from "./Message.js";
 
 export class SequenceRecording 
 {
@@ -22,27 +22,59 @@ export class SequenceRecording
 		}
 	}
 
-	// The data argument is a Uint8Array 
-	addMessage(data, timestamp)
+	//// The data argument is a Uint8Array 
+	//addMessage(data, timestamp)
+	//{
+	//	var channelIndex = data[0] & 0xF,
+	//		message;
+	//
+	//	switch(data.length)
+	//	{
+	//		case 1:
+	//			message = new Message(data[0]);
+	//			break;
+	//		case 2:
+	//			message = new Message(data[0], data[1]);
+	//			break;
+	//		case 3:
+	//			message = new Message(data[0], data[1], data[2]);
+	//			break;
+	//	}
+	//	this.trackRecordings[channelIndex].addMessage(message, timestamp);
+	//}
+
+	// The trackRecordings are recorded separately, each with the currentMoment's (absolute DOMHRT) timestamp.
+	// These values will be adjusted relative to the first moment.timestamp
+	// before saving them in a Standard MIDI File.
+	// (i.e. the value of the earliest timestamp in the recording will be
+	// subtracted from all the timestamps in the recording)
+	record(currentMoment)
 	{
-		var channelIndex = data[0] & 0xF,
-			message;
+		let timeStampedMessages = currentMoment.timestampedMessages(),
+			timestamp = timeStampedMessages.timestamp,					
+			messages = timeStampedMessages.messages,
+			messagesPerTrack = [],
+			timestampedMoment = {};
 
-		switch(data.length)
+		for(let msg of messages)
 		{
-			case 1:
-				message = new Message(data[0]);
-				break;
-			case 2:
-				message = new Message(data[0], data[1]);
-				break;
-			case 3:
-				message = new Message(data[0], data[1], data[2]);
-				break;
+			let trIndex = msg.channel();
+			
+			if(messagesPerTrack[trIndex] === undefined)
+			{
+				messagesPerTrack[trIndex] = [];
+			}
+			messagesPerTrack[trIndex].push(msg);											
 		}
-		this.trackRecordings[channelIndex].addMessage(message, timestamp);
-	};
+		timestampedMoment.timestamp = timestamp;
+		for(let trackIndex = 0; trackIndex < messagesPerTrack.length; ++trackIndex)
+		{
+			let trackRecording = this.trackRecordings[trackIndex];
 
+			timestampedMoment.messages = messagesPerTrack[trackIndex];					
+			trackRecording.moments.push(timestampedMoment);
+		}
+	}
 }
 
 

@@ -272,18 +272,7 @@ let moments, // Set in play().
 
 			if(sequenceRecording !== undefined && sequenceRecording !== null)
 			{
-				// The moments are recorded with their current (absolute DOMHRT) timestamp values.
-				// These values are adjusted relative to the first moment.timestamp
-				// before saving them in a Standard MIDI File.
-				// (i.e. the value of the earliest timestamp in the recording is
-				// subtracted from all the timestamps in the recording)
-				for(let msg of currentMoment.messages)
-				{
-					let trIndex = msg.channel(),
-						tr = sequenceRecording.trackRecordings[trIndex];
-
-					tr.addMoment(currentMoment);
-				}
+				sequenceRecording.record(currentMoment);
 			}
 		}
 
