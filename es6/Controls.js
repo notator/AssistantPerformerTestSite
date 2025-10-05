@@ -608,82 +608,18 @@ var
         enableInterpretationSelectControl();
     },
 
-    // Callback called when a performing sequenceRecording is stopped or has played its last message,
-    // or when the performer is stopped or has played its last subsequence.
-    reportEndOfPerformance = function (sequenceRecording, performanceMsDur)
+    // Callback called when the performer is stopped or has come to the end of the score.
+    reportEndOfPerformance = function (performanceData)
     {
-        let  scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
-
-        // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
-        // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
-        function setTimestampsRelativeToSequenceRecording(sequenceRecording)
-        {
-            var i, nOutputVoices = sequenceRecording.trackRecordings.length, trackRecording,
-                j, nMoments, moment,
-                offset, success = true;
-
-            // Returns the earliest moment.timestamp in the sequenceRecording.
-            // Returns Number.MAX_VALUE if sequenceRecording is undefined, null or has no moments.
-            function findOffset(sequenceRecording)
-            {
-                var
-                    k, nTrks, trackRec,
-                    timestamp,
-                    rOffset = Number.MAX_VALUE;
-
-                if(sequenceRecording !== undefined && sequenceRecording !== null)
-                {
-                    nTrks = sequenceRecording.trackRecordings.length;
-                    for(k = 0; k < nTrks; ++k)
-                    {
-                        trackRec = sequenceRecording.trackRecordings[k];
-                        // trackRec can be undefined, e.g. if a single track has channel > 0.
-                        if(trackRec !== undefined && trackRec.moments.length > 0)
-                        {
-                            timestamp = trackRec.moments[0].timestamp;
-                            rOffset = (rOffset < timestamp) ? rOffset : timestamp;
-                        }
-                    }
-                }
-
-                return rOffset;
-            }
-
-            offset = findOffset(sequenceRecording);
-
-            if(offset === Number.MAX_VALUE)
-            {
-                success = false;
-            }
-            else
-            {
-                for(i = 0; i < nOutputVoices; ++i)
-                {
-                    trackRecording = sequenceRecording.trackRecordings[i];
-                    // trackRecording can be undefined, e.g. if a single track has channel > 0.
-                    if(trackRecording !== undefined)
-                    {
-                        nMoments = trackRecording.moments.length;
-                        for(j = 0; j < nMoments; ++j)
-                        {
-                            moment = trackRecording.moments[j];
-                            moment.timestamp -= offset;
-                        }
-                    }
-                }
-            }
-            return success;
-        }
-
-        if(setTimestampsRelativeToSequenceRecording(sequenceRecording))
-        {
-            createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDur);
-        }
-
-        // The moment.timestamps do not need to be restored to their original values here
-        // because they will be re-assigned next time sequenceRecording.nextMoment() is called.
+        let sequenceRecording = performanceData.sequenceRecording,
+            performanceMsDur = performanceData.performanceMsDur,
+            scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
 
         deviceOptions.outputDevice.setAllChannelSoundOff();
+
+        sequenceRecording.processPerformedMoments();
+
+        createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDur);        
 
         setStopped();
         // the following line is important, because the stop button is also the pause button.

@@ -12,6 +12,9 @@ export class SequenceRecording
 	{
 		let i, nOutputTracks = trackIsOnArray.length;
 
+		// moments are initially stored here during a performance. 
+		this.performedMoments = [];
+		// the trackRecordings are filled by processPerformedMoments() when the performance has stopped.
 		this.trackRecordings = [];
 		for(i = 0; i < nOutputTracks; ++i)
 		{
@@ -22,57 +25,58 @@ export class SequenceRecording
 		}
 	}
 
-	//// The data argument is a Uint8Array 
-	//addMessage(data, timestamp)
-	//{
-	//	var channelIndex = data[0] & 0xF,
-	//		message;
-	//
-	//	switch(data.length)
-	//	{
-	//		case 1:
-	//			message = new Message(data[0]);
-	//			break;
-	//		case 2:
-	//			message = new Message(data[0], data[1]);
-	//			break;
-	//		case 3:
-	//			message = new Message(data[0], data[1], data[2]);
-	//			break;
-	//	}
-	//	this.trackRecordings[channelIndex].addMessage(message, timestamp);
-	//}
-
-	// The trackRecordings are recorded separately, each with the currentMoment's (absolute DOMHRT) timestamp.
-	// These values will be adjusted relative to the first moment.timestamp
-	// before saving them in a Standard MIDI File.
-	// (i.e. the value of the earliest timestamp in the recording will be
-	// subtracted from all the timestamps in the recording)
 	record(currentMoment)
 	{
-		let timeStampedMessages = currentMoment.timestampedMessages(),
-			timestamp = timeStampedMessages.timestamp,					
-			messages = timeStampedMessages.messages,
-			messagesPerTrack = [],
-			timestampedMoment = {};
+		this.performedMoments.push(currentMoment);
+	}
 
-		for(let msg of messages)
+	// Sets the separate trackRecordings, each with a normalized timestamp relative to the start of the recording.
+	processPerformedMoments()
+	{
+		function normalizeTimestamps(that)
 		{
-			let trIndex = msg.channel();
-			
-			if(messagesPerTrack[trIndex] === undefined)
+			let performedMoments = that.performedMoments,
+				originTimestamp = performedMoments[0].timestamp;
+
+			for(let moment of performedMoments)
 			{
-				messagesPerTrack[trIndex] = [];
+				moment.timestamp -= originTimestamp;
 			}
-			messagesPerTrack[trIndex].push(msg);											
 		}
-		timestampedMoment.timestamp = timestamp;
-		for(let trackIndex = 0; trackIndex < messagesPerTrack.length; ++trackIndex)
-		{
-			let trackRecording = this.trackRecordings[trackIndex];
 
-			timestampedMoment.messages = messagesPerTrack[trackIndex];					
-			trackRecording.moments.push(timestampedMoment);
+		function getTrackRecordings(that, currentMoment)
+		{
+			let timeStampedMessages = currentMoment.timestampedMessages(),
+				timestamp = timeStampedMessages.timestamp,					
+				messages = timeStampedMessages.messages,
+				messagesPerTrack = [],
+				timestampedMoment = {};
+
+			for(let msg of messages)
+			{
+				let trIndex = msg.channel();
+			
+				if(messagesPerTrack[trIndex] === undefined)
+				{
+					messagesPerTrack[trIndex] = [];
+				}
+				messagesPerTrack[trIndex].push(msg);											
+			}
+			timestampedMoment.timestamp = timestamp;
+			for(let trackIndex = 0; trackIndex < messagesPerTrack.length; ++trackIndex)
+			{
+				let trackRecording = that.trackRecordings[trackIndex];
+
+				timestampedMoment.messages = messagesPerTrack[trackIndex];					
+				trackRecording.moments.push(timestampedMoment);
+			}
+		}
+
+		console.assert(this.performedMoments.length > 0);
+		normalizeTimestamps(this);
+		for(let moment of this.performedMoments)
+		{
+			getTrackRecordings(this, moment);			
 		}
 	}
 }

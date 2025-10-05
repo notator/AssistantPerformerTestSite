@@ -73,7 +73,10 @@ let moments, // Set in play().
 
 	scheduleReportEndOfPerformance = function(sequenceRecording, performanceMsDur)
 	{
-		requestAnimationFrame((sequenceRecording, performanceMsDur) => reportEndOfPerformance(sequenceRecording, performanceMsDur));
+		let performanceData = {sequenceRecording, performanceMsDur};
+
+		requestAnimationFrame(() => reportEndOfPerformance(performanceData));
+
 	},
 
 	// This function uses, but does not change, the global moments variable.
@@ -99,7 +102,7 @@ let moments, // Set in play().
 
 		function scheduleReportEndOfRegion(regionIndex)
 		{
-			requestAnimationFrame((regionIndex) => reportEndOfRegion(regionIndex));
+			requestAnimationFrame(() => reportEndOfRegion(regionIndex));
 		}
 
 		if(document.hidden === true)
@@ -356,7 +359,7 @@ export class Performer
 {
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence ends
 	// It is called in this file as:
-	//      reportEndOfPerformance(sequenceRecording, performanceMsDur);
+	//      reportEndOfPerformance(performanceData) // performanceData is {sequenceRecording, performanceMsDur}
 	// The reportEndOfRegionCallback argument is a callback function that is called when a new Region is about to start.
 	// Only those Moments that are at the beginning of a Region have a .startRegion attribute. The attribute's value is
 	// the Region that is about to start.
