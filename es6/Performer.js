@@ -275,7 +275,7 @@ let moments, // Set in play().
 
 			if(sequenceRecording !== undefined && sequenceRecording !== null)
 			{
-				sequenceRecording.record(currentMoment);
+				sequenceRecording.performedMoments.push(currentMoment); // will be processed later
 			}
 		}
 

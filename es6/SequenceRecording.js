@@ -25,11 +25,6 @@ export class SequenceRecording
 		}
 	}
 
-	record(currentMoment)
-	{
-		this.performedMoments.push(currentMoment);
-	}
-
 	// Sets the separate trackRecordings, each with a normalized timestamp relative to the start of the recording.
 	processPerformedMoments()
 	{
