@@ -1,6 +1,5 @@
 
 import { TrackRecording } from "./TrackRecording.js";
-//import { Message } from "./Message.js";
 
 export class SequenceRecording 
 {
@@ -73,6 +72,35 @@ export class SequenceRecording
 		{
 			getTrackRecordings(this, moment);			
 		}
+	}
+
+	// Returns true if any of the trackRecordings contain moments, otherwise false.
+	// Used to prevent the creation of a 'save' button when there is nothing to save.
+	hasData()
+	{
+		let	has = false,
+			trackRecordings = this.trackRecordings,
+			nTracks = trackRecordings.length;
+
+		for(let i = 0; i < nTracks; ++i)
+		{
+			if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
+			{
+				has = true;
+				break;
+			}
+		}
+		return has;
+	}
+
+	// Returns the processed sequence as a JSON string wrapped in a Blob.
+	// The JSON string is in the format that can be read by the ResidentSynthHost.
+	toJSON(sequenceMsDur)
+	{
+		let jsonString = "", // TODO
+		jsonBlob = new Blob([jsonString], {type:"application/json"} );
+
+		return jsonBlob;
 	}
 }
 

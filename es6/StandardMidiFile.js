@@ -112,25 +112,6 @@ let
 			smf = null,
 			trackRecordings = sequenceRecording.trackRecordings;
 
-		// Returns true if any of the trackRecordings contain moments, otherwise false.
-		// Used to prevent the creation of a 'save' button when there is nothing to save.
-		function hasData(trackRecordings)
-		{
-			var
-				i, has = false,
-				nTracks = trackRecordings.length;
-
-			for(i = 0; i < nTracks; ++i)
-			{
-				if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
-				{
-					has = true;
-					break;
-				}
-			}
-			return has;
-		}
-
 		// Returns a Uint8Array containing the complete standard MIDI file.
 		// Moment timestamps are currently relative to the start of the trackRecordings, so the
 		// earliest moment timestamp is 0.
@@ -483,7 +464,7 @@ let
 			return midiFileArray;
 		}
 
-		if(hasData(trackRecordings))
+		if(sequenceRecording.hasData())
 		{
 			midiArray = sequenceToUint8Array(trackRecordings, sequenceMsDur);
 			smf = new Blob([midiArray], { type: 'audio/midi' });
