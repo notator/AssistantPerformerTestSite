@@ -43,7 +43,7 @@ var
     // options set in the top dialog
     deviceOptions = {},
 
-    // deletes the 'save' button created by createSaveMIDIFileLink() 
+    // deletes the 'save' button created by createSaveFileLink() 
     deleteSaveLink = function ()
     {
         let
@@ -59,50 +59,6 @@ var
                 downloadLinkDiv.removeChild(saveLink);
             }, 1500);
         }
-    },
-
-    // Returns true if any of the defined trackRecordings contain moments, otherwise false.
-    // Used to prevent the creation of a 'save' button when there is nothing to save.
-    hasData = function (nOutputVoices, trackRecordings)
-    {
-        var i, has = false;
-        for(i = 0; i < nOutputVoices; ++i)
-        {
-            if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
-            {
-                has = true;
-                break;
-            }
-        }
-        return has;
-    },
-
-    // Returns the name of the file to be downloaded
-    // The date part of the name is formatted as
-    //     year-month-day, with month and day always having two characters
-    // so that downloaded files will list in order of creation time.
-    getMIDIFileName = function (scoreName)
-    {
-        var
-            d = new Date(),
-            dayOfTheMonth = (d.getDate()).toString(),
-            month = (d.getMonth() + 1).toString(),
-            year = (d.getFullYear()).toString(),
-            downloadName;
-
-        if(month.length === 1)
-        {
-            month = "0".concat(month);
-        }
-
-        if(dayOfTheMonth.length === 1)
-        {
-            dayOfTheMonth = "0".concat(dayOfTheMonth);
-        }
-
-        downloadName = scoreName.concat('_', year, '-', month, '-', dayOfTheMonth, '.mid'); // .mid is added in case scoreName contains a '.'.
-
-        return downloadName;
     },
 
     // Creates a button which, when clicked, downloads a standard MIDI file recording
@@ -122,32 +78,57 @@ var
     // sequenceMsDur is the total duration of the sequenceRecording in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileLink = function (scoreName, sequenceRecording, sequenceMsDur)
+    createSaveFileLink = function (scoreName, sequenceRecording, sequenceMsDur)
     {
-        var
-            standardMidiFile,
-            downloadName,
-            downloadLinkDiv, saveLink, a,
-            nOutputVoices = sequenceRecording.trackRecordings.length;
-
-        if(hasData(nOutputVoices, sequenceRecording.trackRecordings))
+        // Returns the name of the file to be downloaded (without the .mid or .json suffix)
+        // The date part of the name is formatted as
+        //     year-month-day, with month and day always having two characters
+        // so that downloaded files will list in order of creation time.
+        function getFilenameRoot(scoreName)
         {
-            downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the Element which will contain the link
+            var
+                d = new Date(),
+                dayOfTheMonth = (d.getDate()).toString(),
+                month = (d.getMonth() + 1).toString(),
+                year = (d.getFullYear()).toString(),
+                downloadName;
+
+            if(month.length === 1)
+            {
+                month = "0".concat(month);
+            }
+
+            if(dayOfTheMonth.length === 1)
+            {
+                dayOfTheMonth = "0".concat(dayOfTheMonth);
+            }
+
+            downloadName = scoreName.concat('_', year, '-', month, '-', dayOfTheMonth);
+
+            return downloadName;
+        }
+
+        if(sequenceRecording.hasData())
+        {
+            let downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the Element which will contain the link
 
             if(downloadLinkDiv !== null)
             {
-                saveLink = document.getElementById("saveLink");
-
-                if(saveLink === null) // It doesn't exist, so can be created and added to downloadLinkDiv.
+                if(document.getElementById("saveLink") === null) // It doesn't exist, so can be created and added to downloadLinkDiv.
                 {
-                    downloadName = getMIDIFileName(scoreName);
+                    let downloadName = getFilenameRoot(scoreName),
+                        blob;
+                    
+                    //downloadName = downloadName + ".midi";
+                    //blob = sequenceToSMF(sequenceRecording, sequenceMsDur);
 
-                    standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDur);
+                    downloadName = downloadName + ".json";
+                    blob = sequenceRecording.toJSON(sequenceMsDur);
 
-                    a = document.createElement('a');
+                    let a = document.createElement('a');
                     a.id = "saveLink";
                     a.download = downloadName;
-                    a.href = window.URL.createObjectURL(standardMidiFile); // window.URL is set in Main.js
+                    a.href = window.URL.createObjectURL(blob); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
                     a.onmouseover = function () // there is an event argument, but it is ignored
@@ -619,7 +600,7 @@ var
 
         sequenceRecording.processPerformedMoments();
 
-        createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDur);        
+        createSaveFileLink(scoreName, sequenceRecording, performanceMsDur);        
 
         setStopped();
         // the following line is important, because the stop button is also the pause button.
