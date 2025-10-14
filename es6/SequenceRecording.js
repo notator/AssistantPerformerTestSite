@@ -49,6 +49,7 @@ export class SequenceRecording
 
 				if(previousMoment.timestamp === currentMoment.timestamp)
 				{
+					console.assert(false, "Untested code.");
 					previousMoment.mergeMoment(currentMoment);
 					performedMoments.splice(momentIndex, 1); // remove the current moment
 				}

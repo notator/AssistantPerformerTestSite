@@ -124,6 +124,7 @@ var
                     
                     if(saveAsStandardMIDIFile)
                     {
+                        console.assert(false, "Untested code.");
                         // sequenceRecording will be saved as a Standard MIDI File
                         downloadName = filenameRoot + ".midi";
                         blob = sequenceToSMF(sequenceRecording, sequenceMsDur);
