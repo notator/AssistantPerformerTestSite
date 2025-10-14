@@ -116,14 +116,24 @@ var
             {
                 if(document.getElementById("saveLink") === null) // It doesn't exist, so can be created and added to downloadLinkDiv.
                 {
-                    let downloadName = getFilenameRoot(scoreName),
+                    const saveAsStandardMIDIFile = false;
+
+                    let filenameRoot = getFilenameRoot(scoreName),
+                        downloadName,
                         blob;
                     
-                    //downloadName = downloadName + ".midi";
-                    //blob = sequenceToSMF(sequenceRecording, sequenceMsDur);
-
-                    downloadName = downloadName + ".json";
-                    blob = sequenceRecording.toJSON(downloadName, sequenceMsDur);
+                    if(saveAsStandardMIDIFile)
+                    {
+                        // sequenceRecording will be saved as a Standard MIDI File
+                        downloadName = filenameRoot + ".midi";
+                        blob = sequenceToSMF(sequenceRecording, sequenceMsDur);
+                    }
+                    else
+                    {
+                        // sequenceRecording will be saved in ResidentSynth recording format (JSON)
+                        downloadName = filenameRoot + ".json";
+                        blob = sequenceRecording.toJSON(filenameRoot, sequenceMsDur);
+                    }
 
                     let a = document.createElement('a');
                     a.id = "saveLink";
