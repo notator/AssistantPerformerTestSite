@@ -123,7 +123,7 @@ var
                     //blob = sequenceToSMF(sequenceRecording, sequenceMsDur);
 
                     downloadName = downloadName + ".json";
-                    blob = sequenceRecording.toJSON(sequenceMsDur);
+                    blob = sequenceRecording.toJSON(downloadName, sequenceMsDur);
 
                     let a = document.createElement('a');
                     a.id = "saveLink";

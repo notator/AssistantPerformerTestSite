@@ -12,7 +12,9 @@ export class SequenceRecording
 		let i, nOutputTracks = trackIsOnArray.length;
 
 		// moments are initially stored here during a performance. 
-		this.performedMoments = [];
+		this.performedMoments = []; // will be ignored by JSON.stringify when saving the recording.
+
+		this.totalDuration = -1; // will be set at the end of a recording
 		// the trackRecordings are filled by processPerformedMoments() when the performance has stopped.
 		this.trackRecordings = [];
 		for(i = 0; i < nOutputTracks; ++i)
@@ -22,6 +24,7 @@ export class SequenceRecording
 				this.trackRecordings.push(new TrackRecording());
 			}
 		}
+		
 	}
 
 	// Sets the separate trackRecordings, each with a normalized timestamp relative to the start of the recording.
@@ -75,7 +78,6 @@ export class SequenceRecording
 	}
 
 	// Returns true if any of the trackRecordings contain moments, otherwise false.
-	// Used to prevent the creation of a 'save' button when there is nothing to save.
 	hasData()
 	{
 		let	has = false,
@@ -95,10 +97,73 @@ export class SequenceRecording
 
 	// Returns the processed sequence as a JSON string wrapped in a Blob.
 	// The JSON string is in the format that can be read by the ResidentSynthHost.
-	toJSON(sequenceMsDur)
+	toJSON(downloadName, sequenceMsDur)
 	{
-		let jsonString = "", // TODO
-		jsonBlob = new Blob([jsonString], {type:"application/json"} );
+		function toResidentSynthRecording(downloadName, trackRecordings, sequenceMsDur)
+		{
+			function getOutMsgString(trackIndex, msgData, timestamp)
+			{
+				const NOTE_OFF = 0x80,
+					  NOTE_ON = 0x90;
+
+				let msgString = "";
+
+				if(msgData[0] - trackIndex === NOTE_OFF)
+				{
+					msgString += ((NOTE_ON + trackIndex).toString() + ",");
+					msgString += (msgData[1].toString() + ",");
+					msgString += "0,";
+					
+				}
+				else
+				{
+					msgString += (msgData[0].toString() + ",");
+					msgString += (msgData[1].toString() + ",");
+					let data2String = (msgData[2] === undefined) ? "0" : msgData[2];
+					msgString += (data2String + ",")
+				}
+				msgString += timestamp.toString();
+
+				return msgString;
+			}
+
+			let recording = {};
+
+			recording.name = downloadName;
+			recording.channels = [];
+
+			for(let trackIndex = 0; trackIndex < trackRecordings.length; trackIndex++)
+			{
+				let channel = {};
+				channel.channel = trackIndex;
+				channel.messages = [];
+
+				let moments = trackRecordings[trackIndex].moments;
+				
+				for(let momentIndex = 0; momentIndex < moments.length; momentIndex++)
+				{
+					let moment = moments[momentIndex],
+						timestamp = moment.timestamp,
+						messages = moment.messages;
+
+					for(let msg of messages)
+					{
+						let outMsgString = getOutMsgString(trackIndex, msg.data, timestamp);
+						channel.messages.push(outMsgString);
+					}
+				}
+				
+				recording.channels.push(channel);
+			}
+
+			return recording;
+		}
+
+		let recording = toResidentSynthRecording(downloadName, this.trackRecordings, sequenceMsDur);
+
+		let jsonString = JSON.stringify(recording);
+		
+		let jsonBlob = new Blob([jsonString], {type:"application/json"} );
 
 		return jsonBlob;
 	}
