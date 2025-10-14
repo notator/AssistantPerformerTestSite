@@ -38,6 +38,20 @@ export class SequenceRecording
 			for(let moment of performedMoments)
 			{
 				moment.timestamp -= originTimestamp;
+				moment.timestamp = Math.round(moment.timestamp);
+			}
+
+			// merge moments having identical timestamps
+			for(let momentIndex = performedMoments.length - 1; momentIndex >= 1; momentIndex--)
+			{
+				let currentMoment = performedMoments[momentIndex],
+					previousMoment = performedMoments[momentIndex - 1];
+
+				if(previousMoment.timestamp === currentMoment.timestamp)
+				{
+					previousMoment.mergeMoment(currentMoment);
+					performedMoments.splice(momentIndex, 1); // remove the current moment
+				}
 			}
 		}
 
