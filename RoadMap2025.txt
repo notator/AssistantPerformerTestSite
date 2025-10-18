@@ -1,6 +1,5 @@
 
-AssistantPerformerRoadMap2025
-TODOs and Commentary about the changes being made before the Web Audio conference in Paris, November 2025.
+RoadMap2025 - TODOs for both the AssistantPerformer and ResidentSynth.
 These changes are being implemented gradually, in conjunction with changes being made in Moritz and the ResidentSynth(Host).
 This file is intended to be a help when revising the main documentation for AssistantPerformer2025 when the TODOS2025 branch is merged
 into the stable branch.
@@ -84,7 +83,10 @@ score is to experience "what it is like to be" someone else. Its comforting to k
 (In an Alert() box? Or in a temporary DIV on the markersLayer?). This could also be done using a new tool in the array of controls at the top
 of the page.
 
-4. (TODO) Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
+4. (TODO) Write a Moritz Algorithm that converts a Standard MIDI File to SVG-MIDI. For example my old L'Apres Midi...and/or Brückner 7 MIDI files.
+Note that each conversion needs a separate mkss file, so I can't just make one algorithm. The Algorithms can, however share a lot of code!
+
+5. (TODO) Write an application that would add recordings made by the ResidentSynthHost to a new or existing SVG-MIDI score.
 This project would be part of the Moritz solution (written in C#).
 I'm thinking of composing a piece that would be performed by the Assistant Performer, but that would be put together from different recordings
 of different (particular) note sequences. The (obsolete) palettes did this at the event level, but I'm thinking of doing something similar with
@@ -95,19 +97,16 @@ of higher logic (e.g. counterpoint) that way...
 (Note that I'm currently watching many videos by https://www.youtube.com/@EarlyMusicSources. Especially interesting are the ones related to the
 genesis of counterpoint and harmony. A really great resource!) 
 
-(Possibly after the November conference)
-5. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
+6. When the residentSynth supports timestamps, revise Sequence.js to use the new, timestamped messages.
 I want to simplify Sequence.js if possible, but not to change the way it reports each msPos (msPositions) to the Cursor! Possibly, the use of PREQUEUE could
 be changed: Timestamped messages sent _between_the_changes_of_cursor_position_ could be sent all at once to the synth for scheduling. Use CoPilot
 for help, but be very careful! We already got into a mess with this. (Those changes have now been undone.)
 
-(Possibly after the November conference)
-6. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
+7. Use Copilot to help modernise the Assistant Performer code. Some of it is very old, and it ought to be brought up to date with the latest
 ways of doing things. Apart from doing simple things like changing vars into lets, it might even be worth converting the whole project to strongly
 typed Typescript.
 
-(Possibly after the November conference)
-7. Implement an Annotations Editor in the AssistantPerformer2025. This may not be as large a project as it sounds. The "annotations" layer already
+8. Implement an Annotations Editor in the AssistantPerformer2025. This may not be as large a project as it sounds. The "annotations" layer already
 exists in the SVG-MIDI scores, and anything written on it is simply ignored by the performance functions.
 I imagine it should be fairly easy to create a new editing, "non-performance", page that would have special tools instead of performance controls.
 The tools would react to clicks on the score in the same way as the "set marker" tools do on the performance page.
