@@ -61,8 +61,7 @@ export class SequenceRecording
 			let timeStampedMessages = currentMoment.timestampedMessages(),
 				timestamp = timeStampedMessages.timestamp,					
 				messages = timeStampedMessages.messages,
-				messagesPerTrack = [],
-				timestampedMoment = {};
+				messagesPerTrack = [];
 
 			for(let msg of messages)
 			{
@@ -74,11 +73,13 @@ export class SequenceRecording
 				}
 				messagesPerTrack[trIndex].push(msg);											
 			}
-			timestampedMoment.timestamp = timestamp;
+			
 			for(let trackIndex = 0; trackIndex < messagesPerTrack.length; ++trackIndex)
 			{
-				let trackRecording = that.trackRecordings[trackIndex];
+				let trackRecording = that.trackRecordings[trackIndex],
+					timestampedMoment = {};
 
+				timestampedMoment.timestamp = timestamp;
 				timestampedMoment.messages = messagesPerTrack[trackIndex];					
 				trackRecording.moments.push(timestampedMoment);
 			}
@@ -161,10 +162,13 @@ export class SequenceRecording
 						timestamp = moment.timestamp,
 						messages = moment.messages;
 
-					for(let msg of messages)
+					if(messages !== undefined) // can be undefined if the performance was stopped prematurely
 					{
-						let outMsgString = getOutMsgString(trackIndex, msg.data, timestamp);
-						channel.messages.push(outMsgString);
+						for(let msg of messages)
+						{
+							let outMsgString = getOutMsgString(trackIndex, msg.data, timestamp);
+							channel.messages.push(outMsgString);
+						}
 					}
 				}
 				
