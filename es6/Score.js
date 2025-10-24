@@ -2018,7 +2018,7 @@ let //**************************************************************************
             let currentMoment = new Moment(allMoments[0]),
                 mergedMoments = [];
 
-            for(let i = 0; i < allMoments.length; ++i)
+            for(let i = 1; i < allMoments.length; ++i)
             {
                 let moment = allMoments[i];
                 if(moment.msPosInPerf === currentMoment.msPosInPerf)
