@@ -150,6 +150,11 @@ export class SequenceRecording
 
 			for(let trackIndex = 0; trackIndex < trackRecordings.length; trackIndex++)
 			{
+				if(trackRecordings[trackIndex] === undefined)
+				{
+					continue; // the track has been turned off for this performance so it has no recording.
+				}
+
 				let channel = {};
 				channel.channel = trackIndex;
 				channel.messages = [];
