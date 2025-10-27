@@ -109,7 +109,7 @@ let moments, // Set in play().
 		{
 			stopAtEndOfPerformance();
 		}
-		else if(currentMoment === null)
+		else if(currentMoment.nextMoment === null)
 		{
 			if(timer instanceof Conductor)
 			{
@@ -248,8 +248,6 @@ let moments, // Set in play().
 			requestAnimationFrame(() => reportUndersizedMomentDuration());
 		}
 
-		const PREQUEUE = 6;
-
 		if(currentMoment === null)
 		{
 			return;
@@ -279,7 +277,7 @@ let moments, // Set in play().
 			}
 		}
 
-		if(currentMoment.timestamp - previousTimestamp < PREQUEUE)
+		if(currentMoment.timestamp - previousTimestamp < 1)
 		{
 			nUndersizedMomentDurations++;
 		}
