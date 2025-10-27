@@ -2041,11 +2041,13 @@ let //**************************************************************************
                 }
                 else
                 {
-                    delete currentMoment.msPosInChord; // this attribute is no longer required.
                     mergedMoments.push(currentMoment);
                     currentMoment = new Moment(moment);
                 }
             }
+
+            mergedMoments.push(currentMoment);
+
             return mergedMoments;
         }
 
