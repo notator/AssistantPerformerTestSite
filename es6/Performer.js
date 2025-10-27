@@ -30,6 +30,7 @@ let moments, // Set in play().
 	
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
 	currentRegionIndex, // the index in the regionSequence
+	endRegionIndex,
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
