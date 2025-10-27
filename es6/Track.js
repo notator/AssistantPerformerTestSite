@@ -75,6 +75,7 @@ export class Track
 						moment.msPosInScore = midiObj.msPosInScore + midiObj.msDuration;
 					}
 					moment.msPosInPerf = midiObj.msPosInPerf + moment.msPosInChord;
+					delete moment.msPosInChord; // this attribute is no longer required.
 					console.assert(! isNaN(moment.msPosInPerf));
 				}
 
