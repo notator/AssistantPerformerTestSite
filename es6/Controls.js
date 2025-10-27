@@ -1372,7 +1372,8 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.reportUndersizedMomentDuration);
+        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore,
+            score.reportUndersizedMomentDuration, score.getRegionSequence());
         
         setSvgControlsState('stopped');
     }

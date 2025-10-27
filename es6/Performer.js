@@ -141,7 +141,7 @@ let moments, // Set in play().
 				if(nextMomt.regionIndex !== undefined && nextMomt.regionIndex !== currentRegionIndex)
 				{
 					scheduleReportEndOfRegion(currentRegionIndex);
-					startOfRegion == true;
+					startOfRegion = true;
 					currentRegionIndex = nextMomt.regionIndex;
 					console.assert(nextMomt.msPosInScore === regionSequence[currentRegionIndex].startMsPosInScore);											
 				}
@@ -371,7 +371,7 @@ export class Performer
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
 	// Only those Moments whose msPosInScore is to be reported have a .msPosInScore attribute.
-	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, reportUndersizedMomentDurationCallBack)
+	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, reportUndersizedMomentDurationCallBack, regionSequenceArg)
 	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
@@ -394,6 +394,7 @@ export class Performer
 		reportEndOfRegion = reportEndOfRegionCallback;		
 		reportMsPosInScore = reportMsPosInScoreCallback;
 		reportUndersizedMomentDuration = reportUndersizedMomentDurationCallBack;
+		regionSequence = regionSequenceArg;
 
 		// external interface
 		this.resume = resume;
