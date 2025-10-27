@@ -1861,6 +1861,17 @@ let //**************************************************************************
 
             function setRegionStartAndEndMsPosInPerf(regionSequence)
             {
+                function getRegionDurationInPerformance(interpIndex)
+                {
+                    let trackInterpretation = tracks[0].interpretations[interpIndex],
+                    msDuration = 0;
+                    for(let midiObject of trackInterpretation.midiObjects)
+                    {
+                        msDuration += midiObject.msDuration;
+                    }
+                    return msDuration;
+                }
+
                 if(regionSequence.hasConsecutiveRegions === false)
                 {
                     for(let region of regionSequence)
@@ -1874,9 +1885,12 @@ let //**************************************************************************
                     let msPos = 0;
                     for(let region of regionSequence)
                     {
+                        let regionDurationInPerformance = getRegionDurationInPerformance(region.interpIndex);
+
                         region.startMsPosInPerf = msPos;
-                        msPos += (region.endMsPosInScore - region.startMsPosInScore);
-                        region.endMsPosInPerf = msPos;
+                        region.endMsPosInPerf = region.startMsPosInPerf + regionDurationInPerformance;
+
+                        msPos = region.endMsPosInPerf;
                     }
                 }
             }
@@ -1997,15 +2011,13 @@ let //**************************************************************************
         function getAllMoments(tracks)
         {
             let allMoments = [];
-            for(let i = 0; i < tracks.length; ++i)
+            for(let track of tracks)
             {
-                let runtimeInterpretation = tracks[i].runtimeInterpretation;
-                if(runtimeInterpretation !== undefined)
-                {                    
+                if(track !== undefined && track.runtimeInterpretation !== undefined)
+                {
+                    let runtimeInterpretation = track.runtimeInterpretation;
                     for(let midiObject of runtimeInterpretation.midiObjects)
                     {
-                        // msPosInScore is used later to sort the moments, and when updating the GUI during performance
-                        midiObject.moments[0].msPosInScore = midiObject.msPosInScore;
                         allMoments = allMoments.concat(midiObject.moments);
                     }
                 }
@@ -2021,12 +2033,15 @@ let //**************************************************************************
             for(let i = 1; i < allMoments.length; ++i)
             {
                 let moment = allMoments[i];
+
                 if(moment.msPosInPerf === currentMoment.msPosInPerf)
                 {
                     currentMoment.mergeMoment(moment);
+                    currentMoment.msPosInScore = moment.msPosInScore; // changes the first moment in each region
                 }
                 else
                 {
+                    delete currentMoment.msPosInChord; // this attribute is no longer required.
                     mergedMoments.push(currentMoment);
                     currentMoment = new Moment(moment);
                 }
