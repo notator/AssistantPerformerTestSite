@@ -64,7 +64,7 @@ done incrementally.
     (04.09.2025: The rewrite is nearly complete. See Score.setTracksAndMoments().)
     Once the new Sequence code is complete and running, test all the AP's functions with the three test scores and Study 2, to ensure that
     the rewrite has been successful.
-Comment: Also see the blue-boxed note apropos the remarks at the start of Part 4 of Retrospective 2024 (Also, see my 9th July notebook entry.):
+Comment 1: Also see the blue-boxed note apropos the remarks at the start of Part 4 of Retrospective 2024 (Also, see my 9th July notebook entry.):
 The decision to implement multiple interpretations of a score has to do with the way performance practice traditions develop (through the
 use of different recordings of the same piece). There is never a single, perfect performance of a score that is intended to be interpreted by
 humans.
@@ -78,6 +78,15 @@ but that´s actually irrelevant here. Its also irrelevant to ask whether "free-wi
 working (much in the same way that all that´s relevant about space, time and information is how we _experience_ them. What they, and "free will"
 "really" are (maybe when _mathematically_ defined) isn´t relevant to how we experience them. Experiencing someone's unique performance of a
 score is to experience "what it is like to be" someone else. Its comforting to know that we are not alone.
+Comment 2: See my remarks in the application to attend the Web Audio Conference in Paris in November 2025. These include the idea that the space
+in DAW GUIs is currently being used inefficiently. (In the end I didn't go.)
+Comment 3 (On the difference between the logical durations in the score, and the real durations in the Assistant Performer's .json recordings):
+In this version of the AP, each moment has a single timestamp and a list of messages that are sent "simultaneously" to the synth.
+The time at which the messages are actually sent (their timestamp) depends on the local timer, but that does not affect their "simultaneity".
+As far as the performance logic is concerned, the smallest logical moment duration (the duration set in the score) is 1 millisecond.
+In practice, the time between two performed moments can be any floating point value greater than 0. Every message in a saved (.json) recording
+has a timestamp (relative to the start of the recording) that is rounded to the nearest integer millisecond. This means that moments that were
+nominally 1ms apart in the score can appear to be synchronous in the recording.
 
 3. (TODO) Add code to the AssistantPerformer that would react to a right-click on a chord symbol by displaying its temporal information
 (In an Alert() box? Or in a temporary DIV on the markersLayer?). This could also be done using a new tool in the array of controls at the top
