@@ -456,8 +456,6 @@ var
 
         deleteSaveLink();
 
-        score.deleteUndersizedMomentMarkers();
-
         setPage2ControlsDisabled();
 
         switch(deviceOptions.performanceMode)
@@ -525,7 +523,6 @@ var
 
         if(speed > 0)
         {
-            score.deleteUndersizedMomentMarkers();
             score.getMarkersLayer().appendChild(conductor.timeMarkerElement());
             performer.setTimerAndOutputDevice(conductor, conductor);
         }
@@ -1372,8 +1369,7 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore,
-            score.reportUndersizedMomentDuration, score.getRegionSequence());
+        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.getRegionSequence());
         
         setSvgControlsState('stopped');
     }

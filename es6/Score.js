@@ -60,34 +60,6 @@ let //**************************************************************************
     //******************************************************************************************
     // functions
 
-    // This callback is called by sequence.tick() if it can't keep up with the speed of a performance,
-    // so that moments having different msPosInScore have had to be sent "synchronously" in a tight loop.
-    // nAsynchMomentsSentAtOnce is the number of moments sent "synchronously" during the overload.
-    reportUndersizedMomentDuration = function ()
-    {
-        let undersizedMomentMarkerElem = cursor.element.cloneNode();
-
-        const LIGHT_BLUE = "#AAAAFF";
-
-        let strokeWidth = parseInt(undersizedMomentMarkerElem.style.strokeWidth) / 2,
-            strokeWidthString = strokeWidth.toString() + "px";
-
-        undersizedMomentMarkerElem.style.stroke = LIGHT_BLUE;
-        undersizedMomentMarkerElem.style.strokeWidth = strokeWidthString;
-        undersizedMomentMarkerElem.setAttribute("class", "tickOverloadMarker");
-
-        markersLayer.appendChild(undersizedMomentMarkerElem);
-    },
-
-    deleteUndersizedMomentMarkers = function ()
-    {
-        let markerElems = markersLayer.getElementsByClassName("tickOverloadMarker");
-        for(let i = markerElems.length - 1; i >= 0; --i)
-        {
-            markersLayer.removeChild(markerElems[i]);
-        }
-    },
-
     // Returns a clone of the trackIsOnArray
     // (so that values in the trackIsOnArray can't be changed except by the tracksControl).
     getReadOnlyTrackIsOnArray = function ()
@@ -2165,9 +2137,6 @@ export class Score
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;
-
-        this.reportUndersizedMomentDuration = reportUndersizedMomentDuration;
-        this.deleteUndersizedMomentMarkers = deleteUndersizedMomentMarkers;
 
         this.getMoments = getMoments; // called by performer to get the current moments
     }

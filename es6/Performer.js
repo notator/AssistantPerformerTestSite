@@ -21,11 +21,9 @@ let moments, // Set in play().
 	reportEndOfPerformance, // callback. Set in play().
 	reportEndOfRegion, // callback	
 	reportMsPosInScore,  // callback. Set in play().
-	reportUndersizedMomentDuration, // callback. Set in play().
 
 	lastReportedMsPos = -1, // set by tick() used by nextMoment()
 	msPosToReport = -1,   // set in nextMoment() and used/reset by tick()
-	nUndersizedMomentDurations = 0, // incremented in tick() if different moments are sent at the same time.
 	previousTimestamp = 0,
 	
 	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
@@ -214,7 +212,7 @@ let moments, // Set in play().
 	// 1. Removed the local PREQUEUE and delay variables, and the PREQUEUE loop.
 	//    This tick() function is called recursively per moment, and each moment's messages are conceptually
 	//    synchronous (i.e.have the same timestamp).
-	// 2. reportMsPosInScore(msPos) and reportUndersizedMomentDuration() are now called using requestAnimationFrame.
+	// 2. reportMsPosInScore(msPos) is now called using requestAnimationFrame.
 	//    Copilot showed me how to use requestAnimationFrame to minimize the disruption to setTimeout
 	//    while updating the GUI.
 	// This scheme means that performance is _locally_ accurate (i.e. the individual moment.msDurations
@@ -243,11 +241,6 @@ let moments, // Set in play().
 			requestAnimationFrame(() => reportMsPosInScore(msPosToReport));
 		}
 
-		function scheduleReportUndersizedMomentDuration()
-		{
-			requestAnimationFrame(() => reportUndersizedMomentDuration());
-		}
-
 		if(currentMoment === null)
 		{
 			return;
@@ -256,11 +249,6 @@ let moments, // Set in play().
 		if(msPosToReport >= 0)
 		{
 			scheduleReportMsPosInScore(msPosToReport);
-			if(nUndersizedMomentDurations > 0)
-			{
-				scheduleReportUndersizedMomentDuration();
-				nUndersizedMomentDurations = 0;
-			}
 			lastReportedMsPos = msPosToReport;
 			msPosToReport = -1;
 		}
@@ -275,13 +263,9 @@ let moments, // Set in play().
 			{
 				sequenceRecording.performedMoments.push(currentMoment); // will be processed later
 			}
-		}
 
-		if(currentMoment.timestamp - previousTimestamp < 1)
-		{
-			nUndersizedMomentDurations++;
-		}
-		previousTimestamp = currentMoment.timestamp;
+			previousTimestamp = currentMoment.timestamp;
+		}		
 		
 		let delay = currentMoment.msDuration / speed;
 
@@ -369,7 +353,7 @@ export class Performer
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
 	// Only those Moments whose msPosInScore is to be reported have a .msPosInScore attribute.
-	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, reportUndersizedMomentDurationCallBack, regionSequenceArg)
+	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, regionSequenceArg)
 	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
@@ -378,8 +362,7 @@ export class Performer
 
 		if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
 			|| reportEndOfRegionCallback === undefined || reportEndOfRegionCallback === null
-			|| reportMsPosInScoreCallback === undefined || reportMsPosInScoreCallback === null
-			|| reportUndersizedMomentDurationCallBack === undefined || reportUndersizedMomentDurationCallBack === null)
+			|| reportMsPosInScoreCallback === undefined || reportMsPosInScoreCallback === null)
 		{
 			throw "Error: all callbacks must be defined.";
 		}
@@ -391,7 +374,7 @@ export class Performer
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportEndOfRegion = reportEndOfRegionCallback;		
 		reportMsPosInScore = reportMsPosInScoreCallback;
-		reportUndersizedMomentDuration = reportUndersizedMomentDurationCallBack;
+
 		regionSequence = regionSequenceArg;
 
 		// external interface
