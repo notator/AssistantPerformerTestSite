@@ -6,12 +6,11 @@ let moments, // Set in play().
 	outputDevice, // either outputDevice.send function or conductor.midiThruSend function.
 
 	startOfRegion,
-	previousMomtMsPosInScore, // nextMoment()
 	currentMoment = null, // nextMoment(), resume(), tick()
 	endOfConductedPerformance,
 
-	//startMarkerMsPosInScore,
-	endMarkerMsPosInScore,
+	startMarker,
+	endMarker,
 
 	// used by setState()
 	pausedMoment = null, // set by pause(), used by resume()
@@ -22,11 +21,12 @@ let moments, // Set in play().
 	reportEndOfRegion, // callback	
 	reportMsPosInScore,  // callback. Set in play().
 
-	lastReportedMsPos = -1, // set by tick() used by nextMoment()
-	msPosToReport = -1,   // set in nextMoment() and used/reset by tick()
+	lastReportedMsPosInScore = -1, // set by tick() used by nextMoment()
+	msPosInScoreToReport = -1,   // set in nextMoment() and used/reset by tick()
 	previousTimestamp = 0,
+	previousMomtMsPosInPerf,
 	
-	regionSequence, // an array of objects having .startMsPosInScore, .endMsPosInScore and  .startMsPosInPerformance objects (is set in init())
+	regionSequence, // an array of regions
 	currentRegionIndex, // the index in the regionSequence
 	endRegionIndex,
 
@@ -89,7 +89,7 @@ let moments, // Set in play().
 	// Null is returned if there are no more moments or if the sequence is paused or stopped.
 	nextMoment = function()
 	{
-		let	nextMomtMsPosInScore, nextMomt = null, delay;
+		let	nextMomtMsPosInPerf, nextMomt = null, delay;
 
 		function stopAtEndOfPerformance()
 		{			
@@ -114,7 +114,7 @@ let moments, // Set in play().
 				if(endOfConductedPerformance === false)
 				{
 					nextMomt = new Moment(0, 0);  // dummy moment
-					nextMomtMsPosInScore = endMarkerMsPosInScore;
+					nextMomtMsPosInPerf = endMarker.msPosInPerf;
 					endOfConductedPerformance = true;
 				}
 				else
@@ -127,7 +127,7 @@ let moments, // Set in play().
 				// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
 				setState("stopped");
 				// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-				delay = (endMarkerMsPosInScore - previousMomtMsPosInScore) / speed;
+				delay = (endMarker.msPosInPerf - previousMomtMsPosInPerf) / speed;
 				window.setTimeout(stopAtEndOfPerformance, delay);
 			}
 		}
@@ -143,18 +143,18 @@ let moments, // Set in play().
 					currentRegionIndex = nextMomt.regionIndex;
 					console.assert(nextMomt.msPosInScore === regionSequence[currentRegionIndex].startMsPosInScore);											
 				}
-				nextMomtMsPosInScore = nextMomt.msPosInScore;
+				nextMomtMsPosInPerf = nextMomt.msPosInPerf;
 			}
 		}
 
 		// TODO: revise the following.
 		if(!stopped && !paused)
 		{
-			if((nextMomtMsPosInScore > lastReportedMsPos) || startOfRegion)
+			if((nextMomt.msPosInScore > lastReportedMsPosInScore) || startOfRegion)
 			{
 				// the position will be reported by tick() when nextMomt is sent.
-				msPosToReport = nextMomtMsPosInScore;
-				//console.log("msPosToReport=%i", msPosToReport);
+				msPosInScoreToReport = nextMomt.msPosInScore;
+				//console.log("msPosInScoreToReport=%i", msPosInScoreToReport);
 			}
 
 			if(previousTimestamp === null)
@@ -163,20 +163,20 @@ let moments, // Set in play().
 			}
 			else if(startOfRegion)
 			{
-				let duration = (regionSequence[currentRegionIndex - 1].endMsPosInScore - previousMomtMsPosInScore) / speed;
+				let duration = (regionSequence[currentRegionIndex - 1].endMsPosInPerf - previousMomtMsPosInPerf) / speed;
 				//console.log("start of region moment duration: " + duration.toString());
 				nextMomt.timestamp = duration + previousTimestamp;
 				startOfRegion = false;
 			}
 			else
 			{
-				let duration = (nextMomtMsPosInScore - previousMomtMsPosInScore) / speed;
+				let duration = (nextMomtMsPosInPerf - previousMomtMsPosInPerf) / speed;
 				//console.log("moment duration: " + duration.toString());
 				nextMomt.timestamp = duration + previousTimestamp;
 			}
 
 			previousTimestamp = nextMomt.timestamp;
-			previousMomtMsPosInScore = nextMomtMsPosInScore;
+			previousMomtMsPosInPerf = nextMomtMsPosInPerf;
 		}
 
 		return nextMomt; // null stops tick().
@@ -236,9 +236,9 @@ let moments, // Set in play().
 		}
 
 		// Copilot showed me how to use requestAnimationFrame here.
-		function scheduleReportMsPosInScore(msPosToReport)
+		function scheduleReportMsPosInScore(msPosInScoreToReport)
 		{
-			requestAnimationFrame(() => reportMsPosInScore(msPosToReport));
+			requestAnimationFrame(() => reportMsPosInScore(msPosInScoreToReport));
 		}
 
 		if(currentMoment === null)
@@ -246,11 +246,11 @@ let moments, // Set in play().
 			return;
 		}
 
-		if(msPosToReport >= 0)
+		if(msPosInScoreToReport >= 0)
 		{
-			scheduleReportMsPosInScore(msPosToReport);
-			lastReportedMsPos = msPosToReport;
-			msPosToReport = -1;
+			scheduleReportMsPosInScore(msPosInScoreToReport);
+			lastReportedMsPosInScore = msPosInScoreToReport;
+			msPosInScoreToReport = -1;
 		}
 
 		if(currentMoment.messages.length > 0) // rest moments can be empty (but should be reported above) 
@@ -311,8 +311,8 @@ let moments, // Set in play().
 		{
 			setState("running");
 
-			currentRegionIndex = 0;
-			currentMoment = moments[0];
+			//currentRegionIndex = startRegionIndex; is set in play
+			currentMoment = moments.find(x => x.msPosInPerf === startMarker.msPosInPerf);
 			previousTimestamp = 0;
 			if(currentMoment === null)
 			{
@@ -348,7 +348,7 @@ export class Performer
 	// The reportMsPosInScoreCallback argument is a callback function which reports the current
 	// msPosInScore back to the GUI while performing.
 	// It is called here as:
-	//      reportMsPosInScore(msPosToReport);
+	//      reportMsPosInScore(msPosInScoreToReport);
 	// The msPos it passes back is the original number of milliseconds from the start of the score
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
@@ -400,13 +400,16 @@ export class Performer
 	// play()
 	// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
 	// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
-	play(momentsArg, startRegionIndex, startMarkerMsPosInScore, endRegionIndexArg, endMarkerMsPosInScore, recording)
+	play(momentsArg, startMarkerArg, endMarkerArg, startRegionIndex, endRegionIndexArg, recording)
 	{
-		moments = momentsArg;		
+		moments = momentsArg;
+		
 		currentRegionIndex = startRegionIndex;
-		previousMomtMsPosInScore = startMarkerMsPosInScore;
-		endRegionIndex = endRegionIndexArg;	
-		endMarkerMsPosInScore = endMarkerMsPosInScore;
+		endRegionIndex = endRegionIndexArg;
+
+		startMarker = startMarkerArg;
+		endMarker = endMarkerArg;
+
 		// The 'recording' argument is an empty SequenceRecording to which timestamped moments will be added as they are performed.
 	    // It has the same number of tracks as the trackIsOnArray, but a track will be undefined if it has been turned off for this performance.
 		sequenceRecording = recording;
@@ -415,8 +418,8 @@ export class Performer
 		pauseStartTime = -1;
 		previousTimestamp = null;
 		
-		msPosToReport = -1;
-		lastReportedMsPos = -1;
+		msPosInScoreToReport = -1;
+		lastReportedMsPosInScore = -1;
 		endOfConductedPerformance = false;
 
 		performanceStartTime = timer.now();

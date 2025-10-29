@@ -496,9 +496,7 @@ var
 
             startRegionIndex = score.getStartRegionIndex();
             score.setActiveInfoStringsStyle(startRegionIndex);
-            startMarkerMsPos = score.getStartMarkerMsPosInScore();
             endRegionIndex = score.getEndRegionIndex();
-            endMarkerMsPos = score.getEndMarkerMsPosInScore();
 
             if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep)
             {
@@ -512,7 +510,7 @@ var
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
             let moments = score.getMoments();
-            performer.play(moments, startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording);
+            performer.play(moments, score.getStartMarker(), score.getEndMarker(), startRegionIndex, endRegionIndex, sequenceRecording);
         }
     },
 

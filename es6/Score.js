@@ -242,14 +242,14 @@ let //**************************************************************************
         return returnObject;
     },
 
-    getStartMarkerMsPosInScore = function ()
+    getStartMarker = function ()
     {
-        return startMarker.msPosInScore;
+        return startMarker;
     },
 
-    getEndMarkerMsPosInScore = function ()
+    getEndMarker = function ()
     {
-        return endMarker.msPosInScore;
+        return endMarker;
     },
 
     // This function is called by the tracksControl whenever a track's on/off state is toggled.
@@ -2101,8 +2101,8 @@ export class Score
         // it to the top of the div.
         this.moveStartMarkerToTop = moveStartMarkerToTop;
 
-        this.getStartMarkerMsPosInScore = getStartMarkerMsPosInScore;
-        this.getEndMarkerMsPosInScore = getEndMarkerMsPosInScore;
+        this.getStartMarker = getStartMarker;
+        this.getEndMarker = getEndMarker;
 
         // Recalculates the timeObject lists for the cursor using trackIsOnArray
         // (tracksControl.trackIsOnArray) to take into account which tracks are actually performing.
