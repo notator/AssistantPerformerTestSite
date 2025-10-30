@@ -189,38 +189,15 @@ class MidiObject
 {
 	constructor(midiObjectElem)
 	{
-		function getClonedMoments(originalMoments)
-		{
-			let clonedMoments = [],
-				clonedMoment;
-
-			for(let moment of originalMoments)
-			{
-				clonedMoment = new Moment(moment.msPosInChord);
-				clonedMoment.messages = moment.messages;
-				clonedMoments.push(clonedMoment);
-			}
-			return clonedMoments;
-		}
-
 		let moments = [],
-			msDuration,
-			msPosInScore;
+			msDuration;
 
-		if(midiObjectElem instanceof MidiObject)
-		{
-			 // make a clone
-			 moments = getClonedMoments(midiObjectElem.moments); // the contained messages are not cloned
-			 msDuration = midiObjectElem.msDuration;
-			 msPosInScore = midiObjectElem.msPosInScore;
-		}
-		else if (midiObjectElem.nodeName === "midiChord")
+		if(midiObjectElem.nodeName === "midiChord")
 		{
 			// read the score
 			let momDur = _getMoments(midiObjectElem);
 			moments = momDur.moments;
 			msDuration = momDur.msDuration;
-			msPosInScore = -1; // will be set later
 		}
 		else if (midiObjectElem.nodeName === "midiRest")
 		{
@@ -228,13 +205,14 @@ class MidiObject
 			let moment = new Moment(0); // There are no messages in the moment.messages array.
 			moments.push(moment);
 			msDuration = parseInt(midiObjectElem.getAttribute("msDuration"));
-			msPosInScore = -1; // will be set later
 		}
+		else throw("Illegal argument to MidiObject constructor.")
 
-		// The msDuration and msPosInScore properties are not changed by the global speed option!
+		// The msDuration, msPosInScore and msPosInPerf properties are not changed by the global speed option!
 		// These values are used, but not changed, either when moving Markers about or during performances.)		
 		Object.defineProperty(this, "msDuration", { value: msDuration, writable: false });
-		Object.defineProperty(this, "msPosInScore", { value: msPosInScore, writable: true });
+		Object.defineProperty(this, "msPosInScore", {value: -1, writable: true});
+		Object.defineProperty(this, "msPosInPerf", {value: -1, writable: true});
 		// Each moments array is an ordered array of Moment objects.
 		// A Moment is a list of logically synchronous Messages.
 		Object.defineProperty(this, "moments", { value: moments, writable: true });

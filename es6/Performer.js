@@ -107,7 +107,7 @@ let moments, // Set in play().
 		{
 			stopAtEndOfPerformance();
 		}
-		else if(currentMoment.nextMoment === null)
+		else if(currentMoment.nextMoment === null || currentMoment.nextMoment.msPosInPerf === endMarker.msPosInPerf)
 		{
 			if(timer instanceof Conductor)
 			{
@@ -134,6 +134,11 @@ let moments, // Set in play().
 		else
 		{
 			nextMomt = currentMoment.nextMoment;
+			if(nextMomt !== null && nextMomt.msPosInPerf === endMarker.msPosInPerf)
+			{
+				nextMomt = null;
+			}
+
 			if(nextMomt !== null)
 			{
 				if(nextMomt.regionIndex !== undefined && nextMomt.regionIndex !== currentRegionIndex)
@@ -147,7 +152,6 @@ let moments, // Set in play().
 			}
 		}
 
-		// TODO: revise the following.
 		if(!stopped && !paused)
 		{
 			if((nextMomt.msPosInScore > lastReportedMsPosInScore) || startOfRegion)
@@ -353,7 +357,7 @@ export class Performer
 	// (regardless of the current speed).This value is used to identify chord and rest symbols in the score,
 	// and so to synchronize the running cursor.
 	// Only those Moments whose msPosInScore is to be reported have a .msPosInScore attribute.
-	constructor(outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, regionSequenceArg)
+	constructor(momentsArg, outputDeviceArg, reportEndOfPerfCallback, reportEndOfRegionCallback, reportMsPosInScoreCallback, regionSequenceArg)
 	{		
 		if(outputDeviceArg === undefined || outputDeviceArg === null)
 		{
@@ -369,6 +373,7 @@ export class Performer
 
 		timer = performance; // performance.now() is the default timer
 
+		moments = momentsArg;
 		outputDevice = outputDeviceArg;
 
 		reportEndOfPerformance = reportEndOfPerfCallback;

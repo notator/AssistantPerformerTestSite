@@ -128,9 +128,9 @@ let //**************************************************************************
                 return barline;
             }
 
-            let returnObject = null;
+            let returnObject = undefined;
 
-            if(midiObjectBefore !== null && midiObjectAfter === null) // clicked to right of last midiObject
+            if(midiObjectBefore !== undefined && midiObjectAfter === undefined) // clicked to right of last midiObject
             {
                 if(settingStart)
                 {
@@ -144,7 +144,7 @@ let //**************************************************************************
                     returnObject = barline;
                 }
             }
-            else if(midiObjectBefore === null && midiObjectAfter !== null)	 // clicked to left of first midiObject
+            else if(midiObjectBefore === undefined && midiObjectAfter !== undefined)	 // clicked to left of first midiObject
             {
                 if(settingStart)
                 {
@@ -164,7 +164,7 @@ let //**************************************************************************
                     msPos = midiObject.msPosInScore,
                     barline = findBarline(system, msPos);
 
-                if(barline !== null)
+                if(barline !== undefined)
                 {
                     returnObject = barline;
                 }
@@ -177,7 +177,7 @@ let //**************************************************************************
             return returnObject;
         }
 
-        let midiObjectBefore = null, midiObjectAfter = null, returnObject = null,
+        let midiObjectBefore = undefined, midiObjectAfter = undefined, returnObject = undefined,
             deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
             startIndex = 0, endIndex = numberOfTracks,
             firstMidiObject, lastMidiObject,
@@ -220,9 +220,9 @@ let //**************************************************************************
             }
         }
 
-        if(returnObject === null)
+        if(returnObject === undefined)
         {
-            if(midiObjectBefore === null || midiObjectAfter === null)
+            if(midiObjectBefore === undefined || midiObjectAfter === undefined)
             {
                 let settingStart = state.localeCompare('settingStart') === 0;
                 returnObject = findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, firstMidiObject, lastMidiObject, deltaBefore, deltaAfter, settingStart);
@@ -458,10 +458,26 @@ let //**************************************************************************
 
         function getMsPosInPerf(msPosInScore, region)
         {
-            let msPosInRegion = msPosInScore - region.startMsPosInScore,
-                msPosInPerf = region.startMsPosInPerf + msPosInRegion;
+            function findMidiObject(msPosInScore, interpretationIndex)
+            {
+                let midiObject = undefined;
+                for(let track of tracks)
+                {
+                    let interpretation = track.interpretations[interpretationIndex];
+                    midiObject = interpretation.midiObjects.find(x => x.msPosInScore === msPosInScore)
+                    if(midiObject !== undefined)
+                    {
+                        break;
+                    }
+                }
 
-            return msPosInPerf;
+                return midiObject;
+            }
+
+            let regionIndex = regionSequence.indexOf(region),
+                midiObject = findMidiObject(msPosInScore, regionIndex);
+
+            return midiObject.msPosInPerf;
         }
 
         function selectRegionIndex(timeObject, settingEndMarker)
@@ -609,13 +625,7 @@ let //**************************************************************************
             {
                 regionIndex = -1;
             }
-            else if(possibleRegionNames.length === 1)
-            {
-                regionShortName = possibleRegionNames[0];
-                regionIndex = indexOfShortNameInRegionSequence(regionShortName);
-                regionShortName = "";
-            }
-            else if(possibleRegionNames.length > 1)
+            else
             {
                 openRegionSelectControl(possibleRegionNames, cursorX, cursorY);
             }
@@ -649,6 +659,7 @@ let //**************************************************************************
                     else
                     {
                         regionIndex = indexOfShortNameInRegionSequence(regionShortName);
+                        regionShortName = "";
                         if(regionIndex >= 0)
                         {
                             let region = regionSequence[regionIndex],
@@ -681,6 +692,7 @@ let //**************************************************************************
                     else
                     {
                         regionIndex = indexOfShortNameInRegionSequence(regionShortName);
+                        regionShortName = "";
                         if(regionIndex >= 0)
                         {
                             let region = regionSequence[regionIndex],
@@ -1345,8 +1357,8 @@ let //**************************************************************************
                         }
                     }
 
-                    // Sets the msPos of each timeObject (rests and chords) in the voice.timeObjects arrays.
-                    function setMsPositions(systems)
+                    // Sets the msPosInScore of each timeObject (rests and chords) in the voice.timeObjects arrays.
+                    function setMsPositionsInScore(systems)
                     {
                         let nStaves, nVoices, nSystems,
                             timeObjects, nTimeObjects, nInterpretations;
@@ -1371,14 +1383,15 @@ let //**************************************************************************
                                             nTimeObjects = timeObjects.length;
                                             for(let tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                                             {
-                                                let midiObject = timeObjects[tIndex][interpIndex];
+                                                let midiObject = timeObjects[tIndex][interpIndex],
+                                                    msDuration = timeObjects[tIndex][0].msDuration;                                                  ;
 
                                                 if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                                 {
                                                     Object.defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
                                                 }
 
-                                                msPos += midiObject.msDuration;
+                                                msPos += msDuration;
                                             }
                                         }
                                     }
@@ -1397,7 +1410,7 @@ let //**************************************************************************
                         getSystemVoiceObjects(i, systemElem, system, viewBoxScale);
                     }
 
-                    setMsPositions(systems);
+                    setMsPositionsInScore(systems);
                 }
 
                 function getSystemBarlineTimeObjects(systemElems, systemElem)
@@ -1978,7 +1991,7 @@ let //**************************************************************************
     // Returns a flat, linked list of moments.
     getMoments = function ()
     {
-        let linkedMoments = getLinkedMoments(regionSequence, tracks, trackIsOnArray);  
+        let linkedMoments = getLinkedMoments(regionSequence, tracks, trackIsOnArray);
         return linkedMoments;
     };
 

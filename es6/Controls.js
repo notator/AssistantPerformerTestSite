@@ -1130,6 +1130,7 @@ export class Controls
         {
             if(svgControlsState === 'stopped')
             {
+                score.getMoments();
                 setSvgControlsState('settingStart');
             }
             else if(svgControlsState === 'settingStart')
@@ -1142,6 +1143,7 @@ export class Controls
         {
             if(svgControlsState === 'stopped')
             {
+                score.getMoments();
                 setSvgControlsState('settingEnd');
             }
             else if(svgControlsState === 'settingEnd')
@@ -1362,7 +1364,9 @@ export class Controls
 
         score.refreshDisplay(undefined); // arg 2 is undefined so score.trackIsOnArray is not changed.
 
-        performer = new Performer(deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.getRegionSequence());
+        let moments = score.getMoments();
+
+        performer = new Performer(moments, deviceOptions.outputDevice, reportEndOfPerformance, reportEndOfRegion, reportMsPosInScore, score.getRegionSequence());
         
         setSvgControlsState('stopped');
     }

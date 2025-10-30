@@ -105,35 +105,25 @@ export class Track
 
 				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
 				{
-					let midiObjectInScore = midiObjectsInScore[midiObjIndex],
-						midiObjectInPerf;
+					let midiObjectInScore = midiObjectsInScore[midiObjIndex];					
 
-					if(midiObjectInScore instanceof MidiChord)
-					{
-						midiObjectInPerf = new MidiChord(midiObjectInScore);
-					}
-					else
-					{
-						midiObjectInPerf = new MidiRest(midiObjectInScore);
-					}					
+					midiObjectInScore.msPosInPerf = msPosInPerf;
+					msPosInPerf += midiObjectInScore.msDuration;
 
-					midiObjectInPerf.msPosInPerf = msPosInPerf;
-					msPosInPerf += midiObjectInPerf.msDuration;
-
-					midiObjectInPerf.moments[0].msPosInScore = midiObjectInScore.msPosInScore; // used to update the cursor when performing
+					midiObjectInScore.moments[0].msPosInScore = midiObjectInScore.msPosInScore; // used to update the cursor when performing
 
 					// MidiRest.moments contains a single Moment having an msPosInChord attribute that is set to 0.
-					for(let moment of midiObjectInPerf.moments)
+					for(let moment of midiObjectInScore.moments)
 					{
-						if(moment.msPosInChord === midiObjectInPerf.msDuration)
+						if(moment.msPosInChord === midiObjectInScore.msDuration)
 						{
-							moment.msPosInScore = midiObjectInPerf.msPosInScore + midiObjectInPerf.msDuration;
+							moment.msPosInScore = midiObjectInScore.msPosInScore + midiObjectInScore.msDuration;
 						}						
-						moment.msPosInPerf = midiObjectInPerf.msPosInPerf + moment.msPosInChord;
+						moment.msPosInPerf = midiObjectInScore.msPosInPerf + moment.msPosInChord;
 						console.assert(Number.isNaN(moment.msPosInPerf) === false);
 					}
 
-					interpretation.midiObjects.push(midiObjectInPerf);
+					interpretation.midiObjects.push(midiObjectInScore);
 
 					if(midiObjIndex === lastIndex)
 					{
