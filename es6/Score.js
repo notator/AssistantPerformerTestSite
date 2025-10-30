@@ -31,10 +31,6 @@ let //**************************************************************************
     // When no regions are defined explicitly in a score, default regions are constructed for each interpretation .
     regionSequence,
 
-    // A constant array of objects of the form {startMsPosInScore, array of regionShortName}
-    // used by the SetStartMarker and SetEndMarker tools.
-    regionShortNamesPerMsPosInScore,
-
     // An array of Track objects.
     tracks = [],
 
@@ -52,8 +48,6 @@ let //**************************************************************************
 
     // used by setStartMarker and setEndMarker tools.
     regionShortName = "",
-    startRegionIndex,
-    endRegionIndex,
     setMarkerEvent,
     setMarkerState,
 
@@ -340,8 +334,7 @@ let //**************************************************************************
     // It is called again by regionSelectControlMouseOut (above) after selecting a regionShortName
     svgPageClicked = function (e, state)
     {
-        let ignoreOtherMarker = e.ignoreOtherMarker, // used when changing interpretations
-            cursorX = e.pageX,
+        let cursorX = e.pageX,
             cursorY = e.pageY,
             systemIndex, system,
             timeObjectsArray, midiObjectOrBarline, trackIndex;
@@ -463,34 +456,16 @@ let //**************************************************************************
             return trackIndex;
         }
 
-        // Displays an alert if an attempt was made to set the startMarker or endMarker in the wrong order.
+        function getMsPosInPerf(msPosInScore, region)
+        {
+            let msPosInRegion = msPosInScore - region.startMsPosInScore,
+                msPosInPerf = region.startMsPosInPerf + msPosInRegion;
+
+            return msPosInPerf;
+        }
+
         function selectRegionIndex(timeObject, settingEndMarker)
         {
-            function findMsPosForRegions(timeObject, settingEndMarker)
-            {
-                let msPos = timeObject.msPosInScore;
-                if(settingEndMarker === true)
-                {
-                    msPos--;
-                }
-                return msPos;
-            }
-
-            function findRegionShortNamesAtMsPos(msPosInScore)
-            {
-                let regionShortNames = undefined;
-                for(let i = 1; i < regionShortNamesPerMsPosInScore.length; ++i)
-                {
-                    if(regionShortNamesPerMsPosInScore[i - 1].msPosInScore <= msPosInScore
-                        && regionShortNamesPerMsPosInScore[i].msPosInScore > msPosInScore)
-                    {
-                        regionShortNames = regionShortNamesPerMsPosInScore[i - 1].regionShortNames;
-                        break;
-                    }
-                }
-                return regionShortNames;
-            }
-
             // Creates the regionSelectElem and its containing div (=layer).
             // Populates the regionSelectElem's options, and adds the div to the document.
             function openRegionSelectControl(possibleRegionNames, cursorX, cursorY)
@@ -569,34 +544,49 @@ let //**************************************************************************
                 document.body.appendChild(selectRegionLayer);
             }
 
-            function getPossibleRegionShortNames(msPosInScore, regionShortNames, settingEndMarker, ignoreOtherMarker)
+            function getPossibleRegionShortNames(msPosInScore, settingEndMarker)
             {
-                let possibleNames = [];
-                for(let regionShortName of regionShortNames)
+                function findAllRegionsAtMsPosInScore(msPosInScore)
                 {
-                    let index = indexInRegionSequence(regionShortName);
-                    if(settingEndMarker === false)
+                    let regionsAtMsPosInScore = [];
+                    for(let region of regionSequence)
                     {
-                        if(index < endRegionIndex
-                            || (ignoreOtherMarker === undefined && index === endRegionIndex && msPosInScore < endMarker.msPosInScore))
+                        if(region.startMsPosInScore <= msPosInScore && region.endMsPosInScore > msPosInScore)
                         {
-                            // ignoreOtherMarker is defined only when changing interpretations.
-                            // In this case, the markers are not actually moving in the graphics, so the check does not need to be made,
-                            // and the  marker.msPosInScore values are currently invalid anyway (they are being reset).
-                            possibleNames.push(regionShortName);
+                            regionsAtMsPosInScore.push(region);
                         }
                     }
-                    else // find end region names
-                    {
-                        if(index > startRegionIndex
-                            || (ignoreOtherMarker === undefined && index === startRegionIndex && msPosInScore > startMarker.msPosInScore))
+                    return regionsAtMsPosInScore;
+                }
+
+                let regionsAtMsPosInScore = findAllRegionsAtMsPosInScore(timeObject.msPosInScore),
+                    possibleNames = [];
+
+                for(let regionAtMsPosInScore of regionsAtMsPosInScore)
+                {
+                    let msPosInPerf = getMsPosInPerf(msPosInScore, regionAtMsPosInScore)
+
+                    if(settingEndMarker === false)
+                    {   // settting startMarker
+                        let endMarkerRegion = regionSequence[endMarker.regionIndex];
+                        if(msPosInPerf < endMarker.msPosInPerf
+                            || (msPosInPerf < endMarker.msPosInPerf && msPosInPerf >= endMarkerRegion.startMsPosInPerf && msPosInPerf < endMarkerRegion.endMsPosInPerf))
                         {
-                            possibleNames.push(regionShortName);
+                            possibleNames.push(regionAtMsPosInScore.shortName);
+                        }
+                    }
+                    else 
+                    {   // setting endMarker
+                        let startMarkerRegion = regionSequence[startMarker.regionIndex];
+                        if(msPosInPerf > startMarker.msPosInPerf
+                            || (msPosInPerf > startMarker.msPosInPerf && msPosInPerf >= startMarkerRegion.startMsPosInPerf && msPosInPerf < startMarkerRegion.endMsPosInPerf))
+                        {
+                            possibleNames.push(regionAtMsPosInScore.shortName);
                         }
                     }
                 }
 
-                if(possibleNames.length === 0 && ignoreOtherMarker === undefined)
+                if(possibleNames.length === 0)
                 {
                     if(settingEndMarker === false)
                     {
@@ -612,9 +602,7 @@ let //**************************************************************************
                 return possibleNames;
             }
 
-            let msPosForRegions = findMsPosForRegions(timeObject, settingEndMarker),
-                regionShortNames = findRegionShortNamesAtMsPos(msPosForRegions),
-                possibleRegionNames = getPossibleRegionShortNames(msPosForRegions, regionShortNames, settingEndMarker, ignoreOtherMarker),
+            let possibleRegionNames = getPossibleRegionShortNames(timeObject.msPosInScore, settingEndMarker),
                 regionIndex = 0; // default
 
             if(possibleRegionNames === null) // illegal marker position click
@@ -624,7 +612,7 @@ let //**************************************************************************
             else if(possibleRegionNames.length === 1)
             {
                 regionShortName = possibleRegionNames[0];
-                regionIndex = indexInRegionSequence(regionShortName);
+                regionIndex = indexOfShortNameInRegionSequence(regionShortName);
                 regionShortName = "";
             }
             else if(possibleRegionNames.length > 1)
@@ -658,20 +646,27 @@ let //**************************************************************************
                         setMarkerEvent = e; // global: This function is called again with this event when a region has been selected.
                         setMarkerState = state; // global: This function is called again with this state when a region has been selected. 
                     }
-                    else regionIndex = indexInRegionSequence(regionShortName);
-
-                    if(regionIndex >= 0 && (regionSequence.length === 1 || regionIndex <= endRegionIndex))
+                    else
                     {
-                        startRegionIndex = regionIndex;
-                        startMarker = system.startMarker;
-                        hideStartMarkersExcept(startMarker);
-                        startMarker.moveTo(midiObjectOrBarline);
-                        startMarker.msPosInPerf = startMarker.msPosInScore;
-                        if(regionSequence.length > 1)
+                        regionIndex = indexOfShortNameInRegionSequence(regionShortName);
+                        if(regionIndex >= 0)
                         {
-                            let region = regionSequence[startRegionIndex];
-                            startMarker.setLable(region.shortName);
-                            startMarker.msPosInPerf += region.startMsPosInPerf;
+                            let region = regionSequence[regionIndex],
+                                msPosInPerf = getMsPosInPerf(midiObjectOrBarline.msPosInScore, region);
+
+                            if(msPosInPerf >= endMarker.msPosInPerf)
+                            {
+                                alert("Attempt to position the startMarker after the endMarker")
+                            }
+                            else
+                            {
+                                startMarker = system.startMarker;
+                                hideStartMarkersExcept(startMarker);
+                                startMarker.regionIndex = regionIndex;
+                                startMarker.moveTo(midiObjectOrBarline);
+                                startMarker.setLable(region.shortName);
+                                startMarker.msPosInPerf = msPosInPerf;
+                            }
                         }
                     }
                     currentRegionIndex = (regionIndex === -1) ? currentRegionIndex : regionIndex;
@@ -683,20 +678,27 @@ let //**************************************************************************
                         setMarkerEvent = e; // global: This function is called again with this event when a region has been selected.
                         setMarkerState = state; // global: This function is called again with this state when a region has been selected. 
                     }
-                    else regionIndex = indexInRegionSequence(regionShortName);
-
-                    if(regionIndex >= 0 && (regionSequence.length === 1 || regionIndex >= startRegionIndex))
+                    else
                     {
-                        endRegionIndex = regionIndex;
-                        endMarker = system.endMarker;
-                        hideEndMarkersExcept(endMarker);
-                        endMarker.moveTo(midiObjectOrBarline);
-                        endMarker.msPosInPerf = endMarker.msPosInScore;
-                        if(regionSequence.length > 1)
+                        regionIndex = indexOfShortNameInRegionSequence(regionShortName);
+                        if(regionIndex >= 0)
                         {
-                            let region = regionSequence[endRegionIndex];
-                            endMarker.setLable(regionSequence[endRegionIndex].shortName);
-                            endMarker.msPosInPerf += region.startMsPosInPerf;
+                            let region = regionSequence[regionIndex],
+                                msPosInPerf = getMsPosInPerf(midiObjectOrBarline.msPosInScore, region);
+
+                            if(msPosInPerf <= startMarker.msPosInPerf)
+                            {
+                                alert("Attempt to position the endMarker before the startMarker")
+                            }
+                            else
+                            {
+                                endMarker = system.endMarker;
+                                hideEndMarkersExcept(endMarker);
+                                endMarker.regionIndex = regionIndex;
+                                endMarker.moveTo(midiObjectOrBarline);
+                                endMarker.setLable(region.shortName);
+                                endMarker.msPosInPerf = msPosInPerf;
+                            }
                         }
                     }
                     break;
@@ -713,11 +715,11 @@ let //**************************************************************************
 
     // This function does nothing if there are no defined infoStrings
     // (such as for simpleInterpretations, or when there is only one region).
-    setActiveInfoStringsStyle = function (regionIndex)
+    setActiveInfoStringsStyle = function ()
     {
         // This function does nothing if there are no defined infoStrings
         // (such as for simpleInterpretations, or when there is only one region).
-        regionSequence[regionIndex].setActiveInfoStringsStyle(true);
+        regionSequence[startMarker.regionIndex].setActiveInfoStringsStyle(true);
     },
 
     leaveRegion = function (regionIndex)
@@ -967,7 +969,7 @@ let //**************************************************************************
             }
 
             // If the <regionSequence> element is defined in the score, this function uses it to set the following values (global inside Score.js):
-            // 	   startRegionIndex, endRegionIndex, regionSequence.
+            // 	   startMarker.regionIndex, endMarker.regionIndex, regionSequence.
             // If there are no regions defined in the score, one region per interpretation will be created later, when the number of interpretations
             // is known. Interpretations are defined by the level of their <midiChord> and <midiRest> elements inside the <midiObjects> elements.
             function getConsecutiveRegionDataFromScore(svgElem)
@@ -986,8 +988,6 @@ let //**************************************************************************
                     regionSeq.hasConsecutiveRegions = true; // will be false in interpretation regions (created later).
                 }
 
-                startRegionIndex = 0;
-                endRegionIndex = regionSeq.length - 1;
                 regionSequence = regionSeq;
             }
 
@@ -1059,10 +1059,10 @@ let //**************************************************************************
 
                     system = systems[systemIndex];
 
-                    system.startMarker = new StartMarker(yCoordinates, systemIndex, vbScale, displayLable);
+                    system.startMarker = new StartMarker(yCoordinates, systemIndex, vbScale, displayLable, 0);
                     markersLayer.appendChild(system.startMarker.element);
 
-                    system.endMarker = new EndMarker(yCoordinates, systemIndex, vbScale, displayLable);
+                    system.endMarker = new EndMarker(yCoordinates, systemIndex, vbScale, displayLable, regionSequence.length - 1);
                     markersLayer.appendChild(system.endMarker.element);
                 }
                 // cursor is accessed outside the score using a getter function
@@ -1156,7 +1156,7 @@ let //**************************************************************************
             pageSystemsElem = svgElem.getElementsByClassName("systems")[0];
             pageSystemElems = pageSystemsElem.getElementsByClassName("system");
 
-            // get regions into regionSequence and default values for startRegionIndex, endRegionIndex.
+            // get regions into regionSequence and default values for startMarker.regionIndex, endMarker.regionIndex.
             // Region and MidiObject msPosInPerf values will be set when the MidiObjects have been loaded.
             getConsecutiveRegionDataFromScore(svgElem);
 
@@ -1598,18 +1598,9 @@ let //**************************************************************************
     },
 
     // Returns -1 if the regionShortName is not present in regionSequence
-    indexInRegionSequence = function (regionShortName)
+    indexOfShortNameInRegionSequence = function (regionShortName)
     {
-        let index = -1;
-        for(let i = 0; i < regionSequence.length; ++i)
-        {
-            let region = regionSequence[i];
-            if(regionShortName.localeCompare(region.shortName) === 0)
-            {
-                index = i;
-                break;
-            }
-        }
+        let index = regionSequence.findIndex(x => x.shortName.localeCompare(regionShortName) === 0);
         return index;
     },
 
@@ -1623,7 +1614,7 @@ let //**************************************************************************
         startMarker.msPosInPerf = 0;
         startMarker.setVisible(true);
 
-        startRegionIndex = 0;
+        startMarker.regionIndex = 0;
     },
 
     sendEndMarkerToEnd = function ()
@@ -1666,7 +1657,7 @@ let //**************************************************************************
         endMarker.msPosInPerf = lastRegion.endMsPosInPerf;
         endMarker.setVisible(true);
 
-        endRegionIndex = regionSequence.length - 1;
+        endMarker.regionIndex = regionSequence.length - 1;
     },
 
     // Called when the start button is clicked in the top options panel,
@@ -1697,7 +1688,7 @@ let //**************************************************************************
     // Sets the cursor invisible when the end of the score is reached.
     advanceCursor = function (msPosInScore)
     {
-        if(msPosInScore === endMarker.msPosInScore && currentRegionIndex === endRegionIndex)
+        if(msPosInScore === endMarker.msPosInScore && currentRegionIndex === endMarker.regionIndex)
         {
             cursor.setVisible(false);
         }
@@ -1711,67 +1702,6 @@ let //**************************************************************************
     {
         function setRegionData(systems)
         {
-            // Sets regionShortNamesPerMsPosInScore (global in score),
-            // which is used by the SetStartMarker and SetEndMarker tools.
-            function setRegionNamesPerMsPosInScore(regionSequence)
-            {
-                // Returns an array containing one unique name per performed region.
-                // Uses Moritz' algorithm (A, A1, A2 etc.).
-                function getRegionShortNameSequence(regionSequence)
-                {
-                    let shortNames = [];
-                    for(let region of regionSequence)
-                    {
-                        shortNames.push(region.shortName);
-                    }
-                    return shortNames;
-                }
-
-                function getRegionMsPosBounds(regionSequence)
-                {
-                    let regionMsPosBounds = [];
-                    for(let region of regionSequence)
-                    {
-                        let msPosInScore = region.startMsPosInScore;
-                        if(regionMsPosBounds.indexOf(msPosInScore) === -1)
-                        {
-                            regionMsPosBounds.push(msPosInScore);
-                        }
-                        msPosInScore = region.endMsPosInScore;
-                        if(regionMsPosBounds.indexOf(msPosInScore) === -1)
-                        {
-                            regionMsPosBounds.push(msPosInScore);
-                        }
-                    }
-                    regionMsPosBounds.sort((a, b) => (a - b));
-
-                    return regionMsPosBounds;
-                }
-
-                let regionShortNameSequence = getRegionShortNameSequence(regionSequence);
-                let regionMsPosBoundsInScore = getRegionMsPosBounds(regionSequence);
-
-                // global in Score.js: will contain objects of the form {startMsPosInScore, array of regionInstanceName}
-                regionShortNamesPerMsPosInScore = [];
-                for(let msPosInScore of regionMsPosBoundsInScore)
-                {
-                    let regionShortNames = [];
-                    for(let i = 0; i < regionSequence.length; ++i)
-                    {
-                        let region = regionSequence[i],
-                            regionShortName = regionShortNameSequence[i],
-                            duration = region.endMsPosInScore - region.startMsPosInScore;
-
-                        if(msPosInScore >= region.startMsPosInScore && msPosInScore < (region.startMsPosInScore + duration))
-                        {
-                            regionShortNames.push(regionShortName);
-                        }
-                    }
-                    let entry = {msPosInScore, regionShortNames};
-                    regionShortNamesPerMsPosInScore.push(entry);
-                }
-            }
-
             // Set each region.startBarline and region.systemIndex.
             // These attributes are used when selecting a region with the InterpretatonsSelect control.
             function setRegionStartBarlineAndSystemIndex(regionSequence, systems)
@@ -1827,8 +1757,8 @@ let //**************************************************************************
 
                 regionSequence.hasConsecutiveRegions = false; // is true if a regionSequence is defined in the score.
                 // These two variables (global in Score) need to be ignored in scores that have no consecutive regions.
-                startRegionIndex = -1;
-                endRegionIndex = -1;
+                startMarker.regionIndex = -1;
+                endMarker.regionIndex = -1;
             }
 
             function setRegionStartAndEndMsPosInPerf(regionSequence)
@@ -1867,7 +1797,6 @@ let //**************************************************************************
                 }
             }
 
-            setRegionNamesPerMsPosInScore(regionSequence);
             setRegionStartBarlineAndSystemIndex(regionSequence, systems);
             setRegionStartAndEndMsPosInPerf(regionSequence);
         } // end of setRegionData()
@@ -1911,29 +1840,6 @@ let //**************************************************************************
     getMarkersLayer = function ()
     {
         return markersLayer; // is undefined before a score is loaded
-    },
-
-    getRegionNamesPerMsPosInScore = function ()
-    {
-        return regionShortNamesPerMsPosInScore; // is undefined before a score is loaded (used at runtime)
-    },
-
-    getStartRegionIndex = function ()
-    {
-        return startRegionIndex;
-    },
-
-    getEndRegionIndex = function ()
-    {
-        if(regionSequence.hasConsecutiveRegions === false)
-        {
-            // e.g. Study 1 with several interpretations of the same score
-            return startRegionIndex;
-        }
-        else
-        {
-            return endRegionIndex;
-        }
     },
 
     // called by interpretationSelect.leave
@@ -2131,9 +2037,6 @@ export class Score
         this.getMarkersLayer = getMarkersLayer;
         this.getSystems = getSystems;
         this.getCursor = getCursor;
-        this.getRegionNamesPerMsPosInScore = getRegionNamesPerMsPosInScore;
-        this.getStartRegionIndex = getStartRegionIndex;
-        this.getEndRegionIndex = getEndRegionIndex;
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;

@@ -483,10 +483,6 @@ var
         }
         else if(performer.isStopped())
         {
-            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
-
-            sequenceRecording = new SequenceRecording(trackIsOnArray);
-
             if(deviceOptions.performanceMode === performanceMode.score)
             {
                 score.setCursor();
@@ -494,9 +490,7 @@ var
 
             score.moveStartMarkerToTop(globalElements.svgPagesFrame);            
 
-            startRegionIndex = score.getStartRegionIndex();
-            score.setActiveInfoStringsStyle(startRegionIndex);
-            endRegionIndex = score.getEndRegionIndex();
+            score.setActiveInfoStringsStyle();
 
             if(deviceOptions.performanceMode === performanceMode.conductingTimer || deviceOptions.performanceMode === performanceMode.conductingCreep)
             {
@@ -506,11 +500,12 @@ var
             {
                 performer.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Performer can use conductor or performance timer
             }
-                        
-            deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);
 
-            let moments = score.getMoments();
-            performer.play(moments, score.getStartMarker(), score.getEndMarker(), startRegionIndex, endRegionIndex, sequenceRecording);
+            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
+            sequenceRecording = new SequenceRecording(trackIsOnArray);
+            deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);                        
+            
+            performer.play(score.getMoments(), score.getStartMarker(), score.getEndMarker(), sequenceRecording);
         }
     },
 

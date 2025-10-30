@@ -5,7 +5,7 @@ const CIRCLE_RADIUS = 5; // user html pixels;
 class Marker
 {
 	// Contains a line, a disk and a text element.
-	constructor(yCoordinates, systemIndex, vbScale, displayLable)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable, regionIndex)
 	{
 		let element = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 			line = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
@@ -46,7 +46,8 @@ class Marker
 		Object.defineProperty(this, "yCoordinates", {value: yCoordinates, writable: false});
 		Object.defineProperty(this, "systemIndex", {value: systemIndex, writable: false});
 
-		Object.defineProperty(this, "msPosInPerf", {value: 0, writable: true});
+		Object.defineProperty(this, "msPosInPerf", {value: 0, writable: true}); // this value is set later
+		Object.defineProperty(this, "regionIndex", {value: regionIndex, writable: true});
 	}
 
 	// the top of the line (excluding the disk)
@@ -103,9 +104,9 @@ class Marker
 
 export class StartMarker extends Marker
 {
-	constructor(yCoordinates, systemIndex, vbScale, displayLable)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable, startRegionIndex)
 	{
-		super(yCoordinates, systemIndex, vbScale, displayLable);
+		super(yCoordinates, systemIndex, vbScale, displayLable, startRegionIndex);
 
 		this.line.style.stroke = GREEN;
 		this.circle.style.fill = GREEN;
@@ -120,9 +121,9 @@ export class StartMarker extends Marker
 
 export class EndMarker extends Marker
 {
-	constructor(yCoordinates, systemIndex, vbScale, displayLable)
+	constructor(yCoordinates, systemIndex, vbScale, displayLable, endRegionIndex)
 	{
-		super(yCoordinates, systemIndex, vbScale, displayLable);
+		super(yCoordinates, systemIndex, vbScale, displayLable, endRegionIndex);
 
 		this.line.style.stroke = RED;
 		this.circle.style.fill = RED;

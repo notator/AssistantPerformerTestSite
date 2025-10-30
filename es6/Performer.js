@@ -400,15 +400,15 @@ export class Performer
 	// play()
 	// In blue, live conducted performances, Performer.speed is always 1. (The speed slider value is used differently.)
 	// In normal performances, Performer.speed is the value of the global speed slider (range [0.1..9.99]).
-	play(momentsArg, startMarkerArg, endMarkerArg, startRegionIndex, endRegionIndexArg, recording)
+	play(momentsArg, startMarkerArg, endMarkerArg, recording)
 	{
 		moments = momentsArg;
-		
-		currentRegionIndex = startRegionIndex;
-		endRegionIndex = endRegionIndexArg;
 
 		startMarker = startMarkerArg;
 		endMarker = endMarkerArg;
+
+		currentRegionIndex = startMarker.regionIndex;
+		endRegionIndex = endMarker.regionIndex;
 
 		// The 'recording' argument is an empty SequenceRecording to which timestamped moments will be added as they are performed.
 	    // It has the same number of tracks as the trackIsOnArray, but a track will be undefined if it has been turned off for this performance.
