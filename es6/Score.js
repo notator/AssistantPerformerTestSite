@@ -118,59 +118,103 @@ let //**************************************************************************
     // Returns null if no midiObject or barline can be found that matches the arguments.
     findPerformingMidiObjectOrBarline = function (system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
     {
-        function findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, firstMidiObject, lastMidiObject, deltaBefore, deltaAfter, settingStart)
+        function findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, clickAlignment, settingStart)
         {
-            function findBarline(system, msPos)
+            function findNearestObject(clickAlignment, leftObject, rightObject)
             {
-                let currentInterpIndex = regionSequence[currentRegionIndex].interpIndex,
-                    barline = system.barlinesPerInterpretation[currentInterpIndex].find(x => x.msPosInScore === msPos);
+                let deltaBefore = clickAlignment - leftObject.alignment,
+                    deltaAfter = rightObject.alignment - clickAlignment,
+                    returnObject = (deltaBefore < deltaAfter) ? leftObject : rightObject;
 
-                return barline;
+                console.assert(deltaBefore >= 0 && deltaAfter >= 0);
+
+                return returnObject;
             }
 
             let returnObject = undefined;
 
             if(midiObjectBefore !== undefined && midiObjectAfter === undefined) // clicked to right of last midiObject
             {
-                if(settingStart)
+                let rightMostBarline = system.barlines[system.barlines.length - 1],
+                    nearestObject = undefined;
+
+                if(clickAlignment < rightMostBarline.alignment)
+                {
+                    // clicked to the left of the rightMostBarline
+                    nearestObject = findNearestObject(clickAlignment, midiObjectBefore, rightMostBarline);
+                }
+
+                if(nearestObject === midiObjectBefore)
                 {
                     returnObject = midiObjectBefore;
                 }
-                else  // setting end
+                else if(settingStart)
                 {
-                    let msPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration,
-                        barline = findBarline(system, msPos);
-
-                    returnObject = barline;
+                    alert("The start marker cannot be set at the end of a system.\nSet it at the beginning of the next one.");
+                }
+                else  // setting end
+                {                    
+                    if(nearestObject === undefined)  // clicked to the right of the rightMostBarline
+                    {
+                        returnObject = rightMostBarline;
+                    }
+                    else
+                    {
+                        returnObject = nearestObject;                        
+                    }
                 }
             }
-            else if(midiObjectBefore === undefined && midiObjectAfter !== undefined)	 // clicked to left of first midiObject
+            else if(midiObjectBefore === undefined && midiObjectAfter !== undefined) // clicked to left of first midiObject
             {
-                if(settingStart)
-                {
-                    let msPos = firstMidiObject.msPosInScore,
-                        barline = findBarline(system, msPos);
+                let leftMostBarline = system.barlines[0],
+                    nearestObject = undefined;
 
-                    returnObject = barline;
+                if(clickAlignment > leftMostBarline.alignment)
+                {
+                    // clicked to the right of the leftMostBarline
+                    nearestObject = findNearestObject(clickAlignment, leftMostBarline, midiObjectAfter);
+                }
+
+                if(nearestObject === midiObjectAfter && (midiObjectAfter.alignment > (leftMostBarline.alignment + 30)))
+                {
+                    returnObject = midiObjectAfter;
+                }
+                else if(settingStart)
+                {
+                    returnObject = leftMostBarline;
                 }
                 else // setting end
                 {
-                    alert("The end marker cannot be set at the beginning of a system.\nSet it at the end of the previous one.");
+                    if(nearestObject === undefined)  // clicked to the left of the leftMostBarline
+                    {
+                        alert("The end marker cannot be set at the beginning of a system.\nSet it at the end of the previous one.");
+                    }
+                    else
+                    {
+                        returnObject = nearestObject;
+                    }                                    
                 }
             }
             else // clicked between two midiObjects (both midiObjectBefore and midiObjectAfter are defined)
             {
-                let midiObject = (deltaAfter < deltaBefore) ? midiObjectAfter : midiObjectBefore,
-                    msPos = midiObject.msPosInScore,
-                    barline = findBarline(system, msPos);
+                let alignmentBefore = midiObjectBefore.alignment,
+                    alignmentAfter = midiObjectAfter.alignment,
+                    barline = system.barlines.find(x => (x.alignment > alignmentBefore && x.alignment < alignmentAfter));
 
                 if(barline !== undefined)
-                {
-                    returnObject = barline;
+                {   
+                    if((clickAlignment - barline.alignment) >= 0)
+                    {
+                        returnObject = barline;
+                    }
+                    else // clicked between midiObjectBefore and barline
+                    {
+                        returnObject = findNearestObject(clickAlignment, midiObjectBefore, barline);
+                    }                    
                 }
                 else
                 {
-                    returnObject = midiObject;
+                    returnObject = findNearestObject(clickAlignment, midiObjectBefore, midiObjectAfter);
                 }
             }
 
@@ -180,7 +224,6 @@ let //**************************************************************************
         let midiObjectBefore = undefined, midiObjectAfter = undefined, returnObject = undefined,
             deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
             startIndex = 0, endIndex = numberOfTracks,
-            firstMidiObject, lastMidiObject,
             currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
 
         for(let i = startIndex; i < endIndex; ++i)
@@ -197,23 +240,17 @@ let //**************************************************************************
                         if(alignment === midiObject.alignment)
                         {
                             returnObject = midiObject;
-                            firstMidiObject = timeObjects[0][currentInterpIndex];
-                            lastMidiObject = timeObjects[timeObjects.length - 1][currentInterpIndex];
                             break;
                         }
                         if(alignment > midiObject.alignment && (deltaBefore > (alignment - midiObject.alignment)))
                         {
                             midiObjectBefore = midiObject;
                             deltaBefore = alignment - midiObject.alignment;
-                            firstMidiObject = timeObjects[0][currentInterpIndex];
-                            lastMidiObject = timeObjects[timeObjects.length - 1][currentInterpIndex];
                         }
                         if(alignment < midiObject.alignment && (deltaAfter > (midiObject.alignment - alignment)))
                         {
                             midiObjectAfter = midiObject;
                             deltaAfter = midiObject.alignment - alignment;
-                            firstMidiObject = timeObjects[0][currentInterpIndex];
-                            lastMidiObject = timeObjects[timeObjects.length - 1][currentInterpIndex];
                         }
                     }
                 }
@@ -222,15 +259,8 @@ let //**************************************************************************
 
         if(returnObject === undefined)
         {
-            if(midiObjectBefore === undefined || midiObjectAfter === undefined)
-            {
-                let settingStart = state.localeCompare('settingStart') === 0;
-                returnObject = findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, firstMidiObject, lastMidiObject, deltaBefore, deltaAfter, settingStart);
-            }
-            else
-            {
-                returnObject = (deltaAfter < deltaBefore) ? midiObjectAfter : midiObjectBefore;
-            }
+            let settingStart = state.localeCompare('settingStart') === 0;
+                returnObject = findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, alignment, settingStart);
         }
 
         return returnObject;
@@ -642,9 +672,9 @@ let //**************************************************************************
 
         midiObjectOrBarline = findPerformingMidiObjectOrBarline(system, timeObjectsArray, numberOfTracks, trackIsOnArray, cursorX, trackIndex, state);
 
-        // timeObject is either null (if the track has been disabled) or is now the nearest performing chord to the click,
+        // midiObjectOrBarline is either undefined (if the track has been disabled) or is now the nearest performing chord or barline to the click,
         // either in a live performers voice (if there is one and it is performing) or in a performing voice.
-        if(midiObjectOrBarline !== null)
+        if(midiObjectOrBarline !== undefined)
         {
             let regionIndex = 0;
             switch(state)
@@ -1415,13 +1445,13 @@ let //**************************************************************************
 
                 function getSystemBarlineTimeObjects(systemElems, systemElem)
                 {
-                    function getBarlinesPerInterpretation(systemElem, voiceTimeObjects, nInterpretations)
+                    function getBarlines(systemElem, voiceTimeObjects)
                     {
                         function getBarlineTypeAndAlignments(barlineElems, typeString)
                         {
                             let barlineElem, barlineX1,
-                                barlineObjs = [], barlineObj, thickBarlines,
-                                alignment, currentAlignment = -1;
+                                barlines = [], barlineObj, thickBarlines,
+                                alignments = [], alignment;
 
                             for(var i = 0; i < barlineElems.length; i++)
                             {
@@ -1436,22 +1466,19 @@ let //**************************************************************************
                                     barlineX1 = thickBarlines[0].getAttribute('x1');
                                 }
                                 alignment = parseFloat(barlineX1, 10) / viewBoxScale;
-                                if(alignment > currentAlignment)
+                                if(alignments.includes(alignment) === false)
                                 {
                                     barlineObj = {};
                                     barlineObj.typeString = typeString;
                                     barlineObj.alignment = alignment;
-                                    barlineObjs.push(barlineObj);
-
-                                    currentAlignment = alignment;
-                                }
-                                else
-                                {
-                                    break;
+                                    barlines.push(barlineObj);
+                                    alignments.push(alignment);
                                 }
                             }
 
-                            return barlineObjs;
+                            barlines.sort((x, y) => x.alignment - y.alignment);
+
+                            return barlines;
                         }
 
                         let normalBarlineElems = Array.from(systemElem.getElementsByClassName('normalBarline')),
@@ -1459,7 +1486,7 @@ let //**************************************************************************
                             endAndStartRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline')),
                             endRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endRegionBarline')),
                             endOfScoreBarlineElems = Array.from(systemElem.getElementsByClassName('endOfScoreBarline')),
-                            barlineObjs, normalBarlineObjs = [], startRegionBarlineObjs = [], endRegionBarlineObjs = [], endOfScoreBarlineObjs = [],
+                            barlines, normalBarlineObjs = [], startRegionBarlineObjs = [], endRegionBarlineObjs = [], endOfScoreBarlineObjs = [],
                             endAndStartBarlineObjs = [];
 
                         normalBarlineObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
@@ -1468,61 +1495,49 @@ let //**************************************************************************
                         endOfScoreBarlineObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
                         endAndStartBarlineObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
 
-                        barlineObjs = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
-                        barlineObjs.sort((x, y) => x.alignment - y.alignment);
+                        barlines = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
+                        barlines.sort((x, y) => x.alignment - y.alignment);
 
-                        if(barlineObjs[barlineObjs.length - 1].typeString === "endOfScoreBarline")
+                        if(barlines[barlines.length - 1].typeString === "endOfScoreBarline")
                         {
-                            barlineObjs.splice(barlineObjs.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
+                            barlines.splice(barlines.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
                         }
 
-                        let barlinesPerInterpretation = [];
-
-                        barlinesPerInterpretation[0] = barlineObjs;
-                        for(let interpIndex = 1; interpIndex < nInterpretations; ++interpIndex)
+                        let jIndex = 0;
+                        for(let i = 0; i < barlines.length; i++)
                         {
-                            barlinesPerInterpretation.push(JSON.parse(JSON.stringify(barlineObjs))); // deep clone
-                        }
-
-                        for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
-                        {
-                            let jIndex = 0, barlines = barlinesPerInterpretation[interpIndex];
-                            for(let i = 0; i < barlines.length; i++)
+                            let barline = barlines[i];
+                            for(var j = jIndex; j < voiceTimeObjects.length; j++)
                             {
-                                let barline = barlines[i];
-                                for(var j = jIndex; j < voiceTimeObjects.length; j++)
+                                let midiObject = voiceTimeObjects[j][0];
+                                if((midiObject instanceof MidiChord || midiObject instanceof MidiRest)
+                                    && midiObject.alignment > barline.alignment)
                                 {
-                                    let midiObject = voiceTimeObjects[j][interpIndex];
-                                    if((midiObject instanceof MidiChord || midiObject instanceof MidiRest)
-                                        && midiObject.alignment > barline.alignment)
-                                    {
-                                        barline.msPosInScore = midiObject.msPosInScore;
-                                        jIndex = j + 1;
-                                        break;
-                                    }
+                                    barline.msPosInScore = midiObject.msPosInScore;
+                                    jIndex = j + 1;
+                                    break;
                                 }
                             }
-                            if(barlines.length > 1)
-                            {
-                                let lastBarline = barlines[barlines.length - 1],
-                                    lastMidiObject = voiceTimeObjects[voiceTimeObjects.length - 1][interpIndex],
-                                    lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
+                        }
+                        if(barlines.length > 1)
+                        {
+                            let lastBarline = barlines[barlines.length - 1],
+                                lastMidiObject = voiceTimeObjects[voiceTimeObjects.length - 1][0],
+                                lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
 
-                                lastBarline.msPosInScore = lastBarlineMsPos;
-                            }
+                            lastBarline.msPosInScore = lastBarlineMsPos;
                         }
 
-                        return barlinesPerInterpretation;
+                        return barlines;
                     }
 
-                    let voiceTimeObjects, nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
                     for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
                     {
                         system = systems[systemIndex];
                         systemElem = systemElems[systemIndex];
-                        voiceTimeObjects = system.staves[0].voices[0].timeObjects;
+                        let voiceTimeObjects = system.staves[0].voices[0].timeObjects;
 
-                        system.barlinesPerInterpretation = getBarlinesPerInterpretation(systemElem, voiceTimeObjects, nInterpretations);
+                        system.barlines = getBarlines(systemElem, voiceTimeObjects);
                     }
                 }
 
@@ -1623,7 +1638,7 @@ let //**************************************************************************
         hideStartMarkersExcept(startMarker);
 
         startMarker.setLable(regionSequence[0].shortName);
-        startMarker.moveTo(systems[0].barlinesPerInterpretation[0][0]);
+        startMarker.moveTo(systems[0].barlines[0]);
         startMarker.msPosInPerf = 0;
         startMarker.setVisible(true);
 
@@ -1637,7 +1652,7 @@ let //**************************************************************************
             for(var i = 0; i < systems.length; ++i)	
             {
                 let system = systems[i],
-                    barlines = system.barlinesPerInterpretation[0],
+                    barlines = system.barlines,
                     endBarline = barlines.find(x => (x.typeString === "endRegionBarline" || x.typeString === "endOfScoreBarline"));
 
                 if(endBarline !== undefined)
@@ -1724,7 +1739,7 @@ let //**************************************************************************
                     let found = false;
                     for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
                     {
-                        let barlines = systems[systemIndex].barlinesPerInterpretation[0];
+                        let barlines = systems[systemIndex].barlines;
                         for(let barline of barlines)
                         {
                             if(region.startMsPosInScore === barline.msPosInScore)
