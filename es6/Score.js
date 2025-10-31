@@ -115,10 +115,10 @@ let //**************************************************************************
     // Returns null or the performing midiChord, midiRest or barline closest to the startMarkerTool or endMarkerTool click position.
     // Displays an alert if an attempt is made to position the start marker at the end of a system, or
     // the end marker at the beginning of a system.
-    // Returns null if no midiObject or barline can be found that matches the arguments.
-    findPerformingMidiObjectOrBarline = function (system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
+    // Returns undefined if no midiObject or barline can be found that matches the arguments.
+    findPerformingTimeObject = function (system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
     {
-        function findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, clickAlignment, settingStart)
+        function findTimeObject(system, midiObjectBefore, midiObjectAfter, clickAlignment, settingStart)
         {
             function findNearestObject(clickAlignment, leftObject, rightObject)
             {
@@ -260,10 +260,10 @@ let //**************************************************************************
         if(returnObject === undefined)
         {
             let settingStart = state.localeCompare('settingStart') === 0;
-                returnObject = findBarlineOrMidiObject(system, midiObjectBefore, midiObjectAfter, alignment, settingStart);
+                returnObject = findTimeObject(system, midiObjectBefore, midiObjectAfter, alignment, settingStart);
         }
 
-        return returnObject;
+        return returnObject; // a MidiChord, MidiRest or (untyped) barline
     },
 
     getStartMarker = function ()
@@ -355,7 +355,7 @@ let //**************************************************************************
 
         setView(trackIsOnArray);
 
-        midiObject = findPerformingMidiObjectOrBarline(system, timeObjectsArray, numberOfTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
+        midiObject = findPerformingTimeObject(system, timeObjectsArray, numberOfTracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
 
         startMarker.moveTo(midiObject); // can be a midiChord, midiRest or barline
     },
@@ -367,7 +367,7 @@ let //**************************************************************************
         let cursorX = e.pageX,
             cursorY = e.pageY,
             systemIndex, system,
-            timeObjectsArray, midiObjectOrBarline, trackIndex;
+            timeObjectsArray, timeObject, trackIndex;
 
         // Returns the system having stafflines closest to cursorY.
         function findSystemIndex(cursorY)
@@ -486,7 +486,7 @@ let //**************************************************************************
             return trackIndex;
         }
 
-        function getMsPosInPerf(msPosInScore, region)
+        function getMsPosInPerf(timeObject, region)
         {
             function findMidiObject(msPosInScore, interpretationIndex)
             {
@@ -505,9 +505,20 @@ let //**************************************************************************
             }
 
             let regionIndex = regionSequence.indexOf(region),
-                midiObject = findMidiObject(msPosInScore, regionIndex);
+                msPosInPerf;
 
-            return midiObject.msPosInPerf;
+            if(timeObject instanceof MidiChord || timeObject instanceof MidiRest)
+            {
+                let midiObject = findMidiObject(timeObject.msPosInScore, regionIndex);
+                msPosInPerf = midiObject.msPosInPerf;
+            }
+            else // timeObject is a barline
+            {
+                let barline = timeObject;
+                msPosInPerf = barline.msPosInPerfPerRegion[regionIndex];
+            }
+
+            return msPosInPerf;            
         }
 
         function selectRegionIndex(timeObject, settingEndMarker)
@@ -610,7 +621,7 @@ let //**************************************************************************
 
                 for(let regionAtMsPosInScore of regionsAtMsPosInScore)
                 {
-                    let msPosInPerf = getMsPosInPerf(msPosInScore, regionAtMsPosInScore)
+                    let msPosInPerf = getMsPosInPerf(timeObject, regionAtMsPosInScore)
 
                     if(settingEndMarker === false)
                     {   // settting startMarker
@@ -670,11 +681,11 @@ let //**************************************************************************
 
         trackIndex = findTrackIndex(cursorY, system);
 
-        midiObjectOrBarline = findPerformingMidiObjectOrBarline(system, timeObjectsArray, numberOfTracks, trackIsOnArray, cursorX, trackIndex, state);
+        timeObject = findPerformingTimeObject(system, timeObjectsArray, numberOfTracks, trackIsOnArray, cursorX, trackIndex, state);
 
-        // midiObjectOrBarline is either undefined (if the track has been disabled) or is now the nearest performing chord or barline to the click,
+        // timeObject is either undefined (if the track has been disabled) or is now the nearest performing chord or barline to the click,
         // either in a live performers voice (if there is one and it is performing) or in a performing voice.
-        if(midiObjectOrBarline !== undefined)
+        if(timeObject !== undefined)
         {
             let regionIndex = 0;
             switch(state)
@@ -682,7 +693,7 @@ let //**************************************************************************
                 case 'settingStart':
                     if(regionShortName.localeCompare("") === 0)
                     {
-                        regionIndex = selectRegionIndex(midiObjectOrBarline, false);
+                        regionIndex = selectRegionIndex(timeObject, false);
                         setMarkerEvent = e; // global: This function is called again with this event when a region has been selected.
                         setMarkerState = state; // global: This function is called again with this state when a region has been selected. 
                     }
@@ -693,7 +704,7 @@ let //**************************************************************************
                         if(regionIndex >= 0)
                         {
                             let region = regionSequence[regionIndex],
-                                msPosInPerf = getMsPosInPerf(midiObjectOrBarline.msPosInScore, region);
+                                msPosInPerf = getMsPosInPerf(timeObject, region);
 
                             if(msPosInPerf >= endMarker.msPosInPerf)
                             {
@@ -704,7 +715,7 @@ let //**************************************************************************
                                 startMarker = system.startMarker;
                                 hideStartMarkersExcept(startMarker);
                                 startMarker.regionIndex = regionIndex;
-                                startMarker.moveTo(midiObjectOrBarline);
+                                startMarker.moveTo(timeObject);
                                 startMarker.setLable(region.shortName);
                                 startMarker.msPosInPerf = msPosInPerf;
                             }
@@ -715,7 +726,7 @@ let //**************************************************************************
                 case 'settingEnd':
                     if(regionShortName.localeCompare("") === 0)
                     {
-                        regionIndex = selectRegionIndex(midiObjectOrBarline, true);
+                        regionIndex = selectRegionIndex(timeObject, true);
                         setMarkerEvent = e; // global: This function is called again with this event when a region has been selected.
                         setMarkerState = state; // global: This function is called again with this state when a region has been selected. 
                     }
@@ -726,7 +737,7 @@ let //**************************************************************************
                         if(regionIndex >= 0)
                         {
                             let region = regionSequence[regionIndex],
-                                msPosInPerf = getMsPosInPerf(midiObjectOrBarline.msPosInScore, region);
+                                msPosInPerf = getMsPosInPerf(timeObject.msPosInScore, region);
 
                             if(msPosInPerf <= startMarker.msPosInPerf)
                             {
@@ -737,7 +748,7 @@ let //**************************************************************************
                                 endMarker = system.endMarker;
                                 hideEndMarkersExcept(endMarker);
                                 endMarker.regionIndex = regionIndex;
-                                endMarker.moveTo(midiObjectOrBarline);
+                                endMarker.moveTo(timeObject);
                                 endMarker.setLable(region.shortName);
                                 endMarker.msPosInPerf = msPosInPerf;
                             }
@@ -1984,7 +1995,25 @@ let //**************************************************************************
             return moments;
         }
 
+        function setBarlineMsPosInPerfPerRegionArrays(systems, tracks)
+        {
+            TODO *********************************************
+            /* (Approximately like this):
+                for each system in systems
+                    for each barline (except the last) in system
+                        for each track
+                            midiObjectIndex = index of the closest midiObject.alignment to the right of the barline.alignment in any track.interpretation[0]
+                            trackIndex = index of the track containing the midiObject                            
+                        for interpretationIndex = 0 to max
+                            midiObject = tracks[trackIndex].interpretations[interpretationIndex][midiObjectIndex]
+                            barline.msPosInPerfPerRegion.push(midiObject.msPosInPerf);
+                finally, set the final barline.msPosInPerf on each system to the first barline.msPosInPerf on the next system.
+            */
+        }
+
         setTrackRuntimeInterpretations(tracks, trackIsOnArray);
+
+        setBarlineMsPosInPerfPerRegionArrays(systems, tracks);
 
         let allMoments = getAllMoments(tracks);
 
