@@ -29,12 +29,10 @@ export class Cursor
 		Object.defineProperty(this, "element", { value: newElement(viewBoxScale), writable: false });
 
 		Object.defineProperty(this, "msPosDataArray", { value: undefined, writable: true }); // set in init()
-		Object.defineProperty(this, "startMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
-		Object.defineProperty(this, "endMarkerMsPosInScore", { value: -1, writable: true }); // set in init()
 		Object.defineProperty(this, "yCoordinates", { value: { top: -1, bottom: -1 }, writable: true }); // set in moveElementTo() in init()		
 	}
 
-	set(systems, startMarkerMsPosInScore, endMarkerMsPosInScore, trackIsOnArray, interpIndex, displayRunningCursor)
+	set(systems, startMarkerMsPosInScore, trackIsOnArray, interpIndex, displayRunningCursor)
 	{
 		// Returns an array containing an msPosData object for every distinct msPosInScore.
 		// An msPosData object contains the following fields:
@@ -173,9 +171,6 @@ export class Cursor
 
 		// The last entry is an msPosData object for the final barline.
 		this.msPosDataArray = getScoreMsPosDataArray(systems, this.viewBoxScale, trackIsOnArray, interpIndex);
-
-		this.startMarkerMsPosInScore = startMarkerMsPosInScore;
-		this.endMarkerMsPosInScore = endMarkerMsPosInScore;
 
 		this.moveElementTo(startMarkerMsPosInScore); // sets yCoordinates if necessary
 

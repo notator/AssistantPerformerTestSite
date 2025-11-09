@@ -737,7 +737,7 @@ let //**************************************************************************
                         if(regionIndex >= 0)
                         {
                             let region = regionSequence[regionIndex],
-                                msPosInPerf = getMsPosInPerf(timeObject.msPosInScore, region);
+                                msPosInPerf = getMsPosInPerf(timeObject, region);
 
                             if(msPosInPerf <= startMarker.msPosInPerf)
                             {
@@ -811,7 +811,7 @@ let //**************************************************************************
     {
         let displayRunningCursor = true,
             currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
-        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
+        cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
     },
 
 
@@ -1456,7 +1456,7 @@ let //**************************************************************************
 
                 function getSystemBarlineTimeObjects(systemElems, systemElem)
                 {
-                    function getBarlines(systemElem, voiceTimeObjects)
+                    function getBarlines(systemElem, system)
                     {
                         function getBarlineTypeAndAlignments(barlineElems, typeString)
                         {
@@ -1514,29 +1514,37 @@ let //**************************************************************************
                             barlines.splice(barlines.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
                         }
 
-                        let jIndex = 0;
-                        for(let i = 0; i < barlines.length; i++)
+                        for(let barlineIndex = 0; barlineIndex < barlines.length; barlineIndex++)
                         {
-                            let barline = barlines[i];
-                            for(var j = jIndex; j < voiceTimeObjects.length; j++)
+                            let barline = barlines[barlineIndex];
+                            for(staff of system.staves)
                             {
-                                let midiObject = voiceTimeObjects[j][0];
-                                if((midiObject instanceof MidiChord || midiObject instanceof MidiRest)
-                                    && midiObject.alignment > barline.alignment)
+                                for(voice of staff.voices)
                                 {
-                                    barline.msPosInScore = midiObject.msPosInScore;
-                                    jIndex = j + 1;
-                                    break;
+                                    let timeObject = voice.timeObjects.find(x => (x[0] instanceof MidiChord || x[0] instanceof MidiRest)
+                                            && x[0].alignment > barline.alignment);
+
+                                    if(timeObject !== undefined)
+                                    {
+                                        let midiObject = timeObject[0];
+                                        if(barline.msPosInScore === undefined || midiObject.msPosInScore < barline.msPosInScore)
+                                        {
+                                            barline.msPosInScore = midiObject.msPosInScore;
+                                        }
+                                    }
+                                    else // final barline on system
+                                    {
+                                        console.assert(barlineIndex === barlines.length - 1);
+                                        let lastMidiObject = voice.timeObjects[voice.timeObjects.length - 1][0],
+                                            endOfLastMidiObject = lastMidiObject.msPosInScore + lastMidiObject.msDuration;  
+                                            
+                                        if(barline.msPosInScore === undefined || endOfLastMidiObject < barline.msPosInScore)
+                                        {
+                                            barline.msPosInScore = endOfLastMidiObject;
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        if(barlines.length > 1)
-                        {
-                            let lastBarline = barlines[barlines.length - 1],
-                                lastMidiObject = voiceTimeObjects[voiceTimeObjects.length - 1][0],
-                                lastBarlineMsPos = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
-
-                            lastBarline.msPosInScore = lastBarlineMsPos;
                         }
 
                         return barlines;
@@ -1546,9 +1554,8 @@ let //**************************************************************************
                     {
                         system = systems[systemIndex];
                         systemElem = systemElems[systemIndex];
-                        let voiceTimeObjects = system.staves[0].voices[0].timeObjects;
 
-                        system.barlines = getBarlines(systemElem, voiceTimeObjects);
+                        system.barlines = getBarlines(systemElem, system);
                     }
                 }
 
@@ -1858,7 +1865,7 @@ let //**************************************************************************
         sendMarkersToInitialPositions();
 
         let displayRunningCursor = false;
-        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, 0, displayRunningCursor);
+        cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, 0, displayRunningCursor);
     },
 
     getSystems = function ()
@@ -1997,18 +2004,46 @@ let //**************************************************************************
 
         function setBarlineMsPosInPerfPerRegionArrays(systems, tracks)
         {
-            TODO *********************************************
-            /* (Approximately like this):
-                for each system in systems
-                    for each barline (except the last) in system
-                        for each track
-                            midiObjectIndex = index of the closest midiObject.alignment to the right of the barline.alignment in any track.interpretation[0]
-                            trackIndex = index of the track containing the midiObject                            
-                        for interpretationIndex = 0 to max
-                            midiObject = tracks[trackIndex].interpretations[interpretationIndex][midiObjectIndex]
-                            barline.msPosInPerfPerRegion.push(midiObject.msPosInPerf);
-                finally, set the final barline.msPosInPerf on each system to the first barline.msPosInPerf on the next system.
-            */
+           // all barlines except the rightmost.
+            for(let system of systems)
+            {
+                let barlines = system.barlines;
+                for(let barlineIndex = 0; barlineIndex < barlines.length - 1; barlineIndex++)
+                {
+                    // all barlines except the rightmost.
+                    let barline = barlines[barlineIndex];
+
+                    barline.msPosInPerfPerRegion = [];
+
+                    // find a midiObject in a track.interpretation[0] having the same msPosInScore as the barline.
+                    for(let track of tracks)
+                    {
+                        let midiObjects = track.interpretations[0].midiObjects,
+                            midiObjectIndex = midiObjects.findIndex(x => x.msPosInScore === barline.msPosInScore);
+                        if(midiObjectIndex >= 0)
+                        {
+                            for(let interpretation of track.interpretations)
+                            {
+                                let midiObject = interpretation.midiObjects[midiObjectIndex];
+
+                                barline.msPosInPerfPerRegion.push(midiObject.msPosInPerf);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            // set each rightmost barline.msPosInPerfPerRegion array to share the
+            // .msPosInPerfPerRegion array of the first barline on the following system.
+            for(let systemIndex = 1; systemIndex < systems.length; systemIndex++)
+            {
+                let upperSystemBarlines = systems[systemIndex - 1].barlines,
+                    upperSystemRightMostBarline = upperSystemBarlines[upperSystemBarlines.length - 1],
+                    lowerSystemBarlines = systems[systemIndex].barlines,
+                    lowerSystemLeftMostBarline = lowerSystemBarlines[0];
+
+                    upperSystemRightMostBarline.msPosInPerfPerRegion = lowerSystemLeftMostBarline.msPosInPerfPerRegion;
+            }
         }
 
         setTrackRuntimeInterpretations(tracks, trackIsOnArray);

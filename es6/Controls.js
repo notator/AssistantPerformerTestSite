@@ -452,8 +452,6 @@ var
 
     startPlaying = function ()
     {
-        let startRegionIndex, startMarkerMsPos, endRegionIndex, endMarkerMsPos, sequenceRecording;
-
         deleteSaveLink();
 
         setPage2ControlsDisabled();
@@ -501,8 +499,9 @@ var
                 performer.setTimerAndOutputDevice(performance, deviceOptions.outputDevice); // Performer can use conductor or performance timer
             }
 
-            let trackIsOnArray = score.getReadOnlyTrackIsOnArray();
-            sequenceRecording = new SequenceRecording(trackIsOnArray);
+            let trackIsOnArray = score.getReadOnlyTrackIsOnArray(),
+                sequenceRecording = new SequenceRecording(trackIsOnArray);
+
             deviceOptions.outputDevice.setAllChannelControllersOff(trackIsOnArray);                        
             
             performer.play(score.getMoments(), score.getStartMarker(), score.getEndMarker(), sequenceRecording);
