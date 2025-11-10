@@ -1,3 +1,4 @@
+import { constants } from "./Constants.js";
 import { Moment } from "./Moment.js";
 import { Conductor } from "./Conductor.js";
 
@@ -307,6 +308,35 @@ let moments, // Set in play().
 
 	run = function()
 	{
+		function shuntControlsTo(startMarker)
+		{
+			const CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+				  PROGRAM_CHANGE = constants.COMMAND.PROGRAM_CHANGE;
+				  
+			let // Shunting from start of region would use:
+				//		startShuntIndex = moments.findIndex(x => x.regionIndex === startMarker.regionIndex)
+				// Shunt from start of moments!
+				startShuntIndex = 0,
+				endShuntIndex = moments.findIndex(x => x.msPosInPerf === startMarker.msPosInPerf);
+
+			// residentSynth functions
+			outputDevice.setAllChannelSoundOff();
+            outputDevice.setAllChannelControllersOff();
+
+			for(let mIndex = startShuntIndex; mIndex < endShuntIndex; mIndex++)
+			{
+				let messages = moments[mIndex].messages;
+				for(let message of messages)
+				{
+					let nibble = message.data[0] & 0xF0;
+					if(nibble === CONTROL_CHANGE || nibble === PROGRAM_CHANGE)
+					{
+						outputDevice.send(message.data, performance.now());
+					}
+				}
+			}
+		}
+
 		if(pausedMoment !== null)
 		{
 			resume();
@@ -314,6 +344,8 @@ let moments, // Set in play().
 		else
 		{
 			setState("running");
+
+			shuntControlsTo(startMarker);
 
 			//currentRegionIndex = startRegionIndex; is set in play
 			currentMoment = moments.find(x => x.msPosInPerf === startMarker.msPosInPerf);
