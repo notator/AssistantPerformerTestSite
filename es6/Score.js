@@ -1658,9 +1658,12 @@ let //**************************************************************************
         startMarker.setLable(regionSequence[0].shortName);
         startMarker.moveTo(systems[0].barlines[0]);
         startMarker.msPosInPerf = 0;
-        startMarker.setVisible(true);
-
         startMarker.regionIndex = 0;
+
+        // update the way the current region will be displayed in performance
+        resetRegionInfoStrings();
+
+        startMarker.setVisible(true);
     },
 
     sendEndMarkerToEnd = function ()
@@ -1691,7 +1694,8 @@ let //**************************************************************************
             throw "error: cant find the system!";
         }
 
-        let lastRegion = regionSequence[regionSequence.length - 1],
+        let lastRegionIndex = regionSequence.length - 1,
+            lastRegion = regionSequence[lastRegionIndex],
             systemAndBarline = findSystemAndBarline(lastRegion),
             regionSystem = systemAndBarline.system,
             endOfRegionBarline = systemAndBarline.endBarline;
@@ -1701,9 +1705,12 @@ let //**************************************************************************
         hideEndMarkersExcept(endMarker);
         endMarker.moveTo(endOfRegionBarline);
         endMarker.msPosInPerf = lastRegion.endMsPosInPerf;
-        endMarker.setVisible(true);
+        endMarker.regionIndex = lastRegionIndex;
 
-        endMarker.regionIndex = regionSequence.length - 1;
+        // update the way the current region will be displayed in performance
+        resetRegionInfoStrings();
+
+        endMarker.setVisible(true);
     },
 
     // Called when the start button is clicked in the top options panel,
@@ -1901,10 +1908,14 @@ let //**************************************************************************
         startMarker.moveTo(region.startBarline);
         startMarker.setLable(region.shortName);
         startMarker.msPosInPerf = region.startMsPosInPerf;
+        startMarker.regionIndex = currentRegionIndex;
+
+        // update the way the current region will be displayed in performance
+        resetRegionInfoStrings();
 
         sendEndMarkerToEnd();
 
-        cursor.set(systems, startMarker.msPosInScore, endMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
+        cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentRegionIndex, false);
 
         if(regionSequence.hasConsecutiveRegions === false)
         {
