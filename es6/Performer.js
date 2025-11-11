@@ -232,11 +232,11 @@ let moments, // Set in play().
 		{
 			var
 				messages = moment.messages,
-				i, nMessages = messages.length, timestamp = moment.timestamp;
+				timestamp = moment.timestamp;
 
-			for(i = 0; i < nMessages; ++i)
+			for(let message of messages)
 			{
-				outputDevice.send(messages[i].data, timestamp);
+				outputDevice.send(message.data, timestamp);
 			}
 		}
 
