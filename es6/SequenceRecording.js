@@ -113,9 +113,9 @@ export class SequenceRecording
 
 	// Returns the processed sequence as a JSON string wrapped in a Blob.
 	// The JSON string is in the format that can be read by the ResidentSynthHost.
-	toJSON(downloadName, sequenceMsDur)
+	toJSON(downloadName)
 	{
-		function toResidentSynthRecording(downloadName, trackRecordings, sequenceMsDur)
+		function toResidentSynthRecording(downloadName, trackRecordings)
 		{
 			function getOutMsgString(trackIndex, msgData, timestamp)
 			{
@@ -136,7 +136,7 @@ export class SequenceRecording
 					msgString += (msgData[0].toString() + ",");
 					msgString += (msgData[1].toString() + ",");
 					let data2String = (msgData[2] === undefined) ? "0" : msgData[2];
-					msgString += (data2String + ",")
+					msgString += (data2String + ",");
 				}
 				msgString += timestamp.toString();
 
@@ -183,7 +183,7 @@ export class SequenceRecording
 			return recording;
 		}
 
-		let recording = toResidentSynthRecording(downloadName, this.trackRecordings, sequenceMsDur);
+		let recording = toResidentSynthRecording(downloadName, this.trackRecordings);
 
 		let jsonString = JSON.stringify(recording);
 		

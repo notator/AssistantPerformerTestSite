@@ -494,7 +494,7 @@ let //**************************************************************************
                 for(let track of tracks)
                 {
                     let interpretation = track.interpretations[interpretationIndex];
-                    midiObject = interpretation.midiObjects.find(x => x.msPosInScore === msPosInScore)
+                    midiObject = interpretation.midiObjects.find(x => x.msPosInScore === msPosInScore);
                     if(midiObject !== undefined)
                     {
                         break;
@@ -621,7 +621,7 @@ let //**************************************************************************
 
                 for(let regionAtMsPosInScore of regionsAtMsPosInScore)
                 {
-                    let msPosInPerf = getMsPosInPerf(timeObject, regionAtMsPosInScore)
+                    let msPosInPerf = getMsPosInPerf(timeObject, regionAtMsPosInScore);
 
                     if(settingEndMarker === false)
                     {   // settting startMarker
@@ -708,7 +708,7 @@ let //**************************************************************************
 
                             if(msPosInPerf >= endMarker.msPosInPerf)
                             {
-                                alert("Attempt to position the startMarker after the endMarker")
+                                alert("Attempt to position the startMarker after the endMarker");
                             }
                             else
                             {
@@ -741,7 +741,7 @@ let //**************************************************************************
 
                             if(msPosInPerf <= startMarker.msPosInPerf)
                             {
-                                alert("Attempt to position the endMarker before the startMarker")
+                                alert("Attempt to position the endMarker before the startMarker");
                             }
                             else
                             {
@@ -1425,7 +1425,7 @@ let //**************************************************************************
                                             for(let tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                                             {
                                                 let midiObject = timeObjects[tIndex][interpIndex],
-                                                    msDuration = timeObjects[tIndex][0].msDuration;                                                  ;
+                                                    msDuration = timeObjects[tIndex][0].msDuration;
 
                                                 if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                                 {

@@ -199,14 +199,14 @@ class MidiObject
 			moments = momDur.moments;
 			msDuration = momDur.msDuration;
 		}
-		else if (midiObjectElem.nodeName === "midiRest")
+		else if(midiObjectElem.nodeName === "midiRest")
 		{
 			// read the score
 			let moment = new Moment(0); // There are no messages in the moment.messages array.
 			moments.push(moment);
 			msDuration = parseInt(midiObjectElem.getAttribute("msDuration"));
 		}
-		else throw("Illegal argument to MidiObject constructor.")
+		else throw ("Illegal argument to MidiObject constructor.");
 
 		// The msDuration, msPosInScore and msPosInPerf properties are not changed by the global speed option!
 		// These values are used, but not changed, either when moving Markers about or during performances.)		

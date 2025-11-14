@@ -1,7 +1,3 @@
-
-//import { constants } from "./Constants.js";
-//const UNDEFINED_TIMESTAMP = constants.UNDEFINED_TIMESTAMP;
-
 export class Moment
 {
 	// Moment constructor
@@ -26,14 +22,14 @@ export class Moment
 			let msPosInChord = constructorArg;
 			if(msPosInChord >= 0)
 			{
-				this.msPosInChord = msPosInChord;
-				this.msPosInPerf = -1; // not known here
-				this.msPosInScore = -1; // not known here
-				this.nextMoment = null; // not known here
-				this.messages = []; // an array of Messages (can be replaced)
-			}
-			else
-			{
+			this.msPosInChord = msPosInChord;
+			this.msPosInPerf = -1; // not known here
+			this.msPosInScore = -1; // not known here
+			this.nextMoment = null; // not known here
+			this.messages = []; // an array of Messages (can be replaced)			
+		}
+		else
+		{
 				throw "Error: Moment.msPosInChord must be a number >= 0.";
 			}			
 		}
@@ -41,11 +37,6 @@ export class Moment
 		{
 			throw "Programming error: constructorArg must either be a number (=msPosInChord) or a Moment.";
 		}
-
-		// The absolute time (DOMHRT) at which this moment is sent to the output device.
-		// This value is always set in Performer.nextMoment().
-		// REMARK: I think this timestamp should be added _later_ to save space...
-		// this.timestamp = UNDEFINED_TIMESTAMP;
 	}
 
 	// Adds the moment2.messages to the end of the current messages using
@@ -71,5 +62,3 @@ export class Moment
 		return rval;
 	}
 }
-
-//export { UNDEFINED_TIMESTAMP, Moment };

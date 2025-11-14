@@ -29,7 +29,6 @@ let moments, // Set in play().
 	
 	regionSequence, // an array of regions
 	currentRegionIndex, // the index in the regionSequence
-	endRegionIndex,
 
 	// (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -445,7 +444,6 @@ export class Performer
 		endMarker = endMarkerArg;
 
 		currentRegionIndex = startMarker.regionIndex;
-		endRegionIndex = endMarker.regionIndex;
 
 		// The 'recording' argument is an empty SequenceRecording to which timestamped moments will be added as they are performed.
 	    // It has the same number of tracks as the trackIsOnArray, but a track will be undefined if it has been turned off for this performance.

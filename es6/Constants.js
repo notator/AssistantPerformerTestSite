@@ -237,5 +237,6 @@
 		pitchwheelCombinedValue: pitchwheelCombinedValue
 	};
 
-export { constants };
+export {constants};
+
 

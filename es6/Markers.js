@@ -102,6 +102,7 @@ class Marker
 	}
 }
 
+// StartMarkers are created outside this file.
 export class StartMarker extends Marker
 {
 	constructor(yCoordinates, systemIndex, vbScale, displayLable, startRegionIndex)
@@ -119,6 +120,7 @@ export class StartMarker extends Marker
 	}
 }
 
+// EndMarkers are created outside this file.
 export class EndMarker extends Marker
 {
 	constructor(yCoordinates, systemIndex, vbScale, displayLable, endRegionIndex)
