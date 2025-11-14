@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": false,
+    "strict": false,
+    "outDir": "./wwwroot_dist"
+  },
+  "include": [
+    "es6/**/*",
+    "residentSynth/**/*"
+  ]
+}

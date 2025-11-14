@@ -1,0 +1,24 @@
+{
+  "name": "assistantperformer2025testsite",
+  "version": "1.0.0",
+  "description": "The **Assistant Performer (2025)** is a development of the original [**Assistant Performer**](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html). It implements new functionality made possible by the use of a new score format.<br>\r The new format, written by [**Moritz (2025)**](https://github.com/notator/Moritz), changes the way chord and rest symbols store MIDI information.<br>\r These are breaking changes, so not all the original scores are supported.<br>\r For this reason, the original **Assistant Performer** is going to remain online, with all its scores.<br>\r When ready, the **Assistant Performer (2025)** will be uploaded at a different, parallel address.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notator/AssistantPerformerTestSite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/notator/AssistantPerformerTestSite/issues"
+  },
+  "homepage": "https://github.com/notator/AssistantPerformerTestSite#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
