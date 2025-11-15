@@ -2,6 +2,7 @@ import {StartMarker} from "./Markers.js";
 import {EndMarker} from "./Markers.js";
 import {Cursor} from "./Cursor.js";
 import {MidiChord, MidiRest} from "./MidiObject.js";
+import {NormalBarline, StartRegionBarline, EndRegionBarline, EndAndStartRegionBarline, EndOfScoreBarline} from "./Barline.js";
 import {Track} from "./Track.js";
 import {Moment} from "./Moment.js";
 import {Region} from "./Region.js";
