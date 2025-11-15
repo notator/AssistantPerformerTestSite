@@ -1693,37 +1693,38 @@ let //**************************************************************************
 
     sendEndMarkerToEnd = function ()
     {
-        function findSystemAndBarline(regionDef)
+        function findFinalSystemAndBarline(regionDef)
         {
-            for(var i = 0; i < systems.length; ++i)	
+            let finalSystem = undefined,
+                finalBarline = undefined;
+
+            for(let system of systems)	
             {
-                let system = systems[i],
-                    barlines = system.barlines,
-                    endBarline = barlines.find(x => (x.typeString === "endRegionBarline" || x.typeString === "endOfScoreBarline"));
+                let barlines = system.barlines,
+                    endBarline = barlines.find(x => x.msPosInScore === regionDef.endMsPosInScore);
 
                 if(endBarline !== undefined)
                 {
-                    if(endBarline.typeString === "endRegionBarline" && endBarline.msPosInScore === regionDef.endMsPosInScore)
-                    {
-                        return {system, endBarline};
-                    }
-                    else if(endBarline.typeString === "endOfScoreBarline")
-                    {
-                        endBarline.msPosInScore = regionDef.endMsPosInScore;
-                        return {system, endBarline};
-                    }
+                    finalSystem = system;
+                    finalBarline = endBarline;
+                    break;
                 }
-                else continue;
             }
-
-            throw "error: cant find the system!";
+            if(finalBarline === undefined)
+            {
+                throw "error: cant find the final barline!";
+            }
+            else
+            {
+                return {finalSystem, finalBarline};
+            }
         }
 
         let lastRegionIndex = regionSequence.length - 1,
             lastRegion = regionSequence[lastRegionIndex],
-            systemAndBarline = findSystemAndBarline(lastRegion),
-            regionSystem = systemAndBarline.system,
-            endOfRegionBarline = systemAndBarline.endBarline;
+            finalSystemAndBarline = findFinalSystemAndBarline(lastRegion),
+            regionSystem = finalSystemAndBarline.finalSystem,
+            endOfRegionBarline = finalSystemAndBarline.finalBarline;
 
         endMarker = regionSystem.endMarker;
         endMarker.setLable(lastRegion.shortName);

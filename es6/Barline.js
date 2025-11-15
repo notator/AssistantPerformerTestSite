@@ -4,7 +4,7 @@ class Barline
 	{
 		Object.defineProperty(this, "alignment", {value: alignment, writable: false});
 		Object.defineProperty(this, "msPosInScore", {value: -1, writable: true}); // Is set and frozen later
-		Object.defineProperty(this, "msPosInPerfPerRegion", {value: [], writable: true}); // Is set and frozen with frozen values later.
+		Object.defineProperty(this, "msPosInPerfPerRegion", {value: [], writable: true});
 	}
 }
 
