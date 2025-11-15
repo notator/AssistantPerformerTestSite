@@ -1461,7 +1461,7 @@ let //**************************************************************************
                         function getBarlineTypeAndAlignments(barlineElems, typeString)
                         {
                             let barlineElem, barlineX1,
-                                barlines = [], barlineObj, thickBarlines,
+                                barlines = [], barline, thickBarlines,
                                 alignments = [], alignment;
 
                             for(var i = 0; i < barlineElems.length; i++)
@@ -1479,10 +1479,34 @@ let //**************************************************************************
                                 alignment = parseFloat(barlineX1, 10) / viewBoxScale;
                                 if(alignments.includes(alignment) === false)
                                 {
-                                    barlineObj = {};
-                                    barlineObj.typeString = typeString;
-                                    barlineObj.alignment = alignment;
-                                    barlines.push(barlineObj);
+                                    switch(typeString)
+                                    {
+                                        case "normalBarline":
+                                            {
+                                                barline = new NormalBarline(alignment); break;
+                                            }
+                                        case "startRegionBarline":
+                                            {
+                                                barline = new StartRegionBarline(alignment); break;
+                                            }
+                                        case "endRegionBarline":
+                                            {
+                                                barline = new EndRegionBarline(alignment); break;
+                                            }
+                                        case "endAndStartRegionBarline":
+                                            {
+                                                barline = new EndAndStartRegionBarline(alignment); break;
+                                            }
+                                        case "endOfScoreBarline":
+                                            {
+                                                barline = new EndOfScoreBarline(alignment); break;
+                                            }
+                                        default:
+                                            {
+                                                throw "Unknown barline type string: " + typeString;
+                                            }
+                                    }
+                                    barlines.push(barline);
                                     alignments.push(alignment);
                                 }
                             }
@@ -1509,7 +1533,7 @@ let //**************************************************************************
                         barlines = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
                         barlines.sort((x, y) => x.alignment - y.alignment);
 
-                        if(barlines[barlines.length - 1].typeString === "endOfScoreBarline")
+                        if(barlines[barlines.length - 1] instanceof EndOfScoreBarline)
                         {
                             barlines.splice(barlines.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
                         }
@@ -1527,7 +1551,7 @@ let //**************************************************************************
                                     if(timeObject !== undefined)
                                     {
                                         let midiObject = timeObject[0];
-                                        if(barline.msPosInScore === undefined || midiObject.msPosInScore < barline.msPosInScore)
+                                        if(barline.msPosInScore === -1 || midiObject.msPosInScore < barline.msPosInScore)
                                         {
                                             barline.msPosInScore = midiObject.msPosInScore;
                                         }
@@ -1538,7 +1562,7 @@ let //**************************************************************************
                                         let lastMidiObject = voice.timeObjects[voice.timeObjects.length - 1][0],
                                             endOfLastMidiObject = lastMidiObject.msPosInScore + lastMidiObject.msDuration;  
                                             
-                                        if(barline.msPosInScore === undefined || endOfLastMidiObject < barline.msPosInScore)
+                                        if(barline.msPosInScore === -1 || endOfLastMidiObject < barline.msPosInScore)
                                         {
                                             barline.msPosInScore = endOfLastMidiObject;
                                         }
