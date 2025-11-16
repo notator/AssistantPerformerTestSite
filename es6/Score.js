@@ -1253,7 +1253,8 @@ let //**************************************************************************
                     {
                         let noteObjectElems, noteObjectClass,
                             timeObjects = [], noteObjectAlignment,
-                            i, j, k, noteObjectElem, noteObjectChildren;
+                            i, j, k, noteObjectElem, noteObjectChildren,
+                            nInterpretations = -1;
 
                         noteObjectElems = voiceElem.children;
                         for(i = 0; i < noteObjectElems.length; ++i)
@@ -1272,7 +1273,7 @@ let //**************************************************************************
                                 {
                                     if(noteObjectChildren[j].nodeName === "score:midiChords")
                                     {
-                                        let midiChordsChildren = noteObjectChildren[j].children;
+                                        let midiChordsChildren = noteObjectChildren[j].children;  
                                         for(k = 0; k < midiChordsChildren.length; ++k)
                                         {
                                             timeObject.push(new MidiChord(midiChordsChildren[k]));
@@ -1288,6 +1289,15 @@ let //**************************************************************************
                                         }
                                         break;
                                     }
+                                }
+
+                                if(nInterpretations === -1)
+                                {
+                                    nInterpretations = timeObject.length;
+                                }
+                                else
+                                {
+                                    console.assert(nInterpretations === timeObject.length);
                                 }
 
                                 timeObject.forEach((midiObject) =>
