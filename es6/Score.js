@@ -1406,38 +1406,37 @@ let //**************************************************************************
                     // Sets the msPosInScore of each timeObject (rests and chords) in the voice.timeObjects arrays.
                     function setMsPositionsInScore(systems)
                     {
-                        let nStaves, nVoices, nSystems,
-                            timeObjects, nTimeObjects, nInterpretations;
+                        let nSystems = systems.length,
+                            nStaves = systems[0].staves.length,
+                            nMidiObjectsPerTimeObject = systems[0].staves[0].voices[0].timeObjects[0].length;
 
-                        nSystems = systems.length;
-                        nStaves = systems[0].staves.length;
-                        nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
-
-                        for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
+                        for(let midiObjectIndex = 0; midiObjectIndex < nMidiObjectsPerTimeObject; ++midiObjectIndex)
                         {
                             for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
                             {
-                                nVoices = systems[0].staves[staffIndex].voices.length;
+                                let nVoices = systems[0].staves[staffIndex].voices.length;
                                 for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                                 {
-                                    let msPos = 0;
+                                    let msPosInScore = 0;
                                     for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
                                     {
-                                        timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
+                                        let timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
                                         if(timeObjects !== undefined)
                                         {
-                                            nTimeObjects = timeObjects.length;
+                                            let nTimeObjects = timeObjects.length;
                                             for(let tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                                             {
-                                                let midiObject = timeObjects[tIndex][interpIndex],
+                                                let midiObject = timeObjects[tIndex][midiObjectIndex],
                                                     msDuration = timeObjects[tIndex][0].msDuration;
 
                                                 if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                                 {
-                                                    Object.defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
+                                                    midiObject.msPosInScore = msPosInScore;
+                                                    Object.freeze(midiObject.msPosInScore);
+                                                    //defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
                                                 }
 
-                                                msPos += msDuration;
+                                                msPosInScore += msDuration;
                                             }
                                         }
                                     }
@@ -1574,6 +1573,7 @@ let //**************************************************************************
                                     }
                                 }
                             }
+                            Object.freeze(barline.msPosInScore);
                         }
 
                         return barlines;
