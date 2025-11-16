@@ -44,7 +44,7 @@ export class Track
 				indexRange = midiObjectIndexRangesPerRegion[currentRegionIndex],
 				firstIndex = indexRange.firstMidiObjectIndex,
 				lastIndex = indexRange.lastMidiObjectIndex,
-				midiObjects = that.interpretations[region.interpIndex].midiObjects,
+				midiObjects = that.interpretations[region.midiObjectIndex].midiObjects,
 				msPosInPerf = 0;
 
 			for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)
@@ -96,7 +96,7 @@ export class Track
 					indexRange = midiObjectIndexRangesPerRegion[regionIndex],
 					firstIndex = indexRange.firstMidiObjectIndex,
 					lastIndex = indexRange.lastMidiObjectIndex,
-					midiObjectsInScore = that.interpretations[region.interpIndex].midiObjects,
+					midiObjectsInScore = that.interpretations[region.midiObjectIndex].midiObjects,
 					msPosInPerf = region.startMsPosInPerf;
 
 				for(let midiObjIndex = firstIndex; midiObjIndex <= lastIndex; midiObjIndex++)

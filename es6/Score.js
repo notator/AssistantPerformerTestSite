@@ -41,7 +41,7 @@ let //**************************************************************************
     // This value (currentRegionIndex) is owned by the InterpretationSelect control.
     // The control sets it (and other things) by calling this.setInterpretation(region).
     currentRegionIndex = 0, // default value: the index of the current region in the regionSequence.
-    // currentInterpretationIndex is regionSequence[currentRegionIndex].interpIndex;
+    // currentInterpretationIndex is regionSequence[currentRegionIndex].midiObjectIndex;
 
     // This array is initialized to all tracks on (=true) when the score is loaded,
     // and reset when the tracksControl calls this.refreshDisplay().
@@ -225,7 +225,7 @@ let //**************************************************************************
         let midiObjectBefore = undefined, midiObjectAfter = undefined, returnObject = undefined,
             deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
             startIndex = 0, endIndex = numberOfTracks,
-            currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
+            currentMidiObjectIndex = regionSequence[currentRegionIndex].midiObjectIndex;
 
         for(let i = startIndex; i < endIndex; ++i)
         {
@@ -237,7 +237,7 @@ let //**************************************************************************
                     let nTimeObjects = timeObjects.length;
                     for(let j = 0; j < nTimeObjects; ++j)
                     {
-                        let midiObject = timeObjects[j][currentInterpIndex];
+                        let midiObject = timeObjects[j][currentMidiObjectIndex];
                         if(alignment === midiObject.alignment)
                         {
                             returnObject = midiObject;
@@ -815,8 +815,8 @@ let //**************************************************************************
     setCursor = function ()
     {
         let displayRunningCursor = true,
-            currentInterpIndex = regionSequence[currentRegionIndex].interpIndex;
-        cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentInterpIndex, displayRunningCursor);
+            currentMidiObjectIndex = regionSequence[currentRegionIndex].midiObjectIndex;
+        cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentMidiObjectIndex, displayRunningCursor);
     },
 
 
@@ -1244,14 +1244,14 @@ let //**************************************************************************
                 staffIndex, nStaves, staff,
                 sysIndex, nSystems = systems.length, system, systemElem;
 
-            // Gets the chord, rest and barline timeObjects for the voices in each system. 
+            // Gets the chord and rest timeObjects for the voices in each system. 
             function getVoiceAndSystemTimeObjects()
             {
                 function getVoiceTimeObjects()
                 {
                     function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
                     {
-                        var noteObjectElems, noteObjectClass,
+                        let noteObjectElems, noteObjectClass,
                             timeObjects = [], noteObjectAlignment,
                             i, j, k, noteObjectElem, noteObjectChildren;
 
@@ -1635,12 +1635,12 @@ let //**************************************************************************
                             for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                             {
                                 let timeObject = voice.timeObjects[timeObjectIndex];
-                                for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
+                                for(let midiObjectIndex = 0; midiObjectIndex < nInterpretations; ++midiObjectIndex)
                                 {
-                                    let midiObject = timeObject[interpIndex];
+                                    let midiObject = timeObject[midiObjectIndex];
                                     if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                     {
-                                        track.interpretations[interpIndex].midiObjects.push(midiObject);
+                                        track.interpretations[midiObjectIndex].midiObjects.push(midiObject);
                                     }
                                 }
                             }
@@ -1824,16 +1824,16 @@ let //**************************************************************************
                 let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
                     nInterpretations = timeObjects[0].length;
 
-                for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
+                for(let midiObjectIndex = 0; midiObjectIndex < nInterpretations; ++midiObjectIndex)
                 {
                     let scoreSpanRegionData = {},
-                        finalMidiObject = timeObjects[timeObjects.length - 1][interpIndex],
+                        finalMidiObject = timeObjects[timeObjects.length - 1][midiObjectIndex],
                         finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDuration,
-                        interpretationNr = (interpIndex + 1).toString();
+                        interpretationNr = (midiObjectIndex + 1).toString();
 
                     scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
                     scoreSpanRegionData.longName = "interpretation " + interpretationNr; // used in the interpretationSelect control
-                    scoreSpanRegionData.interpIndex = interpIndex;
+                    scoreSpanRegionData.midiObjectIndex = midiObjectIndex;
                     scoreSpanRegionData.startMsPosInScore = 0;
                     scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
 
@@ -1851,9 +1851,9 @@ let //**************************************************************************
 
             function setRegionStartAndEndMsPosInPerf(regionSequence)
             {
-                function getRegionDurationInPerformance(interpIndex)
+                function getRegionDurationInPerformance(midiObjectIndex)
                 {
-                    let trackInterpretation = tracks[0].interpretations[interpIndex],
+                    let trackInterpretation = tracks[0].interpretations[midiObjectIndex],
                     msDuration = 0;
                     for(let midiObject of trackInterpretation.midiObjects)
                     {
@@ -1868,6 +1868,9 @@ let //**************************************************************************
                     {
                         region.startMsPosInPerf = region.startMsPosInScore;
                         region.endMsPosInPerf = region.endMsPosInScore;
+
+                        Object.freeze(region.startMsPosInPerf);
+                        Object.freeze(region.endMsPosInPerf);
                     }
                 }
                 else // regions are concatenated
@@ -1875,10 +1878,13 @@ let //**************************************************************************
                     let msPos = 0;
                     for(let region of regionSequence)
                     {
-                        let regionDurationInPerformance = getRegionDurationInPerformance(region.interpIndex);
+                        let regionDurationInPerformance = getRegionDurationInPerformance(region.midiObjectIndex);
 
                         region.startMsPosInPerf = msPos;
                         region.endMsPosInPerf = region.startMsPosInPerf + regionDurationInPerformance;
+
+                        Object.freeze(region.startMsPosInPerf);
+                        Object.freeze(region.endMsPosInPerf);
 
                         msPos = region.endMsPosInPerf;
                     }
@@ -1957,7 +1963,7 @@ let //**************************************************************************
             // track.runtimeInterpretation doesn't change when regionSequence.hasConsecutiveRegions is true.
             for(let track of tracks)
             {
-                track.runtimeInterpretation = track.interpretations[region.interpIndex];
+                track.runtimeInterpretation = track.interpretations[region.midiObjectIndex];
             }
         }
     },
