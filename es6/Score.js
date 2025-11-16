@@ -534,16 +534,20 @@ let //**************************************************************************
                     // then deletes the tempSelectRegionLayer (together with its 'select' element).
                     function regionSelectControlMouseLeave()
                     {
-                        let selectElem = document.getElementById("tempRegionSelectElem");
+                        let tempRegionSelect = document.getElementById("tempRegionSelect"),
+                            interpretationSelect = document.getElementById("interpretationSelect");
 
-                        if(selectElem.selectedIndex > 0)
+                        if(tempRegionSelect.selectedIndex > 0)
                         {
-                            regionShortName = selectElem.options[selectElem.selectedIndex].text.slice(0);
+                            regionShortName = tempRegionSelect.options[tempRegionSelect.selectedIndex].text.slice(0);
 
-                            selectElem.removeEventListener('mouseleave', regionSelectControlMouseLeave, false);
+                            let interpretationIndex = indexOfShortNameInRegionSequence(regionShortName);
+                            interpretationSelect.selectedIndex = interpretationIndex;
+
+                            tempRegionSelect.removeEventListener('mouseleave', regionSelectControlMouseLeave, false);
 
                             let selectRegionLayer = document.getElementById("tempSelectRegionLayer");
-                            selectRegionLayer.removeChild(selectElem);
+                            selectRegionLayer.removeChild(tempRegionSelect);
                             document.body.removeChild(selectRegionLayer);
 
                             svgPageClicked(setMarkerEvent, setMarkerState);
@@ -556,7 +560,7 @@ let //**************************************************************************
                         svgPagesFrame = document.getElementById("svgPagesFrame"),
                         scrollTop = svgPagesFrame.scrollTop;
 
-                    selectElem.id = "tempRegionSelectElem";
+                    selectElem.id = "tempRegionSelect";
                     selectElem.style.position = "absolute";
                     selectElem.style.top = (cursorY - scrollTop).toString(10) + "px";
                     selectElem.style.left = cursorX.toString(10) + "px";
@@ -1680,7 +1684,12 @@ let //**************************************************************************
         startMarker = systems[0].startMarker;
         hideStartMarkersExcept(startMarker);
 
-        startMarker.setLable(regionSequence[0].shortName);
+        let interpretationSelect = document.getElementById("interpretationSelect"),
+            firstRegionIndex = 0;
+
+        interpretationSelect.selectedIndex = firstRegionIndex;
+
+        startMarker.setLable(regionSequence[firstRegionIndex].shortName);
         startMarker.moveTo(systems[0].barlines[0]);
         startMarker.msPosInPerf = 0;
         startMarker.regionIndex = 0;
