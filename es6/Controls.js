@@ -241,18 +241,18 @@ var
         }
     },
 
-    disableInterpretationSelectControl = function()
+    disableRegionSelectControl = function()
     {
-        let interpSelect = globalElements.interpretationSelect,
+        let interpSelect = globalElements.regionSelect,
             interpDiv = globalElements.interpretationDiv;
 
         interpSelect.disabled = true;
         interpDiv.style.opacity = 0.5;        
     },
 
-    enableInterpretationSelectControl = function()
+    enableRegionSelectControl = function()
     {
-        let interpSelect = globalElements.interpretationSelect,
+        let interpSelect = globalElements.regionSelect,
             interpDiv = globalElements.interpretationDiv;
                        
         interpSelect.disabled = false;
@@ -279,7 +279,7 @@ var
         cl.setConductCreepControlDisabled.setAttribute("opacity", SMOKE);
         // end performance buttons
 
-        disableInterpretationSelectControl();
+        disableRegionSelectControl();
 
         cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
     },
@@ -382,7 +382,7 @@ var
     setStartMarker = function(e)
     {
         score.setStartMarkerClick(e);                                
-        setInterpretationSelect(score);
+        setRegionSelect(score);
     },
 
     setEventListenersAndMouseCursors = function (svgControlsState)
@@ -586,7 +586,7 @@ var
         globalElements.speedControlInput.disabled = false;
         globalElements.speedControlSmokeDiv.style.display = "none";
 
-        enableInterpretationSelectControl();
+        enableRegionSelectControl();
     },
 
     // Callback called when the performer is stopped or has come to the end of the score.
@@ -813,12 +813,12 @@ var
     //    One (score-length) region per interpretation has been automatically constructed.
     //    Each such region has a longName consisting of the string "interpretation " folowed by the
     //    interpretation's number. Such interpretations are parallel alternatives.
-    setInterpretationSelect = function (score)
+    setRegionSelect = function (score)
     {
-        let interpretationSelect = globalElements.interpretationSelect,
+        let regionSelect = globalElements.regionSelect,
             regions = score.getRegionSequence();
 
-        interpretationSelect.options.length = 0;
+        regionSelect.options.length = 0;
         for(let i = 0; i < regions.length; ++i)
         {
             let region = regions[i],
@@ -827,7 +827,7 @@ var
             option.text = region.longName;
             option.region = region;
 
-            interpretationSelect.add(option, null);
+            regionSelect.add(option, null);
         }      
     };
 
@@ -853,7 +853,7 @@ export class Controls
             globalElements.speedControlLabel2 = document.getElementById("speedControlLabel2");
             globalElements.speedControlSmokeDiv = document.getElementById("speedControlSmokeDiv");
 
-            globalElements.interpretationSelect = document.getElementById("interpretationSelect");
+            globalElements.regionSelect = document.getElementById("regionSelect");
             globalElements.interpretationDiv = document.getElementById("interpretationDiv");
 
             globalElements.conductingLayer = document.getElementById("conductingLayer");
@@ -1182,9 +1182,9 @@ export class Controls
             }
         }
 
-        if(controlID === "interpretationSelect")
+        if(controlID === "regionSelect")
         {
-            let select = globalElements.interpretationSelect;
+            let select = globalElements.regionSelect;
 
             score.setInterpretation(select.options[select.selectedIndex].region);
         }
@@ -1353,7 +1353,7 @@ export class Controls
 
         setSpeedControl(tracksControl.width());                
         
-        setInterpretationSelect(score);
+        setRegionSelect(score);
 
         setConductingLayer();
 

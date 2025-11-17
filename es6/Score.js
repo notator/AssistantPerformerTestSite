@@ -73,7 +73,7 @@ let //**************************************************************************
     //******************************************************************************************
     // Variable values: These can be changed by controls on page 2. (After the Start button is pressed on page 1)
 
-    // This value (currentRegionIndex) is owned by the InterpretationSelect control.
+    // This value (currentRegionIndex) is owned by the RegionSelect control.
     // The control sets it (and other things) by calling this.setInterpretation(region).
     currentRegionIndex = 0, // default value: the index of the current region in the regionSequence.
     // currentInterpretationIndex is regionSequence[currentRegionIndex].midiObjectIndex;
@@ -570,14 +570,14 @@ let //**************************************************************************
                     function regionSelectControlMouseLeave()
                     {
                         let tempRegionSelect = document.getElementById("tempRegionSelect"),
-                            interpretationSelect = document.getElementById("interpretationSelect");
+                            regionSelect = document.getElementById("regionSelect");
 
                         if(tempRegionSelect.selectedIndex > 0)
                         {
                             regionShortName = tempRegionSelect.options[tempRegionSelect.selectedIndex].text.slice(0);
 
                             let interpretationIndex = indexOfShortNameInRegionSequence(regionShortName);
-                            interpretationSelect.selectedIndex = interpretationIndex;
+                            regionSelect.selectedIndex = interpretationIndex;
 
                             tempRegionSelect.removeEventListener('mouseleave', regionSelectControlMouseLeave, false);
 
@@ -1729,10 +1729,10 @@ let //**************************************************************************
         startMarker = systems[0].startMarker;
         hideStartMarkersExcept(startMarker);
 
-        let interpretationSelect = document.getElementById("interpretationSelect"),
+        let regionSelect = document.getElementById("regionSelect"),
             firstRegionIndex = 0;
 
-        interpretationSelect.selectedIndex = firstRegionIndex;
+        regionSelect.selectedIndex = firstRegionIndex;
 
         startMarker.setLable(regionSequence[firstRegionIndex].shortName);
         startMarker.moveTo(systems[0].barlines[0]);
@@ -1877,7 +1877,7 @@ let //**************************************************************************
                         interpretationNr = (midiObjectIndex + 1).toString();
 
                     scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
-                    scoreSpanRegionData.longName = "interpretation " + interpretationNr; // used in the interpretationSelect control
+                    scoreSpanRegionData.longName = "interpretation " + interpretationNr; // used in the regionSelect control
                     scoreSpanRegionData.midiObjectIndex = midiObjectIndex;
                     scoreSpanRegionData.startMsPosInScore = 0;
                     scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
@@ -1981,7 +1981,7 @@ let //**************************************************************************
         return markersLayer; // is undefined before a score is loaded
     },
 
-    // called by interpretationSelect.leave
+    // called by regionSelect.leave
     setInterpretation = function(region)
     {
         // the Score global currentRegionIndex value
