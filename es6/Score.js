@@ -9,6 +9,41 @@ import {Region} from "./Region.js";
 
 const BLACK_COLOR = "#000000";
 
+/***********************************************************************************************
+ * Interpretation is currently a confused concept, that needs to be sorted out.
+ * I want to remove the word entirely from all the code so as to clarify things.
+ * This means redefining various classes, and the way they are constructed.
+ * 
+ * At the top level:
+ *      1. The Interpretation class will be removed entirely
+ *      2. The "InterpretationSelect" control will be renamed to "RegionSelect", and its functionality will change.
+ *          Probably, selecting a Region will set the EndMarker to the end of the Region, not the end of the Score.
+ * 
+ * Lower down, the Track and Region classes need to be modified as follows: 
+ * As before, a Score contains a .tracks array containing Track objects
+ * Tracks are constructed from the <voice> elements in the SVG-MIDI file.
+ * Each Track will have a .midObjectSequences attribute, that is an array containing midiObjectSequence arrays:
+ *          tracks[trackIndex].midiObjectSequences[midiObjectIndex]
+ *      is an array (temporal sequence) of MidiChord and MidiRest objects spanning the whole score.
+ *      These are the <midiChord> and <midiRest> objects defined at midiObjectIndex inside the <midiChords>
+ *      and <midiRests> elements in the SVG-MIDI file.
+ *      These midiObjects' .msPosInScore attributes will be set, but their .msPosInPerf attributes will remain undefined.
+ * 
+ * As before, the Score also contains a .regionSequence array containing Region objects that are defined
+ * (in chronological order) in the SVG-MIDI file.
+ * Each Region has a single .moments array that will be constructed as follows:
+ *      1. The SVG-MIDI file defines the region's startMsPosInScore, endMsPosInScore and midiObjectIndex.
+ *      2. Get the Region's parallel .midiObjectSequences by cloning the midiObjects in the corresponding
+ *          segment of the tracks[trackIndex].midiObjectSequences[midiObjectIndex] midiObjectSequence array.
+ *          Note:
+ *          a) that the midiObjects must be cloned, so that their .msPosInPerf attributes can be set independently
+ *             per region. Regions may overlap, so a midiObject at a particular .msPosInScore will have
+ *             different .msPosInPerf values in different Regions.    
+ *          b) that a region's .midiObjectSequences only span the range between its startMsPosInScore and
+ *             endMsPosInScore 
+ *      3. Convert each Region's parallel .midiObjectSequences to a single sequence of vertical moments (.moments)
+ */
+
 let //******************************************************************************************
     // Constant values, set when a score is loaded. (When the Start button is pressed on page 1)
     viewBox,
@@ -1660,7 +1695,7 @@ let //**************************************************************************
                 }
             }
         }
-
+        
         getEmptySystems();
         getMidiObjects();
         setInitialInterpretationState(systems);
