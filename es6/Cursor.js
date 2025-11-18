@@ -66,9 +66,9 @@ export class Cursor
 					{
 						for(let voice of staff.voices)
 						{
-							if(voice.timeObjects[0][interpIndex].alignment < leftmostMidiObject.alignment)
+							if(voice.midiObjectSequences[0][interpIndex].alignment < leftmostMidiObject.alignment)
 							{
-								leftmostMidiObject = voice.timeObjects[0][interpIndex];
+								leftmostMidiObject = voice.midiObjectSequences[0][interpIndex];
 								// pixelsPerMs is set properly later for CreepConductor
 								msPosData = { msPosInScore: leftmostMidiObject.msPosInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 							}

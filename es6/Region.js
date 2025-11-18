@@ -38,7 +38,7 @@ export class Region
 			// public values (overridden when regionDefElem is defined)
 			shortName = "",
 			longName = "",
-			midiObjectIndex = 0,
+			sequenceIndex = 0,
 			//fromStartOfBar = 1,
 			//toEndOfBar = "last",
 			startMsPosInScore = 0,
@@ -50,7 +50,7 @@ export class Region
 			// Such scores are given one or more parallel regions, one for each interpretation.
 			shortName = scoreSpanRegionData.shortName;
 			longName = scoreSpanRegionData.longName;
-			midiObjectIndex = scoreSpanRegionData.midiObjectIndex;
+			sequenceIndex = scoreSpanRegionData.sequenceIndex;
 			startMsPosInScore = scoreSpanRegionData.startMsPosInScore;
 			endMsPosInScore = scoreSpanRegionData.endMsPosInScore;	
 		}
@@ -58,10 +58,10 @@ export class Region
 		{
 			shortName = regionDefElem.getAttribute("name");
 			longName = "region " + shortName;
-			midiObjectIndex = parseInt(regionDefElem.getAttribute("midiObjectIndex"), 10);
+			sequenceIndex = parseInt(regionDefElem.getAttribute("midiObjectIndex"), 10);
 			// legacy scores that have regions, but only one interpretation (such as Tombeau 1)
 			// have the default midiObjectIndex = 0;
-			midiObjectIndex = (Number.isNaN(midiObjectIndex)) ? 0 : midiObjectIndex; 
+			sequenceIndex = (Number.isNaN(sequenceIndex)) ? 0 : sequenceIndex; 
 			//fromStartOfBar = parseInt(regionDefElem.getAttribute("fromStartOfBar"), 10);
 			//toEndOfBar = parseInt(regionDefElem.getAttribute("toEndOfBar"), 10);
 			startMsPosInScore = parseInt(regionDefElem.getAttribute("startMsPosInScore"), 10);
@@ -97,7 +97,7 @@ export class Region
 
 		Object.defineProperty(this, "shortName", {value: shortName, writable: false});
 		Object.defineProperty(this, "longName", {value: longName, writable: false});
-		Object.defineProperty(this, "midiObjectIndex", {value: midiObjectIndex, writable: false});
+		Object.defineProperty(this, "sequenceIndex", {value: sequenceIndex, writable: false});
 		Object.defineProperty(this, "startMsPosInScore", {value: startMsPosInScore, writable: false});
 		Object.defineProperty(this, "endMsPosInScore", {value: endMsPosInScore, writable: false});	
 		

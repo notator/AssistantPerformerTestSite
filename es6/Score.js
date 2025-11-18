@@ -1,4 +1,4 @@
-import {StartMarker} from "./Markers.js";
+﻿import {StartMarker} from "./Markers.js";
 import {EndMarker} from "./Markers.js";
 import {Cursor} from "./Cursor.js";
 import {MidiChord, MidiRest} from "./MidiObject.js";
@@ -76,7 +76,7 @@ let //**************************************************************************
     // This value (currentRegionIndex) is owned by the RegionSelect control.
     // The control sets it (and other things) by calling this.setInterpretation(region).
     currentRegionIndex = 0, // default value: the index of the current region in the regionSequence.
-    // currentInterpretationIndex is regionSequence[currentRegionIndex].midiObjectIndex;
+    // currentInterpretationIndex is regionSequence[currentRegionIndex].sequenceIndex;
 
     // This array is initialized to all tracks on (=true) when the score is loaded,
     // and reset when the tracksControl calls this.refreshDisplay().
@@ -141,7 +141,7 @@ let //**************************************************************************
             for(j = 0; j < nVoices; ++j)
             {
                 voice = system.staves[i].voices[j];
-                timeObjects = voice.timeObjects;
+                timeObjects = voice.midiObjectSequences;
                 timeObjectsArray.push(timeObjects);
             }
         }
@@ -260,7 +260,7 @@ let //**************************************************************************
         let midiObjectBefore = undefined, midiObjectAfter = undefined, returnObject = undefined,
             deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
             startIndex = 0, endIndex = numberOfTracks,
-            currentMidiObjectIndex = regionSequence[currentRegionIndex].midiObjectIndex;
+            currentMidiObjectIndex = regionSequence[currentRegionIndex].sequenceIndex;
 
         for(let i = startIndex; i < endIndex; ++i)
         {
@@ -850,7 +850,7 @@ let //**************************************************************************
     setCursor = function ()
     {
         let displayRunningCursor = true,
-            currentMidiObjectIndex = regionSequence[currentRegionIndex].midiObjectIndex;
+            currentMidiObjectIndex = regionSequence[currentRegionIndex].sequenceIndex;
         cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentMidiObjectIndex, displayRunningCursor);
     },
 
@@ -1063,8 +1063,8 @@ let //**************************************************************************
 
             // If the <regionSequence> element is defined in the score, this function uses it to set the following values (global inside Score.js):
             // 	   startMarker.regionIndex, endMarker.regionIndex, regionSequence.
-            // If there are no regions defined in the score, one region per interpretation will be created later, when the number of interpretations
-            // is known. Interpretations are defined by the level of their <midiChord> and <midiRest> elements inside the <midiObjects> elements.
+            // If there are no regions defined in the score, one region per level of midiObject in the score's <midiChords> or <midiRests> elements
+            // will be created later.
             function getConsecutiveRegionDataFromScore(svgElem)
             {
                 let regionSeq = [],
@@ -1268,122 +1268,111 @@ let //**************************************************************************
             initializeTrackIsOnArray(systems[0]);
         }
 
-        // Loads the global tracks array
-        function getMidiObjects()
+        // Creates and loads the score's internal tracks array
+        function getTrackMidiObjectArrays()
         {
             // systems->staves->voices->timeObjects
             let
-                trackIndex = 0, track,
-                nTimeObjects,
+                trackIndex = 0,
                 voiceIndex, nVoices, voice,
                 staffIndex, nStaves, staff,
                 sysIndex, nSystems = systems.length, system, systemElem;
 
-            // Gets the chord and rest timeObjects for the voices in each system. 
-            function getVoiceAndSystemTimeObjects()
+            // Gets the midiObjectSequences for each voice in each system. 
+            function getAllVoiceMidiObjectSequences()
             {
-                function getVoiceTimeObjects()
+                function getSystemVoiceObjects(systemIndex, systemElem, system, viewBoxScale1)
                 {
-                    function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
-                    {
-                        let noteObjectElems, noteObjectClass,
-                            timeObjects = [], noteObjectAlignment,
-                            i, j, k, noteObjectElem, noteObjectChildren,
-                            nInterpretations = -1;
-
-                        noteObjectElems = voiceElem.children;
-                        for(i = 0; i < noteObjectElems.length; ++i)
-                        {
-                            let timeObject = [];
-
-                            noteObjectElem = noteObjectElems[i];
-                            noteObjectClass = noteObjectElem.getAttribute('class');
-                            // noteObjectAlignment will be null if this is not a chord or rest
-                            noteObjectAlignment = noteObjectElem.getAttribute('score:alignment');
-
-                            if(noteObjectClass === 'chord' || noteObjectClass === 'rest')
-                            {
-                                noteObjectChildren = noteObjectElem.children;
-                                for(j = 0; j < noteObjectChildren.length; ++j)
-                                {
-                                    if(noteObjectChildren[j].nodeName === "score:midiChords")
-                                    {
-                                        let midiChordsChildren = noteObjectChildren[j].children;  
-                                        for(k = 0; k < midiChordsChildren.length; ++k)
-                                        {
-                                            timeObject.push(new MidiChord(midiChordsChildren[k]));
-                                        }
-                                        break;
-                                    }
-                                    else if(noteObjectChildren[j].nodeName === "score:midiRests")
-                                    {
-                                        let midiRestsChildren = noteObjectChildren[j].children;
-                                        for(k = 0; k < midiRestsChildren.length; ++k)
-                                        {
-                                            timeObject.push(new MidiRest(midiRestsChildren[k])); // see MidiChord constructor.
-                                        }
-                                        break;
-                                    }
-                                }
-
-                                if(nInterpretations === -1)
-                                {
-                                    nInterpretations = timeObject.length;
-                                }
-                                else
-                                {
-                                    console.assert(nInterpretations === timeObject.length);
-                                }
-
-                                timeObject.forEach((midiObject) =>
-                                {
-                                    if(midiObject.msDuration === undefined || midiObject.msDuration < 1)
-                                    {
-                                        throw "Error: Chords and Rests must have a duration greater than 0!";
-                                    }
-
-                                    if(noteObjectAlignment !== null)
-                                    {
-                                        midiObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-                                    }
-                                });
-
-
-                                timeObjects.push(timeObject);
-                            }
-                        }
-
-                        return timeObjects;
-                    }
-
-                    // These are SVG elements in the voice that will have their opacity changed when the voice is disabled.
-                    function getGraphicElements(systemIndex, voiceElem)
-                    {
-                        var graphicElements = [], type, i, noteObjectElems, noteObjectElem;
-
-                        noteObjectElems = voiceElem.children;
-                        for(i = 0; i < noteObjectElems.length; ++i)
-                        {
-                            noteObjectElem = noteObjectElems[i];
-                            type = noteObjectElem.getAttribute('class');
-                            if(type === 'staffName'
-                                || type === 'clef'
-                                || type === 'cautionaryChord'
-                                || type === 'beamBlock'
-                                || type === 'chord' || type === 'rest'
-                                || type === 'smallClef'
-                                || type === 'barline'
-                                || type === 'endBarline') // note that is a group (a barline and a thickBarline)
-                            {
-                                graphicElements.push(noteObjectElem);
-                            }
-                        }
-
-                        return graphicElements;
-                    }
-
                     function setVoices(systemIndex, staff, staffElem, voiceType, viewBoxScale1)
                     {
+                        function getVoiceMidiObjectSequences(systemIndex, voiceElem, viewBoxScale1)
+                        {
+                            let midiObjectSequences = [];
+
+                            let noteObjectElems = voiceElem.children;
+                            for(let noteObjectElem of noteObjectElems)
+                            {
+                                let midiObjectSequence = [],
+                                    noteObjectClass = noteObjectElem.getAttribute('class'),
+                                    noteObjectAlignment = noteObjectElem.getAttribute('score:alignment');
+                                    // noteObjectAlignment will be null if this is not a chord or rest
+
+                                if(noteObjectClass === 'chord' || noteObjectClass === 'rest')
+                                {
+                                    let noteObjectChildren = noteObjectElem.children;
+                                    for(let noteObjectChild of noteObjectChildren)
+                                    {
+                                        if(noteObjectChild.nodeName === "score:midiChords")
+                                        {
+                                            let midiChordElems = noteObjectChild.children;
+                                            for(let midiChordElem of midiChordElems)
+                                            {
+                                                midiObjectSequence.push(new MidiChord(midiChordElem));
+                                            }
+                                            break;
+                                        }
+                                        else if(noteObjectChild.nodeName === "score:midiRests")
+                                        {
+                                            let midiRestElems = noteObjectChild.children;
+                                            for(let midiRestElem of midiRestElems)                        
+                                            {
+                                                midiObjectSequence.push(new MidiRest(midiRestElem)); // see MidiChord constructor.
+                                            }
+                                            break;
+                                        }
+                                    }
+
+                                    midiObjectSequence.forEach((midiObject) =>
+                                    {
+                                        if(midiObject.msDuration === undefined || midiObject.msDuration < 1)
+                                        {
+                                            throw "Error: Chords and Rests must have a duration greater than 0!";
+                                        }
+
+                                        if(noteObjectAlignment !== null)
+                                        {
+                                            midiObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
+                                        }
+                                    });
+
+
+                                    midiObjectSequences.push(midiObjectSequence);
+                                }
+                            }
+
+                            for(let i = 1; i < midiObjectSequences.length; ++i)
+                            {
+                                console.assert(midiObjectSequences[i].length === midiObjectSequences[0].length);
+                            }
+
+                            return midiObjectSequences;
+                        }
+                        // These are SVG elements in the voice that will have their opacity changed when the voice is disabled.
+                        function getGraphicElements(systemIndex, voiceElem)
+                        {
+                            var graphicElements = [], type, i, noteObjectElems, noteObjectElem;
+
+                            noteObjectElems = voiceElem.children;
+                            for(i = 0; i < noteObjectElems.length; ++i)
+                            {
+                                noteObjectElem = noteObjectElems[i];
+                                type = noteObjectElem.getAttribute('class');
+                                if(type === 'staffName'
+                                    || type === 'clef'
+                                    || type === 'cautionaryChord'
+                                    || type === 'beamBlock'
+                                    || type === 'chord' || type === 'rest'
+                                    || type === 'smallClef'
+                                    || type === 'barline'
+                                    || type === 'endBarline') // note that is a group (a barline and a thickBarline)
+                                {
+                                    graphicElements.push(noteObjectElem);
+                                }
+                            }
+
+                            return graphicElements;
+                        }
+
                         var voiceElems, voiceElem, isFirstVoiceInStaff;
 
                         voiceElems = staffElem.getElementsByClassName(voiceType);
@@ -1392,8 +1381,8 @@ let //**************************************************************************
                         {
                             voiceElem = voiceElems[voiceIndex];
                             voice = staff.voices[voiceIndex];
-                            voice.timeObjects = getTimeObjects(systemIndex, voiceElem, viewBoxScale1);
-                            if(voice.timeObjects[0][0].alignment !== undefined)  // is undefined if the voice is invisible
+                            voice.midiObjectSequences = getVoiceMidiObjectSequences(systemIndex, voiceElem, viewBoxScale1);
+                            if(voice.midiObjectSequences[0][0].alignment !== undefined)  // is undefined if the voice is invisible
                             {
                                 voice.graphicElements = getGraphicElements(systemIndex, voiceElem); // will be used to set opacity when the voice is disabled
                                 if(isFirstVoiceInStaff === true)
@@ -1405,241 +1394,235 @@ let //**************************************************************************
                         }
                     }
 
-                    function getSystemVoiceObjects(systemIndex, systemElem, system, viewBoxScale1)
+                    // Moritz now always enforces that
+                    // 1. Every system contains all tracks
+                    // 2. Each track's MidiChannel is the same as its index (from top to bottom in each system).
+                    // The top track therefore always has MidiChannel == 0, and the
+                    // MidiChannels increase contiguously from top to bottom of each system.
+                    function getNumberOfTracks(system)
                     {
-                        var staffElems, staffElem,
-                            staff,
-                            staffIndex;
+                        let staves = system.staves, staffIndex, voiceIndex, voices;
 
-                        // Moritz now always enforces that
-                        // 1. Every system contains all tracks
-                        // 2. Each track's MidiChannel is the same as its index (from top to bottom in each system).
-                        // The top track therefore always has MidiChannel == 0, and the
-                        // MidiChannels increase contiguously from top to bottom of each system.
-                        function getNumberOfTracks(system)
+                        numberOfTracks = 0;
+
+                        for(staffIndex = 0; staffIndex < staves.length; staffIndex++)
                         {
-                            let staves = system.staves, staffIndex, voiceIndex, voices;
-
-                            numberOfTracks = 0;
-
-                            for(staffIndex = 0; staffIndex < staves.length; staffIndex++)
+                            voices = staves[staffIndex].voices;
+                            for(voiceIndex = 0; voiceIndex < voices.length; voiceIndex++)
                             {
-                                voices = staves[staffIndex].voices;
-                                for(voiceIndex = 0; voiceIndex < voices.length; voiceIndex++)
-                                {
-                                    numberOfTracks++;
-                                }
+                                numberOfTracks++;
                             }
                         }
+                    }
 
-                        staffElems = systemElem.getElementsByClassName("staff");
+                    let staffElems = systemElem.getElementsByClassName("staff"),
                         staffIndex = 0;
-                        while(staffIndex < staffElems.length)
-                        {
-                            staff = system.staves[staffIndex];
+
+                    while(staffIndex < staffElems.length)
+                    {
+                        let staff = system.staves[staffIndex],
                             staffElem = staffElems[staffIndex];
-                            setVoices(systemIndex, staff, staffElem, "voice", viewBoxScale1);
-                            staffIndex++;
-                        }
 
-                        if(systemIndex === 0)
-                        {
-                            getNumberOfTracks(systems[0]);
-                        }
+                        setVoices(systemIndex, staff, staffElem, "voice", viewBoxScale1);
+                        staffIndex++;
                     }
 
-                    // Sets the msPosInScore of each timeObject (rests and chords) in the voice.timeObjects arrays.
-                    function setMsPositionsInScore(systems)
+                    if(systemIndex === 0)
                     {
-                        let nSystems = systems.length,
-                            nStaves = systems[0].staves.length,
-                            nMidiObjectsPerTimeObject = systems[0].staves[0].voices[0].timeObjects[0].length;
-
-                        for(let midiObjectIndex = 0; midiObjectIndex < nMidiObjectsPerTimeObject; ++midiObjectIndex)
-                        {
-                            for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-                            {
-                                let nVoices = systems[0].staves[staffIndex].voices.length;
-                                for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
-                                {
-                                    let msPosInScore = 0;
-                                    for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
-                                    {
-                                        let timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
-                                        if(timeObjects !== undefined)
-                                        {
-                                            let nTimeObjects = timeObjects.length;
-                                            for(let tIndex = 0; tIndex < nTimeObjects; ++tIndex)
-                                            {
-                                                let midiObject = timeObjects[tIndex][midiObjectIndex],
-                                                    msDuration = timeObjects[tIndex][0].msDuration;
-
-                                                if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
-                                                {
-                                                    midiObject.msPosInScore = msPosInScore;
-                                                    Object.freeze(midiObject.msPosInScore);
-                                                    //defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
-                                                }
-
-                                                msPosInScore += msDuration;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        getNumberOfTracks(systems[0]);
                     }
-
-                    /*************** end of getVoiceAndSystemTimeObjects function definitions *****************************/
-
-                    for(let i = 0; i < systemElems.length; ++i)
-                    {
-                        systemElem = systemElems[i];
-                        system = systems[i];
-
-                        getSystemVoiceObjects(i, systemElem, system, viewBoxScale);
-                    }
-
-                    setMsPositionsInScore(systems);
                 }
 
-                function getSystemBarlineTimeObjects(systemElems, systemElem)
+                // Sets the msPosInScore of each midiChord and midiRest in the voice.midiObjectSequences arrays.
+                function setMsPositionsInScore(systems)
                 {
-                    function getBarlines(systemElem, system)
+                    let nSystems = systems.length,
+                        nStaves = systems[0].staves.length,
+                        nSequences = systems[0].staves[0].voices[0].midiObjectSequences[0].length;
+
+                    for(let sequenceIndex = 0; sequenceIndex < nSequences; ++sequenceIndex)
                     {
-                        function getBarlineTypeAndAlignments(barlineElems, typeString)
+                        for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
                         {
-                            let barlineElem, barlineX1,
-                                barlines = [], barline, thickBarlines,
-                                alignments = [], alignment;
-
-                            for(var i = 0; i < barlineElems.length; i++)
+                            let nVoices = systems[0].staves[staffIndex].voices.length;
+                            for(let voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                             {
-                                barlineElem = barlineElems[i];
-                                thickBarlines = barlineElem.getElementsByClassName('thickBarline');
-                                if(thickBarlines.length === 0)
+                                let msPosInScore = 0;
+                                for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
                                 {
-                                    barlineX1 = barlineElem.getAttribute('x1');
-                                }
-                                else
-                                {
-                                    barlineX1 = thickBarlines[0].getAttribute('x1');
-                                }
-                                alignment = parseFloat(barlineX1, 10) / viewBoxScale;
-                                if(alignments.includes(alignment) === false)
-                                {
-                                    switch(typeString)
+                                    let midiObjectSequence = systems[systemIndex].staves[staffIndex].voices[voiceIndex].midiObjectSequences[sequenceIndex];
+                                    if(midiObjectSequence !== undefined)
                                     {
-                                        case "normalBarline":
+                                        let nMidiObjects = midiObjectSequence.length;
+                                        for(let midiObjectIndex = 0; midiObjectIndex < nMidiObjects; ++midiObjectIndex)
+                                        {
+                                            let midiObject = midiObjectSequence[midiObjectIndex],
+                                                msDuration = midiObjectSequence[midiObjectIndex].msDuration;
+
+                                            if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                             {
-                                                barline = new NormalBarline(alignment); break;
+                                                midiObject.msPosInScore = msPosInScore;
+                                                Object.freeze(midiObject.msPosInScore);
+                                                //defineProperty(midiObject, "msPosInScore", {value: msPos, writable: false});
                                             }
-                                        case "startRegionBarline":
-                                            {
-                                                barline = new StartRegionBarline(alignment); break;
-                                            }
-                                        case "endRegionBarline":
-                                            {
-                                                barline = new EndRegionBarline(alignment); break;
-                                            }
-                                        case "endAndStartRegionBarline":
-                                            {
-                                                barline = new EndAndStartRegionBarline(alignment); break;
-                                            }
-                                        case "endOfScoreBarline":
-                                            {
-                                                barline = new EndOfScoreBarline(alignment); break;
-                                            }
-                                        default:
-                                            {
-                                                throw "Unknown barline type string: " + typeString;
-                                            }
+
+                                            msPosInScore += msDuration;
+                                        }
                                     }
-                                    barlines.push(barline);
-                                    alignments.push(alignment);
                                 }
                             }
+                        }
+                    }
+                }
 
-                            barlines.sort((x, y) => x.alignment - y.alignment);
+                /*************** end of getVoiceMidiObjectArrays function definitions *****************************/
 
-                            return barlines;
+                for(let i = 0; i < systemElems.length; ++i)
+                {
+                    systemElem = systemElems[i];
+                    system = systems[i];
+
+                    getSystemVoiceObjects(i, systemElem, system, viewBoxScale);
+                }
+
+                setMsPositionsInScore(systems);
+            }
+
+            function getEachSystemBarlines(systemElems, systemElem)
+            {
+                function getBarlines(systemElem, system)
+                {
+                    function getBarlineTypeAndAlignments(barlineElems, typeString)
+                    {
+                        let barlineElem, barlineX1,
+                            barlines = [], barline, thickBarlines,
+                            alignments = [], alignment;
+
+                        for(var i = 0; i < barlineElems.length; i++)
+                        {
+                            barlineElem = barlineElems[i];
+                            thickBarlines = barlineElem.getElementsByClassName('thickBarline');
+                            if(thickBarlines.length === 0)
+                            {
+                                barlineX1 = barlineElem.getAttribute('x1');
+                            }
+                            else
+                            {
+                                barlineX1 = thickBarlines[0].getAttribute('x1');
+                            }
+                            alignment = parseFloat(barlineX1, 10) / viewBoxScale;
+                            if(alignments.includes(alignment) === false)
+                            {
+                                switch(typeString)
+                                {
+                                    case "normalBarline":
+                                        {
+                                            barline = new NormalBarline(alignment); break;
+                                        }
+                                    case "startRegionBarline":
+                                        {
+                                            barline = new StartRegionBarline(alignment); break;
+                                        }
+                                    case "endRegionBarline":
+                                        {
+                                            barline = new EndRegionBarline(alignment); break;
+                                        }
+                                    case "endAndStartRegionBarline":
+                                        {
+                                            barline = new EndAndStartRegionBarline(alignment); break;
+                                        }
+                                    case "endOfScoreBarline":
+                                        {
+                                            barline = new EndOfScoreBarline(alignment); break;
+                                        }
+                                    default:
+                                        {
+                                            throw "Unknown barline type string: " + typeString;
+                                        }
+                                }
+                                barlines.push(barline);
+                                alignments.push(alignment);
+                            }
                         }
 
-                        let normalBarlineElems = Array.from(systemElem.getElementsByClassName('normalBarline')),
-                            startRegionBarlineElems = Array.from(systemElem.getElementsByClassName('startRegionBarline')),
-                            endAndStartRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline')),
-                            endRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endRegionBarline')),
-                            endOfScoreBarlineElems = Array.from(systemElem.getElementsByClassName('endOfScoreBarline')),
-                            barlines, normalBarlineObjs = [], startRegionBarlineObjs = [], endRegionBarlineObjs = [], endOfScoreBarlineObjs = [],
-                            endAndStartBarlineObjs = [];
-
-                        normalBarlineObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
-                        startRegionBarlineObjs = getBarlineTypeAndAlignments(startRegionBarlineElems, "startRegionBarline");
-                        endRegionBarlineObjs = getBarlineTypeAndAlignments(endRegionBarlineElems, "endRegionBarline");
-                        endOfScoreBarlineObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
-                        endAndStartBarlineObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
-
-                        barlines = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
                         barlines.sort((x, y) => x.alignment - y.alignment);
-
-                        if(barlines[barlines.length - 1] instanceof EndOfScoreBarline)
-                        {
-                            barlines.splice(barlines.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
-                        }
-
-                        for(let barlineIndex = 0; barlineIndex < barlines.length; barlineIndex++)
-                        {
-                            let barline = barlines[barlineIndex];
-                            for(staff of system.staves)
-                            {
-                                for(voice of staff.voices)
-                                {
-                                    let timeObject = voice.timeObjects.find(x => (x[0] instanceof MidiChord || x[0] instanceof MidiRest)
-                                            && x[0].alignment > barline.alignment);
-
-                                    if(timeObject !== undefined)
-                                    {
-                                        let midiObject = timeObject[0];
-                                        if(barline.msPosInScore === -1 || midiObject.msPosInScore < barline.msPosInScore)
-                                        {
-                                            barline.msPosInScore = midiObject.msPosInScore;
-                                        }
-                                    }
-                                    else // final barline on system
-                                    {
-                                        console.assert(barlineIndex === barlines.length - 1);
-                                        let lastMidiObject = voice.timeObjects[voice.timeObjects.length - 1][0],
-                                            endOfLastMidiObject = lastMidiObject.msPosInScore + lastMidiObject.msDuration;  
-                                            
-                                        if(barline.msPosInScore === -1 || endOfLastMidiObject < barline.msPosInScore)
-                                        {
-                                            barline.msPosInScore = endOfLastMidiObject;
-                                        }
-                                    }
-                                }
-                            }
-                            Object.freeze(barline.msPosInScore);
-                        }
 
                         return barlines;
                     }
 
-                    for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
-                    {
-                        system = systems[systemIndex];
-                        systemElem = systemElems[systemIndex];
+                    let normalBarlineElems = Array.from(systemElem.getElementsByClassName('normalBarline')),
+                        startRegionBarlineElems = Array.from(systemElem.getElementsByClassName('startRegionBarline')),
+                        endAndStartRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline')),
+                        endRegionBarlineElems = Array.from(systemElem.getElementsByClassName('endRegionBarline')),
+                        endOfScoreBarlineElems = Array.from(systemElem.getElementsByClassName('endOfScoreBarline')),
+                        barlines, normalBarlineObjs = [], startRegionBarlineObjs = [], endRegionBarlineObjs = [], endOfScoreBarlineObjs = [],
+                        endAndStartBarlineObjs = [];
 
-                        system.barlines = getBarlines(systemElem, system);
+                    normalBarlineObjs = getBarlineTypeAndAlignments(normalBarlineElems, "normalBarline");
+                    startRegionBarlineObjs = getBarlineTypeAndAlignments(startRegionBarlineElems, "startRegionBarline");
+                    endRegionBarlineObjs = getBarlineTypeAndAlignments(endRegionBarlineElems, "endRegionBarline");
+                    endOfScoreBarlineObjs = getBarlineTypeAndAlignments(endOfScoreBarlineElems, "endOfScoreBarline");
+                    endAndStartBarlineObjs = getBarlineTypeAndAlignments(endAndStartRegionBarlineElems, "endAndStartRegionBarline");
+
+                    barlines = [...normalBarlineObjs, ...startRegionBarlineObjs, ...endAndStartBarlineObjs, ...endRegionBarlineObjs, ...endOfScoreBarlineObjs];
+                    barlines.sort((x, y) => x.alignment - y.alignment);
+
+                    if(barlines[barlines.length - 1] instanceof EndOfScoreBarline)
+                    {
+                        barlines.splice(barlines.length - 2, 1); // remove the normalBarline contained in the endOfScoreBarline
                     }
+
+                    for(let barlineIndex = 0; barlineIndex < barlines.length; barlineIndex++)
+                    {
+                        let barline = barlines[barlineIndex];
+                        for(staff of system.staves)
+                        {
+                            for(voice of staff.voices)
+                            {
+                                let timeObject = voice.midiObjectSequences.find(x => (x[0] instanceof MidiChord || x[0] instanceof MidiRest)
+                                    && x[0].alignment > barline.alignment);
+
+                                if(timeObject !== undefined)
+                                {
+                                    let midiObject = timeObject[0];
+                                    if(barline.msPosInScore === -1 || midiObject.msPosInScore < barline.msPosInScore)
+                                    {
+                                        barline.msPosInScore = midiObject.msPosInScore;
+                                    }
+                                }
+                                else // final barline on system
+                                {
+                                    console.assert(barlineIndex === barlines.length - 1);
+                                    let lastMidiObject = voice.midiObjectSequences[voice.midiObjectSequences.length - 1][0],
+                                        endOfLastMidiObject = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
+
+                                    if(barline.msPosInScore === -1 || endOfLastMidiObject < barline.msPosInScore)
+                                    {
+                                        barline.msPosInScore = endOfLastMidiObject;
+                                    }
+                                }
+                            }
+                        }
+                        Object.freeze(barline.msPosInScore);
+                    }
+
+                    return barlines;
                 }
 
-                getVoiceTimeObjects();
-                getSystemBarlineTimeObjects(systemElems, systems);
+                for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
+                {
+                    system = systems[systemIndex];
+                    systemElem = systemElems[systemIndex];
+
+                    system.barlines = getBarlines(systemElem, system);
+                }
             }
 
-            function getEmptyTracks(system0staves, nInterpretations)
+            function getEmptyTracks()
             {
-                var tracks = [],
+                let system0staves = systems[0].staves,
+                    nMidiObjectSequences = systems[0].staves[0].voices[0].midiObjectSequences[0].length;
+                    tracks = [],
                     staffIndex, voiceIndex, nStaves = system0staves.length, staff;
 
                 for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
@@ -1647,7 +1630,7 @@ let //**************************************************************************
                     staff = system0staves[staffIndex];
                     for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
                     {
-                        tracks.push(new Track(nInterpretations));
+                        tracks.push(new Track(nMidiObjectSequences));
                     }
                 }
                 return tracks;
@@ -1655,11 +1638,11 @@ let //**************************************************************************
 
             if(systems[0].staves[0].voices[0].timeObjects === undefined)
             {
-                getVoiceAndSystemTimeObjects();
+                getAllVoiceMidiObjectSequences();
+                getEachSystemBarlines(systemElems, systems);
 
-                let nInterpretations = systems[0].staves[0].voices[0].timeObjects[0].length;
-
-                tracks = getEmptyTracks(systems[0].staves, nInterpretations);
+                // One Track per Voice in the score.    
+                tracks = getEmptyTracks();
 
                 nStaves = systems[0].staves.length;
 
@@ -1674,18 +1657,27 @@ let //**************************************************************************
                         for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                         {
                             voice = staff.voices[voiceIndex];
+                            
+                            let nSequences = voice.midiObjectSequences[0].length,
+                                track = tracks[trackIndex];
 
-                            nTimeObjects = voice.timeObjects.length;
-                            track = tracks[trackIndex];
-                            for(let timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
+                            for(let sequenceIndex = 0; sequenceIndex < nSequences; ++sequenceIndex)
                             {
-                                let timeObject = voice.timeObjects[timeObjectIndex];
-                                for(let midiObjectIndex = 0; midiObjectIndex < nInterpretations; ++midiObjectIndex)
+                                let voiceMidiObjectSequence = voice.midiObjectSequences[sequenceIndex],
+                                    voiceSequenceLength = voiceMidiObjectSequence.length,
+                                    trackMidiObjectSequence = track.midiObjectSequences[sequenceIndex];
+
+                                for(let midiObjectIndex = 0; midiObjectIndex < voiceSequenceLength; ++midiObjectIndex)
                                 {
-                                    let midiObject = timeObject[midiObjectIndex];
+                                    let midiObject = voiceMidiObjectSequence[midiObjectIndex];
                                     if(midiObject instanceof MidiChord || midiObject instanceof MidiRest)
                                     {
-                                        track.interpretations[midiObjectIndex].midiObjects.push(midiObject);
+                                        let previousMidiObject = (midiObjectIndex > 0) ? voiceMidiObjectSequence[midiObjectIndex - 1] : null;
+                                        if(previousMidiObject !== null)
+                                        {
+                                            console.assert(midiObject.msPosInScore === (previousMidiObject.msPosInScore + previousMidiObject.msDuration));
+                                        }
+                                        trackMidiObjectSequence.push(midiObject);
                                     }
                                 }
                             }
@@ -1697,7 +1689,7 @@ let //**************************************************************************
         }
         
         getEmptySystems();
-        getMidiObjects();
+        getTrackMidiObjectArrays();
         setInitialInterpretationState(systems);
     },
 
@@ -1863,27 +1855,41 @@ let //**************************************************************************
                 }
             }
 
-            if(regionSequence.length === 0)
+            // Convert integer (1 → 'A', 2 → 'B', etc.)
+            function intToUppercaseChar(num)
             {
-                // create one region per interpretation (each region spans the whole score).
-                let timeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
-                    nInterpretations = timeObjects[0].length;
+                if(typeof num !== 'number' || !Number.isInteger(num) || num < 1 || num > 26)
+                {
+                    throw new Error('Input must be an integer between 1 and 26.');
+                }
 
-                for(let midiObjectIndex = 0; midiObjectIndex < nInterpretations; ++midiObjectIndex)
+                // ASCII code for 'A' is 65
+                const baseCode = 65;
+                return String.fromCharCode(baseCode + num - 1);
+            }
+
+            if(regionSequence.length === 0) // no regions defined in the score
+            {
+                // create one region per midiObjectSequence in the track.midiObjectSequences
+                // (each midiObjectSequence spans the whole score).
+                let midiObjectSequences = tracks[0].midiObjectSequences,
+                    nMidiObjects = midiObjectSequences[0].length,
+                    nSequences = midiObjectSequences.length;
+
+                for(let sequenceIndex = 0; sequenceIndex < nSequences; ++sequenceIndex)
                 {
                     let scoreSpanRegionData = {},
-                        finalMidiObject = timeObjects[timeObjects.length - 1][midiObjectIndex],
+                        finalMidiObject = midiObjectSequences[sequenceIndex][nMidiObjects - 1],
                         finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDuration,
-                        interpretationNr = (midiObjectIndex + 1).toString();
+                        shortName = intToUppercaseChar(sequenceIndex + 1); // used as label on Markers ("A", "B", etc.) 
 
-                    scoreSpanRegionData.shortName = interpretationNr; // used as label on Markers
-                    scoreSpanRegionData.longName = "interpretation " + interpretationNr; // used in the regionSelect control
-                    scoreSpanRegionData.midiObjectIndex = midiObjectIndex;
+                    scoreSpanRegionData.shortName = shortName;
+                    scoreSpanRegionData.longName = "Region " + shortName; // used in the regionSelect control
+                    scoreSpanRegionData.sequenceIndex = sequenceIndex; 
                     scoreSpanRegionData.startMsPosInScore = 0;
                     scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
 
                     let region = new Region(undefined, undefined, scoreSpanRegionData);
-                    // must I set the start barline later?
 
                     regionSequence.push(region);
                 }
@@ -1896,11 +1902,12 @@ let //**************************************************************************
 
             function setRegionStartAndEndMsPosInPerf(regionSequence)
             {
-                function getRegionDurationInPerformance(midiObjectIndex)
+                function getRegionDurationInPerformance(sequenceIndex)
                 {
-                    let trackInterpretation = tracks[0].interpretations[midiObjectIndex],
-                    msDuration = 0;
-                    for(let midiObject of trackInterpretation.midiObjects)
+                    let midiObjectSequence = tracks[0].midiObjectSequences[sequenceIndex],
+                        msDuration = 0;
+
+                    for(let midiObject of midiObjectSequence)
                     {
                         msDuration += midiObject.msDuration;
                     }
@@ -1923,7 +1930,7 @@ let //**************************************************************************
                     let msPos = 0;
                     for(let region of regionSequence)
                     {
-                        let regionDurationInPerformance = getRegionDurationInPerformance(region.midiObjectIndex);
+                        let regionDurationInPerformance = getRegionDurationInPerformance(region.sequenceIndex);
 
                         region.startMsPosInPerf = msPos;
                         region.endMsPosInPerf = region.startMsPosInPerf + regionDurationInPerformance;
@@ -2008,7 +2015,7 @@ let //**************************************************************************
             // track.runtimeInterpretation doesn't change when regionSequence.hasConsecutiveRegions is true.
             for(let track of tracks)
             {
-                track.runtimeInterpretation = track.interpretations[region.midiObjectIndex];
+                track.runtimeInterpretation = track.interpretations[region.sequenceIndex];
             }
         }
     },
