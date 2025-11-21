@@ -187,7 +187,7 @@ function _getMoments(midiChordElem)
 
 class MidiObject
 {
-	constructor(midiObjectElem)
+	constructor(midiObjectElem, alignment, msPosInScore)
 	{
 		let moments = [],
 			msDuration;
@@ -208,10 +208,11 @@ class MidiObject
 		}
 		else throw ("Illegal argument to MidiObject constructor.");
 
+		Object.defineProperty(this, "alignment", {value: alignment, writable: false});
 		// The msDuration, msPosInScore and msPosInPerf properties are not changed by the global speed option!
 		// These values are used, but not changed, either when moving Markers about or during performances.)		
 		Object.defineProperty(this, "msDuration", { value: msDuration, writable: false });
-		Object.defineProperty(this, "msPosInScore", {value: -1, writable: true});
+		Object.defineProperty(this, "msPosInScore", {value: msPosInScore, writable: false});
 		Object.defineProperty(this, "msPosInPerf", {value: -1, writable: true});
 		// Each moments array is an ordered array of Moment objects.
 		// A Moment is a list of logically synchronous Messages.
@@ -226,9 +227,9 @@ export class MidiChord extends MidiObject
 	// A MidiChord contains a private array of Moments containing all
 	// the midi messages required for playing the chord (including a possible envelope).
 	// A Moment is a collection of logically synchronous MIDI Messages.
-	constructor(midiChordElem)
+	constructor(midiChordElem, alignment, msPosInScore)
 	{
-		super(midiChordElem);
+		super(midiChordElem, alignment, msPosInScore);
 	}
 }
 
@@ -238,9 +239,9 @@ export class MidiRest extends MidiObject
 	// Use instanceof to distinguish between the two.
 	// However, MidiRest.moments always contains a single Moment,
 	// whose messages array is empty.
-	constructor(midiRestElem)
+	constructor(midiRestElem, alignment, msPosInScore)
 	{
-		super(midiRestElem);
+		super(midiRestElem, alignment, msPosInScore);
 	}
 }
 

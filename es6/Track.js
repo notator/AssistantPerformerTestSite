@@ -2,15 +2,10 @@ import {Interpretation} from "./Interpretation.js";
 
 export class Track
 {
-	constructor(nMidiObjectSequences)
+	constructor()
 	{
 		// Information from the score is going to be loaded into each midiObjectSequence.
 		this.midiObjectSequences = [];
-		for (let i = 0; i < nMidiObjectSequences; ++i)
-		{
-            // each inner array will be a midiObjectSequence spanning the entire score
-            this.midiObjectSequences.push([]); 
-		}
 	}
 
 	setRuntimeInterpretation(trackIsOn, regionSequence, currentRegionIndex)

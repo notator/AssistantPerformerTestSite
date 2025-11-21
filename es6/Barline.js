@@ -1,48 +1,48 @@
 class Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
 		Object.defineProperty(this, "alignment", {value: alignment, writable: false});
-		Object.defineProperty(this, "msPosInScore", {value: -1, writable: true}); // Is set and frozen later
+		Object.defineProperty(this, "msPosInScore", {value: msPosInScore, writable: false});
 		Object.defineProperty(this, "msPosInPerfPerRegion", {value: [], writable: true});
 	}
 }
 
 export class NormalBarline extends Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
-		super(alignment);
+		super(alignment, msPosInScore);
 	}
 }
 export class StartRegionBarline extends Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
-		super(alignment);
+		super(alignment, msPosInScore);
 	}
 }
 
 export class EndAndStartRegionBarline extends Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
-		super(alignment);
+		super(alignment, msPosInScore);
 	}
 }
 
 export class EndRegionBarline extends Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
-		super(alignment);
+		super(alignment, msPosInScore);
 	}
 }
 
 export class EndOfScoreBarline extends Barline
 {
-	constructor(alignment)
+	constructor(alignment, msPosInScore)
 	{
-		super(alignment);
+		super(alignment, msPosInScore);
 	}
 }
