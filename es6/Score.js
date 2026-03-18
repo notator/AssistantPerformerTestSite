@@ -1530,6 +1530,28 @@ let //**************************************************************************
                     return reducedArray;
                 }
 
+                function leftToRightSort(a, b)
+                {
+                    const getX1 = (barlineElem) =>
+                    {
+                        // Check if the barlineElem is a single line or a group containing lines
+                        if(barlineElem.tagName === 'line')
+                        {
+                            return parseFloat(barlineElem.getAttribute('x1'));
+                        }
+                        else
+                        {
+                            const firstLine = barlineElem.getElementsByTagName('line')[0];
+                            return firstLine ? parseFloat(firstLine.getAttribute('x1')) : 0;
+                        }
+                    };
+
+                    const x1A = getX1(a);
+                    const x1B = getX1(b);
+
+                    return x1A - x1B;
+                }
+
                 let normalBarlineElems = reducedArray(Array.from(systemElem.getElementsByClassName('normalBarline'))),
                     startRegionBarlineElems = reducedArray(Array.from(systemElem.getElementsByClassName('startRegionBarline'))),
                     endAndStartRegionBarlineElems = reducedArray(Array.from(systemElem.getElementsByClassName('endAndStartRegionBarline'))),
@@ -1544,7 +1566,7 @@ let //**************************************************************************
                            either add the thickBarline's X1 attribute to the barlineElem itself
                            or replace the parent barlineElem by its child thickBarline.
                  */
-                barlineElems.sort((a, b) => a.getAttribute('x1') - b.getAttribute('x1'));
+                barlineElems.sort(leftToRightSort);
 
                 return barlineElems;
             }
@@ -1658,7 +1680,7 @@ let //**************************************************************************
                 return returnObject;
             }
             // constructs all barlines in a system, except the rightmost one
-            function getSystemBarlines(systemIndex, tracks, barlineElems)
+            function getSystemBarlines(systemIndex, tracks, sortedBarlineElems)
             {
                 // Returns -1 for the final barline
                 function getMsPosInSystem(systemIndex, tracks, barlineAlignment)
@@ -1687,9 +1709,9 @@ let //**************************************************************************
 
                 let barlines = [];
 
-                for(var i = 0; i < barlineElems.length - 1; i++) // exclude the rightmost barline
+                for(var i = 0; i < sortedBarlineElems.length - 1; i++) // exclude the rightmost barline
                 {
-                    let barlineElem = barlineElems[i],
+                    let barlineElem = sortedBarlineElems[i],
                         barline,
                         rVal = getTypeStringAndAlignment(barlineElem),
                         typeString = rVal.typeString,
@@ -1711,10 +1733,10 @@ let //**************************************************************************
             {
                 let system = systems[systemIndex],
                     systemElem = systemElems[systemIndex],
-                    barlineElems = getAllBarlineElems(systemElem);
+                    barlineElemsSortedLeftToRight = getAllBarlineElems(systemElem);
 
-                rightBarlineElemPerSystem.push(barlineElems[barlineElems.length - 1]);
-                system.barlines = getSystemBarlines(systemIndex, tracks, barlineElems);
+                rightBarlineElemPerSystem.push(barlineElemsSortedLeftToRight[barlineElemsSortedLeftToRight.length - 1]);
+                system.barlines = getSystemBarlines(systemIndex, tracks, barlineElemsSortedLeftToRight);
             }
 
             // construct the rightmost barline for each system except the last
