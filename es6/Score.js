@@ -1626,10 +1626,14 @@ let //**************************************************************************
                 return {typeString: typeString, alignment: alignment};
             }
 
-            // returns the midiObjects[0] index in each track, at the start of the system given by systemIndex
-            function getMidiObjects0IndexPerTrackInSystem(systemIndex, tracks)
+            // Returns an array of indices per Track.
+            // Each index is that of the first midiObject in the track at the beginning of the system given by systemIndex.
+            // Each midiObjectSequence in tracks[trackIndex].midiObjectSequences spans the whole score.
+            // Each tracks[trackIndex].midiObjectSequences[interpretation] contains a particular interpretation of the track.
+            // Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+            function getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks)
             {
-                let midiObjects0IndexPerTrackInSystem = [];
+                let firstMidiObjectIndexPerTrackInSystem = [];
 
                 for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
                 {
@@ -1640,7 +1644,7 @@ let //**************************************************************************
                     {
                         if(systemIndex === 0)
                         {
-                            midiObjects0IndexPerTrackInSystem.push(0);
+                            firstMidiObjectIndexPerTrackInSystem.push(0);
                             break;
                         }
                         else if(midiObjectSequence[midiObjectIndex].alignment < midiObjectSequence[midiObjectIndex - 1].alignment)
@@ -1648,14 +1652,14 @@ let //**************************************************************************
                             sysIndex++;
                             if(sysIndex === systemIndex)
                             {
-                                midiObjects0IndexPerTrackInSystem.push(midiObjectIndex);
+                                firstMidiObjectIndexPerTrackInSystem.push(midiObjectIndex);
                                 break;
                             }
                         }
                     }
                 }
 
-                return midiObjects0IndexPerTrackInSystem;
+                return firstMidiObjectIndexPerTrackInSystem;
             }
             // constructs all barlines in a system, except the rightmost one
             function getSystemLeftBarlines(barlineElemsSortedLeftToRight, midiObjects0IndexPerTrackInSystem)
@@ -1724,10 +1728,11 @@ let //**************************************************************************
                 let system = systems[systemIndex],
                     systemElem = systemElems[systemIndex],
                     barlineElemsSortedLeftToRight = getAllBarlineElemsSortedLeftToRight(systemElem),
-                    midiObjects0IndexPerTrackInSystem = getMidiObjects0IndexPerTrackInSystem(systemIndex, tracks);
+                    firstMidiObjectIndexPerTrackInSystem = getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks);
 
                 rightBarlineElemPerSystem.push(barlineElemsSortedLeftToRight[barlineElemsSortedLeftToRight.length - 1]);
-                system.barlines = getSystemLeftBarlines(barlineElemsSortedLeftToRight, midiObjects0IndexPerTrackInSystem);
+                system.barlines = getSystemLeftBarlines(barlineElemsSortedLeftToRight, firstMidiObjectIndexPerTrackInSystem);
+                system.firstMidiObjectIndexPerTrack = firstMidiObjectIndexPerTrackInSystem;
             }
 
             // construct the rightmost barline for each system except the last
