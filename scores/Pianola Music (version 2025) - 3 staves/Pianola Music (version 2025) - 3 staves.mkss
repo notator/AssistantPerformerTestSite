@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--file created: Wednesday 06.08.2025, 12:58:34-->
+<moritzKrystalScore
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
+	<metadata>
+		<websiteLink
+			aboutLinkText="About Pianola Music"
+			aboutLinkURL="https://james-ingram-act-two.de/compositions/compositionsWrittenBeforeActTwo.html" />
+	</metadata>
+	<dimensions>
+		<paper
+			size="A3"
+			landscape="1" />
+		<title
+			titleHeight="32"
+			authorHeight="14"
+			titleY="50" />
+		<margins
+			topPage1="90"
+			topOtherPages="60"
+			right="50"
+			bottom="50"
+			left="50" />
+	</dimensions>
+	<notation
+		minimumCrotchetDuration="800"
+		beamsCrossBarlines="false"
+		stafflineStemStrokeWidth="0.5"
+		gap="4"
+		minGapsBetweenStaves="8"
+		minGapsBetweenSystems="8"
+		numberOfVoicesPerStaff="2, 2, 2"
+		clefsPerStaff="t, t, t"
+		stafflinesPerStaff="5,  5,  5"
+		staffGroups="3"
+		longStaffNames="1-2, 3-4, 5-6"
+		shortStaffNames="1-2, 3-4, 5-6"
+		systemStartBars="1, 2, 3, 4, 5, 6, 7, 8" />
+	<krystals>
+		<krystal
+			name="12.7_28_74_246.2.perm.krys" />
+	</krystals>
+</moritzKrystalScore>
