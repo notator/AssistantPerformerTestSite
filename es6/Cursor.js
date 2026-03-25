@@ -51,11 +51,31 @@ export class Cursor
 			{
 				let msPosDataPerSystem = [];
 
+				function getLeftmostMidiObject(system)
+				{
+					// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
+					// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
+					// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+
+					let leftmostMidiObject = {};
+
+					leftmostMidiObject.msPosInScore = system.barlines[0].msPosInScore; // initialize to the right barline position
+
+                    leftmostMidiObject.alignment = system.right; // initialize to the right barline position
+
+					return leftmostMidiObject;
+				}
+
 				for(let system of systems)
 				{
+					// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
+					// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
+					// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+
 					let line = system.startMarker.line,
 						yCoordinates = {},
-						leftmostMidiObject = system.staves[0].voices[0].timeObjects[0][interpIndex],
+						leftmostMidiObject = getLeftmostMidiObject(system),
+						//leftmostMidiObject = system.staves[0].voices[0].timeObjects[0][interpIndex],
 						// pixelsPerMs is set properly later for CreepConductor
 						msPosData = { msPosInScore: leftmostMidiObject.msPosInScore, alignment: leftmostMidiObject.alignment * viewBoxScale, pixelsPerMs: 0, yCoordinates: yCoordinates };
 
@@ -103,6 +123,11 @@ export class Cursor
 
 				yCoordinates.top = line.y1.baseVal.value;
 				yCoordinates.bottom = line.y2.baseVal.value;
+
+				// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
+				// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
+				// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+
 
 				let trackIndex = 0;
 				for(let staffIndex = 0; staffIndex < nStaves; ++staffIndex)
