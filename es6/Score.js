@@ -1908,7 +1908,7 @@ let //**************************************************************************
             sendMarkersToInitialPositions();
 
             let displayRunningCursor = false;
-            cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, 0, displayRunningCursor);
+            cursor.set(systems, startMarker.msPosInScore, tracks, trackIsOnArray, 0, displayRunningCursor);
         }
         
         setEmptySystems();
