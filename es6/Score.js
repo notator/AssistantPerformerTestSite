@@ -14,6 +14,10 @@ const BLACK_COLOR = "#000000";
  * I want to remove the word entirely from all the code so as to clarify things.
  * This means redefining various classes, and the way they are constructed.
  * 
+ * system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
+ * whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
+ * Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
+ * 
  * At the top level:
  *      1. The Interpretation class will be removed entirely
  *      2. The "InterpretationSelect" control will be renamed to "RegionSelect", and its functionality will change.
@@ -22,26 +26,27 @@ const BLACK_COLOR = "#000000";
  * Lower down, the Track and Region classes need to be modified as follows: 
  * As before, a Score contains a .tracks array containing Track objects
  * Tracks are constructed from the <voice> elements in the SVG-MIDI file.
- * Each Track will have a .midObjectSequences attribute, that is an array containing midiObjectSequence arrays:
- *          tracks[trackIndex].midiObjectSequences[midiObjectIndex]
- *      is an array (temporal sequence) of MidiChord and MidiRest objects spanning the whole score.
- *      These are the <midiChord> and <midiRest> objects defined at midiObjectIndex inside the <midiChords>
- *      and <midiRests> elements in the SVG-MIDI file.
- *      These midiObjects' .msPosInScore attributes will be set, but their .msPosInPerf attributes will remain undefined.
+ * Each Track will have a .interpretations attribute, that is an array containing interpretation arrays.
+ * Each interpretation is a sequence of midiObjects:
+ *          tracks[trackIndex].interpretations[interpIndex]
+ * is an array (temporal sequence) of MidiChord and MidiRest objects spanning the whole score.
+ * These are the <midiChord> and <midiRest> objects defined at midiObjectIndex inside the <midiChords>
+ * and <midiRests> elements in the SVG-MIDI file.
+ * These midiObjects' .msPosInScore attributes will be set, but their .msPosInPerf attributes will remain undefined.
  * 
  * As before, the Score also contains a .regionSequence array containing Region objects that are defined
  * (in chronological order) in the SVG-MIDI file.
  * Each Region has a single .moments array that will be constructed as follows:
  *      1. The SVG-MIDI file defines the region's startMsPosInScore, endMsPosInScore and midiObjectIndex.
- *      2. Get the Region's parallel .midiObjectSequences by cloning the midiObjects in the corresponding
- *          segment of the tracks[trackIndex].midiObjectSequences[midiObjectIndex] midiObjectSequence array.
+ *      2. Get the Region's parallel .interpretations by cloning the midiObjects in the corresponding
+ *          segment of the tracks[trackIndex].interpretations[interpIndex] interpretation (midiObjects array).
  *          Note:
  *          a) that the midiObjects must be cloned, so that their .msPosInPerf attributes can be set independently
  *             per region. Regions may overlap, so a midiObject at a particular .msPosInScore will have
  *             different .msPosInPerf values in different Regions.    
- *          b) that a region's .midiObjectSequences only span the range between its startMsPosInScore and
+ *          b) that a region's .interpretations only span the range between its startMsPosInScore and
  *             endMsPosInScore 
- *      3. Convert each Region's parallel .midiObjectSequences to a single sequence of vertical moments (.moments)
+ *      3. Convert each Region's parallel .interpretations to a single sequence of vertical moments (.moments)
  */
 
 let //******************************************************************************************
@@ -527,7 +532,7 @@ let //**************************************************************************
                 for(let track of tracks)
                 {
                     let interpretation = track.interpretations[interpretationIndex];
-                    midiObject = interpretation.midiObjects.find(x => x.msPosInScore === msPosInScore);
+                    midiObject = interpretation.find(x => x.msPosInScore === msPosInScore);
                     if(midiObject !== undefined)
                     {
                         break;
@@ -1265,7 +1270,7 @@ let //**************************************************************************
             initializeTrackIsOnArray(systems[0]);
         }
 
-        // Constructs each track.midiObjectSequences array,
+        // Constructs each track.interpretations array,
         // setting the following attributes in all midiObjects:
         //  .alignment
         //  .msPosInScore
@@ -1324,9 +1329,9 @@ let //**************************************************************************
                 return endMsPosInScore;
             }
 
-            function getTrackMidiObjectSequences(track, trackVoiceElems)
+            function getTrackInterpretations(track, trackVoiceElems)
             {
-                let midiObjectSequences = [];
+                let interpretations = [];
 
                 for(let voiceElem of trackVoiceElems)
                 {
@@ -1343,9 +1348,7 @@ let //**************************************************************************
                             scoreMidiChordsElem = noteObjectElem.getElementsByTagName('score:midiChords')[0],
                             scoreMidiRestsElem = noteObjectElem.getElementsByTagName('score:midiRests')[0],
                             alternativeMidiChordElems = [],
-                            alternativeMidiRestElems = [],
-                            alternativeMidiObjectElems = [],
-                            nAlternativeMidiObjects;
+                            alternativeMidiRestElems = [];
 
                         if(scoreMidiChordsElem !== undefined)
                         {
@@ -1356,41 +1359,41 @@ let //**************************************************************************
                             alternativeMidiRestElems = Array.from(scoreMidiRestsElem.getElementsByTagName('midiRest'));
                         }
 
-                        alternativeMidiObjectElems = (alternativeMidiChordElems.length > 0) ? alternativeMidiChordElems : alternativeMidiRestElems,
-                            nAlternativeMidiObjects = alternativeMidiObjectElems.length;
+                        let alternativeMidiObjectElems = (alternativeMidiChordElems.length > 0) ? alternativeMidiChordElems : alternativeMidiRestElems,
+                            nInterpretations = alternativeMidiObjectElems.length;
 
                         console.assert(alternativeMidiChordElems.length > 0);
 
-                        if(midiObjectSequences.length === 0)
+                        if(interpretations.length === 0)
                         {
-                            for(let i = 0; i < nAlternativeMidiObjects; ++i)
+                            for(let i = 0; i < nInterpretations; ++i)
                             {
-                                midiObjectSequences.push([]);
+                                interpretations.push([]);
                             }
                         }
 
-                        for(let midiObjectIndex = 0; midiObjectIndex < nAlternativeMidiObjects; ++midiObjectIndex)
+                        for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
                         {
-                            let midiObjectSequence = midiObjectSequences[midiObjectIndex],
-                                msPosInScore = getCurrentMsPosInScore(midiObjectSequence);
+                            let interpretation = interpretations[interpIndex],
+                                msPosInScore = getCurrentMsPosInScore(interpretation);
 
                             if(alternativeMidiChordElems.length > 0)
                             {
-                                let midiChordElem = alternativeMidiChordElems[midiObjectIndex];
+                                let midiChordElem = alternativeMidiChordElems[interpIndex];
 
-                                midiObjectSequence.push(new MidiChord(midiChordElem, alignment, msPosInScore));
+                                interpretation.push(new MidiChord(midiChordElem, alignment, msPosInScore));
                             }
                             else if(alternativeMidiRestElems.length > 0)
                             {
-                                let midiRestElem = alternativeMidiRestElems[midiObjectIndex];
+                                let midiRestElem = alternativeMidiRestElems[interpIndex];
 
-                                midiObjectSequence.push(new MidiChord(midiRestElem, alignment, msPosInScore));
+                                interpretation.push(new MidiChord(midiRestElem, alignment, msPosInScore));
                             }
                         }
                     }
                 }
 
-                return midiObjectSequences;
+                return interpretations;
             }
 
             function checkSequences(thisSequence, previousSequence)
@@ -1421,20 +1424,20 @@ let //**************************************************************************
                 }
 
                 let track = tracks[trackIndex],
-                    midiObjectSequences = getTrackMidiObjectSequences(track, trackVoiceElems);
+                    interpretations = getTrackInterpretations(track, trackVoiceElems);
 
-                for(let i = 1; i < midiObjectSequences.length; ++i)
+                for(let i = 1; i < interpretations.length; ++i)
                 {
-                    let thisSequence = midiObjectSequences[i],
-                        previousSequence = midiObjectSequences[i - 1];
+                    let thisInterpretation = interpretations[i],
+                        previousInterpretation = interpretations[i - 1];
 
-                    console.assert(thisSequence.length === previousSequence.length);
+                    console.assert(thisInterpretation.length === previousInterpretation.length);
                 }
 
-                track.midiObjectSequences = midiObjectSequences;
+                track.interpretations = interpretations;
             }
 
-            checkSequences(tracks[0].midiObjectSequences[0], tracks[1].midiObjectSequences[0]);
+            checkSequences(tracks[0].interpretations[0], tracks[1].interpretations[0]);
         }
 
         function setSystemVoiceGraphics(systemElems, systems)
@@ -1628,9 +1631,9 @@ let //**************************************************************************
 
             // Returns an array of indices per Track.
             // Each index is that of the first midiObject in the track at the beginning of the system given by systemIndex.
-            // Each midiObjectSequence in tracks[trackIndex].midiObjectSequences spans the whole score.
-            // Each tracks[trackIndex].midiObjectSequences[interpretation] contains a particular interpretation of the track.
-            // Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+            // Each midiObjectSequence in tracks[trackIndex].interpretations spans the whole score.
+            // Each tracks[trackIndex].interpretations[interpretation] contains a particular interpretation of the track.
+            // Each tracks[trackIndex].interpretations[interpretation][index] contains a particular interpretation of the midiObject at that index.
             function getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks)
             {
                 let firstMidiObjectIndexPerTrackInSystem = [];
@@ -1638,16 +1641,16 @@ let //**************************************************************************
                 for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
                 {
                     let sysIndex = 0,
-                        midiObjectSequence = tracks[trackIndex].midiObjectSequences[0];
+                        interpretation = tracks[trackIndex].interpretations[0];
 
-                    for(let midiObjectIndex = 1; midiObjectIndex < midiObjectSequence.length; midiObjectIndex++)
+                    for(let midiObjectIndex = 1; midiObjectIndex < interpretation.length; midiObjectIndex++)
                     {
                         if(systemIndex === 0)
                         {
                             firstMidiObjectIndexPerTrackInSystem.push(0);
                             break;
                         }
-                        else if(midiObjectSequence[midiObjectIndex].alignment < midiObjectSequence[midiObjectIndex - 1].alignment)
+                        else if(interpretation[midiObjectIndex].alignment < interpretation[midiObjectIndex - 1].alignment)
                         {
                             sysIndex++;
                             if(sysIndex === systemIndex)
@@ -1673,23 +1676,23 @@ let //**************************************************************************
 
                     for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
                     {
-                        let midiObjectSequence = tracks[trackIndex].midiObjectSequences[0],
+                        let interpretation = tracks[trackIndex].interpretations[0],
                             midiObjectIndex = midiObjects0IndexPerTrackInSystem[trackIndex];
 
                         const leftMostMidiObjectindex = midiObjectIndex;
 
-                        console.assert(midiObjectIndex < midiObjectSequence.length);
+                        console.assert(midiObjectIndex < interpretation.length);
 
-                        while(midiObjectIndex < midiObjectSequence.length)
+                        while(midiObjectIndex < interpretation.length)
                         {
                             if(midiObjectIndex > leftMostMidiObjectindex)
                             { 
-                                console.assert(midiObjectSequence[midiObjectIndex].alignment > midiObjectSequence[midiObjectIndex - 1].alignment);
+                                console.assert(interpretation[midiObjectIndex].alignment > interpretation[midiObjectIndex - 1].alignment);
                                 // We're still on the same system.
                             }
-                            if(midiObjectSequence[midiObjectIndex].alignment > barlineAlignment)
+                            if(interpretation[midiObjectIndex].alignment > barlineAlignment)
                             {
-                                let midiObjectMsPos = midiObjectSequence[midiObjectIndex].msPosInScore;  
+                                let midiObjectMsPos = interpretation[midiObjectIndex].msPosInScore;  
                                 minMsPos = (minMsPos < midiObjectMsPos) ? minMsPos : midiObjectMsPos;
                                 break;
                             }
@@ -1755,8 +1758,8 @@ let //**************************************************************************
                 rVal = getTypeStringAndAlignment(endOfScoreBarlineElem),
                 typeString = rVal.typeString,
                 alignment = rVal.alignment,
-                midiObjectSequence = tracks[0].midiObjectSequences[0],
-                lastMidiObject = midiObjectSequence[midiObjectSequence.length - 1],
+                interpretation = tracks[0].interpretations[0],
+                lastMidiObject = interpretation[interpretation.length - 1],
                 msPosInScore = lastMidiObject.msPosInScore + lastMidiObject.msDuration,
                 endOfScoreBarline = constructBarline(typeString, alignment, msPosInScore);
 
@@ -1810,22 +1813,22 @@ let //**************************************************************************
 
                 if(regionSequence.length === 0) // no regions defined in the score
                 {
-                    // create one region per midiObjectSequence in the track.midiObjectSequences
-                    // (each midiObjectSequence spans the whole score).
-                    let midiObjectSequences = tracks[0].midiObjectSequences,
-                        nMidiObjects = midiObjectSequences[0].length,
-                        nSequences = midiObjectSequences.length;
+                    // create one region per interpretation in the track.interpretations
+                    // (each interpretation spans the whole score).
+                    let interpretations = tracks[0].interpretations,
+                        nMidiObjects = interpretations[0].length,
+                        nInterpretations = interpretations.length;
 
-                    for(let sequenceIndex = 0; sequenceIndex < nSequences; ++sequenceIndex)
+                    for(let interpIndex = 0; interpIndex < nInterpretations; ++interpIndex)
                     {
                         let scoreSpanRegionData = {},
-                            finalMidiObject = midiObjectSequences[sequenceIndex][nMidiObjects - 1],
+                            finalMidiObject = interpretations[interpIndex][nMidiObjects - 1],
                             finalBarlineMsPosInScore = finalMidiObject.msPosInScore + finalMidiObject.msDuration,
-                            shortName = intToUppercaseChar(sequenceIndex + 1); // used as label on Markers ("A", "B", etc.) 
+                            shortName = intToUppercaseChar(interpIndex + 1); // used as label on Markers ("A", "B", etc.) 
 
                         scoreSpanRegionData.shortName = shortName;
                         scoreSpanRegionData.longName = "Region " + shortName; // used in the regionSelect control
-                        scoreSpanRegionData.sequenceIndex = sequenceIndex;
+                        scoreSpanRegionData.sequenceIndex = interpIndex;
                         scoreSpanRegionData.startMsPosInScore = 0;
                         scoreSpanRegionData.endMsPosInScore = finalBarlineMsPosInScore;
 
@@ -1842,12 +1845,12 @@ let //**************************************************************************
 
                 function setRegionStartAndEndMsPosInPerf(regionSequence)
                 {
-                    function getRegionDurationInPerformance(sequenceIndex)
+                    function getRegionDurationInPerformance(interpIndex)
                     {
-                        let midiObjectSequence = tracks[0].midiObjectSequences[sequenceIndex],
+                        let interpretation = tracks[0].interpretations[interpIndex],
                             msDuration = 0;
 
-                        for(let midiObject of midiObjectSequence)
+                        for(let midiObject of interpretation)
                         {
                             msDuration += midiObject.msDuration;
                         }
@@ -1911,7 +1914,7 @@ let //**************************************************************************
         setEmptySystems();
         setTrackMidiObjectSequences();
         setSystemVoiceGraphics(systemElems, systems);
-        setAllSystemBarlines(systemElems, systems); // uses global tracks (track.midiObjectSequences[0])
+        setAllSystemBarlines(systemElems, systems); // uses global tracks (track.interpretations[0])
         setInitialInterpretationState(systems);
     },
 
@@ -2199,13 +2202,13 @@ let //**************************************************************************
                     // find a midiObject in a track.interpretation[0] having the same msPosInScore as the barline.
                     for(let track of tracks)
                     {
-                        let midiObjects = track.interpretations[0].midiObjects,
-                            midiObjectIndex = midiObjects.findIndex(x => x.msPosInScore === barline.msPosInScore);
+                        let interpretation = track.interpretations[0],
+                            midiObjectIndex = interpretation.findIndex(x => x.msPosInScore === barline.msPosInScore);
                         if(midiObjectIndex >= 0)
                         {
                             for(let interpretation of track.interpretations)
                             {
-                                let midiObject = interpretation.midiObjects[midiObjectIndex];
+                                let midiObject = interpretation[midiObjectIndex];
 
                                 barline.msPosInPerfPerRegion.push(midiObject.msPosInPerf);
                             }

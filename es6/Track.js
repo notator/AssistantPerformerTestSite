@@ -5,7 +5,7 @@ export class Track
 	constructor()
 	{
 		// Information from the score is going to be loaded into each midiObjectSequence.
-		this.midiObjectSequences = [];
+		this.interpretations = [];
 	}
 
 	setRuntimeInterpretation(trackIsOn, regionSequence, currentRegionIndex)

@@ -55,7 +55,7 @@ export class Cursor
 				{
 					// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
 					// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
-					// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+					// Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
 
 					let leftmostMidiObject = {};
 
@@ -70,7 +70,7 @@ export class Cursor
 				{
 					// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
 					// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
-					// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+					// Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
 
 					let line = system.startMarker.line,
 						yCoordinates = {},
@@ -126,7 +126,7 @@ export class Cursor
 
 				// system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
 				// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
-				// Each tracks[trackIndex].midiObjectSequences[interpretation][index] contains a particular interpretation of the midiObject at that index.
+				// Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
 
 
 				let trackIndex = 0;
