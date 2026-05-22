@@ -44,6 +44,12 @@ export class Cursor
 		// The last entry is an msPosData object for the final barline.
 		function getScoreMsPosDataArray(systems, viewBoxScale, tracks, trackIsOnArray, interpIndex)
 		{
+			/*
+
+			// Delete the following function completely when tested
+			// Test: Try setting the startMarker to the start of a system when the only track that has
+			// a midiObject at the start of that system has been disabled.
+			// In this case, the startMarker should set itself to the first performable midiObject.
 			// This array, containing one msPosData object per system, is needed
 			// for the case that when tracks are disabled, there are no midiObjects
 			// at the beginning of the system.
@@ -92,6 +98,7 @@ export class Cursor
 
 				return msPosDataPerSystem;
 			}
+			*/
 
 			function getSystemMsPosDataArray(system, viewBoxScale, tracks, trackIsOnArray, interpIndex)
 			{
@@ -120,7 +127,7 @@ export class Cursor
 				// whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
 				// Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
 
-				let finalBarlineMsPosInScore = system.barlines[system.barlines.length - 1].msPosInScore;
+				let finalBarlineOnSystemMsPosInScore = system.barlines[system.barlines.length - 1].msPosInScore;
 				for(let trackIndex = 0; trackIndex < trackIsOnArray.length; ++trackIndex)
 				{
 					if(trackIsOnArray[trackIndex] === true)
@@ -132,7 +139,7 @@ export class Cursor
 						{
 							let midiObject = interpretation[moIndex];			
 
-							if(midiObject.msPosInScore >= finalBarlineMsPosInScore)
+							if(midiObject.msPosInScore >= finalBarlineOnSystemMsPosInScore)
 							{
 								break;
 							}
@@ -154,18 +161,20 @@ export class Cursor
 				return systemMsPosDataArray;
 			}
 
-			let defaultSystemStartMsPosData = getDefaultSystemStartMsPosDataArray(systems, viewBoxScale, tracks, trackIsOnArray, interpIndex); 
+			// Delete the following completely when tested:
+			// let defaultSystemStartMsPosData = getDefaultSystemStartMsPosDataArray(systems, viewBoxScale, tracks, trackIsOnArray, interpIndex); 
 			let msPosDataArray = [];
 			let nSystems = systems.length;
 			for(let systemIndex = 0; systemIndex < nSystems; ++systemIndex)
 			{
 				let system = systems[systemIndex];
 				let systemMsPosDataArray = getSystemMsPosDataArray(system, viewBoxScale, tracks, trackIsOnArray, interpIndex);
-				// If there was no msPosData object at the start of the system, insert the default value.
-				if(systemMsPosDataArray[0].alignment > defaultSystemStartMsPosData[systemIndex].alignment)
-				{
-					systemMsPosDataArray.splice(0, 0, defaultSystemStartMsPosData[systemIndex]);
-				}
+				// Delete the following completely when tested:
+				//// If there was no msPosData object at the start of the system, insert the default value.
+				//if(systemMsPosDataArray[0].alignment > defaultSystemStartMsPosData[systemIndex].alignment)
+				//{
+				//	systemMsPosDataArray.splice(0, 0, defaultSystemStartMsPosData[systemIndex]);
+				//}
 
 				if(systemIndex === nSystems - 1)
 				{	// Append an msPosData object for the final barline.

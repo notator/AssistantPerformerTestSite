@@ -11,12 +11,20 @@ const BLACK_COLOR = "#000000";
 
 /***********************************************************************************************
  * Interpretation is currently a confused concept, that needs to be sorted out.
- * I want to remove the word entirely from all the code so as to clarify things.
  * This means redefining various classes, and the way they are constructed.
+ *
+ * I'm revising the code so that, when a score has been loaded, the global tracks and systems data structures in this Score namespace
+ * are defined as follows:
  * 
- * system.firstMidiObjectIndexPerTrack[trackIndex] is the index of a midiObject in an interpretation.
- * whereby the interpretation (midiObjectSequence) can be found using the global tracks variable:
- * Each tracks[trackIndex].interpretations[interpIndex][index] contains a particular interpretation of the midiObject at that index.
+ * tracks is an array of Track objects, each of which has an .interpretations attribute that is an array of interpretation.
+ * Each interpretation is a sequence of midiObjects (MidiChord and MidiRest objects) spanning the whole score.
+ * So each tracks[trackIndex].interpretations[interpIndex][midiObjectIndex] contains a particular interpretation of the midiObject at midiObjectIndex. 
+ * 
+ * systems is an array of system objects. 
+ * system.firstMidiObjectIndexPerTrack is an array of indices, one per track.
+ * Each midiObjectIndex is that of the first midiObject in the track at the beginning of the system given by systemIndex.
+ * The midiObjectIndex can be used to find the midiObject in an interpretation of the track, as follows:
+ * firstMidiObject = tracks[trackIndex].interpretations[interpIndex][midiObjectIndex]
  * 
  * At the top level:
  *      1. The Interpretation class will be removed entirely
@@ -26,13 +34,13 @@ const BLACK_COLOR = "#000000";
  * Lower down, the Track and Region classes need to be modified as follows: 
  * As before, a Score contains a .tracks array containing Track objects
  * Tracks are constructed from the <voice> elements in the SVG-MIDI file.
- * Each Track will have a .interpretations attribute, that is an array containing interpretation arrays.
+ * Each Track has a .interpretations attribute, that is an array containing interpretation arrays.
  * Each interpretation is a sequence of midiObjects:
  *          tracks[trackIndex].interpretations[interpIndex]
  * is an array (temporal sequence) of MidiChord and MidiRest objects spanning the whole score.
  * These are the <midiChord> and <midiRest> objects defined at midiObjectIndex inside the <midiChords>
  * and <midiRests> elements in the SVG-MIDI file.
- * These midiObjects' .msPosInScore attributes will be set, but their .msPosInPerf attributes will remain undefined.
+ * These midiObjects' .msPosInScore attributes are set, but their .msPosInPerf attributes are undefined.
  * 
  * As before, the Score also contains a .regionSequence array containing Region objects that are defined
  * (in chronological order) in the SVG-MIDI file.
@@ -133,28 +141,11 @@ let //**************************************************************************
         }
     },
 
-    getTimeObjectsArray = function (system)
-    {
-        var i, nStaves = system.staves.length, j, voice, nVoices, timeObjects, timeObjectsArray = [];
-
-        for(i = 0; i < nStaves; ++i)
-        {
-            nVoices = system.staves[i].voices.length;
-            for(j = 0; j < nVoices; ++j)
-            {
-                voice = system.staves[i].voices[j];
-                timeObjects = voice.midiObjectSequences;
-                timeObjectsArray.push(timeObjects);
-            }
-        }
-        return timeObjectsArray;
-    },
-
     // Returns null or the performing midiChord, midiRest or barline closest to the startMarkerTool or endMarkerTool click position.
     // Displays an alert if an attempt is made to position the start marker at the end of a system, or
     // the end marker at the beginning of a system.
     // Returns undefined if no midiObject or barline can be found that matches the arguments.
-    findPerformingTimeObject = function (system, timeObjectsArray, numberOfTracks, trackIsOnArray, alignment, trackIndex, state)
+    findPerformingMidiObject = function (system, tracks, trackIsOnArray, alignment, trackIndex, state)
     {
         function findTimeObject(system, midiObjectBefore, midiObjectAfter, clickAlignment, settingStart)
         {
@@ -321,7 +312,7 @@ let //**************************************************************************
     {
         var i, system = systems[startMarker.systemIndex],
             startMarkerAlignment = startMarker.alignment,
-            timeObjectsArray = getTimeObjectsArray(system), midiObject;
+            midiObject;
 
         // This function sets the opacity of the staves.
         // Staves have either one or two voices (=tracks).
@@ -393,7 +384,7 @@ let //**************************************************************************
 
         setView(trackIsOnArray);
 
-        midiObject = findPerformingTimeObject(system, timeObjectsArray, tracks.length, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
+        midiObject = findPerformingMidiObject(system, tracks, trackIsOnArray, startMarkerAlignment, undefined, 'settingStart');
 
         startMarker.moveTo(midiObject); // can be a midiChord, midiRest or barline
     },
@@ -719,11 +710,9 @@ let //**************************************************************************
         systemIndex = findSystemIndex(cursorY);
         system = systems[systemIndex];
 
-        timeObjectsArray = getTimeObjectsArray(system);
-
         trackIndex = findTrackIndex(cursorY, system);
 
-        timeObject = findPerformingTimeObject(system, timeObjectsArray, tracks.length, trackIsOnArray, cursorX, trackIndex, state);
+        timeObject = findPerformingMidiObject(system, tracks, trackIsOnArray, cursorX, trackIndex, state);
 
         // timeObject is either undefined (if the track has been disabled) or is now the nearest performing chord or barline to the click,
         // either in a live performers voice (if there is one and it is performing) or in a performing voice.
@@ -853,6 +842,7 @@ let //**************************************************************************
     {
         let displayRunningCursor = true,
             currentMidiObjectIndex = regionSequence[currentRegionIndex].sequenceIndex;
+
         cursor.set(systems, startMarker.msPosInScore, trackIsOnArray, currentMidiObjectIndex, displayRunningCursor);
     },
 
@@ -1396,18 +1386,14 @@ let //**************************************************************************
                 return interpretations;
             }
 
-            function checkSequences(thisSequence, previousSequence)
+            function checkInterpretations(thisInterpretation, previousInterpretation)
             {
-                let identicalAlignments = true;
-                for(let j = 0; j < thisSequence.length; ++j)
+                console.assert(thisInterpretation.length === previousInterpretation.length);
+
+                for(let j = 0; j < thisInterpretation.length; ++j)
                 {
-                    if(thisSequence[j].alignment !== previousSequence[j].alignment)
-                    {
-                        identicalAlignments = false;
-                        break;
-                    }
+                    console.assert(thisInterpretation[j].alignment === previousInterpretation[j].alignment);
                 }
-                console.assert(identicalAlignments === false);
             }
 
             /*************** end of setTrackMidiObjectSequences function definitions *****************************/
@@ -1431,13 +1417,11 @@ let //**************************************************************************
                     let thisInterpretation = interpretations[i],
                         previousInterpretation = interpretations[i - 1];
 
-                    console.assert(thisInterpretation.length === previousInterpretation.length);
+                    checkInterpretations(thisInterpretation, previousInterpretation);
                 }
 
                 track.interpretations = interpretations;
             }
-
-            checkSequences(tracks[0].interpretations[0], tracks[1].interpretations[0]);
         }
 
         function setSystemVoiceGraphics(systemElems, systems)
@@ -1506,11 +1490,11 @@ let //**************************************************************************
         {
             function getAllBarlineElemsSortedLeftToRight(systemElem)
             {
-                function reducedArray(staffConnectors, classString)
+                function reducedArray(systemElem, classString)
                 {
                     let reducedArray = [],
                         alignments = [],                        
-                        barlineElemsArray = Array.from(staffConnectors.getElementsByClassName(classString));
+                        barlineElemsArray = Array.from(systemElem.getElementsByClassName(classString));
 
                     for(let barlineElem of barlineElemsArray)
                     {
@@ -1557,13 +1541,34 @@ let //**************************************************************************
                     return x1A - x1B;
                 }
 
-                let staffConnectors = systemElem.getElementsByClassName('staffConnectors')[0],
-                    normalBarlineElems = reducedArray(staffConnectors, 'normalBarline'),
-                    startRegionBarlineElems = reducedArray(staffConnectors, 'startRegionBarline'),
-                    endAndStartRegionBarlineElems = reducedArray(staffConnectors, 'endAndStartRegionBarline'),
-                    endRegionBarlineElems = reducedArray(staffConnectors, 'endRegionBarline'),
-                    endOfScoreBarlineElems = reducedArray(staffConnectors, 'endOfScoreBarline'),
-                    barlineElems = [...normalBarlineElems, ...startRegionBarlineElems, ...endAndStartRegionBarlineElems, ...endRegionBarlineElems, ...endOfScoreBarlineElems];
+                function getBarlineElems(normalBarlineElems, compositeBarlineElems)
+                {
+                    let barlineElems = [];
+                    // If a normal barline has the same alignment as a normal barline in a composite barline, the normal barline is not added to the array, to avoid double counting.
+                    for(let normalBarlineElem of normalBarlineElems)
+                    {
+                        let normalBarlineAlignment = parseFloat(normalBarlineElem.getAttribute('x1'), 10) / viewBoxScale,
+                            isDuplicate = compositeBarlineElems.some(compositeBarlineElem =>
+                            {
+                                let compositeBarlineAlignment = parseFloat(compositeBarlineElem.getAttribute('x1'), 10) / viewBoxScale;
+                                return normalBarlineAlignment === compositeBarlineAlignment;
+                            });
+
+                        if(!isDuplicate)
+                        {
+                            barlineElems.push(normalBarlineElem);
+                        }
+                    }
+                    return [...barlineElems, ...compositeBarlineElems];
+                }
+
+                let normalBarlineElems = reducedArray(systemElem, 'normalBarline'),
+                    startRegionBarlineElems = reducedArray(systemElem, 'startRegionBarline'),
+                    endAndStartRegionBarlineElems = reducedArray(systemElem, 'endAndStartRegionBarline'),
+                    endRegionBarlineElems = reducedArray(systemElem, 'endRegionBarline'),
+                    endOfScoreBarlineElems = reducedArray(systemElem, 'endOfScoreBarline'),
+                    compositeBarlineElems = [...startRegionBarlineElems, ...endAndStartRegionBarlineElems, ...endRegionBarlineElems, ...endOfScoreBarlineElems],
+                    barlineElems = getBarlineElems(normalBarlineElems, compositeBarlineElems);
 
                 barlineElems.sort(sortBarlinesLeftToRight);
 
@@ -1631,7 +1636,7 @@ let //**************************************************************************
 
             // Returns an array of indices per Track.
             // Each index is that of the first midiObject in the track at the beginning of the system given by systemIndex.
-            // Each midiObjectSequence in tracks[trackIndex].interpretations spans the whole score.
+            // Each interpretation in tracks[trackIndex].interpretations spans the whole score.
             // Each tracks[trackIndex].interpretations[interpretation] contains a particular interpretation of the track.
             // Each tracks[trackIndex].interpretations[interpretation][index] contains a particular interpretation of the midiObject at that index.
             function getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks)
