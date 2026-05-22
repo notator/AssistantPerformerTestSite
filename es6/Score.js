@@ -252,7 +252,7 @@ let //**************************************************************************
 
         let midiObjectBefore = undefined, midiObjectAfter = undefined, returnObject = undefined,
             deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE,
-            startIndex = 0, endIndex = numberOfTracks,
+            startIndex = 0, endIndex = tracks.length,
             currentMidiObjectIndex = regionSequence[currentRegionIndex].sequenceIndex;
 
         for(let i = startIndex; i < endIndex; ++i)
@@ -1488,7 +1488,7 @@ let //**************************************************************************
 
         function setAllSystemBarlines(systemElems, systems)
         {
-            function getAllBarlineElemsSortedLeftToRight(systemElem)
+            function getBarlineElemsSortedLeftToRight(systemElem)
             {
                 function reducedArray(systemElem, classString)
                 {
@@ -1543,22 +1543,32 @@ let //**************************************************************************
 
                 function getBarlineElems(normalBarlineElems, compositeBarlineElems)
                 {
-                    let barlineElems = [];
-                    // If a normal barline has the same alignment as a normal barline in a composite barline, the normal barline is not added to the array, to avoid double counting.
+                    let barlineElems = [],
+                        compositeNormalAlignments = [];
+
+                    for(let compositeBarlineElem of compositeBarlineElems)
+                    {
+                        let normalBarlines = compositeBarlineElem.getElementsByClassName('normalBarline');
+                        for(let normalBarline of normalBarlines)
+                        {
+                            compositeNormalAlignments.push(parseFloat(normalBarline.getAttribute('x1'), 10) / viewBoxScale);
+                        }
+                    }
+
+                    // If a normal barline has the same alignment as a normal barline in a composite barline,
+                    // the normal barline is not added to the array, to avoid double counting.
                     for(let normalBarlineElem of normalBarlineElems)
                     {
-                        let normalBarlineAlignment = parseFloat(normalBarlineElem.getAttribute('x1'), 10) / viewBoxScale,
-                            isDuplicate = compositeBarlineElems.some(compositeBarlineElem =>
-                            {
-                                let compositeBarlineAlignment = parseFloat(compositeBarlineElem.getAttribute('x1'), 10) / viewBoxScale;
-                                return normalBarlineAlignment === compositeBarlineAlignment;
-                            });
-
-                        if(!isDuplicate)
+                        let normalBarlineAlignment = parseFloat(normalBarlineElem.getAttribute('x1'), 10) / viewBoxScale;
+                        // If compositeNormalAlignments contains normalBarlineAlignment,
+                        // then there is a normal barline in a composite barline with the same alignment as normalBarlineElem,
+                        // so normalBarlineElem is not added to the barlineElems array.
+                        if(compositeNormalAlignments.indexOf(normalBarlineAlignment) === -1)
                         {
                             barlineElems.push(normalBarlineElem);
                         }
                     }
+
                     return [...barlineElems, ...compositeBarlineElems];
                 }
 
@@ -1669,56 +1679,117 @@ let //**************************************************************************
 
                 return firstMidiObjectIndexPerTrackInSystem;
             }
-            // constructs all barlines in a system, except the rightmost one
-            function getSystemLeftBarlines(barlineElemsSortedLeftToRight, midiObjects0IndexPerTrackInSystem)
+            // constructs all barlines in a system
+            function getSystemBarlines(barlineElemsSortedLeftToRight, midiObjects0IndexPerTrackInThisSystem, midiObjects0IndexPerTrackInNextSystem)
             {
-                // returns the msPosInScore of the first midiObject after the barline in any track on the current system
-                function getMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInSystem)
+                // returns the msPosInScore of the first midiObject after the barline in any track.interpretation[0]
+                // If there is no midiObject after the barline in any track in the same system,
+                // then the barline's msPosInScore is that of the first midiObject in any track in the next system,
+                // If there is no following system, then the barline's msPosition is the end of the last midiObject in the score..
+                function getBarlineMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInThisSystem, midiObjects0IndexPerTrackInNextSystem)
                 {
-                    let minMsPos = Number.MAX_VALUE;
-
-                    console.assert(midiObjects0IndexPerTrackInSystem.length === tracks.length);
-
-                    for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
+                    // returns the msPosInScore of the first midiObject after the barline in any track.interpretation[0]
+                    // or undefined if there is no midiObject after the barline in any track.interpretation[0].
+                    function getALeftBarlineMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInThisSystem)
                     {
-                        let interpretation = tracks[trackIndex].interpretations[0],
-                            midiObjectIndex = midiObjects0IndexPerTrackInSystem[trackIndex];
+                        let barlineMsPos = Number.MAX_VALUE;
 
-                        const leftMostMidiObjectindex = midiObjectIndex;
+                        console.assert(midiObjects0IndexPerTrackInThisSystem.length === tracks.length);
 
-                        console.assert(midiObjectIndex < interpretation.length);
-
-                        while(midiObjectIndex < interpretation.length)
+                        for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
                         {
-                            if(midiObjectIndex > leftMostMidiObjectindex)
-                            { 
-                                console.assert(interpretation[midiObjectIndex].alignment > interpretation[midiObjectIndex - 1].alignment);
-                                // We're still on the same system.
-                            }
-                            if(interpretation[midiObjectIndex].alignment > barlineAlignment)
+                            let interpretation = tracks[trackIndex].interpretations[0],
+                                midiObjectIndex = midiObjects0IndexPerTrackInThisSystem[trackIndex],
+                                currentMidiObject = interpretation[midiObjectIndex];
+
+                            while(midiObjectIndex < interpretation.length && barlineMsPos !== undefined)
                             {
-                                let midiObjectMsPos = interpretation[midiObjectIndex].msPosInScore;  
-                                minMsPos = (minMsPos < midiObjectMsPos) ? minMsPos : midiObjectMsPos;
+                                if(currentMidiObject.alignment > barlineAlignment)
+                                {
+                                    let midiObjectMsPos = currentMidiObject.msPosInScore;
+                                    barlineMsPos = (barlineMsPos < midiObjectMsPos) ? barlineMsPos : midiObjectMsPos;
+                                    break; // to next track.interpretation
+                                }
+                                else
+                                {
+                                    barlineMsPos = undefined; // the relevant midiObject is on the next system (if there is one), so return undefined;
+                                }
+
+                                midiObjectIndex++;
+                            } 
+                            if(barlineMsPos === undefined)
+                            {
                                 break;
                             }
-                            midiObjectIndex++;
-                        } 
-                    }
-                    console.assert(minMsPos !== Number.MAX_VALUE);
+                        }
+                        console.assert(barlineMsPos !== Number.MAX_VALUE);
 
-                    return minMsPos;
+                        return barlineMsPos;
+
+                    }
+
+                    // returns the msPosInScore of the first midiObject on the following system in any track.interpretation[0]
+                    // or undefined if there is no following system.
+                    function getTheRightBarlineMsPosInSystem(midiObjects0IndexPerTrackInNextSystem)
+                    {
+                        let barlineMsPos = Number.MAX_VALUE;
+
+                        console.assert(midiObjects0IndexPerTrackInThisSystem.length === tracks.length);
+
+                        for(let trackIndex = 0; trackIndex < tracks.length; trackIndex++)
+                        {
+                            let interpretation = tracks[trackIndex].interpretations[0],
+                                midiObjectIndex = midiObjects0IndexPerTrackInNextSystem[trackIndex];
+
+                            console.assert(midiObjectIndex < interpretation.length);
+
+                            let currentMidiObject = interpretation[midiObjectIndex],
+                                midiObjectMsPos = currentMidiObject.msPosInScore;
+
+                            barlineMsPos = (barlineMsPos < midiObjectMsPos) ? barlineMsPos : midiObjectMsPos;
+                        }
+                        console.assert(barlineMsPos !== Number.MAX_VALUE);
+                        return barlineMsPos;
+                    }
+
+                    // returns the endMsPosInScore of the last midiObject in the last system.track[0].interpretation[0]..
+                    function getTheLastBarlineMsPosInScore()
+                    {
+                        let interpretation = tracks[0].interpretations[0],
+                            lastMidiObject = interpretation[interpretation.length - 1],
+                            lastBarlineMsPosInScore = lastMidiObject.msPosInScore + lastMidiObject.msDuration;
+
+                        return lastBarlineMsPosInScore;
+                    }
+
+                    let barlineMsPos = undefined;
+
+                    if((barlineMsPos = getALeftBarlineMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInThisSystem)) === undefined)
+                    {
+                        if(midiObjects0IndexPerTrackInNextSystem === null) // there is no next system
+                        {
+                            barlineMsPos = getTheLastBarlineMsPosInScore();
+                        }
+                        else
+                        {
+                            barlineMsPos = getTheRightBarlineMsPosInSystem(midiObjects0IndexPerTrackInNextSystem);
+                            console.assert(barlineMsPos !== undefined);                            
+                        }
+                    }
+
+                    return barlineMsPos;
                 }
 
                 let barlines = [];
 
-                for(var i = 0; i < barlineElemsSortedLeftToRight.length - 1; i++) // exclude the rightmost barline
+                for(var i = 0; i < barlineElemsSortedLeftToRight.length; i++)
                 {
                     let barlineElem = barlineElemsSortedLeftToRight[i],
                         barline,
                         rVal = getTypeStringAndAlignment(barlineElem),
                         typeString = rVal.typeString,
                         barlineAlignment = rVal.alignment,
-                        msPosInScore = getMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInSystem);
+                        msPosInScore = getBarlineMsPosInSystem(barlineAlignment, midiObjects0IndexPerTrackInThisSystem, midiObjects0IndexPerTrackInNextSystem);
 
                     console.assert(msPosInScore >= 0);
 
@@ -1729,46 +1800,20 @@ let //**************************************************************************
                 return barlines;
             }
 
-            // construct all barlines except the rightmost one for each system
-            let rightBarlineElemPerSystem = [];
+            // set each system.barlines and system.firstMidiObjectIndexPerTrack.
+            // system.barlines is an array of barline objects.
             for(let systemIndex = 0; systemIndex < systems.length; ++systemIndex)
             {
                 let system = systems[systemIndex],
                     systemElem = systemElems[systemIndex],
-                    barlineElemsSortedLeftToRight = getAllBarlineElemsSortedLeftToRight(systemElem),
-                    firstMidiObjectIndexPerTrackInSystem = getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks);
+                    barlineElemsSortedLeftToRight = getBarlineElemsSortedLeftToRight(systemElem),
+                    firstMidiObjectIndexPerTrackInThisSystem = getFirstMidiObjectIndexPerTrackInSystem(systemIndex, tracks),
+                    firstMidiObjectIndexPerTrackInNextSystem = (systemIndex + 1 < systems.length) ? getFirstMidiObjectIndexPerTrackInSystem(systemIndex + 1, tracks) : null;
 
-                rightBarlineElemPerSystem.push(barlineElemsSortedLeftToRight[barlineElemsSortedLeftToRight.length - 1]);
-                system.barlines = getSystemLeftBarlines(barlineElemsSortedLeftToRight, firstMidiObjectIndexPerTrackInSystem);
-                system.firstMidiObjectIndexPerTrack = firstMidiObjectIndexPerTrackInSystem;
+                system.barlines = getSystemBarlines(barlineElemsSortedLeftToRight, firstMidiObjectIndexPerTrackInThisSystem, firstMidiObjectIndexPerTrackInNextSystem);
+                system.firstMidiObjectIndexPerTrack = firstMidiObjectIndexPerTrackInThisSystem;
             }
 
-            // construct the rightmost barline for each system except the last
-            for(let systemIndex = systems.length - 1; systemIndex > 0; systemIndex--)
-            {
-                let previousSystem = systems[systemIndex - 1],
-                    rightBarlineElem = rightBarlineElemPerSystem[systemIndex - 1],
-                    rVal = getTypeStringAndAlignment(rightBarlineElem),
-                    typeString = rVal.typeString,
-                    alignment = rVal.alignment,
-                    system = systems[systemIndex],
-                    msPosInScore = system.barlines[0].msPosInScore,
-                    finalBarline = constructBarline(typeString, alignment, msPosInScore);
-
-                previousSystem.barlines.push(finalBarline);
-            }
-
-            // construct the rightmost barline for the last system
-            let endOfScoreBarlineElem = rightBarlineElemPerSystem[rightBarlineElemPerSystem.length - 1],
-                rVal = getTypeStringAndAlignment(endOfScoreBarlineElem),
-                typeString = rVal.typeString,
-                alignment = rVal.alignment,
-                interpretation = tracks[0].interpretations[0],
-                lastMidiObject = interpretation[interpretation.length - 1],
-                msPosInScore = lastMidiObject.msPosInScore + lastMidiObject.msDuration,
-                endOfScoreBarline = constructBarline(typeString, alignment, msPosInScore);
-
-            systems[systems.length - 1].barlines.push(endOfScoreBarline);
         }
 
         function setInitialInterpretationState(systems)
